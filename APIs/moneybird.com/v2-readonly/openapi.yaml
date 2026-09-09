@@ -64,7 +64,7 @@ paths:
         - in: path
           name: id
           required: true
-          schema: { type: string, pattern: '^\d+$' }
+          schema: { type: string, pattern: '^[0-9]+$' }
       responses:
         '200':
           description: A contact
@@ -79,12 +79,12 @@ components:
       name: administration_id
       required: true
       description: The unique numeric identifier of the Moneybird administration.
-      schema: { type: string, pattern: '^\d+$' }
+      schema: { type: string, pattern: '^[0-9]+$' }
   schemas:
     administration:
       type: object
       properties:
-        id: { type: string, pattern: '^\d+$' }
+        id: { type: string, pattern: '^[0-9]+$' }
         name: { type: string }
         language: { type: string }
         currency: { type: string }
@@ -93,8 +93,8 @@ components:
       type: object
       description: A contact in a Moneybird administration.
       properties:
-        id: { type: string, pattern: '^\d+$' }
-        administration_id: { type: string, pattern: '^\d+$' }
+        id: { type: string, pattern: '^[0-9]+$' }
+        administration_id: { type: string, pattern: '^[0-9]+$' }
         company_name: { type: string }
         firstname: { type: string }
         lastname: { type: string }
