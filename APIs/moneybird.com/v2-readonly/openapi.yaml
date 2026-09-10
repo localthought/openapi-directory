@@ -9,6 +9,86 @@ servers:
 security:
 - bearerAuth: []
 paths:
+  /administrations.json:
+    get:
+      summary: List all administrations
+      description: Lists all administrations the current user has access to.
+      tags:
+      - Administrations
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: A list of administrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/administration_response'
+              examples:
+                ValidatesThatAUserHasAccessToMultipleAdministrationsViaDifferentWays:
+                  summary: Validates that a user has access to multiple administrations
+                    via different ways
+                  value:
+                  - id: '178895991941220541'
+                    name: Administratie
+                    language: nl
+                    currency: EUR
+                    country: NL
+                    time_zone: Europe/Amsterdam
+                    access: accountant_company
+                    suspended: false
+                    period_locked_until: null
+                    period_start_date: '2026-01-01'
+                  - id: 123
+                    name: Parkietje B.V.
+                    language: nl
+                    currency: EUR
+                    country: NL
+                    time_zone: Europe/Amsterdam
+                    access: user
+                    suspended: false
+                    period_locked_until: null
+                    period_start_date: '2026-01-01'
+                ReturnsAccessTypeUserWhenHavingDirectAccessToTheAdministration:
+                  summary: Returns access type user when having direct access to the
+                    administration
+                  value:
+                  - id: '178895992059556830'
+                    name: Parkietje B.V.
+                    language: nl
+                    currency: EUR
+                    country: NL
+                    time_zone: Europe/Amsterdam
+                    access: user
+                    suspended: false
+                    period_locked_until: null
+                    period_start_date: '2026-01-01'
+                ReturnAListOfAdministrationsThatUserHasAccessTo:
+                  summary: Return a list of administrations that user has access to
+                  value:
+                  - id: '178895992091113245'
+                    name: Administratie
+                    language: nl
+                    currency: EUR
+                    country: NL
+                    time_zone: Europe/Amsterdam
+                    access: user
+                    suspended: false
+                    period_locked_until: null
+                    period_start_date: '2026-01-01'
+                  - id: 123
+                    name: Parkietje B.V.
+                    language: nl
+                    currency: EUR
+                    country: NL
+                    time_zone: Europe/Amsterdam
+                    access: user
+                    suspended: false
+                    period_locked_until: null
+                    period_start_date: '2026-01-01'
+      operationId: get_administrations
   /{administration_id}/assets/{id}.json:
     get:
       summary: Get an asset by ID
@@ -374,6 +454,141 @@ paths:
             value: 'false'
       - $ref: '#/components/parameters/per_page'
       - $ref: '#/components/parameters/page'
+  /{administration_id}/contacts/{contact_id}/contact_people/{id}.json:
+    get:
+      summary: Get contact person
+      description: "Returns all information about a contact person.\n\n### Required\
+        \ scope(s)\n Any of: `estimates`, `sales_invoices`, `documents`, `bank` or\
+        \ `settings`"
+      tags:
+      - Contacts
+      security:
+      - bearerAuth:
+        - estimates
+      - bearerAuth:
+        - sales_invoices
+      - bearerAuth:
+        - documents
+      - bearerAuth:
+        - bank
+      - bearerAuth:
+        - settings
+      responses:
+        '200':
+          description: A contact person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/contact_person_response'
+              examples:
+                ReturnAContactPerson:
+                  summary: Return a contact person
+                  value:
+                    id: '497800880439952608'
+                    contact_id: '497800880436806878'
+                    administration_id: 123
+                    firstname: John
+                    lastname: Appleseed
+                    phone: null
+                    email: null
+                    department: null
+                    created_at: '2026-09-09T13:18:56.080Z'
+                    updated_at: '2026-09-09T13:18:56.080Z'
+                    version: 1788959936
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/symbolic_error'
+              examples:
+                Returns404WhenContactPersonDoesNotExist:
+                  summary: Returns 404 when contact person does not exist
+                  value:
+                    error: record not found
+                    symbolic:
+                      id: not_found
+      operationId: get_administration_id_contacts_contact_id_contact_people_id
+      parameters:
+      - $ref: '#/components/parameters/administration_id'
+      - name: contact_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/identifier'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/identifier'
+  /{administration_id}/contacts/{contact_id}/moneybird_payments_mandate.json:
+    get:
+      summary: Get Moneybird Payments mandate
+      description: "Returns information about the stored Moneybird Payments mandate.\
+        \ Only\navailable when Moneybird Payments is enabled for the administration.\n\
+        \n### Required scope(s)\n Any of: `estimates`, `sales_invoices`, `documents`,\
+        \ `bank` or `settings`"
+      tags:
+      - Contacts
+      security:
+      - bearerAuth:
+        - estimates
+      - bearerAuth:
+        - sales_invoices
+      - bearerAuth:
+        - documents
+      - bearerAuth:
+        - bank
+      - bearerAuth:
+        - settings
+      responses:
+        '200':
+          description: A Moneybird Payments mandate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recurring_contract_response'
+              examples:
+                ReturnsInformationAboutTheStoredMoneybirdPaymentsMandate:
+                  summary: Returns information about the stored moneybird payments
+                    mandate
+                  value:
+                    type: idealtestissuer5
+                    sepa_mandate: true
+                    bank: Test Issuer 5
+                    iban: NL81TEST0536169128
+                    bic: TESTNL05
+                    iban_account_name: E. Klaassen
+                    card_expiry_month: null
+                    card_expiry_year: null
+                    card_final_digits: null
+                    created_at: '2022-04-07T13:31:09.000Z'
+                ReturnsLimitedInformationIfMandateExistsButOnlyLimitedInformationIsAvailable:
+                  summary: Returns limited information if mandate exists, but only
+                    limited information is available
+                  value:
+                    type: mccorporatecredit
+                    sepa_mandate: false
+                    bank: null
+                    iban: null
+                    bic: null
+                    iban_account_name: null
+                    card_expiry_month: '3'
+                    card_expiry_year: '2030'
+                    card_final_digits: '0010'
+                    created_at: '2022-04-11T09:17:56.000Z'
+        '403':
+          $ref: '#/components/responses/4XX_open_error'
+        '404':
+          $ref: '#/components/responses/4XX_open_error'
+      operationId: get_administration_id_contacts_contact_id_moneybird_payments_mandate
+      parameters:
+      - $ref: '#/components/parameters/administration_id'
+      - name: contact_id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/identifier'
   /{administration_id}/contacts/{contact_id}/additional_charges.json:
     get:
       summary: Get additional charges
@@ -4542,6 +4757,176 @@ paths:
           description: 'String terms, example: `key1:value1,key2:value2`.'
       - $ref: '#/components/parameters/page'
       - $ref: '#/components/parameters/per_page'
+  /{administration_id}/downloads.json:
+    get:
+      summary: List all downloads
+      description: 'Returns a paginated list of all downloads in the administration.
+
+
+        Only downloads that the authenticated user has permission to access will be
+        returned,
+
+        based on the download type and the user''s permissions within the administration.'
+      tags:
+      - Downloads
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: A list of downloads
+          headers:
+            Link:
+              $ref: '#/components/headers/link'
+            X-Total-Count:
+              $ref: '#/components/headers/x-total-count'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/download_response'
+              examples:
+                ReturnsDownloadsByDownloadType:
+                  summary: Returns downloads by download type
+                  value:
+                  - id: '497801003073013679'
+                    user_id: null
+                    download_type: export_contacts
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: false
+                    downloaded: false
+                    created_at: '2026-09-09T13:20:53.032Z'
+                    updated_at: '2026-09-09T13:20:53.032Z'
+                ReturnsPaginatedDownloads:
+                  summary: Returns paginated downloads
+                  value:
+                  - id: '497801003105519539'
+                    user_id: null
+                    download_type: export_sales_invoices
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: false
+                    downloaded: true
+                    created_at: '2026-09-09T13:20:53.063Z'
+                    updated_at: '2026-09-09T13:20:53.063Z'
+                ReturnsDownloadsByDownloadedStatus:
+                  summary: Returns downloads by downloaded status
+                  value:
+                  - id: '497801003136976822'
+                    user_id: null
+                    download_type: export_sales_invoices
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: false
+                    downloaded: true
+                    created_at: '2026-09-09T13:20:53.093Z'
+                    updated_at: '2026-09-09T13:20:53.093Z'
+                ReturnsDownloadsByFailedStatus:
+                  summary: Returns downloads by failed status
+                  value:
+                  - id: '497801003166336954'
+                    user_id: null
+                    download_type: export_documents
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: true
+                    downloaded: false
+                    created_at: '2026-09-09T13:20:53.122Z'
+                    updated_at: '2026-09-09T13:20:53.122Z'
+                ReturnsAllDownloadsOfAnAdministration:
+                  summary: Returns all downloads of an administration
+                  value:
+                  - id: '497801003209328576'
+                    user_id: null
+                    download_type: export_documents
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: true
+                    downloaded: false
+                    created_at: '2026-09-09T13:20:53.163Z'
+                    updated_at: '2026-09-09T13:20:53.163Z'
+                  - id: '497801003208279999'
+                    user_id: null
+                    download_type: export_sales_invoices
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: false
+                    downloaded: true
+                    created_at: '2026-09-09T13:20:53.162Z'
+                    updated_at: '2026-09-09T13:20:53.162Z'
+                  - id: '497801003207231422'
+                    user_id: null
+                    download_type: export_contacts
+                    filename: Unknown
+                    content_type: application/octet-stream
+                    failed: false
+                    downloaded: false
+                    created_at: '2026-09-09T13:20:53.161Z'
+                    updated_at: '2026-09-09T13:20:53.161Z'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/symbolic_error'
+              examples:
+                ReturnsAnErrorWhenDownloadTypeIsInvalid:
+                  summary: Returns an error when download type is invalid
+                  value:
+                    error: download_type does not have a valid value
+                ReturnsAnErrorWhenPerPageExceedsLimit:
+                  summary: Returns an error when per page exceeds limit
+                  value:
+                    error: per_page does not have a valid value
+      operationId: get_administration_id_downloads
+      parameters:
+      - $ref: '#/components/parameters/administration_id'
+      - $ref: '#/components/parameters/per_page'
+      - $ref: '#/components/parameters/page'
+      - name: download_type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'Filter downloads by type. Common download types include:
+
+          - `auditfile`
+
+          - `brugstaat`
+
+          - `export_ledger_account_report`
+
+
+          Check the `download_type` field in the response to see all available types.
+
+          '
+        examples:
+          ReturnsDownloadsByDownloadType:
+            summary: Returns downloads by download type
+            value: export_contacts
+      - name: downloaded
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: string
+        examples:
+          ReturnsDownloadsByDownloadedStatus:
+            summary: Returns downloads by downloaded status
+            value: 'true'
+      - name: failed
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: boolean
+          - type: string
+        examples:
+          ReturnsDownloadsByFailedStatus:
+            summary: Returns downloads by failed status
+            value: 'true'
   /{administration_id}/estimates/{id}.json:
     get:
       summary: Get an estimate by id
@@ -8784,6 +9169,48 @@ paths:
           ReturnsAllMutationsFilteredOnPeriod:
             summary: Returns all mutations filtered on period
             value: period:this_month
+  /{administration_id}/identities/default.json:
+    get:
+      summary: Retrieve the default identity
+      description: "Returns the default identity of this administration.\n\n### Required\
+        \ scope(s)\n `settings`"
+      tags:
+      - Identities
+      security:
+      - bearerAuth:
+        - settings
+      responses:
+        '200':
+          description: A list of identities
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identity_response'
+              examples:
+                ReturnsTheDefaultIdentity:
+                  summary: Returns the default identity
+                  value:
+                    id: '497800832738133099'
+                    administration_id: 123
+                    company_name: Parkietje B.V.
+                    city: Enschede
+                    country: NL
+                    zipcode: 7523XD
+                    address1: Brouwerijstraat 26
+                    address2: null
+                    email: info@dev.null.moneybird.net
+                    phone: 0612345678
+                    bank_account_name: null
+                    bank_account_number: NL50TEST0166567191
+                    bank_account_bic: null
+                    custom_fields: []
+                    updated_at: '2026-09-09T13:18:10.586Z'
+                    created_at: '2026-09-09T13:18:10.586Z'
+                    chamber_of_commerce: 08155914
+                    tax_number: NL817575546B01
+      operationId: get_administration_id_identities_default
+      parameters:
+      - $ref: '#/components/parameters/administration_id'
   /{administration_id}/identities/{id}.json:
     get:
       summary: Retrieve identity by given id
@@ -11604,6 +12031,64 @@ paths:
       operationId: get_administration_id_ledger_accounts
       parameters:
       - $ref: '#/components/parameters/administration_id'
+  /{administration_id}/payments/{id}.json:
+    get:
+      summary: Returns information about a payment
+      description: Returns information about a payment.
+      tags:
+      - Payments
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: A payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_response'
+              examples:
+                ReturnsASinglePayment:
+                  summary: Returns a single payment
+                  value:
+                    id: '497801007911143299'
+                    administration_id: 123
+                    invoice_type: SalesInvoice
+                    invoice_id: '497801007805237101'
+                    financial_account_id: '497801007904851839'
+                    user_id: 1
+                    payment_transaction_id: null
+                    transaction_identifier: null
+                    price: '363.0'
+                    price_base: '363.0'
+                    payment_date: '2026-09-09'
+                    credit_invoice_id: null
+                    financial_mutation_id: '497801007909046146'
+                    ledger_account_id: '497801007900657534'
+                    linked_payment_id: null
+                    manual_payment_action: null
+                    created_at: '2026-09-09T13:20:57.647Z'
+                    updated_at: '2026-09-09T13:20:57.647Z'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/symbolic_error'
+              examples:
+                Returns404WhenPaymentDoesNotExist:
+                  summary: Returns 404 when payment does not exist
+                  value:
+                    error: record not found
+                    symbolic:
+                      id: not_found
+      operationId: get_administration_id_payments_id
+      parameters:
+      - $ref: '#/components/parameters/administration_id'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/identifier'
   /{administration_id}/products/identifier/{identifier}.json:
     get:
       summary: Returns information about a product based on the identifier
@@ -18925,183 +19410,6 @@ paths:
       parameters:
       - $ref: '#/components/parameters/administration_id'
 components:
-  headers:
-    link:
-      description: Pagination links (next, prev)
-      schema:
-        type: string
-    x-total-count:
-      description: Total number of entries in the collection
-      schema:
-        type: integer
-  requestBodies:
-    payment_request:
-      required: true
-      content:
-        application/*:
-          schema:
-            unevaluatedProperties: false
-            type: object
-            properties:
-              payment:
-                type: object
-                unevaluatedProperties: false
-                properties:
-                  payment_date:
-                    type: string
-                    description: The date on which the payment was made.
-                  price:
-                    $ref: '#/components/schemas/money'
-                    description: The amount paid in the document's currency.
-                  price_base:
-                    $ref: '#/components/schemas/money'
-                    description: Amount paid expressed in the base currency of the
-                      administration. Required when the document uses a different
-                      currency than the administration's base currency.
-                  financial_account_id:
-                    $ref: '#/components/schemas/identifier'
-                    description: The ID of the financial account (bank account or
-                      cash register) associated with this payment. Required for `private_payment`
-                      and `cash_payment` actions. Should be a valid financial account
-                      id.
-                  financial_mutation_id:
-                    $ref: '#/components/schemas/identifier'
-                    description: The ID of the bank transaction to link this payment
-                      to. Required for `bank_transfer` actions. Should be a valid
-                      financial mutation id.
-                  transaction_identifier:
-                    type: string
-                    description: An external transaction reference, e.g. a bank transaction
-                      ID or PSP reference. Used to match the payment with financial
-                      mutations.
-                  manual_payment_action:
-                    type: string
-                    description: Can be `private_payment` (needs financial_account_id),
-                      `payment_without_proof`, `cash_payment` (needs financial_account_id),
-                      `rounding_error`, `bank_transfer` (needs financial_mutation_id),
-                      `balance_settlement` (needs ledger_account_id) or `invoices_settlement`
-                      (needs invoice_id).
-                  ledger_account_id:
-                    $ref: '#/components/schemas/identifier'
-                    description: The ID of the ledger account to book this payment
-                      to. Required for `balance_settlement` actions. Should be a valid
-                      ledger account id.
-                  invoice_id:
-                    $ref: '#/components/schemas/identifier'
-                    description: The ID of the document to settle this payment against.
-                      Required for `invoices_settlement` actions. Should be a valid
-                      document id (sales invoice, purchase invoice, receipt, etc.).
-                required:
-                - payment_date
-                - price
-            required: []
-  responses:
-    200_synchronization_response:
-      description: IDs and versions of records
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: object
-              unevaluatedProperties: false
-              properties:
-                id:
-                  anyOf:
-                  - type: integer
-                  - type: string
-                version:
-                  anyOf:
-                  - type: integer
-                  - type: string
-    204_no_content:
-      description: No content
-    302_found:
-      description: Found
-      content:
-        text/plain:
-          schema:
-            type: string
-    400_bad_request:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/symbolic_error'
-    401_unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/symbolic_error'
-    402_payment_required:
-      description: Payment required
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/symbolic_error'
-    403_forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/symbolic_error'
-    404_not_found:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/symbolic_error'
-    422_unprocessable_entity:
-      description: Unprocessable entity
-      content:
-        application/json:
-          schema:
-            anyOf:
-            - $ref: '#/components/schemas/symbolic_error'
-            - $ref: '#/components/schemas/non_symbolic_error'
-    429_too_many_requests:
-      description: Too many requests - rate limit exceeded
-      content:
-        application/json:
-          schema:
-            type: string
-            example: Retry later
-      headers:
-        RateLimit-Limit:
-          description: The rate limit ceiling for that given request
-          schema:
-            type: integer
-            example: 150
-        RateLimit-Remaining:
-          description: The number of requests left for the time window
-          schema:
-            type: integer
-            example: 149
-        RateLimit-Reset:
-          description: The time at which the current rate limit window resets in UTC
-            epoch seconds
-          schema:
-            type: integer
-            example: 1609459200
-        Retry-After:
-          description: The time at which the current rate limit window resets in UTC
-            epoch seconds
-          schema:
-            type: integer
-            example: 1609459200
-    4XX_open_error:
-      description: Error code
-      content:
-        application/json:
-          schema:
-            type: integer
-    status_code:
-      description: Status code
-      content:
-        application/json:
-          schema:
-            type: integer
   securitySchemes:
     bearerAuth:
       type: http
@@ -19122,1072 +19430,198 @@ components:
             bank: Access banking data and contacts
             time_entries: Access time entries
             settings: Access settings and contacts
+  parameters:
+    administration_id:
+      in: path
+      name: administration_id
+      required: true
+      schema:
+        $ref: '#/components/schemas/administration_id'
+      description: The unique identifier of the administration
+    per_page:
+      name: per_page
+      in: query
+      required: false
+      schema:
+        pattern: ^\d+$
+        minimum: 1
+        maximum: 100
+        anyOf:
+        - type: integer
+        - type: string
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        anyOf:
+        - type: integer
+        - type: string
   schemas:
     administration_id:
       allOf:
       - $ref: '#/components/schemas/identifier'
         description: A unique record identifier of an administration
         example: '123'
-    administration_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/administration_id'
-        name:
-          type: string
-          example: Moneybird
-        language:
-          type: string
-          enum:
-          - nl
-          - nl-be
-          - en
-          example: nl
-          description: The ISO 639-1 language code used in the administration
-        currency:
-          type: string
-          description: The ISO 4217 currency code
-          example: EUR
-        country:
-          type: string
-          description: The ISO 3166-1 alpha-2 code the administration country
-          example: NL
-        time_zone:
-          type: string
-          description: The time zone of the administration
-          example: Europe/Amsterdam
-        access:
-          type: string
-          enum:
-          - accountant_company
-          - user
-          description: The type of acess the user has to this administration
-          example: user
-        suspended:
-          type: boolean
-        period_locked_until:
-          type: string
-          format: date
-          nullable: true
-        period_start_date:
-          type: string
-          format: date
-          description: Start of the year in which the administration recorded its
-            first bookkeeping data, based on journal entries.
-          example: '2024-01-01'
-    aging_report_item:
-      type: object
-      description: Aging report data item
-      properties:
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-        aging_buckets:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: The aging bucket name, e.g. '< 30 days', '30-60 days',
-                  '60+ days'
-              amount:
-                type: string
-    asset_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier_nullable'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        name:
-          type: string
-        purchase_date:
-          type: string
-          format: date
-        purchase_value:
-          $ref: '#/components/schemas/number'
-        calculated_purchase_value:
-          $ref: '#/components/schemas/number'
-          description: Purchase value reduced by any reinvestment reserve purchase
-            applied to the asset.
-        current_value:
-          $ref: '#/components/schemas/number'
-        value_change_plan:
-          type: object
-          unevaluatedProperties: false
-          properties:
-            lifespan_in_years:
-              type: number
-            residual_value:
-              $ref: '#/components/schemas/number'
-            active:
-              type: boolean
-            monthly_depreciation:
-              $ref: '#/components/schemas/number'
-          nullable: true
-        disposal:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/disposal_response'
-        value_changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/value_change_response'
-        sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/source_response'
-        reinvestment_reserve_purchase:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/reinvestment_reserve_purchase_response'
-    attachment_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        attachable_id:
-          $ref: '#/components/schemas/identifier'
-        attachable_type:
-          type: string
-          enum:
-          - SalesInvoice
-          - RecurringSalesInvoice
-          - Document
-          - FinancialStatement
-          - Workflow
-          - Estimate
-          - ExternalSalesInvoice
-        filename:
-          type: string
-        content_type:
-          type: string
-        size:
-          type: integer
-        rotation:
-          type: integer
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-    balance_sheet_ledger_account:
-      type: array
-      description: A list of ledger accounts with their value and child accounts
-      items:
-        type: object
-        properties:
-          ledger_account_id:
-            type: string
-          value:
-            type: string
-          children:
-            type: array
-            items:
-              type: object
-              properties:
-                ledger_account_id:
-                  type: string
-                value:
-                  type: string
-    base_contact_response:
+    identifier:
+      pattern: ^\d+$
+      description: A unique record identifier
+      example: '458026356994737217'
+      anyOf:
+      - type: string
+      - type: integer
+    workflow_response:
       type: object
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
           $ref: '#/components/schemas/administration_id'
-        company_name: {}
-        firstname:
+        type:
           type: string
-          nullable: true
-        lastname:
-          type: string
-          nullable: true
-        address1:
-          type: string
-          nullable: true
-        address2:
-          type: string
-          nullable: true
-        zipcode:
-          type: string
-          nullable: true
-        city:
-          type: string
-          nullable: true
-        country:
-          type: string
-        phone:
-          type: string
-          nullable: true
-        delivery_method:
-          type: string
-          enum:
-          - Email
-          - Post
-          - Manual
-          - Simplerinvoicing
-          - Peppol
-          - null
-          nullable: true
-        customer_id:
-          type: string
-          description: Will be assigned automatically if empty
-        tax_number:
-          type: string
-          nullable: true
-        chamber_of_commerce:
-          type: string
-          nullable: true
-        bank_account:
-          type: string
-          description: The SEPA IBAN of the contact, can be empty if no SEPA IBAN
-            is set
-          nullable: true
-        is_trusted:
-          type: boolean
-          default: default
-        max_transfer_amount:
-          type: number
-          nullable: true
-        attention:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        email_ubl:
-          type: boolean
-        send_invoices_to_attention:
-          type: string
-          nullable: true
-        send_invoices_to_email:
-          type: string
-          nullable: true
-        send_estimates_to_attention:
-          type: string
-          nullable: true
-        send_estimates_to_email:
-          type: string
-          nullable: true
-        direct_debit:
-          type: boolean
-        sepa_active:
-          type: boolean
-          nullable: true
-        sepa_iban:
-          type: string
-          nullable: true
-        sepa_iban_account_name:
-          type: string
-          nullable: true
-        sepa_bic:
-          type: string
-          nullable: true
-        sepa_mandate_id:
-          type: string
-          nullable: true
-        sepa_mandate_date:
-          type: string
-          format: date
-          nullable: true
-        sepa_sequence_type:
-          type: string
-          enum:
-          - RCUR
-          - FRST
-          - OOFF
-          - FNAL
-        credit_card_number:
-          type: string
-          nullable: true
-        credit_card_reference:
-          type: string
-          nullable: true
-        credit_card_type:
-          type: string
-          enum:
-          - mastercard
-          - visa
-          - null
-          nullable: true
-        tax_number_validated_at:
-          type: string
-          format: date-time
-          nullable: true
-        tax_number_valid:
-          type: boolean
-          nullable: true
-        invoice_workflow_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        estimate_workflow_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        si_identifier:
-          type: string
-          nullable: true
-        si_identifier_type:
-          type: string
-          nullable: true
-        moneybird_payments_mandate:
-          type: boolean
-          description: Whether the contact has a valid Moneybird Payments mandate
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          type: integer
-          example: 1716801778
-        sales_invoices_url:
-          type: string
-          format: uri
-          pattern: ^https:\/\/moneybird\.\w{3,9}\/\d+\/sales_invoices\/[a-f0-9]{64}\/all$
-          example: https://moneybird.com/123/sales_invoices/4f0af91e456aa9c5b11ccfd6572da4f56cc8e45a701690c9279c9e4cec7b68f1/all
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value_response'
-        contact_people:
-          type: array
-          items:
-            $ref: '#/components/schemas/contact_person_response'
-        archived:
-          type: boolean
-    base_user_response:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
         name:
           type: string
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    contact_person_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        firstname:
-          type: string
-          nullable: true
-        lastname:
-          type: string
-          nullable: true
-        phone:
-          type: string
-          nullable: true
-        email:
-          type: string
-          nullable: true
-        department:
-          type: string
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          type: integer
-    contact_report_item:
-      type: object
-      description: Contact report data item
-      properties:
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-      required:
-      - contact_id
-      - amount
-    contact_response:
-      unevaluatedProperties: false
-      allOf:
-      - $ref: '#/components/schemas/base_contact_response'
-      - type: object
-        properties:
-          events:
-            type: array
-            items:
-              $ref: '#/components/schemas/event_response'
-    creditors_report_item:
-      type: object
-      description: Creditors report data item
-      properties:
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-      required:
-      - contact_id
-      - amount
-    currency:
-      type: string
-      description: ISO 4217 currency code
-      example: EUR
-    custom_field_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier_nullable'
-        administration_id:
-          oneOf:
-          - $ref: '#/components/schemas/administration_id'
-          - type: 'null'
-        name:
-          type: string
-        source:
-          type: string
-          enum:
-          - sales_invoice
-          - estimate
-          - contact
-          - identity
-          - null
-          nullable: true
-    custom_field_value_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        name:
-          type: string
-        value:
-          type: string
-    custom_fields_attributes:
-      oneOf:
-      - type: object
-        additionalProperties:
-          type: object
-          unevaluatedProperties: false
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the custom field to set a value for. Retrieve
-                available custom fields via the custom fields endpoint.
-            value:
-              type: string
-              description: The value to assign to the custom field. The expected format
-                depends on the custom field's type (e.g. text or dropdown).
-          required:
-          - id
-          - value
-      - type: array
-        items:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the custom field to set a value for. Retrieve
-                available custom fields via the custom fields endpoint.
-            value:
-              type: string
-              description: The value to assign to the custom field. The expected format
-                depends on the custom field's type (e.g. text or dropdown).
-    debtors_report_item:
-      type: object
-      description: Debtors report data item
-      properties:
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-      required:
-      - contact_id
-      - amount
-    detail_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        tax_rate_id:
-          $ref: '#/components/schemas/identifier'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        project_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        product_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-          nullable: true
-        amount_decimal:
-          type: string
-          nullable: true
-        description:
-          type: string
-        price:
-          type: string
-          pattern: ^-?\d+\.\d{1,2}$
-          examples:
-          - '123.45'
-          - '-500.0'
-          - '0.0'
-          example: '123.45'
-        period:
-          type: string
-          pattern: ^\d{6,8}..\d{6,8}$
-          example: 20250501..20250531
-          nullable: true
-        row_order:
-          type: integer
-        total_price_excl_tax_with_discount:
-          $ref: '#/components/schemas/number'
-        total_price_excl_tax_with_discount_base:
-          $ref: '#/components/schemas/number'
-        tax_report_reference:
-          type: array
-          items:
-            type: string
-            nullable: true
-        mandatory_tax_text:
-          type: string
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-        is_optional:
-          type: boolean
-        is_selected:
-          type: boolean
-    details_attributes:
-      oneOf:
-      - type: object
-        additionalProperties:
-          type: object
-          unevaluatedProperties: false
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of an existing detail to update. Required when updating
-                or removing an existing detail; omit when creating a new one.
-            description:
-              type: string
-              description: A free-text description for this detail, e.g. the name
-                of the product or service delivered.
-            period:
-              type: string
-              description: 'String with a date range: `20140101..20141231`, presets
-                are also allowed: `this_month`, `prev_month`, `next_month`, `this_quarter`,
-                `prev_quarter`, `next_quarter`, `this_year`, `prev_year`, `next_year`.
-                Used to indicate the period the detail applies to. Revenue or expenses
-                are deferred over this period in the profit and loss report.'
-            price:
-              $ref: '#/components/schemas/money'
-              description: The unit price for this detail.
-            amount:
-              description: The quantity for this detail, e.g. `1`, `5` or `0.5`. Defaults
-                to 1 if not provided.
-              anyOf:
-              - type: integer
-              - type: string
-            tax_rate_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the tax rate to apply to this detail. Should
-                be a valid tax rate id. If not provided, the administration's default
-                tax rate is used.
-            ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the ledger account (category) to book this detail
-                to. Should be a valid ledger account id.
-            project_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the project to associate with this detail. Should
-                be a valid project id. Used to track revenue and expenses per project.
-            product_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the product to use for this detail. When provided,
-                the product's default price, tax rate, ledger account, description
-                and period are applied as defaults. Explicitly provided values take
-                precedence. Should be a valid product id.
-            row_order:
-              description: The position of this detail in the document, starting at
-                0. Used to control the display order of details.
-              anyOf:
-              - type: integer
-              - type: string
-            is_optional:
-              description: Whether this detail is optional. Optional details are shown
-                on estimates but not included in the total unless selected by the
-                client. Only allowed on estimates.
-              anyOf:
-              - type: boolean
-              - type: string
-            is_selected:
-              description: Whether this optional detail has been selected by the client.
-                Only relevant when `is_optional` is true.
-              anyOf:
-              - type: boolean
-              - type: string
-            _destroy:
-              description: Set to `true` to remove this detail from the document.
-                Requires the `id` of the existing detail.
-              anyOf:
-              - type: boolean
-              - type: string
-            automated_tax_enabled:
-              description: Whether automatic tax calculation is enabled for this detail.
-                When enabled, the tax rate is automatically determined based on the
-                product's type and VAT rate type, combined with the contact's country,
-                tax number and address. Requires a `product_id` with smart tax selection
-                enabled (i.e. `product_type` and `vat_rate_type` configured on the
-                product).
-              anyOf:
-              - type: boolean
-              - type: string
-          required: []
-      - type: array
-        items:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of an existing detail to update. Required when updating
-                or removing an existing detail; omit when creating a new one.
-            description:
-              type: string
-              description: A free-text description for this detail, e.g. the name
-                of the product or service delivered.
-            period:
-              type: string
-              description: 'String with a date range: `20140101..20141231`, presets
-                are also allowed: `this_month`, `prev_month`, `next_month`, `this_quarter`,
-                `prev_quarter`, `next_quarter`, `this_year`, `prev_year`, `next_year`.
-                Used to indicate the period the detail applies to. Revenue or expenses
-                are deferred over this period in the profit and loss report.'
-            price:
-              $ref: '#/components/schemas/money'
-              description: The unit price for this detail.
-            amount:
-              description: The quantity for this detail, e.g. `1`, `5` or `0.5`. Defaults
-                to 1 if not provided.
-              anyOf:
-              - type: integer
-              - type: string
-            tax_rate_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the tax rate to apply to this detail. Should
-                be a valid tax rate id. If not provided, the administration's default
-                tax rate is used.
-            ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the ledger account (category) to book this detail
-                to. Should be a valid ledger account id.
-            project_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the project to associate with this detail. Should
-                be a valid project id. Used to track revenue and expenses per project.
-            product_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the product to use for this detail. When provided,
-                the product's default price, tax rate, ledger account, description
-                and period are applied as defaults. Explicitly provided values take
-                precedence. Should be a valid product id.
-            row_order:
-              description: The position of this detail in the document, starting at
-                0. Used to control the display order of details.
-              anyOf:
-              - type: integer
-              - type: string
-            is_optional:
-              description: Whether this detail is optional. Optional details are shown
-                on estimates but not included in the total unless selected by the
-                client. Only allowed on estimates.
-              anyOf:
-              - type: boolean
-              - type: string
-            is_selected:
-              description: Whether this optional detail has been selected by the client.
-                Only relevant when `is_optional` is true.
-              anyOf:
-              - type: boolean
-              - type: string
-            _destroy:
-              description: Set to `true` to remove this detail from the document.
-                Requires the `id` of the existing detail.
-              anyOf:
-              - type: boolean
-              - type: string
-            automated_tax_enabled:
-              description: Whether automatic tax calculation is enabled for this detail.
-                When enabled, the tax rate is automatically determined based on the
-                product's type and VAT rate type, combined with the contact's country,
-                tax number and address. Requires a `product_id` with smart tax selection
-                enabled (i.e. `product_type` and `vat_rate_type` configured on the
-                product).
-              anyOf:
-              - type: boolean
-              - type: string
-    disposal_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        date:
-          type: string
-          format: date
-        reason:
-          type: string
-          enum:
-          - out_of_use
-          - sold
-          - private_withdrawal
-          - divested
-        externally_booked:
-          type: boolean
-        asset_id:
-          $ref: '#/components/schemas/identifier'
-        reinvestment_reserve_sale:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/reinvestment_reserve_sale_response'
-    document_style_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        name:
-          type: string
-        identity_id:
-          $ref: '#/components/schemas/identifier'
         default:
           type: boolean
-        logo_hash:
+        currency:
+          type: string
+        language:
+          type: string
+        active:
+          type: boolean
+        prices_are_incl_tax:
+          type: boolean
+        payment_methods:
+          type: array
+          items:
+            type: string
+          nullable: true
+        collection_method:
           type: string
           nullable: true
-        logo_container_full_width:
-          type: boolean
-          default: false
-          nullable: true
-        logo_display_width:
+        number_of_collections:
           type: integer
-          default: 50
-          nullable: true
-        logo_position:
-          type: string
-          enum:
-          - left
-          - center
-          - right
-        background_hash:
-          type: string
-          nullable: true
-        paper_size:
-          type: string
-          enum:
-          - A4
-          - letter
-        address_position:
-          type: string
-          enum:
-          - left
-          - right
-        font_size:
-          type: integer
-        font_family:
-          type: string
-        print_on_stationery:
-          type: boolean
-          default: false
-          nullable: true
-        custom_css:
-          type: string
-          nullable: true
-        invoice_sender_address:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        invoice_metadata_left:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        invoice_metadata_right:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        estimate_sender_address:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        estimate_metadata_left:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        estimate_metadata_right:
-          type: array
-          items:
-            type: object
-            additionalProperties:
-              anyOf:
-              - type: string
-              - type: boolean
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-    download_response:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        user_id:
-          $ref: '#/components/schemas/identifier_nullable'
-          description: The user who created the download
-        download_type:
-          type: string
-          description: The type of download (e.g., export_contacts, export_sales_invoices,
-            auditfile)
-        filename:
-          type: string
-        content_type:
-          type: string
-        failed:
-          type: boolean
-        downloaded:
+        show_qr_code:
           type: boolean
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-    estimate_response:
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/workflow_step_response'
+      additionalProperties: false
+    workflow_step_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
           $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
-        contact_person_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact_person:
-          oneOf:
-          - $ref: '#/components/schemas/contact_person_response'
-          - type: 'null'
-        estimate_id:
-          type: string
-          nullable: true
-        estimate_sequence_id:
-          type: string
-          nullable: true
-        workflow_id:
-          $ref: '#/components/schemas/identifier'
-        document_style_id:
-          $ref: '#/components/schemas/identifier'
-        identity_id:
-          $ref: '#/components/schemas/identifier'
-        draft_id:
+        step_order:
           type: integer
-          nullable: true
-        state:
-          type: string
-          enum:
-          - draft
-          - open
-          - late
-          - accepted
-          - rejected
-          - billed
-          - archived
-        estimate_date:
-          type: string
-          format: date
-          nullable: true
-        due_date:
-          type: string
-          format: date
-        reference:
-          type: string
-          nullable: true
-        language:
-          type: string
-          nullable: true
-        currency:
-          type: string
-        exchange_rate:
-          $ref: '#/components/schemas/number'
-        discount:
-          $ref: '#/components/schemas/number'
-        original_estimate_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        show_tax:
-          type: boolean
-          default: true
-        sign_online:
-          type: boolean
-          default: true
-        sent_at:
-          type: string
-          format: date
-          nullable: true
-        accepted_at:
-          type: string
-          format: date
-          nullable: true
-        rejected_at:
-          type: string
-          format: date
-          nullable: true
-        archived_at:
-          type: string
-          format: date
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-        public_view_code:
-          type: string
-          pattern: ^\d+$
-          nullable: true
-        public_view_code_expires_at:
-          type: string
-          format: date-time
-          nullable: true
-        version:
+        due_interval:
           type: integer
-        pre_text:
+        reminder_delay:
+          type: integer
+        reminder_text:
           type: string
           nullable: true
-        post_text:
-          type: string
-          nullable: true
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/detail_response'
-        prices_are_incl_tax:
+        reminder_auto_send:
           type: boolean
-          default: false
-        total_price_excl_tax:
-          $ref: '#/components/schemas/number'
-        total_price_excl_tax_base:
-          $ref: '#/components/schemas/number'
-        total_price_incl_tax:
-          $ref: '#/components/schemas/number'
-        total_price_incl_tax_base:
-          $ref: '#/components/schemas/number'
-        total_discount:
-          $ref: '#/components/schemas/number'
-        url:
-          type: string
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value_response'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-        tax_totals:
-          type: array
-          items:
-            $ref: '#/components/schemas/tax_subtotal_response'
-    event_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        administration_id:
-          oneOf:
-          - $ref: '#/components/schemas/administration_id'
-          - type: 'null'
-        user_id:
-          $ref: '#/components/schemas/identifier'
         action:
           type: string
-        link_entity_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        link_entity_type:
-          type: string
+          enum:
+          - suspend_moneybird_account
+          - reactivate_moneybird_account
+          - warn_moneybird_account
+          - cancel_subscription
+          - null
           nullable: true
-        data:
-          type: object
-          additionalProperties: true
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    timestamp:
+      type: string
+      format: date-time
+    symbolic_error:
+      type: object
+      properties:
+        error:
+          type: string
+        symbolic:
+          type: object
+          additionalProperties:
+            anyOf:
+            - type: string
+            - type: object
+            - type: array
+    webhook_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        url:
+          type: string
+        enabled_events:
+          type: array
+          items:
+            type: string
+          description: List of events this webhook is subscribed to. See [webhook
+            events](https://developer.moneybird.com/webhooks/events) for all available
+            events and event groups.
+        last_http_status:
+          description: HTTP status code of the request last received back from the
+            webhook
+          anyOf:
+          - type: integer
+          - type: string
+          - type: object
+            nullable: true
+            enum:
+            - null
+        last_http_body:
+          type: string
+          description: Body of the request last received back from the webhook
+          nullable: true
+        token:
+          type: string
+        secret:
+          type: string
+          description: The webhook's secret, used to generate webhook signatures.
+            Only returned at creation.
+        deactivated_at:
+          oneOf:
+          - $ref: '#/components/schemas/timestamp'
+          - type: object
+            nullable: true
+            enum:
+            - null
+          description: Timestamp when the webhook was deactivated. Null if the webhook
+            is active.
+      additionalProperties: false
+    verification_response:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            type: string
+        bank_account_numbers:
+          type: array
+          items:
+            type: string
+        chamber_of_commerce_number:
+          type: string
+        tax_number:
+          type: string
+      additionalProperties: false
     extended_user_response:
-      unevaluatedProperties: false
       allOf:
       - $ref: '#/components/schemas/base_user_response'
       - type: object
@@ -20224,658 +19658,61 @@ components:
               - settings
               - ownership
               - time_entries
-    external_sales_invoice_response:
-      type: object
-      unevaluatedProperties: false
       properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
-        date:
-          type: string
-          format: date
-        state:
-          type: string
-          enum:
-          - new
-          - open
-          - late
-          - paid
-          - uncollectible
-          - pending_payment
-        due_date:
-          type: string
-          format: date
-          nullable: true
-        reference:
-          type: string
-          nullable: true
-        entry_number:
-          type: integer
-        origin:
-          type: string
-          enum:
-          - upload
-          - endpoint
-          - si
-          - email
-          - si_local
-          - si_peppol
-          - api
-          - moneybird_bv
-          - mollie
-          - null
-          nullable: true
-        source:
-          type: string
-          nullable: true
-        source_url:
-          type: string
-          nullable: true
-        currency:
-          $ref: '#/components/schemas/currency'
-        paid_at:
-          type: string
-          format: date
-          nullable: true
         created_at:
           $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/detail_response'
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/payment_response'
-        total_paid:
-          type: string
-        total_unpaid:
-          type: string
-        total_unpaid_base:
-          type: string
-        prices_are_incl_tax:
-          type: boolean
-        total_price_excl_tax:
-          type: string
-        total_price_excl_tax_base:
-          type: string
-        total_price_incl_tax:
-          type: string
-        total_price_incl_tax_base:
-          type: string
-        marked_dubious_on:
-          type: string
-          format: date
-          nullable: true
-        marked_uncollectible_on:
-          type: string
-          format: date
-          nullable: true
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-        tax_totals:
-          type: array
-          items:
-            $ref: '#/components/schemas/tax_subtotal_response'
-    financial_account_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        type:
-          type: string
-        name:
-          type: string
-        identifier:
-          type: string
-        currency:
-          $ref: '#/components/schemas/currency'
-        provider:
-          type: string
-          nullable: true
-        moneybird_account:
-          type: boolean
-          description: Whether Moneybird provides this account (Moneybird Betaalrekening
-            or Moneybird Online Betaalmethoden), rather than an account at an external
-            bank or provider.
-        active:
-          type: boolean
-          default: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    financial_mutation_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        amount:
-          type: string
-        code:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-        message:
-          type: string
-          nullable: true
-        contra_account_name:
-          type: string
-          nullable: true
-        contra_account_number:
-          type: string
-        state:
-          type: string
-          enum:
-          - unprocessed
-          - processed
-          default: unprocessed
-        settlement_state:
-          type: string
-          enum:
-          - authorised
-          - cancelled
-          - expired
-          - settled
-          - pending
-          - refused
-          - error
-          - captured
-          - failed
-          - returned
-          default: settled
-        amount_open:
-          type: string
-        sepa_fields:
-          type: object
-          nullable: true
-        batch_reference:
-          type: string
-          nullable: true
-        financial_account_id:
-          $ref: '#/components/schemas/identifier'
-        currency:
-          $ref: '#/components/schemas/currency'
-        original_amount:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        financial_statement_id:
-          $ref: '#/components/schemas/identifier'
-        processed_at:
-          type: string
-          format: date-time
-          nullable: true
-        account_servicer_transaction_id:
-          type: string
-          nullable: true
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/payment_response'
-        ledger_account_bookings:
-          type: array
-          items:
-            $ref: '#/components/schemas/ledger_account_booking_response'
-    financial_statement_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        financial_account_id:
-          $ref: '#/components/schemas/identifier'
-        reference:
-          type: string
-        official_date:
-          type: string
-          format: date
-          nullable: true
-        official_balance:
-          type: string
-          nullable: true
-        importer_service:
-          type: string
-          nullable: true
-        financial_mutations:
-          type: array
-          items:
-            $ref: '#/components/schemas/financial_mutation_response'
-    fiscal_allocation_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        private_ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        percentage:
-          $ref: '#/components/schemas/number'
-        price:
-          $ref: '#/components/schemas/number'
-        price_base:
-          $ref: '#/components/schemas/number'
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    fiscal_allocations_attributes:
-      oneOf:
-      - type: object
-        additionalProperties:
-          type: object
-          unevaluatedProperties: false
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of an existing fiscal allocation to update. Required
-                when updating or removing an existing allocation; omit when creating
-                a new one.
-            ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the ledger account (category) this allocation
-                applies to. Must match a ledger account used in the document's details.
-            private_ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the private ledger account (equity account) to
-                allocate the private portion to.
-            percentage:
-              $ref: '#/components/schemas/number'
-              description: The percentage of expenses for the given ledger account
-                that is allocated to private use. The total percentage across all
-                allocations for the same ledger account on a document must not exceed
-                100.
-              minimum: 0
-              maximum: 100
-            _destroy:
-              description: Set to `true` to remove this fiscal allocation from the
-                document. Requires the `id` of the existing allocation.
-              anyOf:
-              - type: boolean
-              - type: string
-          required: []
-      - type: array
-        items:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of an existing fiscal allocation to update. Required
-                when updating or removing an existing allocation; omit when creating
-                a new one.
-            ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the ledger account (category) this allocation
-                applies to. Must match a ledger account used in the document's details.
-            private_ledger_account_id:
-              $ref: '#/components/schemas/identifier'
-              description: The ID of the private ledger account (equity account) to
-                allocate the private portion to.
-            percentage:
-              $ref: '#/components/schemas/number'
-              description: The percentage of expenses for the given ledger account
-                that is allocated to private use. The total percentage across all
-                allocations for the same ledger account on a document must not exceed
-                100.
-              minimum: 0
-              maximum: 100
-            _destroy:
-              description: Set to `true` to remove this fiscal allocation from the
-                document. Requires the `id` of the existing allocation.
-              anyOf:
-              - type: boolean
-              - type: string
-    general_document_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
-        reference:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-        due_date:
-          type: string
-          format: date
-          nullable: true
-        entry_number:
-          type: integer
-          nullable: true
-        state:
-          type: string
-          enum:
-          - new
-          - open
-          - late
-          - paid
-          - saved
-          - pending_payment
-        exchange_rate:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-    general_journal_document_entry_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        project_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        debit:
-          type: string
-        credit:
-          type: string
-        row_order:
-          type: integer
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        description:
-          type: string
-          nullable: true
-    general_journal_document_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        reference:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-        journal_type:
-          type: string
-          enum:
-          - fiscal_year_ending
-          - null
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        general_journal_document_entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/general_journal_document_entry_response'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-    identifier:
-      pattern: ^\d+$
-      description: A unique record identifier
-      example: '458026356994737217'
-      anyOf:
-      - type: string
-      - type: integer
-    identifier_nullable:
-      pattern: ^\d+$
-      description: A unique record identifier
-      example: '458026356994737217'
-      anyOf:
-      - type: string
-      - type: integer
-      - type: object
-        nullable: true
-    identity_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        company_name:
-          type: string
-          nullable: true
-        city:
-          type: string
-          nullable: true
-        country:
-          type: string
-          nullable: true
-        zipcode:
-          type: string
-          nullable: true
-        address1:
-          type: string
-          nullable: true
-        address2:
-          type: string
-          nullable: true
         email:
           type: string
-          nullable: true
-        phone:
-          type: string
-          nullable: true
-        bank_account_name:
-          type: string
-          nullable: true
-        bank_account_number:
-          type: string
-          nullable: true
-        bank_account_bic:
-          type: string
-          nullable: true
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value_response'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        chamber_of_commerce:
-          type: string
-          nullable: true
-        tax_number:
-          type: string
-          nullable: true
-    ledger_account_booking_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
+        email_validated:
+          type: boolean
         id:
           $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        financial_mutation_id:
-          $ref: '#/components/schemas/identifier'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        project_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        description:
+        language:
           type: string
-          nullable: true
-        price:
-          type: string
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    ledger_account_data:
-      type: object
-      description: Data grouped by ledger account. Contains an array of ledger account
-        entries with ledger_account_id and value.
-      required:
-      - ledger_accounts
-      properties:
-        ledger_accounts:
-          type: array
-          description: Array of ledger account entries with ledger_account_id and
-            value.
-          items:
-            type: object
-            required:
-            - ledger_account_id
-            - value
-            properties:
-              ledger_account_id:
-                type: string
-                description: The ID of the ledger account
-              value:
-                type: string
-                description: The value for this ledger account
-    ledger_account_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
         name:
           type: string
-        account_type:
-          type: string
-          enum:
-          - non_current_assets
-          - current_assets
-          - equity
-          - non_current_liabilities
-          - current_liabilities
-          - revenue
-          - direct_costs
-          - expenses
-          - other_income_expenses
-          - other
-          - temporary
-          - provisions
-        account_id:
-          type: string
-          nullable: true
-        parent_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        active:
-          type: boolean
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        allowed_document_types:
+        permissions:
           type: array
           items:
             type: string
             enum:
-            - sales_invoice
-            - purchase_invoice
-            - general_journal_document
-            - financial_mutation
-            - payment
-        taxonomy_item:
-          $ref: '#/components/schemas/taxonomy_item_response'
-        financial_account_id:
-          $ref: '#/components/schemas/identifier_nullable'
-    minimal_contact_response:
+            - sales_invoices
+            - documents
+            - estimates
+            - bank
+            - settings
+            - ownership
+            - time_entries
+        time_zone:
+          type: string
+          example: Europe/Amsterdam
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        user_type:
+          type: string
+          enum:
+          - end_user
+          - api_user
+          - system_user
+          - deleted_end_user
+          - deleted_api_user
+          - owner
+          - accountant
+          - employee
+      additionalProperties: false
+    base_user_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
-        firstname:
+        name:
           type: string
-          nullable: true
-        lastname:
-          type: string
-          nullable: true
-        company_name:
-          type: string
-          nullable: true
-    minimal_time_entry_response:
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+    time_entry_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -20884,51 +19721,65 @@ components:
         contact_id:
           $ref: '#/components/schemas/identifier_nullable'
         project_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        sales_invoice_id:
           $ref: '#/components/schemas/identifier_nullable'
         user_id:
           $ref: '#/components/schemas/identifier'
         started_at:
           $ref: '#/components/schemas/timestamp'
         ended_at:
-          $ref: '#/components/schemas/timestamp'
+          oneOf:
+          - $ref: '#/components/schemas/timestamp'
+          - type: object
+            nullable: true
+            enum:
+            - null
         description:
           type: string
-          nullable: true
         paused_duration:
-          type: string
+          type: integer
         billable:
           type: boolean
+          nullable: true
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-    money:
-      oneOf:
-      - type: string
-        pattern: ^-?[0-9]+[,\.]?[0-9]*$
-        example: '1.0'
-      - type: number
-        minimum: -1000000000
-        maximum: 1000000000
-        example: 1
-      - type: 'null'
-      description: An amount of money. Both a decimal and a string '10,95' are accepted.
-        A string is bound to the same range as a number, -1,000,000,000 <= *n* <=
-        1,000,000,000.
-    non_symbolic_error:
-      type: object
-      properties:
-        error:
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              anyOf:
-              - type: string
-              - type: object
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/minimal_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        user:
+          $ref: '#/components/schemas/user_response'
+        project:
+          oneOf:
+          - $ref: '#/components/schemas/project_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        sales_invoice:
+          oneOf:
+          - $ref: '#/components/schemas/sales_invoice_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+      additionalProperties: false
     note_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -20949,6 +19800,8 @@ components:
           - type: string
           - type: object
             nullable: true
+            enum:
+            - null
         note:
           type: string
           nullable: true
@@ -21055,603 +19908,47 @@ components:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-    number:
-      oneOf:
+      additionalProperties: false
+    identifier_nullable:
+      pattern: ^\d+$
+      description: A unique record identifier
+      example: '458026356994737217'
+      anyOf:
       - type: string
-        pattern: ^-?[0-9]+[,\.]?[0-9]*$
-        example: '1.0'
-      - type: number
-        example: 1
-      - type: 'null'
-    payment_response:
+      - type: integer
+      - type: object
+        nullable: true
+        enum:
+        - null
+    event_response:
       type: object
-      unevaluatedProperties: false
       properties:
-        id:
-          $ref: '#/components/schemas/identifier'
         administration_id:
-          $ref: '#/components/schemas/administration_id'
-        invoice_type:
-          type: string
-          enum:
-          - SalesInvoice
-          - Document
-          - ExternalSalesInvoice
-          - VatDocument
-        invoice_id:
-          $ref: '#/components/schemas/identifier'
-        financial_account_id:
-          $ref: '#/components/schemas/identifier_nullable'
+          oneOf:
+          - $ref: '#/components/schemas/administration_id'
+          - type: object
+            nullable: true
+            enum:
+            - null
         user_id:
           $ref: '#/components/schemas/identifier'
-        payment_transaction_id:
+        action:
+          type: string
+        link_entity_id:
           $ref: '#/components/schemas/identifier_nullable'
-        transaction_identifier:
+        link_entity_type:
           type: string
           nullable: true
-        price:
-          $ref: '#/components/schemas/number'
-        price_base:
-          $ref: '#/components/schemas/number'
-        payment_date:
-          type: string
-          format: date
-        credit_invoice_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        financial_mutation_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        linked_payment_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        manual_payment_action:
-          type: string
-          nullable: true
+        data:
+          type: object
+          additionalProperties: true
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-    product_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        description:
-          type: string
-          nullable: true
-        title:
-          type: string
-          nullable: true
-        identifier:
-          type: string
-          nullable: true
-        price:
-          type: string
-        currency:
-          type: string
-        frequency:
-          type: integer
-          nullable: true
-        frequency_type:
-          type: string
-          enum:
-          - day
-          - week
-          - month
-          - quarter
-          - year
-          - null
-          nullable: true
-        tax_rate_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        ledger_account_id:
-          $ref: '#/components/schemas/identifier'
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    project_report_item:
-      type: object
-      description: Project report data item
-      properties:
-        project_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
-          type: string
-      required:
-      - project_id
-      - amount
-    project_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        name:
-          type: string
-        state:
-          type: string
-          enum:
-          - active
-          - archived
-        budget:
-          type: integer
-          nullable: true
-    purchase_invoice_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
-        reference:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-        due_date:
-          type: string
-          format: date
-          nullable: true
-        entry_number:
-          type: integer
-          nullable: true
-        state:
-          type: string
-          enum:
-          - new
-          - open
-          - late
-          - paid
-          - saved
-          - pending_payment
-        currency:
-          $ref: '#/components/schemas/currency'
-        exchange_rate:
-          type: string
-          nullable: true
-        revenue_invoice:
-          type: boolean
-          nullable: true
-        prices_are_incl_tax:
-          type: boolean
-          nullable: true
-        origin:
-          type: string
-          enum:
-          - upload
-          - endpoint
-          - si
-          - email
-          - si_local
-          - si_peppol
-          - api
-          - moneybird_bv
-          - mollie
-          - null
-          nullable: true
-        paid_at:
-          type: string
-          format: date
-          nullable: true
-        tax_number:
-          type: string
-          nullable: true
-        total_price_excl_tax:
-          type: string
-          nullable: true
-        total_price_excl_tax_base:
-          type: string
-          nullable: true
-        total_price_incl_tax:
-          type: string
-          nullable: true
-        total_price_incl_tax_base:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/detail_response'
-        fiscal_allocations:
-          type: array
-          items:
-            $ref: '#/components/schemas/fiscal_allocation_response'
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/payment_response'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-    purchase_transaction_batch_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        financial_account_id:
-          $ref: '#/components/schemas/identifier'
-        state:
-          type: string
-          enum:
-          - exported
-          - cancelled
-          - open
-        identifier:
-          type: string
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    purchase_transaction_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        financial_account_id:
-          $ref: '#/components/schemas/identifier'
-        payment_instrument_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        state:
-          type: string
-          enum:
-          - open
-          - cancelled
-          - paid
-          - pending_payment
-          - error
-          - awaiting_authorization
-          - preparing
-        sepa_iban:
-          type: string
-        sepa_iban_account_name:
-          type: string
-        sepa_bic:
-          type: string
-        source_sepa_iban:
-          type: string
-          nullable: true
-        source_sepa_iban_account_name:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-          nullable: true
-        description:
-          type: string
-        end_to_end_id:
-          type: string
-        contact:
-          $ref: '#/components/schemas/simple_contact_response'
-        amount:
-          type: string
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        payable_type:
-          type: string
-          nullable: true
-        payable_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        payment_method:
-          type: string
-          nullable: true
-    receipt_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
-        reference:
-          type: string
-          nullable: true
-        date:
-          type: string
-          format: date
-        due_date:
-          type: string
-          format: date
-          nullable: true
-        entry_number:
-          type: integer
-          nullable: true
-        state:
-          type: string
-          enum:
-          - new
-          - open
-          - late
-          - paid
-          - saved
-          - pending_payment
-        currency:
-          type: string
-          nullable: true
-        exchange_rate:
-          $ref: '#/components/schemas/number'
-        revenue_invoice:
-          type: boolean
-          nullable: true
-        prices_are_incl_tax:
-          type: boolean
-          nullable: true
-        origin:
-          type: string
-          enum:
-          - upload
-          - endpoint
-          - si
-          - email
-          - si_local
-          - si_peppol
-          - api
-          - moneybird_bv
-          - mollie
-          - null
-          nullable: true
-        paid_at:
-          type: string
-          format: date
-          nullable: true
-        tax_number:
-          type: string
-          nullable: true
-        total_price_excl_tax:
-          type: string
-          nullable: true
-        total_price_excl_tax_base:
-          type: string
-          nullable: true
-        total_price_incl_tax:
-          type: string
-          nullable: true
-        total_price_incl_tax_base:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        version:
-          $ref: '#/components/schemas/version'
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/detail_response'
-        fiscal_allocations:
-          type: array
-          items:
-            $ref: '#/components/schemas/fiscal_allocation_response'
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/payment_response'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-    recurring_contract_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        type:
-          type: string
-          nullable: true
-        sepa_mandate:
-          type: boolean
-        bank:
-          type: string
-          nullable: true
-        iban:
-          type: string
-          nullable: true
-        bic:
-          type: string
-          nullable: true
-        iban_account_name:
-          type: string
-          nullable: true
-        card_expiry_month:
-          type: string
-          nullable: true
-        card_expiry_year:
-          type: string
-          nullable: true
-        card_final_digits:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-    recurring_sales_invoice_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier'
-        contact:
-          $ref: '#/components/schemas/simple_contact_response'
-        contact_person_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        contact_person:
-          oneOf:
-          - $ref: '#/components/schemas/contact_person_response'
-          - type: 'null'
-        workflow_id:
-          $ref: '#/components/schemas/identifier'
-        start_date:
-          type: string
-          format: date
-        invoice_date:
-          type: string
-          format: date
-        last_date:
-          type: string
-          format: date
-          nullable: true
-        active:
-          type: boolean
-          nullable: true
-        payment_conditions:
-          type: string
-          nullable: true
-        reference:
-          type: string
-          nullable: true
-        language:
-          type: string
-        currency:
-          type: string
-        discount:
-          type: string
-          nullable: true
-        first_due_interval:
-          type: integer
-        auto_send:
-          type: boolean
-          nullable: true
-        sending_scheduled_at:
-          type: string
-          format: date-time
-          nullable: true
-        sending_scheduled_user_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        frequency_type:
-          type: string
-          enum:
-          - day
-          - week
-          - month
-          - quarter
-          - year
-        frequency:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-        updated_at:
-          type: string
-          format: date-time
-          nullable: true
-        version:
-          $ref: '#/components/schemas/version'
-        prices_are_incl_tax:
-          type: boolean
-        total_price_excl_tax:
-          type: string
-        total_price_excl_tax_base:
-          type: string
-        total_price_incl_tax:
-          type: string
-        total_price_incl_tax_base:
-          type: string
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/detail_response'
-        custom_fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/custom_field_value_response'
-        notes:
-          type: array
-          items:
-            $ref: '#/components/schemas/note_response'
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/attachment_response'
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/event_response'
-        subscription:
-          oneOf:
-          - $ref: '#/components/schemas/subscription_response'
-          - type: 'null'
-    reinvestment_reserve_purchase_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        amount:
-          $ref: '#/components/schemas/number'
-        date:
-          type: string
-          format: date
-        asset_id:
-          $ref: '#/components/schemas/identifier'
-    reinvestment_reserve_sale_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        amount:
-          $ref: '#/components/schemas/number'
-        date:
-          type: string
-          format: date
-        disposal_id:
-          $ref: '#/components/schemas/identifier'
+      additionalProperties: false
     sales_invoice_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -21666,7 +19963,10 @@ components:
         contact_person:
           oneOf:
           - $ref: '#/components/schemas/contact_person_response'
-          - type: 'null'
+          - type: object
+            nullable: true
+            enum:
+            - null
         invoice_id:
           type: string
           description: The invoice number. It is `null` while the invoice is a draft.
@@ -21822,9 +20122,258 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/minimal_time_entry_response'
+      additionalProperties: false
+    minimal_time_entry_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        project_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        user_id:
+          $ref: '#/components/schemas/identifier'
+        started_at:
+          $ref: '#/components/schemas/timestamp'
+        ended_at:
+          $ref: '#/components/schemas/timestamp'
+        description:
+          type: string
+          nullable: true
+        paused_duration:
+          type: string
+        billable:
+          type: boolean
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    tax_subtotal_response:
+      type: object
+      properties:
+        tax_rate_id:
+          $ref: '#/components/schemas/identifier'
+        taxable_amount:
+          $ref: '#/components/schemas/number'
+        taxable_amount_base:
+          $ref: '#/components/schemas/number'
+        tax_amount:
+          $ref: '#/components/schemas/number'
+        tax_amount_base:
+          $ref: '#/components/schemas/number'
+      additionalProperties: false
+    number:
+      oneOf:
+      - type: string
+        pattern: ^-?[0-9]+[,\.]?[0-9]*$
+        example: '1.0'
+      - type: number
+        example: 1
+      - type: object
+        nullable: true
+        enum:
+        - null
+    attachment_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        attachable_id:
+          $ref: '#/components/schemas/identifier'
+        attachable_type:
+          type: string
+          enum:
+          - SalesInvoice
+          - RecurringSalesInvoice
+          - Document
+          - FinancialStatement
+          - Workflow
+          - Estimate
+          - ExternalSalesInvoice
+        filename:
+          type: string
+        content_type:
+          type: string
+        size:
+          type: integer
+        rotation:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    custom_field_value_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        name:
+          type: string
+        value:
+          type: string
+      additionalProperties: false
+    payment_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        invoice_type:
+          type: string
+          enum:
+          - SalesInvoice
+          - Document
+          - ExternalSalesInvoice
+          - VatDocument
+        invoice_id:
+          $ref: '#/components/schemas/identifier'
+        financial_account_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        user_id:
+          $ref: '#/components/schemas/identifier'
+        payment_transaction_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        transaction_identifier:
+          type: string
+          nullable: true
+        price:
+          $ref: '#/components/schemas/number'
+        price_base:
+          $ref: '#/components/schemas/number'
+        payment_date:
+          type: string
+          format: date
+        credit_invoice_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        financial_mutation_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        linked_payment_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        manual_payment_action:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    detail_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        tax_rate_id:
+          $ref: '#/components/schemas/identifier'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        project_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        product_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        amount:
+          type: string
+          nullable: true
+        amount_decimal:
+          type: string
+          nullable: true
+        description:
+          type: string
+        price:
+          type: string
+          pattern: ^-?\d+\.\d{1,2}$
+          x-source-examples:
+          - '123.45'
+          - '-500.0'
+          - '0.0'
+          example: '123.45'
+        period:
+          type: string
+          pattern: ^\d{6,8}..\d{6,8}$
+          example: 20250501..20250531
+          nullable: true
+        row_order:
+          type: integer
+        total_price_excl_tax_with_discount:
+          $ref: '#/components/schemas/number'
+        total_price_excl_tax_with_discount_base:
+          $ref: '#/components/schemas/number'
+        tax_report_reference:
+          type: array
+          items:
+            type: string
+            nullable: true
+        mandatory_tax_text:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_optional:
+          type: boolean
+        is_selected:
+          type: boolean
+      additionalProperties: false
+    version:
+      type: integer
+    contact_person_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        firstname:
+          type: string
+          nullable: true
+        lastname:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          type: integer
+      additionalProperties: false
     simple_contact_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -21989,68 +20538,220 @@ components:
             $ref: '#/components/schemas/contact_person_response'
         archived:
           type: boolean
-    source_response:
+      additionalProperties: false
+    project_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
-        asset_id:
-          $ref: '#/components/schemas/identifier'
-        detail_id:
-          $ref: '#/components/schemas/identifier'
-        general_journal_document_entry_id:
-          $ref: '#/components/schemas/identifier'
-    subscription_additional_charge_response:
+        name:
+          type: string
+        state:
+          type: string
+          enum:
+          - active
+          - archived
+        budget:
+          type: integer
+          nullable: true
+      additionalProperties: false
+    user_response:
+      $ref: '#/components/schemas/base_user_response'
+    minimal_contact_response:
       type: object
-      unevaluatedProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        firstname:
+          type: string
+          nullable: true
+        lastname:
+          type: string
+          nullable: true
+        company_name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    tax_rate_response:
+      type: object
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
           $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        subscription_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        product_id:
-          $ref: '#/components/schemas/identifier'
-        detail_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        amount:
+        name:
+          type: string
+        percentage:
+          oneOf:
+          - $ref: '#/components/schemas/number'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        tax_rate_type:
+          type: string
+          enum:
+          - sales_invoice
+          - purchase_invoice
+          - general_journal_document
+        show_tax:
+          type: boolean
+          nullable: true
+        active:
+          type: boolean
+          nullable: true
+        country:
           type: string
           nullable: true
-        price:
+        created_at:
           type: string
-        period:
+          format: date-time
+          nullable: true
+        updated_at:
           type: string
-          pattern: ^[0-9]{6}..[0-9]{6}$
-          example: 202501..202506
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    task_list_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/identifier'
+        name:
+          type: string
         description:
           type: string
-    subscription_product_response:
+          nullable: true
+        deadline_on:
+          type: string
+          format: date
+          nullable: true
+        period_begin:
+          type: string
+          format: date
+          nullable: true
+        period_end:
+          type: string
+          format: date
+          nullable: true
+        completed:
+          type: boolean
+        template_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        total_tasks_count:
+          type: integer
+        completed_tasks_count:
+          type: integer
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/task_list_group_response'
+      additionalProperties: false
+    task_list_group_response:
       type: object
-      unevaluatedProperties: false
       properties:
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-          nullable: true
-        product_id:
+        id:
           $ref: '#/components/schemas/identifier'
-        product:
-          $ref: '#/components/schemas/product_response'
-        amount:
-          type: string
-        discount:
+        name:
           type: string
           nullable: true
+        row_order:
+          type: integer
+        report_type:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/task_list_task_response'
+      additionalProperties: false
+    task_list_task_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/identifier'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        row_order:
+          type: integer
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        report_type:
+          type: string
+          nullable: true
+        task_lists_group_id:
+          $ref: '#/components/schemas/identifier'
+        parent_task_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        assignee_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        subtasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/task_list_task_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+      additionalProperties: false
+    task_list_template_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/identifier'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        period:
+          type: string
+          description: ISO 8601 duration string (e.g. "P1M" for one month, "P3M" for
+            one quarter, "P1Y" for one year)
+          nullable: true
+        deadline_after:
+          type: string
+          description: ISO 8601 duration string representing the deadline offset from
+            the period end
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/task_list_group_response'
+      additionalProperties: false
     subscription_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -22096,16 +20797,108 @@ components:
         contact_person:
           oneOf:
           - $ref: '#/components/schemas/contact_person_response'
-          - type: 'null'
+          - type: object
+            nullable: true
+            enum:
+            - null
         subscription_products:
           type: array
           items:
             $ref: '#/components/schemas/subscription_product_response'
         recurring_sales_invoice_id:
           $ref: '#/components/schemas/identifier_nullable'
+      additionalProperties: false
+    subscription_product_response:
+      type: object
+      properties:
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        product_id:
+          $ref: '#/components/schemas/identifier'
+        product:
+          $ref: '#/components/schemas/product_response'
+        amount:
+          type: string
+        discount:
+          type: string
+          nullable: true
+      additionalProperties: false
+    product_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        description:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        identifier:
+          type: string
+          nullable: true
+        price:
+          type: string
+        currency:
+          type: string
+        frequency:
+          type: integer
+          nullable: true
+        frequency_type:
+          type: string
+          enum:
+          - day
+          - week
+          - month
+          - quarter
+          - year
+          - null
+          nullable: true
+        tax_rate_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    subscription_additional_charge_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        subscription_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        product_id:
+          $ref: '#/components/schemas/identifier'
+        detail_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        amount:
+          type: string
+          nullable: true
+        price:
+          type: string
+        period:
+          type: string
+          pattern: ^[0-9]{6}..[0-9]{6}$
+          example: 202501..202506
+        description:
+          type: string
+      additionalProperties: false
     subscription_template_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -22123,159 +20916,184 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/product_response'
-    symbolic_error:
+      additionalProperties: false
+    recurring_sales_invoice_response:
       type: object
-      properties:
-        error:
-          type: string
-        symbolic:
-          type: object
-          additionalProperties:
-            anyOf:
-            - type: string
-            - type: object
-            - type: array
-    task_list_group_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        name:
-          type: string
-          nullable: true
-        row_order:
-          type: integer
-        report_type:
-          type: string
-          nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        tasks:
-          type: array
-          items:
-            $ref: '#/components/schemas/task_list_task_response'
-    task_list_response:
-      type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
           $ref: '#/components/schemas/identifier'
-        name:
-          type: string
-        description:
-          type: string
-          nullable: true
-        deadline_on:
-          type: string
-          format: date
-          nullable: true
-        period_begin:
-          type: string
-          format: date
-          nullable: true
-        period_end:
-          type: string
-          format: date
-          nullable: true
-        completed:
-          type: boolean
-        template_id:
+        contact:
+          $ref: '#/components/schemas/simple_contact_response'
+        contact_person_id:
           $ref: '#/components/schemas/identifier_nullable'
-        total_tasks_count:
-          type: integer
-        completed_tasks_count:
-          type: integer
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/task_list_group_response'
-    task_list_task_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
+        contact_person:
+          oneOf:
+          - $ref: '#/components/schemas/contact_person_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        workflow_id:
           $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/identifier'
-        name:
+        start_date:
           type: string
-        description:
+          format: date
+        invoice_date:
+          type: string
+          format: date
+        last_date:
+          type: string
+          format: date
+          nullable: true
+        active:
+          type: boolean
+          nullable: true
+        payment_conditions:
           type: string
           nullable: true
-        row_order:
+        reference:
+          type: string
+          nullable: true
+        language:
+          type: string
+        currency:
+          type: string
+        discount:
+          type: string
+          nullable: true
+        first_due_interval:
           type: integer
-        completed_at:
+        auto_send:
+          type: boolean
+          nullable: true
+        sending_scheduled_at:
           type: string
           format: date-time
           nullable: true
-        report_type:
+        sending_scheduled_user_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        frequency_type:
           type: string
-          nullable: true
-        task_lists_group_id:
-          $ref: '#/components/schemas/identifier'
-        parent_task_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        assignee_id:
-          $ref: '#/components/schemas/identifier_nullable'
+          enum:
+          - day
+          - week
+          - month
+          - quarter
+          - year
+        frequency:
+          type: integer
         created_at:
-          $ref: '#/components/schemas/timestamp'
+          type: string
+          format: date-time
+          nullable: true
         updated_at:
-          $ref: '#/components/schemas/timestamp'
-        subtasks:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          $ref: '#/components/schemas/version'
+        prices_are_incl_tax:
+          type: boolean
+        total_price_excl_tax:
+          type: string
+        total_price_excl_tax_base:
+          type: string
+        total_price_incl_tax:
+          type: string
+        total_price_incl_tax_base:
+          type: string
+        details:
           type: array
           items:
-            $ref: '#/components/schemas/task_list_task_response'
+            $ref: '#/components/schemas/detail_response'
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value_response'
         notes:
           type: array
           items:
             $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
         events:
           type: array
           items:
             $ref: '#/components/schemas/event_response'
-    task_list_template_response:
+        subscription:
+          oneOf:
+          - $ref: '#/components/schemas/subscription_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+      additionalProperties: false
+    purchase_transaction_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
+          $ref: '#/components/schemas/administration_id'
+        financial_account_id:
           $ref: '#/components/schemas/identifier'
-        name:
+        payment_instrument_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        state:
           type: string
+          enum:
+          - open
+          - cancelled
+          - paid
+          - pending_payment
+          - error
+          - awaiting_authorization
+          - preparing
+        sepa_iban:
+          type: string
+        sepa_iban_account_name:
+          type: string
+        sepa_bic:
+          type: string
+        source_sepa_iban:
+          type: string
+          nullable: true
+        source_sepa_iban_account_name:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+          nullable: true
         description:
           type: string
-          nullable: true
-        period:
+        end_to_end_id:
           type: string
-          description: ISO 8601 duration string (e.g. "P1M" for one month, "P3M" for
-            one quarter, "P1Y" for one year)
-          nullable: true
-        deadline_after:
+        contact:
+          $ref: '#/components/schemas/simple_contact_response'
+        amount:
           type: string
-          description: ISO 8601 duration string representing the deadline offset from
-            the period end
-          nullable: true
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-        groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/task_list_group_response'
-    tax_rate_response:
+        payable_type:
+          type: string
+          nullable: true
+        payable_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        payment_method:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ledger_account_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -22283,50 +21101,49 @@ components:
           $ref: '#/components/schemas/administration_id'
         name:
           type: string
-        percentage:
-          oneOf:
-          - $ref: '#/components/schemas/number'
-          - type: 'null'
-        tax_rate_type:
+        account_type:
           type: string
           enum:
-          - sales_invoice
-          - purchase_invoice
-          - general_journal_document
-        show_tax:
-          type: boolean
+          - non_current_assets
+          - current_assets
+          - equity
+          - non_current_liabilities
+          - current_liabilities
+          - revenue
+          - direct_costs
+          - expenses
+          - other_income_expenses
+          - other
+          - temporary
+          - provisions
+        account_id:
+          type: string
           nullable: true
+        parent_id:
+          $ref: '#/components/schemas/identifier_nullable'
         active:
           type: boolean
-          nullable: true
-        country:
-          type: string
-          nullable: true
         created_at:
-          type: string
-          format: date-time
-          nullable: true
+          $ref: '#/components/schemas/timestamp'
         updated_at:
-          type: string
-          format: date-time
-          nullable: true
-    tax_subtotal_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        tax_rate_id:
-          $ref: '#/components/schemas/identifier'
-        taxable_amount:
-          $ref: '#/components/schemas/number'
-        taxable_amount_base:
-          $ref: '#/components/schemas/number'
-        tax_amount:
-          $ref: '#/components/schemas/number'
-        tax_amount_base:
-          $ref: '#/components/schemas/number'
+          $ref: '#/components/schemas/timestamp'
+        allowed_document_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - sales_invoice
+            - purchase_invoice
+            - general_journal_document
+            - financial_mutation
+            - payment
+        taxonomy_item:
+          $ref: '#/components/schemas/taxonomy_item_response'
+        financial_account_id:
+          $ref: '#/components/schemas/identifier_nullable'
+      additionalProperties: false
     taxonomy_item_response:
       type: object
-      unevaluatedProperties: false
       properties:
         taxonomy_version:
           type: string
@@ -22340,67 +21157,204 @@ components:
         reference:
           type: string
           nullable: true
-    time_entry_response:
+      additionalProperties: false
+    identity_response:
       type: object
-      unevaluatedProperties: false
       properties:
         id:
           $ref: '#/components/schemas/identifier'
         administration_id:
           $ref: '#/components/schemas/administration_id'
-        contact_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        project_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        sales_invoice_id:
-          $ref: '#/components/schemas/identifier_nullable'
-        user_id:
-          $ref: '#/components/schemas/identifier'
-        started_at:
-          $ref: '#/components/schemas/timestamp'
-        ended_at:
-          oneOf:
-          - $ref: '#/components/schemas/timestamp'
-          - type: 'null'
-        description:
+        company_name:
           type: string
-        paused_duration:
-          type: integer
-        billable:
-          type: boolean
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        zipcode:
+          type: string
+          nullable: true
+        address1:
+          type: string
+          nullable: true
+        address2:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        bank_account_name:
+          type: string
+          nullable: true
+        bank_account_number:
+          type: string
+          nullable: true
+        bank_account_bic:
+          type: string
+          nullable: true
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value_response'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        chamber_of_commerce:
+          type: string
+          nullable: true
+        tax_number:
+          type: string
+          nullable: true
+      additionalProperties: false
+    financial_mutation_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        amount:
+          type: string
+        code:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        message:
+          type: string
+          nullable: true
+        contra_account_name:
+          type: string
+          nullable: true
+        contra_account_number:
+          type: string
+        state:
+          type: string
+          enum:
+          - unprocessed
+          - processed
+          default: unprocessed
+        settlement_state:
+          type: string
+          enum:
+          - authorised
+          - cancelled
+          - expired
+          - settled
+          - pending
+          - refused
+          - error
+          - captured
+          - failed
+          - returned
+          default: settled
+        amount_open:
+          type: string
+        sepa_fields:
+          type: object
+          nullable: true
+        batch_reference:
+          type: string
+          nullable: true
+        financial_account_id:
+          $ref: '#/components/schemas/identifier'
+        currency:
+          $ref: '#/components/schemas/currency'
+        original_amount:
+          type: string
           nullable: true
         created_at:
           $ref: '#/components/schemas/timestamp'
         updated_at:
           $ref: '#/components/schemas/timestamp'
-        contact:
-          oneOf:
-          - $ref: '#/components/schemas/minimal_contact_response'
-          - type: 'null'
-        user:
-          $ref: '#/components/schemas/user_response'
-        project:
-          oneOf:
-          - $ref: '#/components/schemas/project_response'
-          - type: 'null'
-        sales_invoice:
-          oneOf:
-          - $ref: '#/components/schemas/sales_invoice_response'
-          - type: 'null'
-        events:
+        version:
+          $ref: '#/components/schemas/version'
+        financial_statement_id:
+          $ref: '#/components/schemas/identifier'
+        processed_at:
+          type: string
+          format: date-time
+          nullable: true
+        account_servicer_transaction_id:
+          type: string
+          nullable: true
+        payments:
           type: array
           items:
-            $ref: '#/components/schemas/event_response'
-        notes:
+            $ref: '#/components/schemas/payment_response'
+        ledger_account_bookings:
           type: array
           items:
-            $ref: '#/components/schemas/note_response'
-    timestamp:
-      type: string
-      format: date-time
-    typeless_document_response:
+            $ref: '#/components/schemas/ledger_account_booking_response'
+      additionalProperties: false
+    ledger_account_booking_response:
       type: object
-      unevaluatedProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        financial_mutation_id:
+          $ref: '#/components/schemas/identifier'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        project_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        description:
+          type: string
+          nullable: true
+        price:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    currency:
+      type: string
+      description: ISO 4217 currency code
+      example: EUR
+    financial_account_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        type:
+          type: string
+        name:
+          type: string
+        identifier:
+          type: string
+        currency:
+          $ref: '#/components/schemas/currency'
+        provider:
+          type: string
+          nullable: true
+        moneybird_account:
+          type: boolean
+          description: Whether Moneybird provides this account (Moneybird Betaalrekening
+            or Moneybird Online Betaalmethoden), rather than an account at an external
+            bank or provider.
+        active:
+          type: boolean
+          default: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    external_sales_invoice_response:
+      type: object
       properties:
         id:
           $ref: '#/components/schemas/identifier'
@@ -22411,7 +21365,309 @@ components:
         contact:
           oneOf:
           - $ref: '#/components/schemas/simple_contact_response'
-          - type: 'null'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        date:
+          type: string
+          format: date
+        state:
+          type: string
+          enum:
+          - new
+          - open
+          - late
+          - paid
+          - uncollectible
+          - pending_payment
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        reference:
+          type: string
+          nullable: true
+        entry_number:
+          type: integer
+        origin:
+          type: string
+          enum:
+          - upload
+          - endpoint
+          - si
+          - email
+          - si_local
+          - si_peppol
+          - api
+          - moneybird_bv
+          - mollie
+          - null
+          nullable: true
+        source:
+          type: string
+          nullable: true
+        source_url:
+          type: string
+          nullable: true
+        currency:
+          $ref: '#/components/schemas/currency'
+        paid_at:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          $ref: '#/components/schemas/version'
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/detail_response'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment_response'
+        total_paid:
+          type: string
+        total_unpaid:
+          type: string
+        total_unpaid_base:
+          type: string
+        prices_are_incl_tax:
+          type: boolean
+        total_price_excl_tax:
+          type: string
+        total_price_excl_tax_base:
+          type: string
+        total_price_incl_tax:
+          type: string
+        total_price_incl_tax_base:
+          type: string
+        marked_dubious_on:
+          type: string
+          format: date
+          nullable: true
+        marked_uncollectible_on:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+        tax_totals:
+          type: array
+          items:
+            $ref: '#/components/schemas/tax_subtotal_response'
+      additionalProperties: false
+    estimate_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier'
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/simple_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        contact_person_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact_person:
+          oneOf:
+          - $ref: '#/components/schemas/contact_person_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        estimate_id:
+          type: string
+          nullable: true
+        estimate_sequence_id:
+          type: string
+          nullable: true
+        workflow_id:
+          $ref: '#/components/schemas/identifier'
+        document_style_id:
+          $ref: '#/components/schemas/identifier'
+        identity_id:
+          $ref: '#/components/schemas/identifier'
+        draft_id:
+          type: integer
+          nullable: true
+        state:
+          type: string
+          enum:
+          - draft
+          - open
+          - late
+          - accepted
+          - rejected
+          - billed
+          - archived
+        estimate_date:
+          type: string
+          format: date
+          nullable: true
+        due_date:
+          type: string
+          format: date
+        reference:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        currency:
+          type: string
+        exchange_rate:
+          $ref: '#/components/schemas/number'
+        discount:
+          $ref: '#/components/schemas/number'
+        original_estimate_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        show_tax:
+          type: boolean
+          default: true
+        sign_online:
+          type: boolean
+          default: true
+        sent_at:
+          type: string
+          format: date
+          nullable: true
+        accepted_at:
+          type: string
+          format: date
+          nullable: true
+        rejected_at:
+          type: string
+          format: date
+          nullable: true
+        archived_at:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        public_view_code:
+          type: string
+          pattern: ^\d+$
+          nullable: true
+        public_view_code_expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          type: integer
+        pre_text:
+          type: string
+          nullable: true
+        post_text:
+          type: string
+          nullable: true
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/detail_response'
+        prices_are_incl_tax:
+          type: boolean
+          default: false
+        total_price_excl_tax:
+          $ref: '#/components/schemas/number'
+        total_price_excl_tax_base:
+          $ref: '#/components/schemas/number'
+        total_price_incl_tax:
+          $ref: '#/components/schemas/number'
+        total_price_incl_tax_base:
+          $ref: '#/components/schemas/number'
+        total_discount:
+          $ref: '#/components/schemas/number'
+        url:
+          type: string
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+        tax_totals:
+          type: array
+          items:
+            $ref: '#/components/schemas/tax_subtotal_response'
+      additionalProperties: false
+    download_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        user_id:
+          $ref: '#/components/schemas/identifier_nullable'
+          description: The user who created the download
+        download_type:
+          type: string
+          description: The type of download (e.g., export_contacts, export_sales_invoices,
+            auditfile)
+        filename:
+          type: string
+        content_type:
+          type: string
+        failed:
+          type: boolean
+        downloaded:
+          type: boolean
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+    typeless_document_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/simple_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
         reference:
           type: string
           nullable: true
@@ -22455,11 +21711,983 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/event_response'
-    user_response:
-      $ref: '#/components/schemas/base_user_response'
+      additionalProperties: false
+    receipt_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/simple_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        reference:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        entry_number:
+          type: integer
+          nullable: true
+        state:
+          type: string
+          enum:
+          - new
+          - open
+          - late
+          - paid
+          - saved
+          - pending_payment
+        currency:
+          type: string
+          nullable: true
+        exchange_rate:
+          $ref: '#/components/schemas/number'
+        revenue_invoice:
+          type: boolean
+          nullable: true
+        prices_are_incl_tax:
+          type: boolean
+          nullable: true
+        origin:
+          type: string
+          enum:
+          - upload
+          - endpoint
+          - si
+          - email
+          - si_local
+          - si_peppol
+          - api
+          - moneybird_bv
+          - mollie
+          - null
+          nullable: true
+        paid_at:
+          type: string
+          format: date
+          nullable: true
+        tax_number:
+          type: string
+          nullable: true
+        total_price_excl_tax:
+          type: string
+          nullable: true
+        total_price_excl_tax_base:
+          type: string
+          nullable: true
+        total_price_incl_tax:
+          type: string
+          nullable: true
+        total_price_incl_tax_base:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          $ref: '#/components/schemas/version'
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/detail_response'
+        fiscal_allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/fiscal_allocation_response'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+      additionalProperties: false
+    fiscal_allocation_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        private_ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        percentage:
+          $ref: '#/components/schemas/number'
+        price:
+          $ref: '#/components/schemas/number'
+        price_base:
+          $ref: '#/components/schemas/number'
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    purchase_invoice_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/simple_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        reference:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        entry_number:
+          type: integer
+          nullable: true
+        state:
+          type: string
+          enum:
+          - new
+          - open
+          - late
+          - paid
+          - saved
+          - pending_payment
+        currency:
+          $ref: '#/components/schemas/currency'
+        exchange_rate:
+          type: string
+          nullable: true
+        revenue_invoice:
+          type: boolean
+          nullable: true
+        prices_are_incl_tax:
+          type: boolean
+          nullable: true
+        origin:
+          type: string
+          enum:
+          - upload
+          - endpoint
+          - si
+          - email
+          - si_local
+          - si_peppol
+          - api
+          - moneybird_bv
+          - mollie
+          - null
+          nullable: true
+        paid_at:
+          type: string
+          format: date
+          nullable: true
+        tax_number:
+          type: string
+          nullable: true
+        total_price_excl_tax:
+          type: string
+          nullable: true
+        total_price_excl_tax_base:
+          type: string
+          nullable: true
+        total_price_incl_tax:
+          type: string
+          nullable: true
+        total_price_incl_tax_base:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          $ref: '#/components/schemas/version'
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/detail_response'
+        fiscal_allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/fiscal_allocation_response'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/payment_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+      additionalProperties: false
+    general_journal_document_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        reference:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        journal_type:
+          type: string
+          enum:
+          - fiscal_year_ending
+          - null
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          $ref: '#/components/schemas/version'
+        general_journal_document_entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/general_journal_document_entry_response'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+      additionalProperties: false
+    general_journal_document_entry_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier'
+        project_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        debit:
+          type: string
+        credit:
+          type: string
+        row_order:
+          type: integer
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        description:
+          type: string
+          nullable: true
+      additionalProperties: false
+    general_document_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        contact_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        contact:
+          oneOf:
+          - $ref: '#/components/schemas/simple_contact_response'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        reference:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        entry_number:
+          type: integer
+          nullable: true
+        state:
+          type: string
+          enum:
+          - new
+          - open
+          - late
+          - paid
+          - saved
+          - pending_payment
+        exchange_rate:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          $ref: '#/components/schemas/version'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/attachment_response'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+      additionalProperties: false
+    document_style_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        name:
+          type: string
+        identity_id:
+          $ref: '#/components/schemas/identifier'
+        default:
+          type: boolean
+        logo_hash:
+          type: string
+          nullable: true
+        logo_container_full_width:
+          type: boolean
+          default: false
+          nullable: true
+        logo_display_width:
+          type: integer
+          default: 50
+          nullable: true
+        logo_position:
+          type: string
+          enum:
+          - left
+          - center
+          - right
+        background_hash:
+          type: string
+          nullable: true
+        paper_size:
+          type: string
+          enum:
+          - A4
+          - letter
+        address_position:
+          type: string
+          enum:
+          - left
+          - right
+        font_size:
+          type: integer
+        font_family:
+          type: string
+        print_on_stationery:
+          type: boolean
+          default: false
+          nullable: true
+        custom_css:
+          type: string
+          nullable: true
+        invoice_sender_address:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        invoice_metadata_left:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        invoice_metadata_right:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        estimate_sender_address:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        estimate_metadata_left:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        estimate_metadata_right:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              anyOf:
+              - type: string
+              - type: boolean
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    custom_field_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier_nullable'
+        administration_id:
+          oneOf:
+          - $ref: '#/components/schemas/administration_id'
+          - type: object
+            nullable: true
+            enum:
+            - null
+        name:
+          type: string
+        source:
+          type: string
+          enum:
+          - sales_invoice
+          - estimate
+          - contact
+          - identity
+          - null
+          nullable: true
+      additionalProperties: false
+    contact:
+      allOf:
+      - $ref: '#/components/schemas/base_contact_response'
+      - type: object
+        properties:
+          events:
+            type: array
+            items:
+              $ref: '#/components/schemas/event_response'
+      properties:
+        address1:
+          type: string
+          nullable: true
+        address2:
+          type: string
+          nullable: true
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        archived:
+          type: boolean
+        attention:
+          type: string
+          nullable: true
+        bank_account:
+          type: string
+          description: The SEPA IBAN of the contact, can be empty if no SEPA IBAN
+            is set
+          nullable: true
+        chamber_of_commerce:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        company_name: {}
+        contact_people:
+          type: array
+          items:
+            $ref: '#/components/schemas/contact_person_response'
+        country:
+          type: string
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        credit_card_number:
+          type: string
+          nullable: true
+        credit_card_reference:
+          type: string
+          nullable: true
+        credit_card_type:
+          type: string
+          enum:
+          - mastercard
+          - visa
+          - null
+          nullable: true
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value_response'
+        customer_id:
+          type: string
+          description: Will be assigned automatically if empty
+        delivery_method:
+          type: string
+          enum:
+          - Email
+          - Post
+          - Manual
+          - Simplerinvoicing
+          - Peppol
+          - null
+          nullable: true
+        direct_debit:
+          type: boolean
+        email:
+          type: string
+          nullable: true
+        email_ubl:
+          type: boolean
+        estimate_workflow_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/event_response'
+        firstname:
+          type: string
+          nullable: true
+        id:
+          $ref: '#/components/schemas/identifier'
+        invoice_workflow_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        is_trusted:
+          type: boolean
+          x-source-default: default
+        lastname:
+          type: string
+          nullable: true
+        max_transfer_amount:
+          type: number
+          nullable: true
+        moneybird_payments_mandate:
+          type: boolean
+          description: Whether the contact has a valid Moneybird Payments mandate
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        phone:
+          type: string
+          nullable: true
+        sales_invoices_url:
+          type: string
+          format: uri
+          pattern: ^https:\/\/moneybird\.\w{3,9}\/\d+\/sales_invoices\/[a-f0-9]{64}\/all$
+          example: https://moneybird.com/123/sales_invoices/4f0af91e456aa9c5b11ccfd6572da4f56cc8e45a701690c9279c9e4cec7b68f1/all
+        send_estimates_to_attention:
+          type: string
+          nullable: true
+        send_estimates_to_email:
+          type: string
+          nullable: true
+        send_invoices_to_attention:
+          type: string
+          nullable: true
+        send_invoices_to_email:
+          type: string
+          nullable: true
+        sepa_active:
+          type: boolean
+          nullable: true
+        sepa_bic:
+          type: string
+          nullable: true
+        sepa_iban:
+          type: string
+          nullable: true
+        sepa_iban_account_name:
+          type: string
+          nullable: true
+        sepa_mandate_date:
+          type: string
+          format: date
+          nullable: true
+        sepa_mandate_id:
+          type: string
+          nullable: true
+        sepa_sequence_type:
+          type: string
+          enum:
+          - RCUR
+          - FRST
+          - OOFF
+          - FNAL
+        si_identifier:
+          type: string
+          nullable: true
+        si_identifier_type:
+          type: string
+          nullable: true
+        tax_number:
+          type: string
+          nullable: true
+        tax_number_valid:
+          type: boolean
+          nullable: true
+        tax_number_validated_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          type: integer
+          example: 1716801778
+        zipcode:
+          type: string
+          nullable: true
+      additionalProperties: false
+    base_contact_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        administration_id:
+          $ref: '#/components/schemas/administration_id'
+        company_name: {}
+        firstname:
+          type: string
+          nullable: true
+        lastname:
+          type: string
+          nullable: true
+        address1:
+          type: string
+          nullable: true
+        address2:
+          type: string
+          nullable: true
+        zipcode:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        country:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        delivery_method:
+          type: string
+          enum:
+          - Email
+          - Post
+          - Manual
+          - Simplerinvoicing
+          - Peppol
+          - null
+          nullable: true
+        customer_id:
+          type: string
+          description: Will be assigned automatically if empty
+        tax_number:
+          type: string
+          nullable: true
+        chamber_of_commerce:
+          type: string
+          nullable: true
+        bank_account:
+          type: string
+          description: The SEPA IBAN of the contact, can be empty if no SEPA IBAN
+            is set
+          nullable: true
+        is_trusted:
+          type: boolean
+          x-source-default: default
+        max_transfer_amount:
+          type: number
+          nullable: true
+        attention:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        email_ubl:
+          type: boolean
+        send_invoices_to_attention:
+          type: string
+          nullable: true
+        send_invoices_to_email:
+          type: string
+          nullable: true
+        send_estimates_to_attention:
+          type: string
+          nullable: true
+        send_estimates_to_email:
+          type: string
+          nullable: true
+        direct_debit:
+          type: boolean
+        sepa_active:
+          type: boolean
+          nullable: true
+        sepa_iban:
+          type: string
+          nullable: true
+        sepa_iban_account_name:
+          type: string
+          nullable: true
+        sepa_bic:
+          type: string
+          nullable: true
+        sepa_mandate_id:
+          type: string
+          nullable: true
+        sepa_mandate_date:
+          type: string
+          format: date
+          nullable: true
+        sepa_sequence_type:
+          type: string
+          enum:
+          - RCUR
+          - FRST
+          - OOFF
+          - FNAL
+        credit_card_number:
+          type: string
+          nullable: true
+        credit_card_reference:
+          type: string
+          nullable: true
+        credit_card_type:
+          type: string
+          enum:
+          - mastercard
+          - visa
+          - null
+          nullable: true
+        tax_number_validated_at:
+          type: string
+          format: date-time
+          nullable: true
+        tax_number_valid:
+          type: boolean
+          nullable: true
+        invoice_workflow_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        estimate_workflow_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        si_identifier:
+          type: string
+          nullable: true
+        si_identifier_type:
+          type: string
+          nullable: true
+        moneybird_payments_mandate:
+          type: boolean
+          description: Whether the contact has a valid Moneybird Payments mandate
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+        updated_at:
+          $ref: '#/components/schemas/timestamp'
+        version:
+          type: integer
+          example: 1716801778
+        sales_invoices_url:
+          type: string
+          format: uri
+          pattern: ^https:\/\/moneybird\.\w{3,9}\/\d+\/sales_invoices\/[a-f0-9]{64}\/all$
+          example: https://moneybird.com/123/sales_invoices/4f0af91e456aa9c5b11ccfd6572da4f56cc8e45a701690c9279c9e4cec7b68f1/all
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/note_response'
+        custom_fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/custom_field_value_response'
+        contact_people:
+          type: array
+          items:
+            $ref: '#/components/schemas/contact_person_response'
+        archived:
+          type: boolean
+    recurring_contract_response:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        sepa_mandate:
+          type: boolean
+        bank:
+          type: string
+          nullable: true
+        iban:
+          type: string
+          nullable: true
+        bic:
+          type: string
+          nullable: true
+        iban_account_name:
+          type: string
+          nullable: true
+        card_expiry_month:
+          type: string
+          nullable: true
+        card_expiry_year:
+          type: string
+          nullable: true
+        card_final_digits:
+          type: string
+          nullable: true
+        created_at:
+          $ref: '#/components/schemas/timestamp'
+      additionalProperties: false
+    asset_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier_nullable'
+        ledger_account_id:
+          $ref: '#/components/schemas/identifier_nullable'
+        name:
+          type: string
+        purchase_date:
+          type: string
+          format: date
+        purchase_value:
+          $ref: '#/components/schemas/number'
+        calculated_purchase_value:
+          $ref: '#/components/schemas/number'
+          description: Purchase value reduced by any reinvestment reserve purchase
+            applied to the asset.
+        current_value:
+          $ref: '#/components/schemas/number'
+        value_change_plan:
+          type: object
+          properties:
+            lifespan_in_years:
+              type: number
+            residual_value:
+              $ref: '#/components/schemas/number'
+            active:
+              type: boolean
+            monthly_depreciation:
+              $ref: '#/components/schemas/number'
+          additionalProperties: false
+          nullable: true
+        disposal:
+          oneOf:
+          - type: object
+            nullable: true
+            enum:
+            - null
+          - $ref: '#/components/schemas/disposal_response'
+        value_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/value_change_response'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/source_response'
+        reinvestment_reserve_purchase:
+          oneOf:
+          - type: object
+            nullable: true
+            enum:
+            - null
+          - $ref: '#/components/schemas/reinvestment_reserve_purchase_response'
+      additionalProperties: false
+    reinvestment_reserve_purchase_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        amount:
+          $ref: '#/components/schemas/number'
+        date:
+          type: string
+          format: date
+        asset_id:
+          $ref: '#/components/schemas/identifier'
+      additionalProperties: false
+    source_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        asset_id:
+          $ref: '#/components/schemas/identifier'
+        detail_id:
+          $ref: '#/components/schemas/identifier'
+        general_journal_document_entry_id:
+          $ref: '#/components/schemas/identifier'
+      additionalProperties: false
     value_change_response:
       type: object
-      unevaluatedProperties: false
       properties:
         type:
           type: string
@@ -22481,175 +22709,112 @@ components:
           type: boolean
         asset_id:
           $ref: '#/components/schemas/identifier'
-    verification_response:
+      additionalProperties: false
+    disposal_response:
       type: object
-      unevaluatedProperties: false
       properties:
-        emails:
-          type: array
-          items:
-            type: string
-        bank_account_numbers:
-          type: array
-          items:
-            type: string
-        chamber_of_commerce_number:
+        date:
           type: string
-        tax_number:
-          type: string
-    verifications_response:
-      $ref: '#/components/schemas/verification_response'
-    version:
-      type: integer
-    webhook_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        url:
-          type: string
-        enabled_events:
-          type: array
-          items:
-            type: string
-          description: List of events this webhook is subscribed to. See [webhook
-            events](https://developer.moneybird.com/webhooks/events) for all available
-            events and event groups.
-        last_http_status:
-          description: HTTP status code of the request last received back from the
-            webhook
-          anyOf:
-          - type: integer
-          - type: string
-          - type: object
-            nullable: true
-        last_http_body:
-          type: string
-          description: Body of the request last received back from the webhook
-          nullable: true
-        token:
-          type: string
-        secret:
-          type: string
-          description: The webhook's secret, used to generate webhook signatures.
-            Only returned at creation.
-        deactivated_at:
-          oneOf:
-          - $ref: '#/components/schemas/timestamp'
-          - type: 'null'
-          description: Timestamp when the webhook was deactivated. Null if the webhook
-            is active.
-    workflow_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        type:
-          type: string
-        name:
-          type: string
-        default:
-          type: boolean
-        currency:
-          type: string
-        language:
-          type: string
-        active:
-          type: boolean
-        prices_are_incl_tax:
-          type: boolean
-        payment_methods:
-          type: array
-          items:
-            type: string
-          nullable: true
-        collection_method:
-          type: string
-          nullable: true
-        number_of_collections:
-          type: integer
-        show_qr_code:
-          type: boolean
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/workflow_step_response'
-    workflow_step_response:
-      type: object
-      unevaluatedProperties: false
-      properties:
-        id:
-          $ref: '#/components/schemas/identifier'
-        administration_id:
-          $ref: '#/components/schemas/administration_id'
-        step_order:
-          type: integer
-        due_interval:
-          type: integer
-        reminder_delay:
-          type: integer
-        reminder_text:
-          type: string
-          nullable: true
-        reminder_auto_send:
-          type: boolean
-        action:
+          format: date
+        reason:
           type: string
           enum:
-          - suspend_moneybird_account
-          - reactivate_moneybird_account
-          - warn_moneybird_account
-          - cancel_subscription
-          - null
+          - out_of_use
+          - sold
+          - private_withdrawal
+          - divested
+        externally_booked:
+          type: boolean
+        asset_id:
+          $ref: '#/components/schemas/identifier'
+        reinvestment_reserve_sale:
+          oneOf:
+          - type: object
+            nullable: true
+            enum:
+            - null
+          - $ref: '#/components/schemas/reinvestment_reserve_sale_response'
+      additionalProperties: false
+    reinvestment_reserve_sale_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        amount:
+          $ref: '#/components/schemas/number'
+        date:
+          type: string
+          format: date
+        disposal_id:
+          $ref: '#/components/schemas/identifier'
+      additionalProperties: false
+    administration_response:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/administration_id'
+        name:
+          type: string
+          example: Moneybird
+        language:
+          type: string
+          enum:
+          - nl
+          - nl-be
+          - en
+          example: nl
+          description: The ISO 639-1 language code used in the administration
+        currency:
+          type: string
+          description: The ISO 4217 currency code
+          example: EUR
+        country:
+          type: string
+          description: The ISO 3166-1 alpha-2 code the administration country
+          example: NL
+        time_zone:
+          type: string
+          description: The time zone of the administration
+          example: Europe/Amsterdam
+        access:
+          type: string
+          enum:
+          - accountant_company
+          - user
+          description: The type of acess the user has to this administration
+          example: user
+        suspended:
+          type: boolean
+        period_locked_until:
+          type: string
+          format: date
           nullable: true
-        created_at:
-          $ref: '#/components/schemas/timestamp'
-        updated_at:
-          $ref: '#/components/schemas/timestamp'
-    contact:
-      unevaluatedProperties: false
-      allOf:
-      - $ref: '#/components/schemas/base_contact_response'
-      - type: object
-        properties:
-          events:
-            type: array
-            items:
-              $ref: '#/components/schemas/event_response'
-  parameters:
-    administration_id:
-      in: path
-      name: administration_id
-      required: true
+        period_start_date:
+          type: string
+          format: date
+          description: Start of the year in which the administration recorded its
+            first bookkeeping data, based on journal entries.
+          example: '2024-01-01'
+      additionalProperties: false
+  responses:
+    404_not_found:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/symbolic_error'
+    4XX_open_error:
+      description: Error code
+      content:
+        application/json:
+          schema:
+            type: integer
+  headers:
+    x-total-count:
+      description: Total number of entries in the collection
       schema:
-        $ref: '#/components/schemas/administration_id'
-      description: The unique identifier of the administration
-    page:
-      name: page
-      in: query
-      required: false
+        type: integer
+    link:
+      description: Pagination links (next, prev)
       schema:
-        anyOf:
-        - type: integer
-        - type: string
-    per_page:
-      name: per_page
-      in: query
-      required: false
-      schema:
-        pattern: ^\d+$
-        minimum: 1
-        maximum: 100
-        anyOf:
-        - type: integer
-        - type: string
+        type: string

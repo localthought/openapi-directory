@@ -11,6 +11,7 @@ import copy
 import json
 import re
 import argparse
+import hashlib
 from pathlib import Path
 
 import yaml
@@ -20,6 +21,8 @@ SOURCE = HERE.parent / "v2" / "openapi.yaml"
 OUT = HERE / "openapi.yaml"
 MANIFEST = HERE / "coverage.json"
 COLLECTIONS = HERE / "collections.json"
+
+SOURCE_DOCUMENT = {}
 
 PRIMARY_LIST_NAMES = {
     "administrations", "assets", "contacts", "custom_fields", "document_styles",
@@ -39,6 +42,8 @@ def path_kind(path: str, op_id: str) -> tuple[str, str]:
     p = path.lower()
     if "/synchronization" in p:
         return "sync_helper", "ID/version synchronization endpoint"
+    if p.endswith("/downloads{format}"):
+        return "primary_list", "JSON download records, not attachment bytes"
     if any(x in p for x in ("/download", "/checkout_identifier", "customer_contact_portal")):
         return "binary_or_helper", "download, portal-link, or checkout helper"
     if "/reports/" in p:
@@ -59,11 +64,39 @@ def path_kind(path: str, op_id: str) -> tuple[str, str]:
 def deref_name(ref: str) -> str | None:
     return ref.rsplit("/", 1)[-1] if isinstance(ref, str) and ref.startswith("#/components/schemas/") else None
 
+def evaluated_properties(schema, seen=None):
+    """Static evaluated property names for the source's allOf object shapes."""
+    seen = set() if seen is None else seen
+    if any(key in schema for key in ("anyOf", "oneOf", "patternProperties")):
+        raise ValueError("Conditional evaluated properties need a separate dialect conversion")
+    names = dict(schema.get("properties", {}))
+    if "$ref" in schema and schema["$ref"] not in seen:
+        reference = schema["$ref"]
+        seen.add(reference)
+        target = SOURCE_DOCUMENT
+        for part in reference.removeprefix("#/").split("/"):
+            target = target[part.replace("~1", "/").replace("~0", "~")]
+        names.update(evaluated_properties(target, seen))
+    for branch in schema.get("allOf", []):
+        names.update(evaluated_properties(branch, seen))
+    return names
+
 def nullable_to_30(node):
     """Convert OpenAPI 3.1 type arrays to valid 3.0 nullable schemas."""
     if isinstance(node, dict):
         out = {k: nullable_to_30(v) for k, v in node.items()}
+        if out.get("required") == []:
+            out.pop("required")  # Empty required is a no-op in 3.1, invalid in 3.0.
+        if "unevaluatedProperties" in out:
+            # allOf activates every branch, so declaring the union of its
+            # property names preserves closure while retaining each constraint.
+            if any(k in out for k in ("$ref", "allOf", "anyOf", "oneOf")):
+                for name in sorted(evaluated_properties(node)):
+                    out.setdefault("properties", {}).setdefault(name, nullable_to_30(evaluated_properties(node)[name]))
+            out["additionalProperties"] = out.pop("unevaluatedProperties")
         typ = out.get("type")
+        if typ == "null":
+            out.update({"type": "object", "nullable": True, "enum": [None]})
         if isinstance(typ, list):
             nullable = "null" in typ
             branches = [t for t in typ if t != "null"]
@@ -73,24 +106,37 @@ def nullable_to_30(node):
                 out.pop("type", None)
                 # OpenAPI 3.0 does not allow a union-valued `type`, and
                 # `nullable` on a parent oneOf is not portable across parsers.
-                # Carry nullability on every concrete branch instead.
+                # Use anyOf for overlapping primitive types (integer/number).
                 out["anyOf"] = [{"type": t} for t in branches]
                 # OpenAPI 3.0 cannot express a nullable union directly. A
                 # dedicated nullable branch avoids oneOf rejecting values
                 # that match more than one branch.
                 if nullable:
-                    out["anyOf"].append({"type": "object", "nullable": True})
+                    out["anyOf"].append({"type": "object", "nullable": True, "enum": [None]})
+            if nullable and not branches:
+                out["type"] = "object"
+                out["nullable"] = True
+                out["enum"] = [None]
             if nullable and len(branches) == 1:
                 out["nullable"] = True
-        if "examples" in out and "example" not in out and isinstance(out["examples"], list) and out["examples"]:
-            out["example"] = out["examples"][0]
+        if isinstance(out.get("examples"), list):
+            examples = out.pop("examples")
+            out["x-source-examples"] = examples
+            if examples and "example" not in out:
+                out["example"] = examples[0]
+        if out.get("type") == "boolean" and "default" in out and not isinstance(out["default"], bool):
+            if out["default"] is not None or not out.get("nullable"):
+                # The upstream is_trusted response schema contains the literal
+                # word "default", not a boolean default. Preserve the source
+                # annotation without inventing an API default value.
+                out["x-source-default"] = out.pop("default")
         return out
     if isinstance(node, list):
         return [nullable_to_30(x) for x in node]
     return node
 
 def main():
-    global SOURCE, OUT, MANIFEST, COLLECTIONS
+    global SOURCE, OUT, MANIFEST, COLLECTIONS, SOURCE_DOCUMENT
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, default=SOURCE)
     parser.add_argument("--output", type=Path, default=OUT)
@@ -99,6 +145,7 @@ def main():
     args = parser.parse_args()
     SOURCE, OUT, MANIFEST, COLLECTIONS = args.source, args.output, args.coverage, args.collections
     src = yaml.safe_load(SOURCE.read_text())
+    SOURCE_DOCUMENT = src
     routes = []
     output_paths = {}
     imported_routes = {}
@@ -115,19 +162,14 @@ def main():
                 "kind": kind,
                 "reason": reason,
                 "imported": (path != "/administrations{format}" and (kind in {"primary_list"} or (kind == "child_or_singleton" and "/additional_charges" in path))),
-                "route_in_openapi": (path != "/administrations{format}" and (kind in {"primary_list", "primary_detail"} or (kind == "child_or_singleton" and "/additional_charges" in path))),
+                "route_in_openapi": kind in {"primary_list", "primary_detail", "child_or_singleton"},
                 "parameters": [p.get("$ref", p.get("name")) for p in operation.get("parameters", [])],
             }
             routes.append(route)
             # Import primary list/detail endpoints. Filtered and lookup routes are
             # retained in the manifest but do not create duplicate importer routes.
-            if path == "/administrations{format}":
+            if kind not in {"primary_list", "primary_detail", "child_or_singleton"}:
                 continue
-            if kind not in {"primary_list", "primary_detail"}:
-                # Additional charges are useful child collections and are safe to
-                # import when explicitly requesting billed and unbilled charges.
-                if kind != "child_or_singleton" or "/additional_charges" not in path:
-                    continue
             op = copy.deepcopy(operation)
             op.pop("parameters", None)
             params = []
@@ -153,33 +195,37 @@ def main():
             output_paths[route_path] = {"get": op}
             imported_routes[route_path] = (op, kind)
 
-    # Copy every source schema so nested response objects remain available.
-    schemas = nullable_to_30(copy.deepcopy(src["components"]["schemas"]))
-    # Existing readonly consumers address the contact schema by this name.
-    schemas["contact"] = copy.deepcopy(schemas.get("contact_response", {}))
-    for path, item in output_paths.items():
-        text = json.dumps(item)
-        text = text.replace("#/components/schemas/contact_response", "#/components/schemas/contact")
-        output_paths[path] = json.loads(text)
-
-    # Retain non-schema component objects referenced by imported operations
-    # (notably the shared 404 response) so every emitted $ref resolves.
-    components = {
-        key: nullable_to_30(copy.deepcopy(value))
-        for key, value in src["components"].items()
-        if key not in {"schemas", "parameters"}
-    }
-    components["schemas"] = schemas
-    # Only keep parameter definitions referenced by imported routes.
-    params = src["components"].get("parameters", {})
-    used = set()
-    for route in routes:
-        if route["kind"] in {"primary_list", "primary_detail"}:
-            for ref in route["parameters"]:
-                if isinstance(ref, str) and ref.startswith("#/components/parameters/"):
-                    used.add(ref.rsplit("/", 1)[-1])
-    components["parameters"] = {k: nullable_to_30(copy.deepcopy(v)) for k, v in params.items() if k in used and k != "format"}
-    components["securitySchemes"] = nullable_to_30(copy.deepcopy(src["components"].get("securitySchemes", {})))
+    # Keep every component reachable from the selected operations, including
+    # nested response schemas, while excluding unused write-request dialects.
+    raw_components = copy.deepcopy(src["components"])
+    raw_components["schemas"]["contact"] = copy.deepcopy(raw_components["schemas"].get("contact_response", {}))
+    output_paths = json.loads(json.dumps(output_paths).replace("#/components/schemas/contact_response", "#/components/schemas/contact"))
+    def references(node):
+        if isinstance(node, dict):
+            if "$ref" in node:
+                yield node["$ref"]
+            for child in node.values():
+                yield from references(child)
+        elif isinstance(node, list):
+            for child in node:
+                yield from references(child)
+    queue = list(references(output_paths))
+    components = {"securitySchemes": copy.deepcopy(raw_components.get("securitySchemes", {}))}
+    seen = set()
+    while queue:
+        reference = queue.pop()
+        if reference in seen:
+            continue
+        seen.add(reference)
+        if not reference.startswith("#/components/"):
+            raise ValueError("Unsupported component reference: " + reference)
+        section, name = reference[len("#/components/"):].split("/", 1)
+        name = name.replace("~1", "/").replace("~0", "~")
+        value = copy.deepcopy(raw_components[section][name])
+        components.setdefault(section, {})[name] = value
+        queue.extend(references(value))
+    components = nullable_to_30(components)
+    schemas = components.get("schemas", {})
     doc = {
         "openapi": "3.0.3",
         "info": {"title": "Moneybird readable record collections", "version": src["info"]["version"], "description": "Generated from the official Moneybird OpenAPI v2 specification."},
@@ -189,13 +235,13 @@ def main():
         "components": components,
     }
     OUT.write_text(yaml.safe_dump(doc, sort_keys=False, allow_unicode=True))
-    MANIFEST.write_text(json.dumps({"source": str(SOURCE), "source_get_count": len(routes), "imported_route_count": len(output_paths), "routes": routes}, indent=2) + "\n")
+    MANIFEST.write_text(json.dumps({"source": "APIs/moneybird.com/v2/openapi.yaml", "source_sha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(), "source_get_count": len(routes), "imported_route_count": len(output_paths), "routes": routes}, indent=2) + "\n")
     collections = []
     for path, (operation, kind) in imported_routes.items():
         # Only array responses are importer collections; detail routes remain in
         # openapi.yaml but do not create another collection entry.
         schema = operation.get("responses", {}).get("200", {}).get("content", {}).get("application/json", {}).get("schema", {})
-        if kind == "primary_detail":
+        if path == "/administrations.json" or kind == "primary_detail" or (kind == "child_or_singleton" and "/additional_charges" not in path):
             continue
         response_is_array = schema.get("type") == "array"
         item_schema = schema.get("items", {}) if response_is_array else schema
@@ -248,7 +294,7 @@ def main():
             "required_dynamic_query": dynamic,
             "notes": "child collection" if kind == "child_or_singleton" else "primary record collection",
         })
-    COLLECTIONS.write_text(json.dumps({"source": str(SOURCE), "collections": collections}, indent=2) + "\n")
+    COLLECTIONS.write_text(json.dumps({"source": "APIs/moneybird.com/v2/openapi.yaml", "source_sha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(), "collections": collections}, indent=2) + "\n")
     print(f"generated {OUT} ({len(output_paths)} routes, {len(schemas)} schemas)")
     print(f"wrote {MANIFEST} ({len(routes)} GET operations)")
     print(f"wrote {COLLECTIONS} ({len(collections)} collections)")

@@ -1,5 +1,6 @@
 {
-  "source": "/private/tmp/moneybird-openapi/APIs/moneybird.com/v2/openapi.yaml",
+  "source": "APIs/moneybird.com/v2/openapi.yaml",
+  "source_sha256": "904cadd6339aa3e7a709334ad664fdbacaa64fc17ab13a594f5fc9973fae4f47",
   "collections": [
     {
       "name": "assets",
@@ -200,6 +201,25 @@
       "response_is_array": true,
       "identity_field": "id",
       "detail_path": "/{administration_id}/documents/typeless_documents/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "downloads",
+      "path": "/{administration_id}/downloads.json",
+      "operationId": "get_administration_id_downloads",
+      "schema": "download_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
       "pagination": {
         "page": true,
         "per_page": true,

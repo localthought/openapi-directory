@@ -1,7 +1,8 @@
 {
-  "source": "/private/tmp/moneybird-openapi/APIs/moneybird.com/v2/openapi.yaml",
+  "source": "APIs/moneybird.com/v2/openapi.yaml",
+  "source_sha256": "904cadd6339aa3e7a709334ad664fdbacaa64fc17ab13a594f5fc9973fae4f47",
   "source_get_count": 112,
-  "imported_route_count": 57,
+  "imported_route_count": 63,
   "routes": [
     {
       "path": "/administrations.json",
@@ -11,7 +12,7 @@
       "kind": "primary_list",
       "reason": "primary JSON list collection",
       "imported": false,
-      "route_in_openapi": false,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/format"
       ]
@@ -107,7 +108,7 @@
       "kind": "child_or_singleton",
       "reason": "child resource or singleton-only endpoint",
       "imported": false,
-      "route_in_openapi": false,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/administration_id",
         "contact_id",
@@ -123,7 +124,7 @@
       "kind": "child_or_singleton",
       "reason": "child resource or singleton-only endpoint",
       "imported": false,
-      "route_in_openapi": false,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/administration_id",
         "contact_id",
@@ -584,10 +585,10 @@
       "method": "GET",
       "operationId": "get_administration_id_downloads",
       "summary": "List all downloads",
-      "kind": "binary_or_helper",
-      "reason": "download, portal-link, or checkout helper",
-      "imported": false,
-      "route_in_openapi": false,
+      "kind": "primary_list",
+      "reason": "JSON download records, not attachment bytes",
+      "imported": true,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/administration_id",
         "#/components/parameters/format",
@@ -823,7 +824,7 @@
       "kind": "child_or_singleton",
       "reason": "default singleton endpoint",
       "imported": false,
-      "route_in_openapi": false,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/administration_id",
         "#/components/parameters/format"
@@ -895,7 +896,7 @@
       "kind": "child_or_singleton",
       "reason": "child resource or singleton-only endpoint",
       "imported": false,
-      "route_in_openapi": false,
+      "route_in_openapi": true,
       "parameters": [
         "#/components/parameters/administration_id",
         "id",
