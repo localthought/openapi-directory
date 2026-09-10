@@ -14,7 +14,7 @@ info:
     - messaging
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json
+      url: https://raw.githubusercontent.com/discord/discord-api-spec/d85bf4ad8a2a1b69f79b3dfb7419f08d1e200cb9/specs/openapi.json
       version: "3.1"
   x-providerName: discord.com
 externalDocs:
@@ -88,7 +88,7 @@ paths:
                   $ref: '#/components/schemas/guild'
         '401':
           description: Invalid or expired access token
-  
+
 components:
   schemas:
     user:
