@@ -1,0 +1,651 @@
+{
+  "source": "/private/tmp/moneybird-openapi/APIs/moneybird.com/v2/openapi.yaml",
+  "collections": [
+    {
+      "name": "assets",
+      "path": "/{administration_id}/assets.json",
+      "operationId": "get_administration_id_assets",
+      "schema": "asset_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/assets/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "active",
+          "value": false,
+          "reason": "include inactive records"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "contact_additional_charges",
+      "path": "/{administration_id}/contacts/{contact_id}/additional_charges.json",
+      "operationId": "get_administration_id_contacts_id_additional_charges",
+      "schema": "subscription_additional_charge_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "include_billed",
+          "value": true,
+          "reason": "include billed and unbilled charges"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "child collection"
+    },
+    {
+      "name": "contacts",
+      "path": "/{administration_id}/contacts.json",
+      "operationId": "get_administration_contacts",
+      "schema": "contact",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/contacts/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "include_archived",
+          "value": true,
+          "reason": "include archived contacts"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "custom_fields",
+      "path": "/{administration_id}/custom_fields.json",
+      "operationId": "get_administration_id_custom_fields",
+      "schema": "custom_field_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "document_styles",
+      "path": "/{administration_id}/document_styles.json",
+      "operationId": "get_administration_id_document_styles",
+      "schema": "document_style_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "general_documents",
+      "path": "/{administration_id}/documents/general_documents.json",
+      "operationId": "get_administration_id_documents_general_documents",
+      "schema": "general_document_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/documents/general_documents/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "general_journal_documents",
+      "path": "/{administration_id}/documents/general_journal_documents.json",
+      "operationId": "get_administration_id_documents_general_journal_documents",
+      "schema": "general_journal_document_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/documents/general_journal_documents/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "purchase_invoices",
+      "path": "/{administration_id}/documents/purchase_invoices.json",
+      "operationId": "get_administration_id_documents_purchase_invoices",
+      "schema": "purchase_invoice_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/documents/purchase_invoices/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "receipts",
+      "path": "/{administration_id}/documents/receipts.json",
+      "operationId": "get_administration_id_documents_receipts",
+      "schema": "receipt_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/documents/receipts/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "typeless_documents",
+      "path": "/{administration_id}/documents/typeless_documents.json",
+      "operationId": "get_administration_id_documents_typeless_documents",
+      "schema": "typeless_document_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/documents/typeless_documents/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "estimates",
+      "path": "/{administration_id}/estimates.json",
+      "operationId": "get_administration_id_estimates",
+      "schema": "estimate_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/estimates/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "external_sales_invoices",
+      "path": "/{administration_id}/external_sales_invoices.json",
+      "operationId": "get_administration_id_external_sales_invoices",
+      "schema": "external_sales_invoice_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/external_sales_invoices/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "financial_accounts",
+      "path": "/{administration_id}/financial_accounts.json",
+      "operationId": "get_administration_id_financial_accounts",
+      "schema": "financial_account_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "financial_mutations",
+      "path": "/{administration_id}/financial_mutations.json",
+      "operationId": "get_administration_id_financial_mutations",
+      "schema": "financial_mutation_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/financial_mutations/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "identities",
+      "path": "/{administration_id}/identities.json",
+      "operationId": "get_administration_id_identities",
+      "schema": "identity_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/identities/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "ledger_accounts",
+      "path": "/{administration_id}/ledger_accounts.json",
+      "operationId": "get_administration_id_ledger_accounts",
+      "schema": "ledger_account_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/ledger_accounts/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "products",
+      "path": "/{administration_id}/products.json",
+      "operationId": "get_administration_id_products",
+      "schema": "product_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/products/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "active",
+          "value": false,
+          "reason": "include inactive records"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "projects",
+      "path": "/{administration_id}/projects.json",
+      "operationId": "get_administration_id_projects",
+      "schema": "project_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/projects/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "filter",
+          "value": "state:all",
+          "reason": "include archived projects"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "purchase_transactions",
+      "path": "/{administration_id}/purchase_transactions.json",
+      "operationId": "get_administration_id_purchase_transactions",
+      "schema": "purchase_transaction_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/purchase_transactions/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "recurring_sales_invoices",
+      "path": "/{administration_id}/recurring_sales_invoices.json",
+      "operationId": "get_administration_id_recurring_sales_invoices",
+      "schema": "recurring_sales_invoice_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/recurring_sales_invoices/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "sales_invoices",
+      "path": "/{administration_id}/sales_invoices.json",
+      "operationId": "get_administration_id_sales_invoices",
+      "schema": "sales_invoice_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/sales_invoices/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "subscription_templates",
+      "path": "/{administration_id}/subscription_templates.json",
+      "operationId": "get_administration_id_subscription_templates",
+      "schema": "subscription_template_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "subscription_additional_charges",
+      "path": "/{administration_id}/subscriptions/{id}/additional_charges.json",
+      "operationId": "get_administration_id_subscriptions_id_additional_charges",
+      "schema": "subscription_additional_charge_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [
+        {
+          "name": "include_billed",
+          "value": true,
+          "reason": "include billed and unbilled charges"
+        }
+      ],
+      "required_dynamic_query": [],
+      "notes": "child collection"
+    },
+    {
+      "name": "subscriptions",
+      "path": "/{administration_id}/subscriptions.json",
+      "operationId": "get_administration_id_subscriptions",
+      "schema": "subscription_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/subscriptions/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [
+        "contact_id"
+      ],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "task_list_templates",
+      "path": "/{administration_id}/task_list_templates.json",
+      "operationId": "get_administration_id_task_list_templates",
+      "schema": "task_list_template_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/task_list_templates/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "task_lists",
+      "path": "/{administration_id}/task_lists.json",
+      "operationId": "get_administration_id_task_lists",
+      "schema": "task_list_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/task_lists/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "tax_rates",
+      "path": "/{administration_id}/tax_rates.json",
+      "operationId": "get_administration_id_tax_rates",
+      "schema": "tax_rate_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "time_entries",
+      "path": "/{administration_id}/time_entries.json",
+      "operationId": "get_administration_id_time_entries",
+      "schema": "time_entry_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/time_entries/{id}.json",
+      "pagination": {
+        "page": true,
+        "per_page": true,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "users",
+      "path": "/{administration_id}/users.json",
+      "operationId": "get_administration_id_users",
+      "schema": "extended_user_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "verifications",
+      "path": "/{administration_id}/verifications.json",
+      "operationId": "get_administration_id_verifications",
+      "schema": "verification_response",
+      "response_path": "$",
+      "item_path": "$",
+      "response_is_array": false,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "webhooks",
+      "path": "/{administration_id}/webhooks.json",
+      "operationId": "get_administration_id_webhooks",
+      "schema": "webhook_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": null,
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    },
+    {
+      "name": "workflows",
+      "path": "/{administration_id}/workflows.json",
+      "operationId": "get_administration_id_workflows",
+      "schema": "workflow_response",
+      "response_path": "$",
+      "item_path": "$[*]",
+      "response_is_array": true,
+      "identity_field": "id",
+      "detail_path": "/{administration_id}/workflows/{id}.json",
+      "pagination": {
+        "page": false,
+        "per_page": false,
+        "max_per_page": 100
+      },
+      "constant_query": [],
+      "required_dynamic_query": [],
+      "notes": "primary record collection"
+    }
+  ]
+}
