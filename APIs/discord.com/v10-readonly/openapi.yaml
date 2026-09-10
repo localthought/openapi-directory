@@ -3,6 +3,9 @@ info:
   title: Discord API (read-only OAuth subset)
   description: Read-only Discord user and guild data available through OAuth2 user tokens.
   version: v10-readonly-20260910
+  license:
+    name: MIT
+    url: https://github.com/discord/discord-api-spec/blob/main/LICENSE
   contact:
     name: Discord Developer Support
     url: https://discord.com/developers/docs
