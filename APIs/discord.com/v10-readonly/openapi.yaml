@@ -1,0 +1,198 @@
+openapi: 3.0.3
+info:
+  title: Discord API (read-only OAuth subset)
+  description: Read-only Discord user and guild data available through OAuth2 user tokens.
+  version: v10-readonly-20260910
+  contact:
+    name: Discord Developer Support
+    url: https://discord.com/developers/docs
+  x-apisguru-categories:
+    - collaboration
+    - messaging
+  x-origin:
+    - format: openapi
+      url: https://raw.githubusercontent.com/discord/discord-api-spec/main/specs/openapi.json
+      version: "3.1"
+  x-providerName: discord.com
+externalDocs:
+  description: Discord API documentation
+  url: https://docs.discord.com/developers/reference
+servers:
+  - url: https://discord.com/api/v10
+security:
+  - discordOAuth: []
+paths:
+  /users/@me:
+    get:
+      operationId: get_my_user
+      summary: Get the authenticated user
+      description: Returns the Discord user associated with the OAuth2 access token.
+      security:
+        - discordOAuth:
+            - identify
+      responses:
+        '200':
+          description: The authenticated Discord user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Invalid or expired access token
+  /users/@me/guilds:
+    get:
+      operationId: list_my_guilds
+      summary: List the authenticated user's guilds
+      description: Returns the guilds that the authenticated user belongs to.
+      security:
+        - discordOAuth:
+            - guilds
+      parameters:
+        - in: query
+          name: before
+          description: Get guilds before this guild ID.
+          schema:
+            type: string
+            pattern: '^(0|[1-9][0-9]*)$'
+        - in: query
+          name: after
+          description: Get guilds after this guild ID.
+          schema:
+            type: string
+            pattern: '^(0|[1-9][0-9]*)$'
+        - in: query
+          name: limit
+          description: Maximum number of guilds to return.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 200
+        - in: query
+          name: with_counts
+          description: Include approximate member and presence counts.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Guilds visible to the authenticated user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/guild'
+        '401':
+          description: Invalid or expired access token
+  
+components:
+  schemas:
+    user:
+      type: object
+      description: A Discord user returned by the authenticated-user endpoint.
+      properties:
+        id:
+          type: string
+          description: The user's Discord snowflake ID.
+          pattern: '^(0|[1-9][0-9]*)$'
+        username:
+          type: string
+        global_name:
+          type: string
+          nullable: true
+        discriminator:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        public_flags:
+          type: integer
+          format: int32
+        flags:
+          type: integer
+          format: int64
+        bot:
+          type: boolean
+        system:
+          type: boolean
+        banner:
+          type: string
+          nullable: true
+        accent_color:
+          type: integer
+          format: int32
+          nullable: true
+        locale:
+          type: string
+        email:
+          type: string
+          format: email
+          nullable: true
+        verified:
+          type: boolean
+        mfa_enabled:
+          type: boolean
+      required:
+        - id
+        - username
+        - global_name
+        - discriminator
+        - avatar
+        - public_flags
+        - flags
+        - mfa_enabled
+        - locale
+      additionalProperties: true
+    guild:
+      type: object
+      description: A partial guild returned for a user's guild list.
+      properties:
+        id:
+          type: string
+          description: The guild's Discord snowflake ID.
+          pattern: '^(0|[1-9][0-9]*)$'
+        name:
+          type: string
+        icon:
+          type: string
+          nullable: true
+        banner:
+          type: string
+          nullable: true
+        owner:
+          type: boolean
+        permissions:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        approximate_member_count:
+          type: integer
+          format: int32
+          nullable: true
+        approximate_presence_count:
+          type: integer
+          format: int32
+          nullable: true
+      required:
+        - id
+        - name
+        - icon
+        - banner
+        - owner
+        - permissions
+        - features
+      additionalProperties: true
+  securitySchemes:
+    discordOAuth:
+      type: oauth2
+      description: OAuth2 user authorization for Discord's read-only identity and guild endpoints.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://discord.com/oauth2/authorize
+          tokenUrl: https://discord.com/api/oauth2/token
+          scopes:
+            identify: Read the authenticated user's basic profile.
+            guilds: List the guilds that the authenticated user belongs to.
