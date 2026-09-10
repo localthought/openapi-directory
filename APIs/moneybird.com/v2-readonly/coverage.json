@@ -1,0 +1,1785 @@
+{
+  "source": "APIs/moneybird.com/v2/openapi.yaml",
+  "source_sha256": "904cadd6339aa3e7a709334ad664fdbacaa64fc17ab13a594f5fc9973fae4f47",
+  "source_get_count": 112,
+  "imported_route_count": 63,
+  "routes": [
+    {
+      "path": "/administrations.json",
+      "method": "GET",
+      "operationId": "get_administrations",
+      "summary": "List all administrations",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/assets/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_assets_id",
+      "summary": "Get an asset by ID",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/assets.json",
+      "method": "GET",
+      "operationId": "get_administration_id_assets",
+      "summary": "List all assets",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "ledger_account_id",
+        "active",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/customer_id/{customer_id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_customer_id_customer_id",
+      "summary": "Get contact by customer id",
+      "kind": "lookup_helper",
+      "reason": "duplicate lookup for a primary collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "customer_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/filter.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_filter",
+      "summary": "Filter contacts",
+      "kind": "lookup_helper",
+      "reason": "alternate filtered collection endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "query",
+        "include_archived",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_synchronization",
+      "summary": "List all ids and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "include_archived"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/{contact_id}/contact_people/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_contact_id_contact_people_id",
+      "summary": "Get contact person",
+      "kind": "child_or_singleton",
+      "reason": "child resource or singleton-only endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "contact_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/{contact_id}/moneybird_payments_mandate.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_contact_id_moneybird_payments_mandate",
+      "summary": "Get Moneybird Payments mandate",
+      "kind": "child_or_singleton",
+      "reason": "child resource or singleton-only endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "contact_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/{id}/additional_charges.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_id_additional_charges",
+      "summary": "Get additional charges",
+      "kind": "child_or_singleton",
+      "reason": "child resource or singleton-only endpoint",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "include_billed"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts_id",
+      "summary": "Get contact",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "include_archived"
+      ]
+    },
+    {
+      "path": "/{administration_id}/contacts.json",
+      "method": "GET",
+      "operationId": "get_administration_id_contacts",
+      "summary": "List all contacts",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page",
+        "query",
+        "include_archived",
+        "todo",
+        "contact_field",
+        "contact_value",
+        "contact_import_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/custom_fields.json",
+      "method": "GET",
+      "operationId": "get_administration_id_custom_fields",
+      "summary": "List all custom fields",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/customer_contact_portal/{contact_id}/invoices.json",
+      "method": "GET",
+      "operationId": "get_administration_id_customer_contact_portal_contact_id_invoices",
+      "summary": "Get a temporary link to the invoices in the customer contact portal",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "contact_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/customer_contact_portal/{contact_id}/subscriptions/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_customer_contact_portal_contact_id_subscriptions_id",
+      "summary": "Get a temporary link to the subscriptions in the customer contact portal",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "contact_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/customer_contact_portal/{contact_id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_customer_contact_portal_contact_id",
+      "summary": "Get a temporary link to the customer contact portal",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "contact_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/document_styles.json",
+      "method": "GET",
+      "operationId": "get_administration_id_document_styles",
+      "summary": "List all document styles",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_documents/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_documents_synchronization",
+      "summary": "List ids and versions of general documents",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_documents/{id}/attachments/{attachment_id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_documents_id_attachments_attachment_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "attachment_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_documents/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_documents_id",
+      "summary": "Get general document",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_documents.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_documents",
+      "summary": "Get general documents",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "new_filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_journal_documents/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_journal_documents_synchronization",
+      "summary": "List ids and versions of general journal documents",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_journal_documents/{id}/attachments/{attachment_id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_journal_documents_id_attachments_attachment_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "attachment_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_journal_documents/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_journal_documents_id",
+      "summary": "Get general journal document",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/general_journal_documents.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_general_journal_documents",
+      "summary": "Get general journal documents",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "new_filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page",
+        "exclude_new_general_journal_documents"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/purchase_invoices/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_purchase_invoices_synchronization",
+      "summary": "List ids and versions of purchase invoices",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/purchase_invoices/{id}/attachments/{attachment_id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_purchase_invoices_id_attachments_attachment_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "attachment_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/purchase_invoices/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_purchase_invoices_id",
+      "summary": "Get purchase invoice",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/purchase_invoices.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_purchase_invoices",
+      "summary": "Get purchase invoices",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "new_filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/receipts/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_receipts_synchronization",
+      "summary": "List ids and versions of receipts",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/receipts/{id}/attachments/{attachment_id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_receipts_id_attachments_attachment_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "attachment_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/receipts/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_receipts_id",
+      "summary": "Get a receipt",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/receipts.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_receipts",
+      "summary": "List receipts",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "new_filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/typeless_documents/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_typeless_documents_synchronization",
+      "summary": "List ids and versions of typeless documents",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/typeless_documents/{id}/attachments/{attachment_id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_typeless_documents_id_attachments_attachment_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "attachment_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/typeless_documents/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_typeless_documents_id",
+      "summary": "Get a typeless document",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/documents/typeless_documents.json",
+      "method": "GET",
+      "operationId": "get_administration_id_documents_typeless_documents",
+      "summary": "Get typeless documents",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "new_filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/downloads.json",
+      "method": "GET",
+      "operationId": "get_administration_id_downloads",
+      "summary": "List all downloads",
+      "kind": "primary_list",
+      "reason": "JSON download records, not attachment bytes",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page",
+        "download_type",
+        "downloaded",
+        "failed"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates/find_by_estimate_id/{estimate_id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates_find_by_estimate_id_estimate_id",
+      "summary": "Get an estimate by estimate_id",
+      "kind": "lookup_helper",
+      "reason": "duplicate lookup for a primary collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "estimate_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates_synchronization",
+      "summary": "List all ids and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates/{estimate_id}/attachments/{id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates_estimate_id_attachments_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "estimate_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates/{id}/download_pdf.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates_id_download_pdf",
+      "summary": "Download estimate PDF by id",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "media"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates_id",
+      "summary": "Get an estimate by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "includes"
+      ]
+    },
+    {
+      "path": "/{administration_id}/estimates.json",
+      "method": "GET",
+      "operationId": "get_administration_id_estimates",
+      "summary": "List all estimates",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/external_sales_invoices/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_external_sales_invoices_synchronization",
+      "summary": "List all ids and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/external_sales_invoices/{external_sales_invoice_id}/attachments/{id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_external_sales_invoices_external_sales_invoice_id_attachments_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "external_sales_invoice_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/external_sales_invoices/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_external_sales_invoices_id",
+      "summary": "Get an external sales invoice by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/external_sales_invoices.json",
+      "method": "GET",
+      "operationId": "get_administration_id_external_sales_invoices",
+      "summary": "List all external invoices",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/financial_accounts.json",
+      "method": "GET",
+      "operationId": "get_administration_id_financial_accounts",
+      "summary": "Retrieve all available financial accounts for the administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/financial_mutations/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_financial_mutations_synchronization",
+      "summary": "List all ids and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/financial_mutations/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_financial_mutations_id",
+      "summary": "Get a financial mutation by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/financial_mutations.json",
+      "method": "GET",
+      "operationId": "get_administration_id_financial_mutations",
+      "summary": "List all financial mutations",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/identities/default.json",
+      "method": "GET",
+      "operationId": "get_administration_id_identities_default",
+      "summary": "Retrieve the default identity",
+      "kind": "child_or_singleton",
+      "reason": "default singleton endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/identities/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_identities_id",
+      "summary": "Retrieve identity by given id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/identities.json",
+      "method": "GET",
+      "operationId": "get_administration_id_identities",
+      "summary": "Retrieve identities",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/ledger_accounts/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_ledger_accounts_id",
+      "summary": "Returns information about a ledger account",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/ledger_accounts.json",
+      "method": "GET",
+      "operationId": "get_administration_id_ledger_accounts",
+      "summary": "List all ledger accounts of an administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/payments/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_payments_id",
+      "summary": "Returns information about a payment",
+      "kind": "child_or_singleton",
+      "reason": "child resource or singleton-only endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/products/identifier/{identifier}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_products_identifier_identifier",
+      "summary": "Returns information about a product based on the identifier",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "identifier",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/products/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_products_id",
+      "summary": "Returns information about a product",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/products.json",
+      "method": "GET",
+      "operationId": "get_administration_id_products",
+      "summary": "List all products of an administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "query",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page",
+        "currency",
+        "active",
+        "for_checkout",
+        "ledger_account_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/projects/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_projects_id",
+      "summary": "Returns information about a project",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/projects.json",
+      "method": "GET",
+      "operationId": "get_administration_id_projects",
+      "summary": "List all projects of an administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/purchase_transactions/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_purchase_transactions_id",
+      "summary": "Get a purchase transaction by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/purchase_transactions.json",
+      "method": "GET",
+      "operationId": "get_administration_id_purchase_transactions",
+      "summary": "List all purchase transactions",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/recurring_sales_invoices/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_recurring_sales_invoices_synchronization",
+      "summary": "List all IDs and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/recurring_sales_invoices/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_recurring_sales_invoices_id",
+      "summary": "Get a recurring sales invoice by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/recurring_sales_invoices.json",
+      "method": "GET",
+      "operationId": "get_administration_id_recurring_sales_invoices",
+      "summary": "List all recurring sales invoices",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/assets.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_assets",
+      "summary": "Assets report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/balance_sheet.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_balance_sheet",
+      "summary": "Balance sheet report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/cash_flow.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_cash_flow",
+      "summary": "Cash flow report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "financial_account_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/creditors.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_creditors",
+      "summary": "Creditors report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/creditors_aging.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_creditors_aging",
+      "summary": "Creditors aging report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_until",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/debtors.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_debtors",
+      "summary": "Debtors report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/debtors_aging.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_debtors_aging",
+      "summary": "Debtors aging report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_until",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/expenses_by_contact.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_expenses_by_contact",
+      "summary": "Expenses by contact report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/expenses_by_project.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_expenses_by_project",
+      "summary": "Expenses by project report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/general_ledger.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_general_ledger",
+      "summary": "General ledger report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/journal_entries.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_journal_entries",
+      "summary": "Journal entries report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page",
+        "project_id",
+        "contact_id",
+        "ledger_account_id",
+        "account_type"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/ledger_accounts/{ledger_account_id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_ledger_accounts_ledger_account_id",
+      "summary": "Ledger account report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "ledger_account_id",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/profit_loss.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_profit_loss",
+      "summary": "Profit loss report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period",
+        "project_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/revenue_by_contact.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_revenue_by_contact",
+      "summary": "Revenue by contact report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/revenue_by_project.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_revenue_by_project",
+      "summary": "Revenue by project report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/subscriptions.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_subscriptions",
+      "summary": "Subscriptions report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month"
+      ]
+    },
+    {
+      "path": "/{administration_id}/reports/tax.json",
+      "method": "GET",
+      "operationId": "get_administration_id_reports_tax",
+      "summary": "Tax report",
+      "kind": "report",
+      "reason": "report dataset rather than a primary record collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/period_month"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/find_by_invoice_id/{invoice_id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_find_by_invoice_id_invoice_id",
+      "summary": "Get an invoice by invoice_id",
+      "kind": "lookup_helper",
+      "reason": "duplicate lookup for a primary collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "invoice_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/find_by_reference/{reference}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_find_by_reference_reference",
+      "summary": "Get an invoice by reference",
+      "kind": "lookup_helper",
+      "reason": "duplicate lookup for a primary collection",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "reference",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/synchronization.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_synchronization",
+      "summary": "List all ids and versions",
+      "kind": "sync_helper",
+      "reason": "ID/version synchronization endpoint",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/{id}/download_packing_slip_pdf.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_id_download_packing_slip_pdf",
+      "summary": "Download sales invoice packing slip PDF by id",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "media"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/{id}/download_pdf.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_id_download_pdf",
+      "summary": "Download sales invoice PDF by id",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "media"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/{id}/download_ubl.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_id_download_ubl",
+      "summary": "Download sales invoice UBL by id",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_id",
+      "summary": "Get an invoice by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices/{sales_invoice_id}/attachments/{id}/download.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices_sales_invoice_id_attachments_id_download",
+      "summary": "Download attachment",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "sales_invoice_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/sales_invoices.json",
+      "method": "GET",
+      "operationId": "get_administration_id_sales_invoices",
+      "summary": "List all invoices",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/subscription_templates/{id}/checkout_identifier.json",
+      "method": "GET",
+      "operationId": "get_administration_id_subscription_templates_id_checkout_identifier",
+      "summary": "Create online sales link [Deprecated]",
+      "kind": "binary_or_helper",
+      "reason": "download, portal-link, or checkout helper",
+      "imported": false,
+      "route_in_openapi": false,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "contact_id",
+        "start_date",
+        "product_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/subscription_templates.json",
+      "method": "GET",
+      "operationId": "get_administration_id_subscription_templates",
+      "summary": "List all subscription templates",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/subscriptions/{id}/additional_charges.json",
+      "method": "GET",
+      "operationId": "get_administration_id_subscriptions_id_additional_charges",
+      "summary": "Get additional charges",
+      "kind": "child_or_singleton",
+      "reason": "child resource or singleton-only endpoint",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format",
+        "include_billed"
+      ]
+    },
+    {
+      "path": "/{administration_id}/subscriptions/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_subscriptions_id",
+      "summary": "Get subscription",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/subscriptions.json",
+      "method": "GET",
+      "operationId": "get_administration_id_subscriptions",
+      "summary": "List subscriptions of a contact",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "contact_id"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_list_groups/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_list_groups_id",
+      "summary": "Returns information about a task list group",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_list_tasks/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_list_tasks_id",
+      "summary": "Returns information about a task",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_list_templates/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_list_templates_id",
+      "summary": "Returns information about a task list template",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_list_templates.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_list_templates",
+      "summary": "List all task list templates of an administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_lists/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_lists_id",
+      "summary": "Returns information about a task list",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/task_lists.json",
+      "method": "GET",
+      "operationId": "get_administration_id_task_lists",
+      "summary": "List all task lists of an administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "#/components/parameters/per_page",
+        "#/components/parameters/page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/tax_rates.json",
+      "method": "GET",
+      "operationId": "get_administration_id_tax_rates",
+      "summary": "List all available tax rates for the administration",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page"
+      ]
+    },
+    {
+      "path": "/{administration_id}/time_entries/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_time_entries_id",
+      "summary": "Get a time entry by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/time_entries.json",
+      "method": "GET",
+      "operationId": "get_administration_id_time_entries",
+      "summary": "List all time entries",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "filter",
+        "#/components/parameters/page",
+        "#/components/parameters/per_page",
+        "query"
+      ]
+    },
+    {
+      "path": "/{administration_id}/users.json",
+      "method": "GET",
+      "operationId": "get_administration_id_users",
+      "summary": "List all users",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format",
+        "include_inactive",
+        "include_accountants",
+        "include_api_users"
+      ]
+    },
+    {
+      "path": "/{administration_id}/verifications.json",
+      "method": "GET",
+      "operationId": "get_administration_id_verifications",
+      "summary": "Retrieve verifications",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/webhooks.json",
+      "method": "GET",
+      "operationId": "get_administration_id_webhooks",
+      "summary": "List all webhooks",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/workflows/{id}.json",
+      "method": "GET",
+      "operationId": "get_administration_id_workflows_id",
+      "summary": "Get a workflow by id",
+      "kind": "primary_detail",
+      "reason": "primary record detail endpoint",
+      "imported": false,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "id",
+        "#/components/parameters/format"
+      ]
+    },
+    {
+      "path": "/{administration_id}/workflows.json",
+      "method": "GET",
+      "operationId": "get_administration_id_workflows",
+      "summary": "Retrieve available workflows",
+      "kind": "primary_list",
+      "reason": "primary JSON list collection",
+      "imported": true,
+      "route_in_openapi": true,
+      "parameters": [
+        "#/components/parameters/administration_id",
+        "#/components/parameters/format"
+      ]
+    }
+  ]
+}
