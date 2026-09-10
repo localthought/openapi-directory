@@ -1,0 +1,151 @@
+openapi: 3.0.3
+info:
+  title: Spotify Web API (read-only playlists subset)
+  version: 1.0.0-readonly
+  description: >-
+    Compatible read-only subset of Spotify's Web API for synchronizing the
+    current user's playlists. The maintained upstream specification is
+    spotify.com/sonallux/2023.2.27; this document preserves only the list and
+    read operations needed by Local Thought.
+  contact:
+    name: Spotify for Developers
+    url: https://developer.spotify.com/documentation/web-api
+  termsOfService: https://developer.spotify.com/terms/
+  x-apisguru-categories: [media]
+  x-origin:
+    - format: openapi
+      url: https://developer.spotify.com/_data/documentation/web-api/reference/open-api-schema.yml
+      version: "3.0"
+  x-providerName: spotify.com
+  x-serviceName: web-api-readonly
+servers:
+  - url: https://api.spotify.com/v1
+security:
+  - oauth_2_0: []
+paths:
+  /me/playlists:
+    get:
+      operationId: get-current-user-playlists
+      summary: Get current user's playlists
+      description: Get playlists owned or followed by the current Spotify user.
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: A paged set of playlists.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PagingPlaylist' }
+        '401': { description: The access token is missing or invalid. }
+        '403': { description: The request is not allowed. }
+        '429': { description: Rate limit exceeded. }
+  /playlists/{playlist_id}:
+    get:
+      operationId: get-playlist
+      summary: Get a playlist
+      description: Get a playlist owned by a Spotify user.
+      parameters:
+        - $ref: '#/components/parameters/PlaylistId'
+      responses:
+        '200':
+          description: A playlist.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Playlist' }
+        '401': { description: The access token is missing or invalid. }
+        '403': { description: The request is not allowed. }
+        '429': { description: Rate limit exceeded. }
+components:
+  parameters:
+    PlaylistId:
+      name: playlist_id
+      in: path
+      required: true
+      description: The Spotify ID of the playlist.
+      schema: { type: string }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of playlists to return.
+      schema: { type: integer, minimum: 1, maximum: 50, default: 20 }
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Index of the first playlist to return.
+      schema: { type: integer, minimum: 0, default: 0 }
+  schemas:
+    PagingPlaylist:
+      type: object
+      required: [href, limit, next, offset, previous, total, items]
+      properties:
+        href: { type: string, format: uri }
+        limit: { type: integer }
+        next: { type: string, format: uri, nullable: true }
+        offset: { type: integer }
+        previous: { type: string, format: uri, nullable: true }
+        total: { type: integer }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/SimplifiedPlaylist' }
+    SimplifiedPlaylist:
+      type: object
+      required: [id, name, type, uri, href]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        type: { type: string, enum: [playlist] }
+        uri: { type: string }
+        href: { type: string, format: uri }
+        collaborative: { type: boolean }
+        description: { type: string, nullable: true }
+        public: { type: boolean, nullable: true }
+        snapshot_id: { type: string }
+        owner: { $ref: '#/components/schemas/User' }
+        external_urls:
+          type: object
+          properties: { spotify: { type: string, format: uri } }
+    Playlist:
+      allOf:
+        - $ref: '#/components/schemas/SimplifiedPlaylist'
+        - type: object
+          properties:
+            followers:
+              type: object
+              properties: { total: { type: integer } }
+            images:
+              type: array
+              items:
+                type: object
+                properties:
+                  url: { type: string, format: uri }
+                  height: { type: integer, nullable: true }
+                  width: { type: integer, nullable: true }
+            items:
+              type: object
+              properties:
+                href: { type: string, format: uri }
+                total: { type: integer }
+    User:
+      type: object
+      properties:
+        id: { type: string }
+        display_name: { type: string, nullable: true }
+        type: { type: string }
+        uri: { type: string }
+        href: { type: string, format: uri }
+        external_urls:
+          type: object
+          properties: { spotify: { type: string, format: uri } }
+  securitySchemes:
+    oauth_2_0:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://accounts.spotify.com/authorize
+          tokenUrl: https://accounts.spotify.com/api/token
+          scopes:
+            playlist-read-private: Access private playlists.
+            playlist-read-collaborative: Access collaborative playlists.
