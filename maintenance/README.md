@@ -1,6 +1,6 @@
 # Official-source maintenance
 
-This initial updater checks six services through seven configured source artifacts,
+This updater checks only the service artifacts configured in `sources.json`,
 including both public GitHub REST descriptions. It does not claim coverage of the
 entire directory, discover every vendor release, convert
 Swagger, generate PRs, or merge them. Those remain explicit follow-up work

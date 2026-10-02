@@ -2,8 +2,8 @@
 
 **Fork maintenance:** This is `ontola/openapi-directory`. Its official-source updater
 and configured coverage are documented in [maintenance/README.md](maintenance/README.md).
-The initial registry monitors six services through seven source artifacts; split or archived sources are reported as
-blocked. The workflow checks weekly and publishes audit artifacts; automatic update PRs
+The source registry identifies the monitored service artifacts. Unsupported or archived
+sources appear with blockers in the report. The workflow checks weekly and publishes audit artifacts; automatic update PRs
 and monthly discovery remain implementation work. The inherited badges, REST API, RSS,
 and contribution links below refer to upstream APIs.guru. A public API serving this
 fork's additions has not been published.
