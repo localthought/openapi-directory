@@ -68,6 +68,16 @@
       "priority": "high"
     },
     {
+      "id": "snowflake-warehouse",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/warehouse/0.0.1/openapi.yaml",
+      "github": {"repository": "snowflakedb/snowflake-rest-api-specs", "ref": "main", "path": "specifications/warehouse.yaml"},
+      "discovery": "Follow the vendor's Warehouse resource-management API, listed in its generally available REST reference. This is separate from SQL execution and other Snowflake resources.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {"tool": "redocly", "version": "2.57.0", "root": "specifications"}
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
