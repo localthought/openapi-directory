@@ -18,6 +18,7 @@ APIs/**/asyncapi.yaml
 # Temp output files
 tmp.yaml
 *.txt
+!maintenance/requirements.txt
 go*sh
 
 APIs/raw.githubusercontent.com/
