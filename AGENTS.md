@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `53f3cbc8e` (PR #97 merged):
+**Last updated**: 2026-10-02. Audit of `origin/main` at `f1a63de2b` (PR #100 merged):
 729 provider domains; 4,260 files under `APIs/`, including 2,086
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -127,6 +127,12 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #91 | Snowflake Database `0.0.1` | New resource API; 15 paths / 18 operations; two-file bundle, zero warnings, no patches |
 | #92 | Snowflake Schema `0.0.1` | New resource API; 7 paths / 10 operations; two-file bundle, zero warnings, no patches |
 | #93 | Snowflake Table `0.0.1` | New resource API; 19 paths / 22 operations; two-file bundle, zero warnings, no patches |
+| #94 / #98 | Maintenance progress | Snowflake and source-health checks, audit evidence and remaining queue recorded |
+| #95 | Live repository-health checks | Exact metadata snapshots, archived/disabled/identity findings, import guards and retained success dates; 47 tests pass locally/CI |
+| #96 | Accurate repeat-import provenance | Record the current stored curation baseline instead of an older manifest fallback; 48 tests pass locally/CI |
+| #97 | Intercom `2.16` wording refresh | Two vendor contact-verification descriptions; version, 168 paths / 235 operations unchanged |
+| #99 | Reproducible Swagger conversion; Grafana/Square monitoring | Locked converter, zero-default warning/patch expectations, response/path safeguards, format-chain provenance; 57 tests pass locally/CI; 22 artifacts / 21 services registered |
+| #100 | Grafana `0.0.1` content refresh | New certificate field, ASN.1 documentation and RBAC wording; fixed version, 207 paths / 314 operations unchanged; zero converter warnings/patches |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -241,8 +247,8 @@ otherwise `git add` refuses with "paths ... outside of your sparse-checkout defi
 | Sentry | `.../getsentry/sentry-api-schema/main/openapi-derefed.json` | **REFRESHED, PR #87**, fixed `v0`, 151 paths / 245 ops. Vendor dereferenced artifact; inlining is upstream's doing. Weekly content checks registered in #86. |
 | PagerDuty | `.../PagerDuty/api-schema/main/reference/REST/openapiv3.json` | **REFRESHED, PR #84**, fixed `2.0.0`, 274 paths / 466 ops. Checked invalid-default removal is registered with the source. |
 | MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | Initial import #48, as `mongodb.com/atlas-admin/2.0`. **Refresh pending validation compatibility:** stored 333 / 541, source 339 / 549. See blocker below. |
-| Grafana | `.../grafana/grafana/main/public/api-merged.json` | **DONE, PR #50.** Swagger 2.0; converts cleanly (0 warnings). Version dir is `0.0.1` because that is literally Grafana's declared `info.version` — a placeholder they never bump. See the push-protection note below. |
-| Square | `.../square/connect-api-specification/master/api.json` | **DONE, PR #51** — a *refresh*, we already had `squareup.com/2.0`. |
+| Grafana | `.../grafana/grafana/main/public/api-merged.json` | **REFRESHED, PR #100.** Canonical Swagger 2.0, monitored through #99's locked conversion recipe, zero warnings/patches. Fixed placeholder `0.0.1`, 207 paths / 314 operations. This legacy artifact does not cover every new `/apis` resource or Grafana Cloud. See the push-protection note below. |
+| Square | `.../square/connect-api-specification/master/api.json` | Stored refresh #51; **monitoring registered #99**, direct OpenAPI 3.0.0. Fixed `2.0`, 253 paths / 332 operations. Three source metadata additions detected, but refresh blocked by two missing vendor schemas; do not invent them. |
 | DocuSign | `.../docusign/OpenAPI-Specifications/master/esignature.rest.swagger-v2.1.json` | **DONE, PR #52** — a *refresh*, we already had `docusign.net/v2.1`. Swagger 2.0. |
 | Intercom | `.../intercom/Intercom-OpenAPI/main/descriptions/2.16/api.intercom.io.yaml` | **REFRESHED, PR #88**, public `2.16`, 168 paths / 235 ops. #86 discovers numeric release directories; preview directory `0` excluded. Historical `2.14` preserved. |
 
@@ -614,6 +620,17 @@ Installed under the session scratchpad (`apibconv/`), re-installable anywhere:
 - `apib2swagger` (1.17.1) — API Blueprint → Swagger 2.0. **Its `--open-api-3` path is broken on modern Node** (`json-schema-to-openapi-schema@0.4.0` throws `Type "null" is not a valid type`, with a misleading stack because of a broken error prototype). Workaround: convert to Swagger 2.0, then hand to `swagger2openapi`. That's how Eventbrite was done.
 - `google-discovery-to-swagger` — Discovery → Swagger 2.0, then `swagger2openapi`.
 
+For registered Swagger imports, use the repository's locked `maintenance/` toolchain,
+not the historical scratchpad. #99 adds swagger2openapi 7.0.8 and all 41 transitive packages
+to the npm lock without changing existing package pins. `conversion` recipes default to
+zero expected warnings/converter patches. Unexpected counts or source formats require
+review. External references must be pinned/bundled first; conversion has no network
+resolution. Missing response declarations are rejected before the converter can invent
+defaults, and every path/operation must survive. Cached input/output/logs/hashes and the
+Swagger → OpenAPI origin chain document the process. Exact vendor patches run afterwards;
+full validation and serialization guards remain mandatory. Accepted warnings do not waive
+missing-reference validation. The regression suite exercises the real locked converter.
+
 ### Post-conversion checks worth running every time
 
 **Write the checker carefully — a naive one produces false failures.** Both of these bit
@@ -740,7 +757,32 @@ tests. #97 refreshes Intercom's fixed public version `2.16` again after the vend
 added or removed endpoints. Existing curation/tag order and the two reporting-parameter
 patches remain. Vendor commit `70d74db6722480bad239eba2f049ff3c98744c5f`, entry SHA-256
 `3274c2255a71c18f38fc146cf316c332503973f5adf0b5ca117f2c409971a4e3`.
-Conversion, automatic PR generation, monthly discovery, and fork index publication
+#99 implements reviewed Swagger 2.0 → OpenAPI 3.0.0 conversion and registers Grafana and
+Square, bringing coverage to 22 artifacts across 21 services and 57 passing local/CI tests.
+#100 refreshes Grafana's fixed `0.0.1` artifact: eight parsed content changes (certificate
+field, ASN.1 title/description, five RBAC descriptions), with no path/operation additions
+or removals and no converter warnings/patches. Vendor commit
+`c58da1723a80496cc505922e457e2a0dc78993d0`, entry SHA-256
+`5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5`, converted SHA-256
+`84895fb7bdb6cbd94d28f77202f4bf923cf20ec7f2c34579715596584cf0fb51`.
+Vendor examples are unchanged; pushing succeeded without a protection bypass. The official
+HTTP reference calls Swagger canonical but marks legacy APIs deprecated. New resource APIs
+and Grafana Cloud need separate discovery; this scope warning appears in audit reports.
+
+Square's current vendor source is **already OpenAPI 3.0.0**, not Swagger: no conversion is
+needed. At vendor commit `0689c901bdfe1ff73f47aa28b17ccd6e0c40bf2d`, entry SHA-256
+`8f65460732e19d7445f7a34d8a9df09163db45273df5176a1cc794890ef591fb`, the only parsed
+drift after the two previously reviewed fixes is three metadata additions:
+`info.externalDocs`, `info.license`, and `x-fern-global-headers`. Endpoints remain 253 / 332.
+The new exact recipe asserts both complete source lists and operation identities before
+restoring the required `vendor_id` parameter and empty OAuth scope list. It does not fix
+undefined `CurrencyExchange` / `AppFeeAllocation` references, so imports remain blocked
+by full validation. No Square refresh PR was created; its existing file is unchanged.
+The expanded audit also rejects Square's new `info.externalDocs` field, which is not
+allowed inside OpenAPI's Info Object. Review a documented exact correction separately;
+moving it does not resolve the two missing schemas, and validation must not be waived.
+
+Automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
 sleeps; do not prevent sleep or extend the deadline without a new request.
@@ -821,17 +863,51 @@ at `/tmp/openapi-ci-audit-37023716280`. Ignored local reports and repository-hea
 snapshots are updated. CI artifacts are the recovery source if temporary/local files
 disappear. No spec commits were created solely for health-check timestamps.
 
+Expanded network audit [37048205733](https://github.com/ontola/openapi-directory/actions/runs/37048205733)
+at main `f1a63de2b` passed 57 tests and fetched all 22 registered descriptions. Seventeen
+match, two have valid new content drift (Plaid and Intercom), and three are import-blocked
+(Atlas validator/dialect, Square invalid Info metadata/missing schemas, Slack archived
+Swagger). Grafana's refreshed conversion matches with zero warnings/patches. All 21
+GitHub-source observations succeeded across sixteen unique repositories; twenty sources
+are `repository_available`, Slack is archived, and hosted Hugging Face is unassessed by
+that repository check. Summary publication and artifact upload succeeded despite the
+expected nonzero audit exit. Both reports, all sixteen repository-response hashes and
+Grafana's conversion output/hash were downloaded and verified at
+`/tmp/openapi-ci-audit-37048205733`; ignored local reports/health snapshots are updated.
+The Grafana service-specific legacy/new-resource coverage note appears in the report.
+
+**New drift queue from that audit:**
+- Plaid `2020-09-14_1.762.0`, vendor commit `325e2e192bcb422df708029bafe9d950c94df2fd`,
+  entry SHA-256 `e07a869352e83670e2ef077376db268358ce7a0dc4a8e97b8e1e980b91616a8c`.
+  Full validation passes. Against the actual last import `2020-09-14_1.740.1`, both have
+  360 paths / 351 operations: `/cra/report/create` and `/protect/cash_advance/feedback/upload`
+  are added; `/link_delivery/create` and `/link_delivery/get` are removed (all POST).
+  **Baseline caveat:** the manifest still names historical `1.345.1`. With a brand-new
+  destination, the updater falls back to that target and overstates incremental endpoint
+  changes. Correct/review the current baseline before importing; preserve curation from
+  `1.740.1`, keep all historical directories, and record the actual incremental removals.
+  Improve new-release baseline tracking reproducibly rather than trusting fallback counts.
+- Intercom fixed `2.16`, vendor commit `7b3a218f2b8a9c09ae24247270c764444cddaf70`,
+  entry SHA-256 `e007fe1902ceaa64e6dbaedfc064f2a2e4fc24bab6c86cf1c8f6900c2b0c42ca`.
+  Full validation and the existing exact reporting patches pass; 168 paths / 235 operations,
+  no endpoints added or removed. Compare content against #97 before its next refresh.
+Neither new refresh has a PR yet. Re-fetch and inspect open PRs before acting.
+
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
 They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
 direct reproducible spec PRs are accepted in this fork. No fork collection endpoint has
 been published or claimed. Index publication still needs verified consumer access.
 
-**Resume next:** resolve Atlas's validator/regex dialect compatibility before its refresh;
-extend the registry to other major imported APIs (for example Square and Grafana),
+**Resume next:** address Plaid's new-release baseline caveat and refresh Plaid/Intercom's
+new drift above, one PR per API. Resolve Atlas's validator/regex dialect compatibility before its refresh;
+extend the registry to other major imported APIs,
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
-needs its conversion recipe and must retain the documented unresolved vendor schemas;
-do not invent them. Repository-health checks are implemented; extend artifact-specific
+is registered as direct OpenAPI 3, with exact existing fixes replayed, but its undefined
+vendor schemas still block import. Do not invent them or waive validation. Grafana's
+legacy HTTP artifact is monitored/refreshed; discover maintained stable descriptions
+for its newer `/apis` resources and Cloud separately. Repository-health checks are
+implemented; extend artifact-specific
 lifecycle/deprecation checks and assessment of hosted sources without confusing repository
 activity with spec freshness. Ownership, service scope and stable-release checks still
 need deliberate review.
@@ -839,7 +915,7 @@ Implement validated per-service
 PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
 merge. Consider fork publication only with
 verified consumer access. Slack's maintained official replacement remains unresolved.
-Cohere, Mistral, Stripe, Figma, PagerDuty, Sentry and Intercom are complete. The registry
+Cohere, Mistral, Stripe, Figma, PagerDuty and Sentry's recorded refreshes are complete. The registry
 and local report retain the latest checks;
 re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
 
