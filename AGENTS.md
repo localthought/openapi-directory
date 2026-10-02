@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `7ce9472de` (PR #93 merged):
+**Last updated**: 2026-10-02. Audit of `origin/main` at `53f3cbc8e` (PR #97 merged):
 729 provider domains; 4,260 files under `APIs/`, including 2,086
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -497,6 +497,17 @@ from that artifact. Record this as an archived source with incomplete current co
 not as a current API merely because re-fetching produces no changes. Look for a maintained
 official replacement; do not silently substitute a third-party reconstruction.
 
+PR #95 now checks GitHub repository metadata on every audit and import, independently
+of content comparison. It records identity, archive/disabled flags, activity observations,
+retrieval time and exact response bytes/hash, deduplicating shared repositories within
+each run. `repository_available` means the same public repository is reachable and is
+neither archived nor disabled; it does **not** establish vendor ownership, artifact
+maintenance or current API coverage. Archive/disabled/identity changes and metadata
+failures block imports. Failed attempts preserve the last successful health-check date;
+content comparison continues independently. Hosted sources, currently Hugging Face,
+remain explicitly unassessed by this repository check. File-specific deprecation and
+replacement discovery still need review.
+
 ### Missing, official spec not yet located
 
 Shopify, Zendesk, Airtable, Heroku, HashiCorp, Coinbase, Dropbox, New Relic, Anthropic,
@@ -718,6 +729,17 @@ separate. Source text is escaped for Markdown/HTML display; custom report filena
 overwrite JSON with their readable companion. Four report regressions bring the test
 total to 39, passing locally and in CI. Database, Schema and Table registrations/imports
 bring configured coverage to twenty artifacts across nineteen services.
+
+#95 adds live repository-health observations, cached response evidence, import guards
+and report findings, with 47 offline tests passing locally and in CI. #96 fixes repeat
+imports' provenance to name the actual stored curation baseline rather than an older
+manifest fallback; its command-level regression brings the total to 48 passing local/CI
+tests. #97 refreshes Intercom's fixed public version `2.16` again after the vendor's
+2026-10-02 14:20 UTC wording update: exactly the create/update contact request schemas'
+`email_verified` descriptions change; 168 paths / 235 operations remain, with zero
+added or removed endpoints. Existing curation/tag order and the two reporting-parameter
+patches remain. Vendor commit `70d74db6722480bad239eba2f049ff3c98744c5f`, entry SHA-256
+`3274c2255a71c18f38fc146cf316c332503973f5adf0b5ca117f2c409971a4e3`.
 Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
@@ -785,6 +807,20 @@ agree (18 matches, 2 blocked), and every row records this run's actual compariso
 The artifact was downloaded to `/tmp/openapi-ci-audit-37016356022`; ignored local copies
 of both reports have been updated. Retrieve the CI artifact if temporary files disappear.
 
+Network audit [37023716280](https://github.com/ontola/openapi-directory/actions/runs/37023716280)
+at main `53f3cbc8e` passed all 48 tests and fetched all twenty artifacts. Eighteen supported
+artifacts match with zero validation errors, including the refreshed Intercom wording.
+Only Atlas's validator recursion and Slack's archived Swagger/conversion remain blocked.
+The new health checker recorded nineteen service observations from fourteen unique GitHub
+repository requests: eighteen artifacts have `repository_available` sources, Slack is
+independently confirmed `archived`, and hosted Hugging Face is `not_assessed` by this
+repository check. No metadata checks failed. The overall audit exits nonzero for the two
+known blockers; readable-summary publication and artifact upload succeed. Both reports
+and every raw repository-metadata response/hash were verified in the downloaded artifact
+at `/tmp/openapi-ci-audit-37023716280`. Ignored local reports and repository-health
+snapshots are updated. CI artifacts are the recovery source if temporary/local files
+disappear. No spec commits were created solely for health-check timestamps.
+
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
 They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
@@ -795,8 +831,10 @@ been published or claimed. Index publication still needs verified consumer acces
 extend the registry to other major imported APIs (for example Square and Grafana),
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 needs its conversion recipe and must retain the documented unresolved vendor schemas;
-do not invent them. Extend automated source-health checks (currently most rows are
-`not_assessed`; dated manual repository checks do not establish perpetual maintenance).
+do not invent them. Repository-health checks are implemented; extend artifact-specific
+lifecycle/deprecation checks and assessment of hosted sources without confusing repository
+activity with spec freshness. Ownership, service scope and stable-release checks still
+need deliberate review.
 Implement validated per-service
 PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
 merge. Consider fork publication only with
