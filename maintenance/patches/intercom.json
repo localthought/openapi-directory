@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "description": "GET /export/reporting_data/{job_identifier} and GET /download/reporting_data/{job_identifier} omit the required path parameter. Add the same required string job_identifier path declaration used in the validated 2.14 import; retain every vendor query/header parameter and assert each complete original list plus operation summary/tags. No endpoint or response schema is invented.",
+  "operations": [
+    {
+      "pointer": "#/paths/~1export~1reporting_data~1{job_identifier}/get/parameters",
+      "from": [
+        {
+          "name": "Intercom-Version",
+          "in": "header",
+          "schema": {
+            "$ref": "#/components/schemas/intercom_version"
+          }
+        },
+        {
+          "name": "app_id",
+          "in": "query",
+          "description": "The Intercom defined code of the workspace the company is associated to.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "job_identifier",
+          "description": "Unique identifier of the job.",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "value": [
+        {
+          "name": "job_identifier",
+          "in": "path",
+          "required": true,
+          "description": "The identifier of the reporting data export job.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Intercom-Version",
+          "in": "header",
+          "schema": {
+            "$ref": "#/components/schemas/intercom_version"
+          }
+        },
+        {
+          "name": "app_id",
+          "in": "query",
+          "description": "The Intercom defined code of the workspace the company is associated to.",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "job_identifier",
+          "description": "Unique identifier of the job.",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "context": {
+        "summary": "Get export job status",
+        "tags": [
+          "Reporting Data Export"
+        ]
+      }
+    },
+    {
+      "pointer": "#/paths/~1download~1reporting_data~1{job_identifier}/get/parameters",
+      "from": [
+        {
+          "name": "Intercom-Version",
+          "in": "header",
+          "schema": {
+            "$ref": "#/components/schemas/intercom_version"
+          }
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "application/octet-stream",
+            "enum": [
+              "application/octet-stream"
+            ]
+          },
+          "description": "Required header for downloading the export file"
+        },
+        {
+          "name": "app_id",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "job_identifier",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "value": [
+        {
+          "name": "job_identifier",
+          "in": "path",
+          "required": true,
+          "description": "The identifier of the reporting data export job.",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "Intercom-Version",
+          "in": "header",
+          "schema": {
+            "$ref": "#/components/schemas/intercom_version"
+          }
+        },
+        {
+          "name": "Accept",
+          "in": "header",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "application/octet-stream",
+            "enum": [
+              "application/octet-stream"
+            ]
+          },
+          "description": "Required header for downloading the export file"
+        },
+        {
+          "name": "app_id",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "job_identifier",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "context": {
+        "summary": "Download completed export job data",
+        "tags": [
+          "Reporting Data Export"
+        ]
+      }
+    }
+  ]
+}
