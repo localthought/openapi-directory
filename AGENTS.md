@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `a9db4d4f2` (PR #63 merged):
-726 provider domains; 4,249 files under `APIs/`, including 2,075
+**Last updated**: 2026-10-02. Audit of `origin/main` at `8e40681fb` (PR #67 merged):
+726 provider domains; 4,250 files under `APIs/`, including 2,076
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -93,6 +93,34 @@ vendor's own published file first, then fixed to match that vendor's own style):
 Grafana (#50) was initially blocked by GitHub push protection over a fake example token in
 Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 
+**October maintenance work merged:**
+
+| PR | Result | Scope |
+|---|---|---|
+| #60 / #64 | Maintenance instructions and progress | Repo instructions and audit findings |
+| #61 | Initial reproducible updater | Six service sources, pinned dependencies, validation, weekly read-only audit artifacts |
+| #62 | Hugging Face Inference Endpoints `2.0.0` | New management API; 40 paths / 46 operations |
+| #63 | Plaid `2020-09-14_1.740.1` | New version directory; 360 paths / 351 operations; historical version preserved |
+| #65 | GitHub public REST, both default and `2022-11-28` artifacts | Fixed `1.1.4` version refreshed in place; each 815 paths / 1,231 operations; seven monitored artifacts across six services |
+| #66 | Exact patch replay in updater | Checked JSON replacements, context assertions, recipe hashes/provenance; 16 passing regression tests |
+| #67 | Xero Accounting `19.1.0` | New version directory; 138 paths / 235 operations; historical version preserved |
+
+GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
+in each artifact. These removals are present in the official source, including retired
+Projects classic, team discussions, tag protection, and product billing endpoints, plus
+path changes for environment secrets/variables and Pages deployments. The full removed
+path list and vendor retirement links are in #65. Other GitHub products were not refreshed.
+Both source files and metadata-preserving imports passed full validation and parsed YAML
+content comparisons; #65's GitHub test run passed.
+
+Xero adds 8 paths / 15 operations and drops the 2 Employees paths / 4 operations in its new
+release. Its documented boolean patch is described in §4. #66's 16 tests passed locally
+and in GitHub CI, and the serialized Xero import passed full validation and comparison.
+After #67, a fresh updater audit against `origin/main` at `8e40681fb` reported
+`matches_source` with no validation errors for both GitHub artifacts, Plaid, Xero, and
+Hugging Face Inference Endpoints. This confirms the patched comparison does not keep
+proposing Xero's already-imported release.
+
 ---
 
 ## 3. Triage progress
@@ -138,7 +166,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-After PR #63 on 2026-10-02: 726 distinct provider domains, 4,249 tracked files under `APIs/`.
+After PR #67 on 2026-10-02: 726 distinct provider domains, 4,250 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -233,7 +261,8 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 ### Still to do
 
 - **Refresh the remaining confirmed stale APIs below**, one PR per API, extending the
-  reusable updater in §9. Plaid is done in PR #63. Re-fetch sources before importing;
+  reusable updater in §9. Plaid, GitHub REST, and Xero are done in PRs #63, #65, and #67.
+  DigitalOcean remains. Re-fetch sources before importing;
   the figures are audit snapshots.
 - **Add the remaining verified missing providers below**, after bundling and full validation.
   Hugging Face Inference Endpoints is done in PR #62.
@@ -252,19 +281,23 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 | Plaid | `2020-09-14_1.345.1` / 201 | `2020-09-14_1.740.1` / 360 | [2020-09-14.yml](https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml) |
 | Xero Accounting | `2.9.4` / 132 | `19.1.0` / 138 | [xero_accounting.yaml](https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_accounting.yaml) |
 
-GitHub's `api.github.com.2022-11-28` spec has the same 551 → 815 comparison; include
-that counterpart in the GitHub API refresh, but audit other GitHub products separately.
+GitHub's `api.github.com.2022-11-28` counterpart was included in #65 and is now registered
+alongside the default public artifact. Audit other GitHub products separately.
 DigitalOcean's source contains relative references to many files: fetch and bundle them,
 or use a verified official bundled artifact. Copying only the entry file is insufficient.
 The counts include all path entries, not necessarily one operation per path. New paths
 and removed paths must be reported separately; net growth can conceal removals.
 
 **Plaid completed:** PR #63 added `2020-09-14_1.740.1` with 360 paths / 351 operations,
-preserving the historical version and curation. **Xero import blocker:** the official
+preserving the historical version and curation. **Xero completed:** PR #67 added `19.1.0`
+with 138 paths / 235 operations, preserving the historical version and curation. The official
 `19.1.0` source has 23 boolean properties with string defaults/examples `'false'`, starting
-with `Account.HasAttachments`. Validation rejects them. Implement a documented,
-reproducible patch with exact source checks before importing; do not disable validation
-or silently coerce arbitrary vendor values.
+with `Account.HasAttachments`. The recipe in `maintenance/patches/xero-accounting.json`
+fixes exactly those 46 values, asserting the original string and sibling `type: boolean`.
+It was verified against vendor commit `fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f`.
+The complete patched source passes validation. If a future vendor source fixes a value or
+changes its type, the recipe intentionally fails and needs review; remove or revise it
+deliberately. Never disable validation or coerce arbitrary vendor values.
 
 ### Verified missing official OADs (downloaded and parsed 2026-10-02)
 
@@ -480,13 +513,23 @@ dependencies, 13 passing offline regression tests, read-only source checks, and 
 validated single-API importer. Its PR tests passed on GitHub. The weekly report-artifact
 workflow is enabled; a manual run [36976870489](https://github.com/ontola/openapi-directory/actions/runs/36976870489)
 fetched all six sources and published a downloadable report and raw source snapshots.
-Its audit job exits nonzero for the known DigitalOcean bundling, Xero validation, and
-Slack conversion/source-health blockers; this is distinct from the successful test job.
-PR #62 added Hugging Face Inference Endpoints; PR #63 refreshed Plaid. Bundling, conversion,
-patch replay, automatic PR generation, monthly discovery, and fork index publication
+That initial audit job exited nonzero for the then-known DigitalOcean bundling, Xero
+validation, and Slack conversion/source-health blockers, distinct from the successful
+test job. Xero's blocker is now resolved by #66's checked patch replay; 16 tests pass
+locally and in GitHub CI. PRs #62/#63/#65/#67 added Hugging Face and refreshed Plaid,
+both public GitHub REST artifacts, and Xero. Seven artifacts across six services are
+registered. Bundling, conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
 sleeps; do not prevent sleep or extend the deadline without a new request.
+
+**Resume next:** implement pinned reference bundling for DigitalOcean in its own
+infrastructure PR, then refresh that API in a separate PR. Afterwards import Snowflake's
+distinct public services, Cohere (handling snippet artifacts), and the verified public
+Mistral description. The source registry and local report retain the latest checks;
+re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
+DigitalOcean's official `package.json` uses `@redocly/cli` and an `openapi bundle` script;
+inspect its lockfile and Makefile for the vendor's own reproducible bundling recipe.
 
 ### Implementation order
 
