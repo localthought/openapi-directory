@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `7dff5b044` (PR #84 merged):
-729 provider domains; 4,256 files under `APIs/`, including 2,082
+**Last updated**: 2026-10-02. Audit of `origin/main` at `2b0d4d993` (PR #88 merged):
+729 provider domains; 4,257 files under `APIs/`, including 2,083
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -118,6 +118,10 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #82 | Figma `0.43.0` | New version directory; 47 paths / 54 operations; composed color values and `COLOR_OPACITY` scope |
 | #83 | Stripe `2026-09-30.endive` | New version directory; 454 paths / 644 operations; includes vendor GA v1+v2 coverage |
 | #84 | PagerDuty `2.0.0` | Fixed version refreshed in place; 274 paths / 466 operations; checked removal of one invalid default |
+| #85 | Expanded audit progress | Source revisions, completed imports and Atlas validator/dialect blocker recorded |
+| #86 | Numeric vendor release discovery; Intercom/Sentry monitoring | Catalog and artifact pinned to one commit; 35 local/CI tests; 17 artifacts / 16 services registered |
+| #87 | Sentry public Web API `v0` | Fixed version refreshed in place; 151 paths / 245 operations; 4 paths / 11 ops added, none removed |
+| #88 | Intercom `2.16` | New directory; 168 paths / 235 operations; 62 paths / 85 ops added, none removed; reporting parameter patch replayed |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -198,7 +202,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-After PR #84 on 2026-10-02: 729 distinct provider domains, 4,256 tracked files under `APIs/`.
+After PR #88 on 2026-10-02: 729 distinct provider domains, 4,257 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -208,13 +212,13 @@ otherwise `git add` refuses with "paths ... outside of your sparse-checkout defi
 |---|---|---|
 | **Stripe** | `.../stripe/openapi/master/latest/openapi.spec3.yaml` | **REFRESHED, PR #83**, `2026-09-30.endive`, 454 paths / 644 ops. Vendor-recommended public GA v1+v2 artifact; prior #44 used the maintained v1-only `openapi/spec3.yaml`. Use YAML, excluding preview and SDK variants. |
 | Figma | `.../figma/rest-api-spec/main/openapi/openapi.yaml` | **REFRESHED, PR #82**, `0.43.0`, 47 paths / 54 ops. OpenAPI 3.1.0; historical `0.42.0` preserved. |
-| Sentry | `.../getsentry/sentry-api-schema/main/openapi-derefed.json` | **DONE, PR #46.** Deref'd artifact: no `$ref`s, no `components.schemas`, everything inlined. That is upstream's doing, not a conversion fault. |
+| Sentry | `.../getsentry/sentry-api-schema/main/openapi-derefed.json` | **REFRESHED, PR #87**, fixed `v0`, 151 paths / 245 ops. Vendor dereferenced artifact; inlining is upstream's doing. Weekly content checks registered in #86. |
 | PagerDuty | `.../PagerDuty/api-schema/main/reference/REST/openapiv3.json` | **REFRESHED, PR #84**, fixed `2.0.0`, 274 paths / 466 ops. Checked invalid-default removal is registered with the source. |
 | MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | Initial import #48, as `mongodb.com/atlas-admin/2.0`. **Refresh pending validation compatibility:** stored 333 / 541, source 339 / 549. See blocker below. |
 | Grafana | `.../grafana/grafana/main/public/api-merged.json` | **DONE, PR #50.** Swagger 2.0; converts cleanly (0 warnings). Version dir is `0.0.1` because that is literally Grafana's declared `info.version` — a placeholder they never bump. See the push-protection note below. |
 | Square | `.../square/connect-api-specification/master/api.json` | **DONE, PR #51** — a *refresh*, we already had `squareup.com/2.0`. |
 | DocuSign | `.../docusign/OpenAPI-Specifications/master/esignature.rest.swagger-v2.1.json` | **DONE, PR #52** — a *refresh*, we already had `docusign.net/v2.1`. Swagger 2.0. |
-| Intercom | `.../intercom/Intercom-OpenAPI/main/descriptions/2.14/api.intercom.io.yaml` | **DONE, PR #54.** See the 404 warning further down before writing this vendor off again. |
+| Intercom | `.../intercom/Intercom-OpenAPI/main/descriptions/2.16/api.intercom.io.yaml` | **REFRESHED, PR #88**, public `2.16`, 168 paths / 235 ops. #86 discovers numeric release directories; preview directory `0` excluded. Historical `2.14` preserved. |
 
 **October follow-up audit:** all four newly registered vendor repositories were checked
 on 2026-10-02 and were maintained/unarchived. #81 registers their moving official sources,
@@ -257,6 +261,39 @@ dependency pins were changed, and no regexes were rewritten or validation bypass
 the validator/dialect issue with meaningful regressions and a separate infrastructure PR
 before importing Atlas. Do not merely remove patterns or raise recursion limits to force it
 through. Raw source and the failed validation are retained in the report/cache.
+
+**Intercom release discovery and import:** official
+[introduction](https://developers.intercom.com/docs/references/introduction) and
+[changelog](https://developers.intercom.com/docs/references/changelog) select public `2.16`
+and distinguish Preview. Vendor repository `intercom/Intercom-OpenAPI` was maintained and
+unarchived on 2026-10-02. #86 adds a reviewed `numeric-directories` recipe: select canonical
+major.minor releases numerically from the pinned `descriptions` catalog, exclude releases
+below `2.16` and prerelease names (Preview is `0`), and require `info.version` to match.
+The complete original catalog response/hash is cached alongside the artifact and included
+in import provenance. Empty, inconsistent, truncated or failed catalogs block instead of
+falling back to an old version. Combined catalog/bundling or code-sample recipes still
+require explicit support. Verify a future selected release against official docs before
+manual import/merge; numeric selection alone is not universal evidence of stable status.
+Tests cover ordering, unsafe paths, exclusions, failure, revision pinning, cache evidence
+and mismatched declared versions. All 35 tests pass locally and in #86's CI.
+
+#88 imports vendor commit `6d8b0b8d27a779a6005716249ed21755f29292d9`, adding 62 paths /
+85 operations with none removed. The vendor's two reporting status/download operations
+still omit required `job_identifier` path declarations. The exact recipe
+`maintenance/patches/intercom.json` prepends the same required string declaration used
+in #54, preserving all original header/query parameters and asserting their complete lists
+plus operation summaries/tags. A simulated vendor correction stops replay. The complete
+patched source and serialized import validate and preserve values/types and curation;
+historical `2.14` is unchanged. The vendor changelog describes breaking schema changes
+between API releases, so no old version is replaced or declared equivalent.
+
+**Sentry refresh:** maintained/unarchived `getsentry/sentry-api-schema` was checked on
+2026-10-02; vendor commit `41d82c69208a3f24dafa36f584cca981d30cfde5` grows fixed `v0` from
+147 paths / 234 ops to 151 / 245, adding four project codeowner/inbound-filter paths and
+eleven operations, removing none. #87 preserves vendor schema/description changes,
+including experimental labels, without API patches or conversion. The parsed import
+matches the official cached source and passes full validation and serialization checks.
+This is the public Web API artifact, not Sentry's SDK ingestion protocol or whole platform.
 
 **Square and DocuSign are the cautionary entries here.** Both were originally recorded as
 "new" by an audit that ran `[ -d "APIs/$d" ]` inside a sparse-checkout worktree. Both were
@@ -643,6 +680,10 @@ is now emitted in deterministic key order, tested across three Python hash seeds
 refresh the first three, with PagerDuty's checked default-removal recipe. Fifteen artifacts
 across fourteen services are now registered. Atlas is still blocked by validator/dialect
 compatibility, separately from Slack's archived-source blocker.
+#86 adds reviewed numeric-directory release discovery and registers Intercom and Sentry;
+#87/#88 refresh both. Seventeen artifacts across sixteen services are registered, and
+35 regression tests pass locally and in CI. The release catalog response and selected
+artifact are pinned together, with explicit release-selection provenance.
 Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
@@ -689,15 +730,31 @@ configured services. The complete report and raw snapshots are available in the
 `/tmp/openapi-ci-audit-37004222700`; the ignored local `cache/maintenance/report.json`
 contains this latest report. Recover from CI if the temporary files disappear.
 
+Network audit [37009315774](https://github.com/ontola/openapi-directory/actions/runs/37009315774)
+at main `2b0d4d993` passed all 35 tests and fetched seventeen artifacts. Fifteen supported
+OpenAPI artifacts match their official sources with zero validation errors, including
+Sentry and the catalog-selected, patched Intercom 2.16 description. The pinned catalog
+and artifact revision agree, and the original catalog response is present in the uploaded
+`official-source-audit` artifact. Atlas's recursion failure and Slack's archived Swagger
+source remain the only two recorded blockers; the audit exits nonzero for those reasons.
+The downloaded artifact is `/tmp/openapi-ci-audit-37009315774`, and the ignored local
+report has been replaced with this verified report. CI is the recovery source after reboot.
+
+Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
+report-artifact access, validated manual import/PR process and source-specific recipes.
+They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
+direct reproducible spec PRs are accepted in this fork. No fork collection endpoint has
+been published or claimed. Index publication still needs verified consumer access.
+
 **Resume next:** resolve Atlas's validator/regex dialect compatibility before its refresh;
-extend the registry to other major imported APIs (for example Square, Sentry and Intercom),
+extend the registry to other major imported APIs (for example Square and Grafana),
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 needs its conversion recipe and must retain the documented unresolved vendor schemas;
 do not invent them. Implement validated per-service
 PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
-merge. Update fork-facing README/CONTRIBUTING and consider fork publication only with
+merge. Consider fork publication only with
 verified consumer access. Slack's maintained official replacement remains unresolved.
-Cohere, Mistral, Stripe, Figma and PagerDuty are complete. The registry
+Cohere, Mistral, Stripe, Figma, PagerDuty, Sentry and Intercom are complete. The registry
 and local report retain the latest checks;
 re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
 
