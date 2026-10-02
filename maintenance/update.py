@@ -17,6 +17,7 @@ from pathlib import Path
 
 import yaml
 from openapi_spec_validator import validate
+import bundle
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -289,14 +290,15 @@ def import_document(source, new, metadata, old):
                                      "version": ".".join(new["openapi"].split(".")[:2])}]
     revision = " at commit " + metadata["revision"] if metadata.get("revision") else " on " + metadata["fetched_at"]
     result["info"]["x-conversion"] = [
-        "Fetched from " + metadata["url"] + revision + "; source SHA-256 " + metadata["sha256"] + ".",
-        ("Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no OpenAPI version conversion."
-         if metadata.get("transformations") else
-         "Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion."),
+        "Fetched from " + metadata["url"] + revision + "; entry source SHA-256 " + metadata["sha256"] + ".",
     ]
     result["info"]["x-conversion"].extend(metadata.get("transformations", []))
     if old:
         result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from " + source["target"] + ".")
+    result["info"]["x-conversion"].append(
+        "Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion."
+        if metadata.get("transformations") else
+        "Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.")
     errors = validate_document(result)
     if errors:
         raise ValueError("Preserving curation produced an invalid document:\n" + "\n".join(errors))
@@ -314,16 +316,21 @@ def load_sources(path):
 
 
 def cache_snapshot(cache, source_id, raw, metadata):
-    cached = cache / source_id / metadata["sha256"]
+    cached = cache / source_id / metadata.get("snapshot_sha256", metadata["sha256"])
     cached.mkdir(parents=True, exist_ok=True)
     (cached / "source").write_bytes(raw)
     (cached / "fetch.json").write_text(json.dumps(metadata, indent=2) + "\n")
 
 
-def prepare_document(source, raw):
+def prepare_document(source, raw, metadata=None, cache=None):
     """Replay reviewed exact replacements; source changes require recipe review."""
-    spec = parse(raw)
     transformations = []
+    if source.get("bundling"):
+        if metadata is None or cache is None:
+            raise ValueError("Bundling requires fetch metadata and a source cache")
+        raw, step = bundle.prepare(source, raw, metadata, cache, request, Loader)
+        transformations.append(step)
+    spec = parse(raw)
     seen = set()
     for filename in source.get("patches", []):
         path = (ROOT / filename).resolve()
@@ -339,8 +346,10 @@ def prepare_document(source, raw):
         # Work on a separate parsed document. No caller's object or original
         # cached bytes are modified, even if a later precondition fails.
         for operation in operations:
-            if set(operation) != {"pointer", "from", "value", "context"}:
-                raise ValueError("Exact patches require pointer, from, value, and context")
+            replacing = set(operation) == {"pointer", "from", "value", "context"}
+            removing = set(operation) == {"pointer", "from", "remove", "context"} and operation["remove"] is True
+            if not replacing and not removing:
+                raise ValueError("Exact patches require pointer, from, context, and value or remove:true")
             ref = operation["pointer"]
             if not isinstance(ref, str) or not ref.startswith("#/") or ref in seen:
                 raise ValueError("Invalid or duplicate patch pointer: " + str(ref))
@@ -357,7 +366,10 @@ def prepare_document(source, raw):
             # JSON comparison distinguishes false from 0 and preserves types.
             if token not in parent or canonical(parent[token]) != canonical(operation["from"]):
                 raise ValueError("Patch source value changed; review recipe: " + ref)
-            parent[token] = copy.deepcopy(operation["value"])
+            if removing:
+                del parent[token]
+            else:
+                parent[token] = copy.deepcopy(operation["value"])
         transformations.append("Applied " + filename + " (SHA-256 " + sha256(recipe_raw)
                                + "): " + recipe["description"])
     return spec, transformations
@@ -371,7 +383,7 @@ def audit(source, base, cache):
         raw, metadata = fetch(source)
         result.update(fetch=metadata, last_successful_fetch=metadata["fetched_at"])
         cache_snapshot(cache, source["id"], raw, metadata)
-        spec, transformations = prepare_document(source, raw)
+        spec, transformations = prepare_document(source, raw, metadata, cache)
         metadata["transformations"] = transformations
         cache_snapshot(cache, source["id"], raw, metadata)
         dest = str(destination(source, spec))
@@ -426,7 +438,7 @@ def main(argv=None):
         source = sources[0]
         raw, metadata = fetch(source)
         cache_snapshot(args.cache, source["id"], raw, metadata)
-        spec, transformations = prepare_document(source, raw)
+        spec, transformations = prepare_document(source, raw, metadata, args.cache)
         metadata["transformations"] = transformations
         cache_snapshot(args.cache, source["id"], raw, metadata)
         dest = destination(source, spec)

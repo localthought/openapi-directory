@@ -228,6 +228,31 @@ class UpdaterTests(unittest.TestCase):
             self.assertNotIn("last_successful_validation", result)
             self.assertEqual((cache / "test" / metadata["sha256"] / "source").read_bytes(), raw)
 
+    def test_checked_removal_of_an_invalid_default_and_transformation_order(self):
+        spec = document()
+        spec["components"]["schemas"]["InvalidDefault"] = {
+            "type": "string", "default": None, "description": "Vendor description"}
+        recipe = {"schema_version": 1, "description": "Removed only an invalid null default.",
+                  "operations": [{"pointer": "#/components/schemas/InvalidDefault/default", "from": None,
+                                  "remove": True, "context": {"type": "string"}}]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/default.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps(recipe))
+            source = {"patches": ["maintenance/patches/default.json"]}
+            with patch.object(update, "ROOT", root):
+                patched, steps = update.prepare_document(source, json.dumps(spec).encode())
+                self.assertEqual(patched["components"]["schemas"]["InvalidDefault"], {
+                    "type": "string", "description": "Vendor description"})
+                self.assertEqual(update.validate_document(patched), [])
+                metadata = {"url": "https://example.com/spec", "sha256": "hash", "fetched_at": "today",
+                            "transformations": steps}
+                result = update.import_document(source, patched, metadata, None)
+                log = result["info"]["x-conversion"]
+                self.assertLess(log.index(steps[0]), len(log) - 1)
+                self.assertIn("Serialized", log[-1])
+
 
 if __name__ == "__main__":
     unittest.main()
