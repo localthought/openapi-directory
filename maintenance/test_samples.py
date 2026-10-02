@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import update
+import yaml
 from test_update import document
 
 
@@ -121,3 +122,23 @@ components:
         self.assertEqual(parsed["components"]["schemas"]["Literal"]["default"], "1e-08")
         self.assertEqual(update.validate_document(parsed), [])
         self.assertEqual(update.compare(parsed, update.parse(json.dumps(parsed).encode()))["status"], "matches_source")
+
+    def test_yaml_serialization_preserves_vendor_scientific_strings_and_numbers(self):
+        spec = document()
+        spec["components"]["schemas"]["Rate"] = {"type": "number", "minimum": 1e-8}
+        values = ["0.16001e0", "1e-08", "1E2", "1e+09", "+1e9", "on", "2026-10-02", 1e-8, 1e9]
+        spec["components"]["schemas"]["Choice"]["example"] = values
+        dumped = yaml.dump(spec, Dumper=update.Dumper, sort_keys=False).encode()
+        parsed = update.parse(dumped)
+        self.assertEqual(parsed, spec)
+        self.assertEqual([type(v) for v in parsed["components"]["schemas"]["Choice"]["example"]],
+                         [type(v) for v in values])
+
+    def test_import_serialization_blocks_type_changes_before_writing(self):
+        spec = document()
+        spec["components"]["schemas"]["Choice"]["example"] = {"percentile": "0.16001e0"}
+        self.assertEqual(update.parse(update.serialize_document(spec).encode()), spec)
+        legacy = yaml.dump(spec, Dumper=yaml.SafeDumper, sort_keys=False)
+        with patch.object(update.yaml, "dump", return_value=legacy):
+            with self.assertRaisesRegex(ValueError, "serialization changed"):
+                update.serialize_document(spec)

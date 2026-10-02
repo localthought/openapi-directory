@@ -46,14 +46,21 @@ Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
                              re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"), list("tTfF"))
 # YAML 1.2 numbers such as 1e-08 are valid without a decimal point. PyYAML's
 # YAML 1.1 resolver leaves them as strings, corrupting numeric schema bounds.
+SCIENTIFIC_NUMBER = re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$")
 Loader.add_implicit_resolver("tag:yaml.org,2002:float",
-                             re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$"),
+                             SCIENTIFIC_NUMBER,
                              list("-+0123456789."))
 
 
 class Dumper(yaml.SafeDumper):
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow, False)
+
+
+# Quote vendor strings that YAML 1.2 readers would otherwise turn into numbers.
+# Keep SafeDumper's other conservative quoting rules (dates, yes/on, etc.).
+Dumper.add_implicit_resolver("tag:yaml.org,2002:float", SCIENTIFIC_NUMBER,
+                             list("-+0123456789."))
 
 
 def git(*args):
@@ -225,6 +232,14 @@ def comparison_content(spec):
 
 def canonical(spec):
     return json.dumps(spec, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def serialize_document(spec):
+    text = yaml.dump(spec, Dumper=Dumper, default_flow_style=False,
+                     sort_keys=False, allow_unicode=True, width=100000)
+    if canonical(parse(text.encode("utf-8"))) != canonical(spec):
+        raise ValueError("YAML serialization changed document values or types; refusing to write")
+    return text
 
 
 def operation_set(spec):
@@ -465,9 +480,9 @@ def main(argv=None):
             if expected != output.read_bytes():
                 raise ValueError("Refusing to overwrite local changes: " + str(dest))
         result = import_document(source, spec, metadata, old)
+        serialized = serialize_document(result)
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(yaml.dump(result, Dumper=Dumper, default_flow_style=False,
-                                    sort_keys=False, allow_unicode=True, width=100000))
+        output.write_text(serialized)
         print(str(dest))
         print(json.dumps(compare(old, spec), indent=2))
         return 0

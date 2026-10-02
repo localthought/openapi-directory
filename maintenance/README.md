@@ -111,6 +111,11 @@ schema bundling and sample recipes require explicit future support.
 The YAML loader preserves unquoted scientific notation such as `1e-08` as a number,
 as required by YAML 1.2. Quoted strings remain strings. This avoids silently corrupting
 numeric schema constraints before OpenAPI 3.1 validation.
+The writer also quotes vendor strings such as `"0.16001e0"` that would otherwise
+be read as numbers under YAML 1.2. Numeric-looking strings and numeric values must
+both survive serialization with their original types.
+Every import re-parses its serialized output and compares values and types before writing
+the file, blocking future serialization regressions instead of committing altered content.
 
 Mistral's public artifact is `openapi-public-doc.yaml`: the vendor's publishing script
 copies it to `docs.mistral.ai/openapi.yaml`, verified byte-identical on 2026-10-02.
