@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `883c681` (PR #59 merged):
-no open PRs; 725 provider domains; 4,247 files under `APIs/`, including 2,073
+**Last updated**: 2026-10-02. Audit of `origin/main` at `a9db4d4f2` (PR #63 merged):
+726 provider domains; 4,249 files under `APIs/`, including 2,075
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -138,7 +138,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-As checked on 2026-10-02: 725 distinct provider domains, 4,247 tracked files under `APIs/`.
+After PR #63 on 2026-10-02: 726 distinct provider domains, 4,249 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -232,9 +232,11 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 
 ### Still to do
 
-- **Refresh the confirmed stale APIs below**, one PR per API, while building the reusable
-  updater in §9. Re-fetch sources before importing; the figures are audit snapshots.
-- **Add the four verified missing providers below**, after bundling and full validation.
+- **Refresh the remaining confirmed stale APIs below**, one PR per API, extending the
+  reusable updater in §9. Plaid is done in PR #63. Re-fetch sources before importing;
+  the figures are audit snapshots.
+- **Add the remaining verified missing providers below**, after bundling and full validation.
+  Hugging Face Inference Endpoints is done in PR #62.
 - **Extend the refresh audit across the rest of `APIs/`.** The October check was a sample,
   not a complete audit. Compare content as well as versions and path counts.
 - **Locate specs for the vendors below**, minding the 404 warning.
@@ -257,6 +259,13 @@ or use a verified official bundled artifact. Copying only the entry file is insu
 The counts include all path entries, not necessarily one operation per path. New paths
 and removed paths must be reported separately; net growth can conceal removals.
 
+**Plaid completed:** PR #63 added `2020-09-14_1.740.1` with 360 paths / 351 operations,
+preserving the historical version and curation. **Xero import blocker:** the official
+`19.1.0` source has 23 boolean properties with string defaults/examples `'false'`, starting
+with `Account.HasAttachments`. Validation rejects them. Implement a documented,
+reproducible patch with exact source checks before importing; do not disable validation
+or silently coerce arbitrary vendor values.
+
 ### Verified missing official OADs (downloaded and parsed 2026-10-02)
 
 | Provider | Official source | Import notes |
@@ -266,7 +275,8 @@ and removed paths must be reported separately; net growth can conceal removals.
 | Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | OpenAPI 3.1, version `1.0.0`. `openapi.yaml` has 131 paths; `openapi-public-doc.yaml` has 212. Establish which artifact matches the public API documentation before choosing an import; do not concatenate them. |
 | Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
 
-None of these four providers was present in the fetched main tree. Parsing is evidence
+None of these four providers was present at the initial audit, before PR #62 added
+Hugging Face Inference Endpoints `2.0.0` (40 paths / 46 operations). Parsing is evidence
 of a real downloadable OAD, not completion of reference resolution or spec validation.
 Search the full tree by domain, brand, service, and aliases again before adding anything.
 
@@ -464,11 +474,15 @@ APIs.guru, not a verified maintenance or publication service for this fork. The 
 is an implementation plan; do not describe these jobs as operational until implemented
 and verified.
 
-**Implementation progress (2026-10-02):** PR #60 merged these instructions. The initial
-updater is under `maintenance/`: six configured service sources, locked dependencies,
-offline regression tests, read-only source checks, and a validated single-API importer.
-The infrastructure change also includes weekly report-artifact and PR-test workflows;
-verify its PR and CI status before calling the schedule operational. Bundling, conversion,
+**Implementation progress (2026-10-02):** PR #60 merged these instructions; PR #61 merged
+the initial updater under `maintenance/`: six configured service sources, locked
+dependencies, 13 passing offline regression tests, read-only source checks, and a
+validated single-API importer. Its PR tests passed on GitHub. The weekly report-artifact
+workflow is enabled; a manual run [36976870489](https://github.com/ontola/openapi-directory/actions/runs/36976870489)
+fetched all six sources and published a downloadable report and raw source snapshots.
+Its audit job exits nonzero for the known DigitalOcean bundling, Xero validation, and
+Slack conversion/source-health blockers; this is distinct from the successful test job.
+PR #62 added Hugging Face Inference Endpoints; PR #63 refreshed Plaid. Bundling, conversion,
 patch replay, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
