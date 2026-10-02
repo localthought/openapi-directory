@@ -2,22 +2,25 @@
 
 This initial updater checks six services through seven configured source artifacts,
 including both public GitHub REST descriptions. It does not claim coverage of the
-entire directory, discover every vendor release, bundle split descriptions, convert
+entire directory, discover every vendor release, convert
 Swagger, generate PRs, or merge them. Those remain explicit follow-up work
 in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
 
-Use Python 3.9+ and the pinned dependencies:
+Use Python 3.9+, Node.js 22.12+ (CI uses Node 24), and the pinned dependencies:
 
 ```sh
 python3 -m venv /tmp/openapi-maintenance-venv
 /tmp/openapi-maintenance-venv/bin/pip install -r maintenance/requirements.txt
+npm ci --prefix maintenance --ignore-scripts --no-audit --no-fund
 /tmp/openapi-maintenance-venv/bin/python -m unittest discover -s maintenance -v
 git fetch origin main
 /tmp/openapi-maintenance-venv/bin/python maintenance/update.py check
 ```
 
 `requirements.in` records the two direct dependencies; `requirements.txt` pins their
-transitive dependencies too. Update and test the lock deliberately. GitHub Actions are
+transitive dependencies too. `package-lock.json` pins the Redocly bundler package and its
+integrity; that release includes its runtime dependencies. Update and test both locks
+deliberately. GitHub Actions are
 pinned to verified release commit SHAs.
 
 `check` reads committed specs from `origin/main`, so sparse checkouts and stale feature
@@ -66,12 +69,33 @@ If the vendor fixes a defect, remove or revise the recipe deliberately rather th
 silently skipping it. Original source bytes remain cached; comparisons and validation
 use the patched document. The report and imported `info.x-conversion` record the recipe,
 its hash, and its explanation, so the same transformation can be replayed.
+Recipes can also remove an explicitly asserted invalid field using `remove: true` in
+place of `value`. This never supplies a replacement value or infers server behavior.
 
 Xero Accounting's recipe fixes only the 46 string `'false'` defaults/examples on 23
 explicitly named boolean properties, verified in vendor commit
 `fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f`. Every replacement asserts `type: boolean`.
 There is no general string-to-boolean coercion. The complete patched document must still
 pass all normal OpenAPI and reference/parameter validation.
+
+Split GitHub descriptions can register a `bundling` recipe. The updater resolves the
+vendor revision, downloads its archive, checks that the archive entry matches the
+independently fetched root, and selects the recursively referenced YAML/JSON files.
+Archive links, unsafe paths, missing files, remote/query references, and unsupported
+non-schema artifacts fail the run. Vendor scripts, plugins, overlays, and configurations
+are not run. Redocly 2.57.0 bundles the pinned data with our empty configuration; full
+OpenAPI and reference validation still run afterwards. The source snapshot hashes every
+referenced file, so changes in helpers are detected even when the entry file is unchanged.
+The cache preserves the archive, selected files, file hashes, bundled output, and logs.
+Each import records the snapshot hash, tool version/options, and warning count.
+
+DigitalOcean's recipe has 21 reviewed component naming warnings: separate definitions
+with identical basenames are disambiguated, retaining both contents. A changed warning
+count stops the run for review. The local bundle was compared with DigitalOcean's
+official published bundle by resolving references across paths and common components.
+Two invalid null defaults in its GenAI `stop` schemas are removed by exact patches;
+all declared alternatives and nullable annotations remain. The complete patched bundle
+must pass validation. Other sources default to zero expected bundling warnings.
 
 The weekly GitHub workflow runs tests and publishes the configured-source report and raw
 snapshots. PRs changing the updater run its tests without network access. Automated PR

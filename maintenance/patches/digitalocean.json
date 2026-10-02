@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "description": "Removed only the invalid null defaults from chat_completion_request.stop and create_response_request.stop: each oneOf admits strings or arrays, so null does not satisfy the declared alternatives. All types, alternatives, nullable annotations, and other constraints are preserved; no replacement default or server behavior is invented.",
+  "operations": [
+    {
+      "pointer": "#/components/schemas/chat_completion_request/properties/stop/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "pointer": "#/components/schemas/create_response_request/properties/stop/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "oneOf": [
+          {
+            "type": "string",
+            "example": "\n"
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
