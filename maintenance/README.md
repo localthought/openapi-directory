@@ -2,8 +2,7 @@
 
 This updater checks only the service artifacts configured in `sources.json`,
 including both public GitHub REST descriptions. It does not claim coverage of the
-entire directory, discover every vendor release, convert
-Swagger, generate PRs, or merge them. Those remain explicit follow-up work
+entire directory, discover every vendor release, generate PRs, or merge them. Those remain explicit follow-up work
 in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
 
 Use Python 3.9+, Node.js 22.12+ (CI uses Node 24), and the pinned dependencies:
@@ -95,6 +94,39 @@ Run `check --source plaid` to select one service, or repeat `--source` for sever
 to `sources.json` only after verifying ownership, service scope, stable-release selection,
 and absence from the full main tree. Known upstream defects need documented patches or
 reviewed exceptions before import; this tool has no validation bypass.
+
+Swagger 2.0 sources can register a `conversion` recipe with `tool: swagger2openapi`,
+`version: 7.0.8`, and reviewed integer `expected_warnings` / `expected_patches` counts
+(both default to zero). The pinned local converter uses `patch:true`, `warnOnly:true`,
+`resolve:false` and target OpenAPI `3.0.0`. External references must first be bundled
+from a pinned source; conversion itself does no network resolution. Unknown extension
+references are also checked, and pre-existing converter warning markers require review.
+Operations missing response declarations are rejected before the converter can fabricate
+default responses. Conversion must retain every path and operation. A source-format,
+warning-count or converter-patch-count change stops the recipe for review.
+
+The cache retains the original bytes, normalized conversion input, converted JSON,
+warning/patch observations and converter log, with input/output hashes. Conversion occurs
+after optional bundling and before exact source-specific patches. Full OpenAPI validation,
+reference checks and the serialized value/type guard remain mandatory: `warnOnly` does
+not waive validation, and accepting a warning count does not repair missing schemas.
+Imports record the Swagger → OpenAPI `x-origin` chain and actual conversion details in
+`info.x-conversion`; they never describe converted files as having no version conversion.
+
+Grafana follows the vendor-documented canonical `public/api-merged.json` source, with
+zero expected warnings and converter patches. This is the existing legacy HTTP artifact,
+whose declared version remains `0.0.1`. The vendor's
+[HTTP reference](https://grafana.com/docs/grafana/latest/developer-resources/api-reference/http-api/)
+marks legacy routes deprecated in favor of newer `/apis` resources. Their descriptions
+and Grafana Cloud need separate discovery; a match to this source does not establish their
+coverage. This service-specific coverage note is displayed in audit reports. Vendor fake
+example credentials remain unmodified; push protection must still be respected.
+
+Square follows its official OpenAPI 3 source directly. Two exact patches replay the
+previously reviewed required `vendor_id` parameter and empty OAuth scope list corrections.
+Its undefined `CurrencyExchange` and `AppFeeAllocation` schemas remain unmodified, so
+validation blocks imports while audits continue to report content drift. No schemas or
+validation exceptions are invented. Vendor fixes stop patch replay for deliberate review.
 
 Exact patches are registered in a source's `patches` list, with JSON recipes under
 `maintenance/patches/`. Each replacement asserts both the original JSON value (including

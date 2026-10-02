@@ -22,6 +22,7 @@ import samples
 import releases
 import report
 import health
+import conversion
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -320,6 +321,8 @@ def import_document(source, new, metadata, old, baseline_path=None):
     result = preserve_curation(old, new)
     result["info"]["x-origin"] = [{"format": "openapi", "url": metadata["url"],
                                      "version": ".".join(new["openapi"].split(".")[:2])}]
+    if metadata.get("conversion"):
+        result["info"]["x-origin"].insert(0, {"format": "swagger", "url": metadata["url"], "version": "2.0"})
     revision = " at commit " + metadata["revision"] if metadata.get("revision") else " on " + metadata["fetched_at"]
     result["info"]["x-conversion"] = [
         "Fetched from " + metadata["url"] + revision + "; entry source SHA-256 " + metadata["sha256"] + ".",
@@ -335,7 +338,7 @@ def import_document(source, new, metadata, old, baseline_path=None):
         result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from "
                                            + (baseline_path or source["target"]) + ".")
     result["info"]["x-conversion"].append(
-        "Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion."
+        "Serialized as YAML with PyYAML 6.0.3" + ("." if metadata.get("conversion") else "; no OpenAPI version conversion.")
         if metadata.get("transformations") else
         "Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.")
     errors = validate_document(result)
@@ -377,6 +380,11 @@ def prepare_document(source, raw, metadata=None, cache=None):
     if metadata and metadata.get("release_catalog"):
         if spec["info"]["version"] != metadata["release_catalog"]["selected_version"]:
             raise ValueError("Declared API version does not match the selected release directory")
+    if source.get("conversion"):
+        if metadata is None or cache is None:
+            raise ValueError("Conversion requires fetch metadata and a source cache")
+        spec, step = conversion.prepare(source, spec, metadata, cache, dereference)
+        transformations.append(step)
     if source.get("code_samples"):
         if metadata is None or cache is None:
             raise ValueError("Code samples require fetch metadata and a source cache")
@@ -427,7 +435,7 @@ def prepare_document(source, raw, metadata=None, cache=None):
 
 def audit(source, base, cache, health_checker=None):
     result = {"id": source["id"], "target": source["target"], "checked_at": now(),
-              "coverage": "Configured service only; freshness of the whole provider is not established."}
+              "coverage": source.get("coverage", "Configured service only; freshness of the whole provider is not established.")}
     result.update((health_checker or health.Checker(request, now, cache)).check(source))
     if source.get("source_health"):
         result["declared_source_health"] = source["source_health"]

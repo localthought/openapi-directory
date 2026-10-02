@@ -53,6 +53,7 @@ def render(document):
         lines.extend(["", "## " + text(row["id"]), "",
                       "- Target: " + text(row.get("destination", row.get("target"))),
                       "- Comparison base revision: " + text(row.get("base_revision")),
+                      "- API coverage: " + text(row.get("coverage")),
                       "- Source: " + text(fetch.get("url")),
                       "- Source revision: " + text(fetch.get("revision")),
                       "- Entry SHA-256: " + text(fetch.get("sha256")),

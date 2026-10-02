@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "description": "PUT /v2/vendors/{vendor_id} declares an empty parameter list despite its path variable. Restore the required string vendor_id path declaration, matching GET on the same path and the previously reviewed import, with update-specific wording. POST /oauth2/revoke declares oauth2 scopes as null; replace only that invalid scope list with [] as required by OpenAPI. Assert complete original lists and each operation's identity/tags. Known upstream references to missing CurrencyExchange and AppFeeAllocation schemas remain unresolved; no schemas are invented.",
+  "operations": [
+    {
+      "pointer": "#/paths/~1v2~1vendors~1{vendor_id}/put/parameters",
+      "from": [],
+      "value": [
+        {
+          "name": "vendor_id",
+          "description": "ID of the [Vendor](entity:Vendor) to update.",
+          "schema": {"type": "string"},
+          "in": "path",
+          "required": true
+        }
+      ],
+      "context": {"summary": "UpdateVendor", "operationId": "UpdateVendor", "tags": ["Vendors"]}
+    },
+    {
+      "pointer": "#/paths/~1oauth2~1revoke/post/security",
+      "from": [{"oauth2": null}],
+      "value": [{"oauth2": []}],
+      "context": {"summary": "RevokeToken", "operationId": "RevokeToken", "tags": ["OAuth"]}
+    }
+  ]
+}
