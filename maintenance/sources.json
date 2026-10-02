@@ -98,6 +98,22 @@
       }
     },
     {
+      "id": "mistral",
+      "provider": "mistral.ai",
+      "target": "APIs/mistral.ai/1.0.0/openapi.yaml",
+      "github": {
+        "repository": "mistralai/platform-docs-public",
+        "ref": "main",
+        "path": "openapi-public-doc.yaml"
+      },
+      "discovery": "Vendor copy-openapi.ts publishes this artifact at docs.mistral.ai/openapi.yaml, verified byte-identical on 2026-10-02. Preserve its beta/public-preview labels; this is the full public description, not a stable-only subset. Do not substitute or concatenate the separate openapi.yaml.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "patches": [
+        "maintenance/patches/mistral.json"
+      ]
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

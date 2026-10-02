@@ -112,6 +112,14 @@ The YAML loader preserves unquoted scientific notation such as `1e-08` as a numb
 as required by YAML 1.2. Quoted strings remain strings. This avoids silently corrupting
 numeric schema constraints before OpenAPI 3.1 validation.
 
+Mistral's public artifact is `openapi-public-doc.yaml`: the vendor's publishing script
+copies it to `docs.mistral.ai/openapi.yaml`, verified byte-identical on 2026-10-02.
+It includes the vendor's labeled public-preview APIs. The other root `openapi.yaml`
+is not the public download and must not be concatenated with it. Eleven exact patches
+correct the speech streaming response's nine references and two discriminator mappings
+from nonexistent document-root `$defs` to the existing definitions inside that response
+schema. No schemas are invented. Changed source values/context block replay for review.
+
 The weekly GitHub workflow runs tests and publishes the configured-source report and raw
 snapshots. PRs changing the updater run its tests without network access. Automated PR
 creation and monthly discovery have not been implemented yet; the one-week Codex
