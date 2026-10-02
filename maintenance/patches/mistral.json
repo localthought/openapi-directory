@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "description": "Corrected 11 document-root references in POST /v1/audio/speech streaming responses (including two discriminator mappings) to the existing definitions under that response schema. The vendor defines these schemas locally, not at document-root $defs; no definitions or API behavior were invented.",
+  "operations": [
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/properties/event/$ref",
+      "from": "#/$defs/SpeechStreamEventTypes",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamEventTypes",
+      "context": {
+        "$ref": "#/$defs/SpeechStreamEventTypes"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/properties/data/oneOf/0/$ref",
+      "from": "#/$defs/SpeechStreamAudioDelta",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamAudioDelta",
+      "context": {
+        "$ref": "#/$defs/SpeechStreamAudioDelta"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/properties/data/oneOf/1/$ref",
+      "from": "#/$defs/SpeechStreamDone",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamDone",
+      "context": {
+        "$ref": "#/$defs/SpeechStreamDone"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/properties/data/discriminator/mapping/speech.audio.delta",
+      "from": "#/$defs/SpeechStreamAudioDelta",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamAudioDelta",
+      "context": {
+        "speech.audio.delta": "#/$defs/SpeechStreamAudioDelta",
+        "speech.audio.done": "#/$defs/SpeechStreamDone"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/properties/data/discriminator/mapping/speech.audio.done",
+      "from": "#/$defs/SpeechStreamDone",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamDone",
+      "context": {
+        "speech.audio.delta": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamAudioDelta",
+        "speech.audio.done": "#/$defs/SpeechStreamDone"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/MessageTokens/properties/role/$ref",
+      "from": "#/$defs/Roles",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/Roles",
+      "context": {
+        "$ref": "#/$defs/Roles"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/PromptTokensDetails/properties/messages/items/$ref",
+      "from": "#/$defs/MessageTokens",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/MessageTokens",
+      "context": {
+        "$ref": "#/$defs/MessageTokens"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/SpeechStreamDone/properties/usage/$ref",
+      "from": "#/$defs/UsageInfo",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/UsageInfo",
+      "context": {
+        "$ref": "#/$defs/UsageInfo"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/UsageInfo/properties/prompt_tokens_details/anyOf/0/$ref",
+      "from": "#/$defs/PromptTokensDetails",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/PromptTokensDetails",
+      "context": {
+        "$ref": "#/$defs/PromptTokensDetails"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/UsageInfo/properties/completion_tokens_details/anyOf/0/$ref",
+      "from": "#/$defs/CompletionTokensDetails",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/CompletionTokensDetails",
+      "context": {
+        "$ref": "#/$defs/CompletionTokensDetails"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/UsageInfo/properties/prompt_token_details/anyOf/0/$ref",
+      "from": "#/$defs/PromptTokensDetails",
+      "value": "#/paths/~1v1~1audio~1speech/post/responses/200/content/text~1event-stream/schema/$defs/PromptTokensDetails",
+      "context": {
+        "$ref": "#/$defs/PromptTokensDetails"
+      }
+    }
+  ]
+}
