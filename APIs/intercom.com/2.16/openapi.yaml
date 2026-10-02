@@ -11,13 +11,13 @@ info:
     url: https://spdx.org/licenses/MIT
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/6d8b0b8d27a779a6005716249ed21755f29292d9/descriptions/2.16/api.intercom.io.yaml
+      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/70d74db6722480bad239eba2f049ff3c98744c5f/descriptions/2.16/api.intercom.io.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/6d8b0b8d27a779a6005716249ed21755f29292d9/descriptions/2.16/api.intercom.io.yaml at commit 6d8b0b8d27a779a6005716249ed21755f29292d9; entry source SHA-256 4ad25263e84fdfc3c03467440899edc13696066aa2556cdf989bdc2f68192e72.
-    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=6d8b0b8d27a779a6005716249ed21755f29292d9; catalog SHA-256 6ea9aa6f11b8b1b9e511ae3e9849c3adde11c475059bd7d65abcb274ca23705b. Preview/prerelease directories and releases below 2.16 are excluded.
+    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/70d74db6722480bad239eba2f049ff3c98744c5f/descriptions/2.16/api.intercom.io.yaml at commit 70d74db6722480bad239eba2f049ff3c98744c5f; entry source SHA-256 3274c2255a71c18f38fc146cf316c332503973f5adf0b5ca117f2c409971a4e3.
+    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=70d74db6722480bad239eba2f049ff3c98744c5f; catalog SHA-256 696240e93fa4cb6c584500bf208a55ed0842f21cae22b4254d82c2fe0351c930. Preview/prerelease directories and releases below 2.16 are excluded.
     - 'Applied maintenance/patches/intercom.json (SHA-256 6e2c3a0ec38f7a2b39e9d6f6428219c15fbf014c03bd3d5774bddfcd7212c2db): GET /export/reporting_data/{job_identifier} and GET /download/reporting_data/{job_identifier} omit the required path parameter. Add the same required string job_identifier path declaration used in the validated 2.14 import; retain every vendor query/header parameter and assert each complete original list plus operation summary/tags. No endpoint or response schema is invented.'
-    - Preserved existing APIs.guru curation metadata from APIs/intercom.com/2.14/openapi.yaml.
+    - Preserved existing APIs.guru curation metadata from APIs/intercom.com/2.16/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 paths:
   /me:
@@ -28473,17 +28473,10 @@ components:
         email_verified:
           type: boolean
           nullable: true
-          description: 'Whether the contact has proved they own this email address, for example by completing a confirmation link or one-time code you sent to it. Send `email_verified` in the same request as `email`, for example `{"email": "jane@example.com", "email_verified": true}`. A request that includes `email_verified` without `email` fails with a `400`.
+          description: 'Whether the contact has proved they own this email address, for example through a confirmation link or one-time code you sent. Send it together with `email`. `email_verified` without `email` is rejected.
 
 
-            - `true`: ownership is proved.
-
-            - `false`: ownership is not proved.
-
-            - Omitted: the current verification status stays the same.
-
-
-            New contacts start unverified. If you change a verified contact''s email, the new address is unverified until you verify it. Only send `true` when you have that proof. When an inbound email, outbound conversation, or ticket matches a verified address, Intercom reuses that lead instead of creating a new one.'
+            Changing a contact''s email resets it to not verified. Intercom reuses leads with a verified email when an inbound email, conversation or ticket matches the address.'
           example: true
         email:
           type: string
@@ -35113,17 +35106,10 @@ components:
         email_verified:
           type: boolean
           nullable: true
-          description: 'Whether the contact has proved they own this email address, for example by completing a confirmation link or one-time code you sent to it. Send `email_verified` in the same request as `email`, for example `{"email": "jane@example.com", "email_verified": true}`. A request that includes `email_verified` without `email` fails with a `400`.
+          description: 'Whether the contact has proved they own this email address, for example through a confirmation link or one-time code you sent. Send it together with `email`. `email_verified` without `email` is rejected.
 
 
-            - `true`: ownership is proved.
-
-            - `false`: ownership is not proved.
-
-            - Omitted: the current verification status stays the same.
-
-
-            New contacts start unverified. If you change a verified contact''s email, the new address is unverified until you verify it. Only send `true` when you have that proof. When an inbound email, outbound conversation, or ticket matches a verified address, Intercom reuses that lead instead of creating a new one.'
+            Changing a contact''s email resets it to not verified. Intercom reuses leads with a verified email when an inbound email, conversation or ticket matches the address.'
           example: true
         phone:
           type: string
