@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "description": "Removed the invalid string default \"20 - incident_summary\" from the integer sre_memories_limit query parameter. The source declares an integer range of 1 to 100; no replacement default or server behavior was inferred.",
+  "operations": [
+    {
+      "pointer": "#/components/parameters/sre_memories_limit/schema/default",
+      "from": "20 - incident_summary",
+      "remove": true,
+      "context": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
+    }
+  ]
+}
