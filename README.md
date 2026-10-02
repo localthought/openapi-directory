@@ -1,12 +1,25 @@
 ![banner]
 
-**Fork maintenance:** This is `ontola/openapi-directory`. Its official-source updater
-and configured coverage are documented in [maintenance/README.md](maintenance/README.md).
-The source registry identifies the monitored service artifacts. Unsupported or archived
-sources appear with blockers in the report. The workflow checks weekly and publishes audit artifacts; automatic update PRs
-and monthly discovery remain implementation work. The inherited badges, REST API, RSS,
-and contribution links below refer to upstream APIs.guru. A public API serving this
-fork's additions has not been published.
+**Fork maintenance:** This is `ontola/openapi-directory`, focused on official descriptions
+of well-known industry APIs. The [source registry](maintenance/sources.json) lists the
+service artifacts checked by the [weekly workflow](.github/workflows/maintenance.yml).
+The updater compares complete vendor content, preserves existing curation, and validates
+each import. Reviewed sources can resolve external references, materialize code samples,
+replay exact patches, or discover newer numeric releases; recipes are source-specific.
+
+See the [updater guide](maintenance/README.md) for reproducible commands and
+[AGENTS.md](AGENTS.md) for scope, completed work and unresolved candidates.
+[Workflow runs](https://github.com/ontola/openapi-directory/actions/workflows/maintenance.yml)
+publish an `official-source-audit` artifact containing the JSON freshness report and raw
+source snapshots. A failed audit can contain successful comparisons alongside recorded
+validation or source-health blockers. A match establishes agreement with the configured
+source, not freshness of every API offered by that vendor.
+
+Imports are delivered in separate PRs for each API, with provenance in the spec's `info`
+block. Automatic update PR creation and monthly discovery remain implementation work.
+Use this fork's committed [API files](APIs) for its additions; a public collection API
+serving this fork has not been published. The inherited badges, REST API, RSS, integrations,
+sponsorship and upstream contribution material below describe APIs.guru.
 
 [![APIs in collection][numApis-image]][apisDir-link]
 [![OpenAPI definitions][numSpecs-image]][apisDir-link]
@@ -17,7 +30,7 @@ fork's additions has not been published.
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/openapi-directory/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/openapi-directory/sponsors/badge.svg" /></a> <a href="#partners" alt="Partners on Open Collective"><img src="https://opencollective.com/openapi-directory/partner/badge.svg" /></a>
 
 Directory of API definitions in [OpenAPI(fka Swagger)](https://openapis.org) [2.0](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md) and [3.x](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.3.md) formats.<BR>
-API access to collection: [Go!][apiDoc-link] - We also have RSS feeds for [added](https://api.apis.guru/v2/added.rss) and [updated](http://api.apis.guru/v2/list.rss) APIs.
+Upstream collection API: [documentation][apiDoc-link], with upstream RSS feeds for [added](https://api.apis.guru/v2/added.rss) and [updated](http://api.apis.guru/v2/list.rss) APIs.
 
 [![Add API][addAPI-image]][addAPI-link]
 
@@ -48,16 +61,23 @@ API definition acceptance criteria
 * Persistent - API is made with long-lived goal, and not for a particular event (conference, hackathon, etc.).
 * Useful - API should provide useful functionality not only for its owner.
 
-Update procedure
+Fork update procedure
 --------------------------
-All definitions are automatically updated from their original source.
-You can see this in the `x-origin` property within each [openapi.yaml](https://github.com/APIs-guru/openapi-directory/search?utf8=%E2%9C%93&q=x-origin+filename%3Aopenapi.yaml) or [swagger.yaml](https://github.com/APIs-guru/openapi-directory/search?utf8=%E2%9C%93&q=x-origin+filename%3Aswagger.yaml) file.
-We run our update script at least weekly and automatically revalidate before committing.
-If you see some APIs are not updated for more than 2 weeks please open [an issue](https://github.com/APIs-guru/openapi-directory/issues/new).
+Weekly checks cover only [registered sources](maintenance/sources.json). They are read-only;
+they publish drift, separate additions/removals, validation results and source revisions.
+The report includes unsupported and archived sources rather than silently treating them as
+current. Historical files outside the registry have no freshness guarantee.
+
+To refresh an API, follow the [maintenance commands](maintenance/README.md) and
+[fork contribution instructions](CONTRIBUTING.md). A declared version bump adds a new
+directory; unchanged vendor versions can require an in-place content refresh. Each spec's
+`info.x-origin` identifies its source and `info.x-conversion` records transformations.
+Report fork-specific stale descriptions or missing official sources in
+[this fork's issues](https://github.com/ontola/openapi-directory/issues/new).
 
 [@seriousme](https://github.com/seriousme) kindly runs a backup validation process based on the official OpenAPI-Specification [JSON Schemas](https://github.com/OAI/OpenAPI-Specification/tree/main/schemas) [here](https://github.com/seriousme/openapi-schema-validator/blob/master/test/realworld/failed.md#results-of-real-world-testing).
 
-Existing integrations
+Inherited upstream integrations
 --------------------------
 
 [![Become a backer](https://opencollective.com/openapi-directory/tiers/backer.svg?avatarHeight=36&width=600)](https://opencollective.com/openapi-directory)
@@ -96,8 +116,11 @@ Also used as test suite in the following projects:
 
 Integration with 3rd-party services
 --------------------------
-We discourage you from using Github RAW links or Git directly, the repository structure may change in the future.
-Instead, we strongly recommend you to use our [REST API][apiDoc-link].
+The upstream project recommends its [REST API][apiDoc-link] for upstream collection access.
+That service is not a verified publication endpoint for this fork's additions. For fork
+content, read the committed files under [APIs](APIs) and pin the repository revision when
+you need reproducibility. A fork index must be published and checked for consumer access
+before it can be advertised here.
 
 Licenses
 --------------------------
