@@ -283,7 +283,7 @@ def destination(source, spec):
 def preserve_curation(old, new):
     result = copy.deepcopy(new)
     if old:
-        for key in CURATION:
+        for key in sorted(CURATION):
             if key in old["info"]:
                 result["info"][key] = copy.deepcopy(old["info"][key])
         twitter = old["info"].get("contact", {}).get("x-twitter")

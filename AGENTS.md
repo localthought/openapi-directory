@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `5c5b3a43e` (PR #72 merged):
-727 provider domains; 4,252 files under `APIs/`, including 2,078
+**Last updated**: 2026-10-02. Audit of `origin/main` at `fc16ad482` (PR #79 merged):
+729 provider domains; 4,254 files under `APIs/`, including 2,080
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -108,6 +108,11 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #70 | DigitalOcean `2.0` | Fixed version refreshed in place; 515 paths / 757 operations; curation preserved |
 | #71 | Snowflake SQL `2.0.0` | New SQL execution service; 3 paths / 3 operations; no bundling or patches |
 | #72 | Snowflake Warehouse `0.0.1` | New management service; 12 paths / 15 operations; `common.yaml` bundled with zero warnings |
+| #74 / #75 | Pinned Fern snippet materialization and YAML scientific numbers | Source snapshots include code artifacts; fetch-helper integration verified; 27 tests pass locally and in CI |
+| #76 | Cohere `1.0` | New OpenAPI 3.1 description; 32 paths / 42 operations; seven TypeScript samples materialized without execution |
+| #77 | Mistral `1.0.0` | New public OpenAPI 3.1 artifact; 212 paths / 299 operations; eleven checked streaming-reference corrections |
+| #78 | YAML string preservation and import round-trip guard | Quote scientific-looking vendor strings, reject serialization type/value changes; 29 tests pass locally and in CI |
+| #79 | GitHub example string types | Eight quote repairs across both public artifacts; paths/operations unchanged, vendor JSON values retained |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -285,9 +290,9 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 - **Monitor the refreshed priority APIs below**, extending the reusable updater in §9.
   All four confirmed stale APIs are done: Plaid #63, GitHub REST #65, Xero #67, and
   DigitalOcean #70. The table retains the original audit snapshots, not current stored counts.
-- **Add the remaining verified missing providers below**, after bundling and full validation.
-  Hugging Face Inference Endpoints is done in PR #62.
-  Snowflake SQL and Warehouse are done in #71/#72; audit remaining distinct public services.
+- **Extend the official coverage audit.** Hugging Face Inference Endpoints (#62), Snowflake
+  SQL/Warehouse (#71/#72), Cohere (#76), and Mistral (#77) are done. Audit remaining
+  distinct stable Snowflake services and other well-known providers before importing more.
 - **Extend the refresh audit across the rest of `APIs/`.** The October check was a sample,
   not a complete audit. Compare content as well as versions and path counts.
 - **Locate specs for the vendors below**, minding the 404 warning.
@@ -333,14 +338,39 @@ the updater for review. Logs, original data, source hashes, and the bundle remai
 | Provider | Official source | Import notes |
 |---|---|---|
 | Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops) and Warehouse `0.0.1` (12 / 15) are DONE in #71/#72. Audit remaining distinct public APIs separately. Shared helper files are not separate APIs. |
-| Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | OpenAPI 3.1, version `1.0`, 32 paths. External `$ref` values in code-sample extensions refer to TypeScript snippets; distinguish those artifacts from schema references and handle them explicitly. |
-| Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | OpenAPI 3.1, version `1.0.0`. `openapi.yaml` has 131 paths; `openapi-public-doc.yaml` has 212. Establish which artifact matches the public API documentation before choosing an import; do not concatenate them. |
+| Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | DONE #76: OpenAPI 3.1, version `1.0`, 32 paths / 42 ops. Seven referenced TypeScript snippets are explicitly materialized as code strings and included in freshness snapshots. |
+| Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | DONE #77: OpenAPI 3.1, version `1.0.0`, 212 paths / 299 ops. `openapi-public-doc.yaml` is the verified public download; do not substitute or concatenate the separate 131-path `openapi.yaml`. |
 | Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
 
 None of these four providers was present at the initial audit, before PR #62 added
-Hugging Face Inference Endpoints `2.0.0` (40 paths / 46 operations). Parsing is evidence
-of a real downloadable OAD, not completion of reference resolution or spec validation.
+Hugging Face Inference Endpoints `2.0.0` (40 paths / 46 operations). All four now have
+validated imports; Snowflake's remaining catalog still needs per-service review. Parsing
+alone is not completion of reference resolution or spec validation.
 Search the full tree by domain, brand, service, and aliases again before adding anything.
+
+**Cohere details:** vendor commit `734aafbe1fe2ca5c7356609009ec0d9b74e6ac57`.
+The `code_samples` recipe operates only on Fern operation-level code sample references,
+fetches UTF-8 artifacts from the same pinned commit, preserves their text without execution,
+and hashes entry plus snippets together. Source snapshot
+`a5f38e5f74280d88f3d3a5231c178ebfa05c63674dddb90979cc268973e333c3` includes all seven.
+No external references remain. Missing or unsafe snippets block refresh, and snippet-only
+changes are detected. PR #75 corrected a live-import fetch-helper contract mismatch after
+#74; its regression test exercises the real HTTP helper with a mocked response.
+
+**Mistral selection and patch:** vendor commit `ce5bfddb42fe91b964f88cb16ab42f41bd415501`.
+The [publishing script](https://github.com/mistralai/platform-docs-public/blob/ce5bfddb42fe91b964f88cb16ab42f41bd415501/src/scripts/copy-openapi.ts)
+explicitly copies `openapi-public-doc.yaml` to the public download. The documentation
+build selects the same source; its bytes exactly matched `https://docs.mistral.ai/openapi.yaml`
+(SHA-256 `fa73befe1c61e1bf4847c532e6375612ae5c7a4a83f96db4a1087ee0115db8b7`).
+This is the full public artifact, including vendor-labeled beta/public-preview APIs,
+not a stable-only subset. Nine references and two discriminator mappings in the speech
+streaming response point at nonexistent document-root `$defs`, while the vendor's
+definitions exist under that response schema. `maintenance/patches/mistral.json` applies
+eleven exact checked pointer replacements to those existing definitions; no schemas are
+invented. All 1,939 local references resolve after the patch and full validation passes.
+Changed source values/context stop replay. Scientific bounds such as `1e-08` are valid
+YAML 1.2 numbers; #74 fixes the loader's old string interpretation instead of patching
+vendor numeric content. No OpenAPI version conversion was used.
 
 Snowflake's [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
 is generally available, but that umbrella page also lists individual preview products:
@@ -554,8 +584,16 @@ test job. Xero's blocker is now resolved by #66's checked patch replay; 16 tests
 locally and in GitHub CI. PRs #62/#63/#65/#67 added Hugging Face and refreshed Plaid,
 both public GitHub REST artifacts, and Xero. #69 adds pinned repository bundling and exact
 field removal, with locked Node tooling and 21 passing local/CI tests; #70 refreshes
-DigitalOcean, and #71/#72 add Snowflake SQL and Warehouse. Nine artifacts across eight
-services are now registered. Conversion, automatic PR generation, monthly discovery, and fork index publication
+DigitalOcean, and #71/#72 add Snowflake SQL and Warehouse, bringing the registry to nine
+artifacts across eight services. #74/#75 add explicitly scoped pinned Fern code-sample
+materialization and YAML 1.2 scientific-number parsing, with 27 passing regression tests;
+#76/#77 add Cohere and Mistral. #78 aligns scientific-number quoting in the writer and
+checks every import's serialized round-trip before writing, with 29 passing local/CI
+tests. #79 repairs eight scientific-looking strings across both GitHub artifacts,
+retaining the same vendor revision, version, paths and operations. Preserved curation
+is now emitted in deterministic key order, tested across three Python hash seeds;
+30 offline tests pass. Eleven artifacts across ten services are now registered.
+Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
 sleeps; do not prevent sleep or extend the deadline without a new request.
@@ -569,11 +607,34 @@ artifact includes the source archives, file hashes, bundles, and report. The aud
 still exits nonzero solely for Slack's already-known archived Swagger/conversion blocker;
 unsupported-format comparison is not evidence of new Slack API drift or current coverage.
 
-**Resume next:** import Cohere after explicitly preserving/materializing its TypeScript
-snippet references, and establish which Mistral artifact matches its public API docs
-before importing it. Then audit more distinct stable Snowflake services and extend
-source freshness/discovery across other well-known providers. Automatic PR generation,
-monthly discovery, and fork publication remain implementation work. The source registry
+The expanded audit [36994983111](https://github.com/ontola/openapi-directory/actions/runs/36994983111)
+at main `ed6630fe3` fetched all eleven sources, passed 27 tests, and matched eight
+supported artifacts. The two GitHub artifacts had only scientific-string type drift:
+their vendor JSON strings `"0.16001e0"` were emitted unquoted by the old writer, and
+the corrected YAML 1.2 reader detected the mismatch. #78/#79 fix the writer and stored
+files, rather than ignoring these example differences. Slack remained the known blocker.
+The downloaded artifact is `/tmp/openapi-ci-audit-36994983111`; CI artifacts, not `/tmp`,
+are the durable download source. Cohere's seven snippets and Mistral's checked recipe
+were exercised successfully in that network audit.
+
+Final network audit [37002022081](https://github.com/ontola/openapi-directory/actions/runs/37002022081)
+at main `fc16ad482` passed all 29 then-current tests and fetched all eleven artifacts.
+All ten supported OpenAPI artifacts matched their official sources with zero validation
+errors, including both repaired GitHub descriptions, Cohere's seven code samples, and
+the patched public Mistral artifact. DigitalOcean still has 21 reviewed bundler warnings;
+Warehouse has zero. The audit job exits nonzero solely for Slack's known archived Swagger
+and source-health blocker. Source snapshots and the full report were published as the
+`official-source-audit` artifact and downloaded to `/tmp/openapi-ci-audit-37002022081`;
+the local `cache/maintenance/report.json` now contains that report. The deterministic
+curation change adds one further offline regression (30 total); it changes no API values.
+
+**Resume next:** extend the official-source registry to priority APIs already imported
+(for example Stripe, Square, Figma, PagerDuty and MongoDB Atlas), audit more distinct
+stable Snowflake services, and continue vendor discovery. Implement validated per-service
+PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
+merge. Update fork-facing README/CONTRIBUTING and consider fork publication only with
+verified consumer access. Slack's maintained official replacement remains unresolved.
+Cohere and Mistral are complete and their local checks match their sources. The registry
 and local report retain the latest checks;
 re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
 

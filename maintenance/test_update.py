@@ -1,5 +1,7 @@
 import copy
 import json
+import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -18,6 +20,21 @@ def document(version="1.0"):
 
 
 class UpdaterTests(unittest.TestCase):
+    def test_curated_import_is_reproducible_across_process_hash_seeds(self):
+        script = '''import hashlib, update
+from test_update import document
+old = document()
+old["info"].update({k: "curated" for k in sorted(update.CURATION)})
+metadata = {"url": "https://vendor.example/spec.json", "revision": "abc", "sha256": "def", "fetched_at": "today"}
+result = update.import_document({"target": "APIs/example.com/1.0/openapi.yaml"}, document(), metadata, old)
+print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
+'''
+        outputs = [subprocess.check_output([os.sys.executable, "-c", script],
+                                           cwd=Path(update.__file__).parent,
+                                           env={**os.environ, "PYTHONHASHSEED": seed})
+                   for seed in ("1", "42", "123")]
+        self.assertEqual(len(set(outputs)), 1)
+
     def test_fixed_version_schema_and_security_changes_are_detected(self):
         old = document()
         new = copy.deepcopy(old)
