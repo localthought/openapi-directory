@@ -5,13 +5,20 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-09-22. `main` at PR #59 merged; no open PRs; 725 provider domains tracked.
+**Last updated**: 2026-10-02. Audit of `origin/main` at `883c681` (PR #59 merged):
+no open PRs; 725 provider domains; 4,247 files under `APIs/`, including 2,073
+`openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
+not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
 ## 1. The standing task
 
-Work through the upstream `APIs-guru/openapi-directory` backlog (PRs and issues) and port anything worth having into our fork.
+Keep this fork current for well-known industry APIs. Prioritize direct comparisons with
+official vendor sources and discovery of missing official OpenAPI descriptions (OADs).
+Use the upstream `APIs-guru/openapi-directory` backlog as a secondary source of leads;
+the previous backlog sweep was low-yield (§3). Follow the current queue in §4 and the
+maintenance implementation instructions in §9.
 
 **Filter criterion the user set, which governs everything:**
 > "you can skip additions of niche APIs, I'm more interested in additions or corrections of well-known industry APIs."
@@ -26,7 +33,8 @@ Work through the upstream `APIs-guru/openapi-directory` backlog (PRs and issues)
 2. **Check what we already have is current.** Most of the value found so far was here, not
    in new additions: Stripe was 4 years stale, Square was 94 paths behind, Meraki and
    Mailchimp both needed version bumps. Walk `APIs/` against upstream sources and compare
-   `info.version` and path counts.
+   `info.version`, paths, operations, and schema content. An unchanged version or path
+   count does not prove an unchanged API.
 
 **Autonomy level as of the last instruction:** the user said *"i don't need to review them, you can merge them when you think they look good."* That applies to straightforward additions of official vendor specs. It does **not** extend to the deferred/judgment items in §5 — those were explicitly declined or parked and need a fresh go-ahead.
 
@@ -116,10 +124,12 @@ Batch triage was abandoned as low-yield. The user agreed the better lead is a **
 ### ⚠️ Audit correctly, against the index — not the working tree
 
 Sparse-checkout means `ls`/`[ -d ]`/`find` under `APIs/` are all unreliable here.
-Check `git sparse-checkout list` first, and audit against the git index:
+Check `git sparse-checkout list` first. Fetch main and audit its tree, rather than a
+possibly stale feature branch's index:
 
 ```bash
-git ls-files APIs | cut -d/ -f2 | sort -u > /tmp/have_domains.txt
+git fetch origin main
+git ls-tree -r --name-only origin/main APIs | cut -d/ -f2 | sort -u > /tmp/have_domains.txt
 for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify okta \
          intercom hubspot salesforce zendesk notion airtable heroku snowflake elastic \
          hashicorp coinbase dropbox newrelic anthropic huggingface nvidia; do
@@ -128,7 +138,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-717 distinct provider domains, 4179 tracked files under `APIs/`.
+As checked on 2026-10-02: 725 distinct provider domains, 4,247 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -222,22 +232,61 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 
 ### Still to do
 
-- **Refresh audit across the rest of `APIs/`.** 725 provider domains; only a dozen or so have
-  been checked. This has been the **higher-yield half of the work by a wide margin** — Stripe
-  was ~4 years stale and Square was 94 paths behind, while the entire upstream issue backlog
-  yielded almost nothing (§3). Walk `APIs/` against vendor sources comparing `info.version`
-  and path counts.
+- **Refresh the confirmed stale APIs below**, one PR per API, while building the reusable
+  updater in §9. Re-fetch sources before importing; the figures are audit snapshots.
+- **Add the four verified missing providers below**, after bundling and full validation.
+- **Extend the refresh audit across the rest of `APIs/`.** The October check was a sample,
+  not a complete audit. Compare content as well as versions and path counts.
 - **Locate specs for the vendors below**, minding the 404 warning.
-- **Decide whether to take HubSpot's 34 per-object CRM slices.** Currently skipped by
-  deliberate choice, not oversight.
+- **HubSpot's 34 per-object CRM slices remain deliberately skipped.** Do not expand this
+  scope without a fresh user instruction.
+
+### Confirmed refresh queue (official sources fetched 2026-10-02)
+
+| API | Stored version / paths | Source version / paths | Official source |
+|---|---|---|---|
+| GitHub REST | `1.1.4` / 551 | `1.1.4` / 815 | [api.github.com.json](https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json) |
+| DigitalOcean | `2.0` / 183 | `2.0` / 515 | [DigitalOcean-public.v2.yaml](https://raw.githubusercontent.com/digitalocean/openapi/main/specification/DigitalOcean-public.v2.yaml) |
+| Plaid | `2020-09-14_1.345.1` / 201 | `2020-09-14_1.740.1` / 360 | [2020-09-14.yml](https://raw.githubusercontent.com/plaid/plaid-openapi/master/2020-09-14.yml) |
+| Xero Accounting | `2.9.4` / 132 | `19.1.0` / 138 | [xero_accounting.yaml](https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/master/xero_accounting.yaml) |
+
+GitHub's `api.github.com.2022-11-28` spec has the same 551 → 815 comparison; include
+that counterpart in the GitHub API refresh, but audit other GitHub products separately.
+DigitalOcean's source contains relative references to many files: fetch and bundle them,
+or use a verified official bundled artifact. Copying only the entry file is insufficient.
+The counts include all path entries, not necessarily one operation per path. New paths
+and removed paths must be reported separately; net growth can conceal removals.
+
+### Verified missing official OADs (downloaded and parsed 2026-10-02)
+
+| Provider | Official source | Import notes |
+|---|---|---|
+| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | `sqlapi.yaml`: version `2.0.0`, 3 paths; `warehouse.yaml`: `0.0.1`, 12 paths. Audit the rest of the catalog, import distinct public APIs separately, and bundle references to `common.yaml`. Shared helper files are not separate APIs. |
+| Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | OpenAPI 3.1, version `1.0`, 32 paths. External `$ref` values in code-sample extensions refer to TypeScript snippets; distinguish those artifacts from schema references and handle them explicitly. |
+| Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | OpenAPI 3.1, version `1.0.0`. `openapi.yaml` has 131 paths; `openapi-public-doc.yaml` has 212. Establish which artifact matches the public API documentation before choosing an import; do not concatenate them. |
+| Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
+
+None of these four providers was present in the fetched main tree. Parsing is evidence
+of a real downloadable OAD, not completion of reference resolution or spec validation.
+Search the full tree by domain, brand, service, and aliases again before adding anything.
+
+### Source health requires a separate check
+
+Slack's stored spec matches its official source in version and path set, but
+[`slackapi/slack-api-specs`](https://github.com/slackapi/slack-api-specs) is archived;
+its Web API spec last changed on 2020-10-06. Current Slack docs describe methods absent
+from that artifact. Record this as an archived source with incomplete current coverage,
+not as a current API merely because re-fetching produces no changes. Look for a maintained
+official replacement; do not silently substitute a third-party reconstruction.
 
 ### Missing, official spec not yet located
 
-Shopify, Zendesk, Airtable, Heroku, Snowflake, HashiCorp, Coinbase, Dropbox, New Relic,
-Anthropic, Hugging Face, NVIDIA.
+Shopify, Zendesk, Airtable, Heroku, HashiCorp, Coinbase, Dropbox, New Relic, Anthropic,
+NVIDIA. Snowflake and Hugging Face Inference Endpoints now have verified sources above.
 
 **Probed and 404'd on 2026-09-22** — these exact URLs, not the vendors themselves:
-`snowflakedb/snowflake-rest-api-specs` (`main`, `releases/8.40/...`),
+guessed paths in `snowflakedb/snowflake-rest-api-specs` (`main`, `releases/8.40/...`; resolved
+on 2026-10-02 by inspecting the repository's `specifications/` directory),
 `zendesk/developer_docs` (`master`, `api-reference/ticketing/oas.yaml`),
 `hashicorp/vault` (`main/openapi.json`), `Shopify/shopify-app-js` (`main/openapi.json`),
 `dropbox/dropbox-api-spec` (`master/openapi.json`).
@@ -312,12 +361,13 @@ GET on the same path declares it correctly and the fix mirrors that" is the stan
 
 ## 6. Conventions that matter
 
-- **Everything is `.yaml`.** 1982 `openapi.yaml` files, 0 `openapi.json`. Convert JSON sources with Python before committing:
+- **Store specs as `.yaml`.** The tree contains both legacy `swagger.yaml` and `openapi.yaml`; new OpenAPI additions use `openapi.yaml`. Convert JSON sources with Python before committing:
   ```python
   yaml.dump(d, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=100000)
   ```
 - **Layout**: `APIs/<domain>/<version>/openapi.yaml`, or `APIs/<domain>/<service>/<version>/openapi.yaml` for multi-service providers. Version dir = `info.version`.
 - **Version bumps are new directories**, never in-place edits. Both #41 and #42 are `+N / −0`.
+- **Vendor versions can stay fixed while content changes.** For a declared version that has not changed (GitHub, DigitalOcean, Square, DocuSign), refresh the existing version in place and report removals explicitly. Do not invent a vendor version. The dated snapshot policy for unversioned Elasticsearch Serverless in §4 remains separate.
 - **Preserve apis.guru curation metadata on any refresh.** A wholesale file replacement silently drops `x-apisguru-categories`, `x-logo`, `x-preferred`, `x-permalink`, `x-providerName`, `x-serviceName`, `x-hasEquivalentPaths`, `contact.x-twitter`, top-level `externalDocs` and `tags`. Merge new spec content *into* the old `info` block. This is the single most important rule for updates — it's what #40 got wrong.
 - **`x-origin` records provenance.** Match existing style; for converted specs list the chain, e.g. API Blueprint → swagger → openapi (see `APIs/icons8.com`, `APIs/ritekit.com`, and `APIs/eventbrite.com/3`).
 - **New additions go in essentially as-is.** Checked against the recently merged ones (Picsart, Nylas, Eventbrite): they carry **no** `x-apisguru-categories`, `x-logo` or `x-providerName`. Those values are apis.guru curation, and inventing them would be fabricating metadata. Add `x-origin` for provenance and otherwise leave the vendor spec alone. The preserve-metadata rule above applies to **refreshes of specs we already have**, where that curation exists and must survive.
@@ -402,3 +452,113 @@ Real defects caught this way: Eventbrite's `<angle>` path params (fixed), Vertex
 Strong signals a submission is junk: duplicate submissions from one domain; bursts posted seconds apart or on a fixed schedule; crypto / x402 / "pay-per-call" framing; gambling; "Intelligence"/"Analytics"/"Scraper" wrappers around someone else's platform; `Official: NO` with a Postman documenter link; a source URL pointing at a random personal repo.
 
 Worked examples: BMObot filed 15 issues in 47 seconds. The "SplunkES8.1" issue (#1419) contains *genuine* Splunk ES 8.1 content but is hosted at `rigzindorje/gmail-api` — Splunk publishes no official spec (checked their GitHub org), so there's no trustworthy `x-origin` and it was skipped. The "guardian" issues (#1334/#1335) are a third-party Postman collection titled "guardian news", not The Guardian's Open Platform.
+
+---
+
+## 9. Build and maintain a reproducible update process
+
+The 2026-10-02 audit found no GitHub Actions workflows or general updater in this fork.
+The generator under `APIs/moneybird.com/v2-readonly/` is specific to a derived subset.
+The README's weekly-update promise, badges, and collection API links describe upstream
+APIs.guru, not a verified maintenance or publication service for this fork. The following
+is an implementation plan; do not describe these jobs as operational until implemented
+and verified.
+
+### Implementation order
+
+1. Build the fetch, compare, validate, and import commands alongside the first refreshes
+   in §4. Put reusable tools and locked dependencies in the repository, rather than relying
+   on `/tmp`, old session scratchpads, or packages installed globally.
+2. Register and refresh the confirmed stale major APIs. Add the verified missing providers
+   with the same machinery, one PR per API. Keep updater infrastructure in its own PR.
+3. Add weekly GitHub Actions checks and PR generation after local runs are reproducible.
+   Add a monthly discovery check for missing major APIs. These are repository workflows;
+   do not assume a recurring Codex chat task already exists.
+4. Extend coverage incrementally across priority providers. Respect every exclusion in §5;
+   neither automation nor this plan authorizes Google regeneration or other parked work.
+5. Update README and CONTRIBUTING to describe this fork's actual import process, maintenance
+   coverage, and publication status. Identify upstream badges and API links explicitly.
+   If publishing a fork index, derive it from this fork's committed specs and verify that
+   consumers can see its additions before advertising that endpoint.
+
+### Source configuration and discovery
+
+- Maintain a machine-readable source manifest keyed by provider and API/service. Record
+  the target spec, official source entry point, release/tag/catalog discovery strategy,
+  source format, bundling/conversion recipe, patch recipe, version policy, and priority.
+  Use existing `info.x-origin` to find leads; confirm vendor ownership and source health
+  before enabling updates. Configuration does not replace in-spec provenance (§5b).
+- Discover releases and service catalogs, not just the already-pinned version URL. A
+  successful download of an old release cannot establish that no newer release exists.
+- For new providers, search vendor documentation and vendor-owned repositories. Inspect
+  repository roots, branches, tags, and SDK generation inputs before dismissing a 404.
+  Check presence against fetched main at full depth and distinguish complete official
+  specs from hand-authored slices, third-party scrapers, and generic protocol definitions.
+- Prefer stable public products. Deduplicate catalog slices by API shape and purpose,
+  following the HubSpot precedent in §4. Label scope accurately when importing only one
+  service of a larger platform. Track unresolved candidates so searches are not repeated
+  blindly, and record what URL was actually checked and when.
+
+### Fetching and detecting changes
+
+- Resolve a vendor repository branch/tag to a commit SHA and fetch the entry document and
+  all referenced files from that revision. For hosted specs, record the retrieval time,
+  final URL, content hash, and available ETag/Last-Modified values. Use bounded timeouts,
+  retries, and concurrency; report failures rather than treating them as unchanged.
+- Keep a raw source hash and a deterministic comparison of parsed vendor content. Check
+  versions, added/removed paths and operations, parameters, security, request/response
+  schemas, and descriptions. A matching version, path count, or recent local commit is
+  insufficient evidence of freshness. Changes confined to YAML formatting or key order
+  should not generate spec PRs.
+- Compare after applying the same pinned conversion and documented patches. Exclude only
+  identified fork-owned curation and generated provenance from vendor-content comparisons;
+  do not ignore the entire `info` block or vendor extensions. Re-fetch external references
+  as part of the source snapshot so their changes are detected too.
+- Preserve the original source bytes for reproducibility. Parser workarounds used for
+  inspection must not silently alter the committed vendor content. A 404, archived repo,
+  authentication failure, or invalid document is a source-health result, not a reason to
+  remove the stored API.
+
+### Import, validation, and delivery
+
+- Bundle external OpenAPI references into a standalone document before committing, with
+  provenance for the bundling and conversion. Identify reference positions correctly:
+  code-sample extensions can contain references to non-schema artifacts, as in Cohere.
+  Preserve or explicitly materialize those artifacts without pretending they are schemas.
+- Support the source's OpenAPI version, including 3.1 and its JSON Schema semantics.
+  Do not downgrade 3.1 documents merely to fit a 3.0-only validator. Apply the checks in
+  §6, including JSON Pointer array indices and referenced path parameters. Reject HTML
+  error pages and catalog indexes that are not OADs.
+- Preserve existing curation (§6); retain historical versions for version bumps and use
+  the documented fixed-version/snapshot policies. Encode justified fixes as reproducible
+  patches with explanations in `info.x-conversion`. Never invent missing schemas. Record
+  known upstream defects explicitly and distinguish them from new validation regressions.
+- Add meaningful tests for updater behavior: fixed-version content changes, referenced-file
+  changes, metadata preservation, new-version directories, patch replay, and failed fetches.
+  Test validators with array-index references, referenced parameters, and OpenAPI 3.1.
+- Generate one update PR per API, updating an existing pending PR rather than duplicating
+  it. Include the official source/revision, old/new versions, additions and removals,
+  conversion warnings, patches, known defects, and validation results. Link any relevant
+  upstream issue or PR in the body. Verify file lists and merge status as required by §7.
+- Routine official additions may follow the existing merge authorization in §1. Do not
+  implement blanket automatic merging of all refreshes. Flag unexplained large removals,
+  source substitutions, new patches, and deferred decisions for review. Respect push
+  protection and approval-review blocks; leave verified PRs ready when merging is blocked.
+
+### Scheduled checks and freshness reporting
+
+- Run weekly checks for registered priority sources; make unsupported providers visible
+  rather than suggesting every historical spec is monitored. Separate read-only fetching
+  and validation from the step permitted to write PRs. Run validation on generated PRs.
+- Publish a machine-readable freshness report and a readable summary as workflow artifacts
+  or a verified fork index. For each API, show the stored/source versions and revisions,
+  last check attempt, last successful fetch/comparison/validation, content drift, pending
+  PR, known defects, and source-health status. Failed attempts must not advance the last
+  successful check. Keep original and converted provenance in the spec's `info` block.
+- Distinguish **matches the configured source**, **a newer release is available**, and
+  **source health or current API coverage is uncertain**. Slack's archived source is the
+  concrete example of why these are different claims. Do not create spec commits solely
+  to change a last-checked timestamp.
+- The monthly discovery job should produce a deduplicated queue of official candidates
+  for well-known APIs, with URLs, ownership evidence, scope, and import obstacles. Notify
+  on actionable drift, failures, or decisions; avoid repetitive unchanged-status updates.
