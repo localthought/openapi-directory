@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `2b0d4d993` (PR #88 merged):
-729 provider domains; 4,257 files under `APIs/`, including 2,083
+**Last updated**: 2026-10-02. Audit of `origin/main` at `7ce9472de` (PR #93 merged):
+729 provider domains; 4,260 files under `APIs/`, including 2,086
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -122,6 +122,11 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #86 | Numeric vendor release discovery; Intercom/Sentry monitoring | Catalog and artifact pinned to one commit; 35 local/CI tests; 17 artifacts / 16 services registered |
 | #87 | Sentry public Web API `v0` | Fixed version refreshed in place; 151 paths / 245 operations; 4 paths / 11 ops added, none removed |
 | #88 | Intercom `2.16` | New directory; 168 paths / 235 operations; 62 paths / 85 ops added, none removed; reporting parameter patch replayed |
+| #89 | Fork contribution and maintenance documentation | Distinguishes actual fork import process/coverage from upstream publication and guidance |
+| #90 | Readable audit reports and three Snowflake registrations | Markdown artifact and job summary, per-row comparison bases, retained success dates; 39 tests pass locally and in CI |
+| #91 | Snowflake Database `0.0.1` | New resource API; 15 paths / 18 operations; two-file bundle, zero warnings, no patches |
+| #92 | Snowflake Schema `0.0.1` | New resource API; 7 paths / 10 operations; two-file bundle, zero warnings, no patches |
+| #93 | Snowflake Table `0.0.1` | New resource API; 19 paths / 22 operations; two-file bundle, zero warnings, no patches |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -156,6 +161,27 @@ validation and source-content comparison; both source registrations passed 21-te
 Other Snowflake services remain to be audited; these additions do not cover its whole API.
 Fresh local checks after #72 report `matches_source` with no validation errors for
 DigitalOcean and both Snowflake services. A full GitHub audit is recorded in §9.
+
+**Snowflake core-resource additions (#91–#93):** Database, Schema and Table use the same
+official vendor commit `990e25d97236a11826c9eed40e587c2b859e5680`, with declared version
+`0.0.1` retained verbatim for each service. The repository was unarchived when checked on
+2026-10-02. These distinct APIs are listed in the generally available REST reference;
+their individual public guides and source artifacts have no preview designation. Each
+bundle contains only its own entry plus `common.yaml`, with zero warnings and no patches
+or version conversion. Shared helper files are not additional APIs. The serialized
+imports match the cached vendor bundles, retain all original path/operation counts and
+pass complete validation with no external references. No new curation was invented.
+
+The documented public guides are
+[Database](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/databases/db-introduction),
+[Schema](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/schemas/schemas-introduction),
+and [Table](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tables/tables-introduction).
+Snapshot hashes respectively: `f6d644eee01cc2e9a3cdda65004c7dd3b294de32ce67b74ffb8cf831b93f86d1`,
+`08d1eb8d0ace124c5bcee97d79786314e6839aea6ab17e5a17e9e10548411309`, and
+`bef7f216bc08a628ffaf339d427ecc0062fec846d6b22f9e70fd447de967c353`.
+Five Snowflake service descriptions are now imported (56 paths / 68 operations total).
+Remaining catalog products need their own release/scope review; do not blindly import
+every filename, preview-only resource or compatibility description.
 
 ---
 
@@ -202,7 +228,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-After PR #88 on 2026-10-02: 729 distinct provider domains, 4,257 tracked files under `APIs/`.
+After PR #93 on 2026-10-02: 729 distinct provider domains, 4,260 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -421,7 +447,7 @@ the updater for review. Logs, original data, source hashes, and the bundle remai
 
 | Provider | Official source | Import notes |
 |---|---|---|
-| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops) and Warehouse `0.0.1` (12 / 15) are DONE in #71/#72. Audit remaining distinct public APIs separately. Shared helper files are not separate APIs. |
+| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops), Warehouse `0.0.1` (12 / 15), Database (15 / 18), Schema (7 / 10) and Table (19 / 22) are DONE in #71/#72/#91–#93. The three new resource APIs also declare `0.0.1`. Audit remaining distinct public APIs separately; helper files are not APIs. |
 | Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | DONE #76: OpenAPI 3.1, version `1.0`, 32 paths / 42 ops. Seven referenced TypeScript snippets are explicitly materialized as code strings and included in freshness snapshots. |
 | Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | DONE #77: OpenAPI 3.1, version `1.0.0`, 212 paths / 299 ops. `openapi-public-doc.yaml` is the verified public download; do not substitute or concatenate the separate 131-path `openapi.yaml`. |
 | Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
@@ -569,7 +595,7 @@ GET on the same path declares it correctly and the fix mirrors that" is the stan
       def increase_indent(self, flow=False, indentless=False):
           return super().increase_indent(flow, False)
   ```
-- **CONTRIBUTING.md** says the canonical route is a web form feeding apis.guru's own curation pipeline, and discourages direct PRs amending spec files. We add vendor specs largely as-is anyway, matching already-merged manual additions.
+- **CONTRIBUTING.md** distinguishes the fork's validated manual spec PR process from the upstream APIs.guru web form and restriction on direct spec PRs. Follow the fork process here; upstream submission does not establish publication of fork-only additions.
 
 ### Conversion toolchain
 Installed under the session scratchpad (`apibconv/`), re-installable anywhere:
@@ -684,6 +710,14 @@ compatibility, separately from Slack's archived-source blocker.
 #87/#88 refresh both. Seventeen artifacts across sixteen services are registered, and
 35 regression tests pass locally and in CI. The release catalog response and selected
 artifact are pinned together, with explicit release-selection provenance.
+#90 adds readable Markdown reports alongside JSON, publishes the readable report in the
+audit job summary even when checks fail, and records comparison base revisions per row.
+Subset checks retain old rows/dates/bases; failed attempts retain earlier success dates.
+Blocked matches are counted as blocked, and added/removed paths and operations remain
+separate. Source text is escaped for Markdown/HTML display; custom report filenames cannot
+overwrite JSON with their readable companion. Four report regressions bring the test
+total to 39, passing locally and in CI. Database, Schema and Table registrations/imports
+bring configured coverage to twenty artifacts across nineteen services.
 Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
@@ -740,6 +774,17 @@ source remain the only two recorded blockers; the audit exits nonzero for those 
 The downloaded artifact is `/tmp/openapi-ci-audit-37009315774`, and the ignored local
 report has been replaced with this verified report. CI is the recovery source after reboot.
 
+Network audit [37016356022](https://github.com/ontola/openapi-directory/actions/runs/37016356022)
+at main `7ce9472de` passed all 39 tests and fetched twenty registered artifacts. Eighteen
+supported artifacts match their official sources with zero validation errors, including
+all five Snowflake descriptions. Atlas's recursion failure and Slack's archived Swagger
+source remain the only two import blockers; the audit job exits nonzero for those reasons.
+The readable-summary step succeeds despite that exit status, and both `report.json` and
+`report.md` are present in the uploaded `official-source-audit` artifact. Their totals
+agree (18 matches, 2 blocked), and every row records this run's actual comparison base.
+The artifact was downloaded to `/tmp/openapi-ci-audit-37016356022`; ignored local copies
+of both reports have been updated. Retrieve the CI artifact if temporary files disappear.
+
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
 They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
@@ -750,7 +795,9 @@ been published or claimed. Index publication still needs verified consumer acces
 extend the registry to other major imported APIs (for example Square and Grafana),
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 needs its conversion recipe and must retain the documented unresolved vendor schemas;
-do not invent them. Implement validated per-service
+do not invent them. Extend automated source-health checks (currently most rows are
+`not_assessed`; dated manual repository checks do not establish perpetual maintenance).
+Implement validated per-service
 PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
 merge. Consider fork publication only with
 verified consumer access. Slack's maintained official replacement remains unresolved.
