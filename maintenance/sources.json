@@ -33,7 +33,7 @@
     {
       "id": "plaid",
       "provider": "plaid.com",
-      "target": "APIs/plaid.com/2020-09-14_1.740.1/openapi.yaml",
+      "target": "APIs/plaid.com/2020-09-14_1.762.0/openapi.yaml",
       "github": {"repository": "plaid/plaid-openapi", "ref": "master", "path": "2020-09-14.yml"},
       "discovery": "Follow the maintained stable artifact; its filename is the API date, while info.version also contains the SDK release.",
       "version_policy": "vendor",
