@@ -20,8 +20,13 @@ info:
   version: 2.0.0
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/PagerDuty/api-schema/main/reference/REST/openapiv3.json
+      url: https://raw.githubusercontent.com/PagerDuty/api-schema/6ab7c72fb78ff76ba65670795a51d925c8b4df12/reference/REST/openapiv3.json
       version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/PagerDuty/api-schema/6ab7c72fb78ff76ba65670795a51d925c8b4df12/reference/REST/openapiv3.json at commit 6ab7c72fb78ff76ba65670795a51d925c8b4df12; entry source SHA-256 f42edfd2608ae90711b43245bd7aa1045a70991868f0933462b0ae8adad90fc5.
+    - 'Applied maintenance/patches/pagerduty.json (SHA-256 9d033c5bda0402bda6f6fb5a94255a5b3da0be336c85b5fbebcf228d0f18365e): Removed the invalid string default "20 - incident_summary" from the integer sre_memories_limit query parameter. The source declares an integer range of 1 to 100; no replacement default or server behavior was inferred.'
+    - Preserved existing APIs.guru curation metadata from APIs/pagerduty.com/2.0.0/openapi.yaml.
+    - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 security:
   - api_key: []
 tags:
@@ -1027,6 +1032,7 @@ components:
           version: rn1Mja13T1HBdmPChqFilSQXUW2fWXM_
     FeatureEnablementListResponseDefault:
       summary: Default Response (No Settings Configured)
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablements:
           - feature: aiops
@@ -1034,6 +1040,7 @@ components:
             updated_at: null
     FeatureEnablementListResponseSuccess:
       summary: Success Response
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablements:
           - feature: aiops
@@ -1041,6 +1048,7 @@ components:
             updated_at: '2025-04-25T15:00:00Z'
     FeatureEnablementListResponseWarningForService:
       summary: Response with No Entitlement Warning
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablements:
           - feature: aiops
@@ -1050,6 +1058,7 @@ components:
               - message: Your account is not entitled to use AIOps features for this Service.
     FeatureEnablementListResponseWarningForOrchestration:
       summary: Response with No Entitlement Warning
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablements:
           - feature: aiops
@@ -1059,16 +1068,19 @@ components:
               - message: You can't use AIOps functionality with this Orchestration because your account hasn't purchased AIOps
     FeatureEnablementPutRequestEnable:
       summary: Enable AIOps
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablement:
           enabled: true
     FeatureEnablementPutRequestDisable:
       summary: Disable AIOps
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablement:
           enabled: false
     FeatureEnablementPutResponseSuccess:
       summary: Success Response
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablement:
           - feature: aiops
@@ -1076,6 +1088,7 @@ components:
             updated_at: '2025-04-25T15:00:00Z'
     FeatureEnablementPutResponseWarningForService:
       summary: Response with No Entitlement Warning
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablement:
           - feature: aiops
@@ -1085,6 +1098,7 @@ components:
               - message: Your account is not entitled to use AIOps features for this Service.
     FeatureEnablementPutResponseWarningForOrchestration:
       summary: Response with No Entitlement Warning
+      description: For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       value:
         enablement:
           - feature: aiops
@@ -3053,7 +3067,7 @@ components:
         type: string
     enablement_feature_name:
       name: feature_name
-      description: The feature enablement identifier, typically the name of the product addon. Currently only `aiops` is supported.
+      description: The feature enablement identifier, typically the name of the product addon. Currently only `aiops` is supported. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
       in: path
       required: true
       schema:
@@ -3409,7 +3423,6 @@ components:
         type: integer
         minimum: 1
         maximum: 100
-        default: 20 - incident_summary
     schedule_v3_id:
       name: id
       in: path
@@ -3453,7 +3466,11 @@ components:
     schedule_v3_since:
       name: since
       in: query
-      description: Start of time range (ISO 8601)
+      description: 'Start of time range (ISO 8601). Send `since` and `until` together.
+
+        `since` can be at most 3 years in the future.
+
+        '
       schema:
         type: string
         format: date-time
@@ -3461,7 +3478,13 @@ components:
     schedule_v3_until:
       name: until
       in: query
-      description: End of time range (ISO 8601)
+      description: 'End of time range (ISO 8601). Send `since` and `until` together.
+
+        `until` must be after `since`, and can be at most 3 years and 2 weeks
+
+        in the future.
+
+        '
       schema:
         type: string
         format: date-time
@@ -3491,6 +3514,8 @@ components:
 
         - `final_schedule`: computed on-call assignments for the time range
 
+        - `users`: all users referenced in the schedule
+
         '
       schema:
         type: array
@@ -3498,18 +3523,20 @@ components:
           type: string
           enum:
             - final_schedule
+            - users
       style: form
       explode: true
       example:
         - final_schedule
-    schedule_v3_limit:
+    schedule_v3_limit_rotations_events:
       name: limit
       in: query
+      description: Maximum number of items to return
       schema:
         type: integer
         minimum: 1
-        maximum: 100
-        default: 25
+        maximum: 1000
+        default: 100
     schedule_v3_limit_schedules:
       name: limit
       in: query
@@ -3517,8 +3544,15 @@ components:
       schema:
         type: integer
         minimum: 1
-        maximum: 1000
-        default: 100
+        maximum: 100
+        default: 25
+    schedule_v3_user_id:
+      name: user_id
+      in: query
+      description: Return only schedules that include this user.
+      schema:
+        type: string
+      example: PUSER123
     schedule_v3_offset:
       name: offset
       in: query
@@ -3530,7 +3564,9 @@ components:
       name: since
       in: query
       required: true
-      description: Start of time range (ISO 8601)
+      description: 'Start of time range (ISO 8601). Can be at most 2 years in the future.
+
+        '
       schema:
         type: string
         format: date-time
@@ -3539,7 +3575,11 @@ components:
       name: until
       in: query
       required: true
-      description: End of time range (ISO 8601)
+      description: 'End of time range (ISO 8601). Can be at most 2 years and 2 weeks in
+
+        the future.
+
+        '
       schema:
         type: string
         format: date-time
@@ -3690,6 +3730,17 @@ components:
       description: Base32-encoded UUID v7 (26 uppercase alphanumeric characters) identifying the ServiceNow credentials.
       schema:
         type: string
+    scribe_transcript_format:
+      name: format
+      in: query
+      description: The transcript format to return a download link for.
+      required: false
+      schema:
+        type: string
+        enum:
+          - enhanced
+          - raw
+        default: enhanced
   requestBodies:
     OrchestrationCacheVariablePostRequest:
       content:
@@ -15405,7 +15456,7 @@ components:
                               example: PQOMK4S
                             annotate:
                               type: string
-                              description: Add this text as a note on the resulting incident. AIOps users can additionally use the {{event}} variable to include elements of the event payload in the note.
+                              description: Add this text as a note on the resulting incident. AIOps users can additionally use the {{event}} variable to include elements of the event payload in the note. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
                         - $ref: '#/components/schemas/OrchestrationUnrouted/allOf/1/properties/orchestration_path/properties/catch_all/properties/actions'
                         - type: object
                           properties:
@@ -15435,7 +15486,7 @@ components:
                                           type: string
                                         value:
                                           type: string
-                                          description: AIOps users can additionally use the {{event}} variable to include elements of the event payload in the header value.
+                                          description: AIOps users can additionally use the {{event}} variable to include elements of the event payload in the header value. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
                                   trigger_types:
                                     type: array
                                     description: 'The Webhook will be associated (or automatically triggered, if `auto_send` is `true`) with the incident, whenever an alert reaches the specified state
@@ -15478,7 +15529,7 @@ components:
                                     example: PEXCK89
                                   value:
                                     type: string
-                                    description: A value that will be used to populate the specified Incident Custom Field. AIOps users can additionally use the {{event}} variable to include elements of the event payload in the custom field value.
+                                    description: A value that will be used to populate the specified Incident Custom Field. AIOps users can additionally use the {{event}} variable to include elements of the event payload in the custom field value. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
                                     example: High CPU on server
           example:
             $ref: '#/components/examples/OrchestrationPathGlobalTypeResponse/value'
@@ -15516,7 +15567,7 @@ components:
                                   example: PSI2I2O
                                 dynamic_route_to:
                                   type: object
-                                  description: Use the contents of an event payload to dynamically route an event to the target service. Available to AIOps customers. Note it can only be used once in the Router, and only in the first rule. The dynamic_route_to rule cannot have conditions or a route_to action defined.
+                                  description: Use the contents of an event payload to dynamically route an event to the target service. Available to AIOps customers. Note it can only be used once in the Router, and only in the first rule. The dynamic_route_to rule cannot have conditions or a route_to action defined. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
                                   properties:
                                     source:
                                       type: string
@@ -16037,6 +16088,13 @@ components:
 
             * `aiops_routing`
 
+
+            For PDRP customers, this feature is branded **Signal Intelligence** in the
+
+            PagerDuty product UI. The API field names and values (e.g. `aiops_routing_mismatch`,
+
+            `aiops_routing`) are unchanged.
+
             '
         warning_type:
           type: string
@@ -16529,7 +16587,7 @@ components:
         feature:
           readOnly: true
           type: string
-          description: The name of the product addon whose set of features will be enabled or disabled.
+          description: The name of the product addon whose set of features will be enabled or disabled. For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
           example: aiops
         enabled:
           type: boolean
@@ -17679,6 +17737,13 @@ components:
       properties:
         schedule:
           type: object
+          description: '`time_zone` is required. `name` and `description` are
+
+            optional; an omitted field keeps its current value.
+
+            '
+          required:
+            - time_zone
           properties:
             name:
               type: string
@@ -17692,6 +17757,21 @@ components:
               type: string
               maxLength: 1024
               example: Updated description
+            teams:
+              type: array
+              description: Teams to associate with this schedule
+              items:
+                type: object
+                required:
+                  - id
+                  - type
+                properties:
+                  id:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - team_reference
     ScheduleResponse:
       type: object
       required:
@@ -17937,6 +18017,9 @@ components:
             next member takes over.
 
 
+            Must be omitted (or null) for `every_member_assignment_strategy`.
+
+
             **UI editor constraint:** When `recurrence` uses `FREQ=WEEKLY`,
 
             `shifts_per_member` must be evenly divisible by the number of days
@@ -17952,7 +18035,7 @@ components:
         members:
           type: array
           minItems: 1
-          maxItems: 20
+          maxItems: 60
           items:
             $ref: '#/components/schemas/ShiftMember'
     Event:
@@ -18044,7 +18127,9 @@ components:
               format: date-time
               description: 'When this event starts producing shifts. Values in the past are
 
-                clamped to the current time.
+                clamped to the current time. Can be at most 12 months in the
+
+                future.
 
                 '
             effective_until:
@@ -18056,12 +18141,19 @@ components:
               type: array
               items:
                 type: string
-              description: "RFC 5545 recurrence rules. Must be an array containing exactly\none RRULE, zero or more EXDATE, and zero or more RDATE.\n\n**UI editor constraints:** The shift-based schedule editor can\nonly load an event when the RRULE satisfies all of the following:\n1. A `FREQ` parameter is present.\n2. `FREQ` is one of `WEEKLY`, `DAILY`, `MONTHLY`, or `HOURLY`.\n3. All `BYDAY` values are standard two-letter day codes\n   (`MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`).\n\nEvents that violate any condition display a\n\"can't be edited in the UI\" modal and must be managed via the API.\n"
+              description: "RFC 5545 recurrence rules. Must be an array containing exactly\none RRULE, zero or more EXDATE, and zero or more RDATE.\n\nThe RRULE can repeat at most once per hour.\n\n**UI editor constraints:** The shift-based schedule editor can\nonly load an event when the RRULE satisfies all of the following:\n1. A `FREQ` parameter is present.\n2. `FREQ` is one of `WEEKLY`, `DAILY`, `MONTHLY`, or `HOURLY`.\n3. All `BYDAY` values are standard two-letter day codes\n   (`MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`).\n\nEvents that violate any condition display a\n\"can't be edited in the UI\" modal and must be managed via the API.\n"
             assignment_strategy:
               $ref: '#/components/schemas/EventAssignmentStrategy'
     UpdateEventRequest:
       type: object
-      description: 'Which fields can be updated depends on the
+      description: 'The request replaces the full event. Send every required field,
+
+        even the fields that do not change. Get the current values with
+
+        `GET /v3/schedules/{id}/rotations/{rotation_id}/events/{event_id}`.
+
+
+        Which fields can be changed depends on the
 
         event''s current state:
 
@@ -18077,6 +18169,13 @@ components:
       properties:
         event:
           type: object
+          required:
+            - name
+            - start_time
+            - end_time
+            - effective_since
+            - recurrence
+            - assignment_strategy
           properties:
             name:
               type: string
@@ -18088,6 +18187,9 @@ components:
             effective_since:
               type: string
               format: date-time
+              description: 'Can be at most 12 months in the future.
+
+                '
             effective_until:
               type: string
               format: date-time
@@ -18096,7 +18198,7 @@ components:
               type: array
               items:
                 type: string
-              description: "RFC 5545 recurrence rules. Must be an array containing exactly\none RRULE, zero or more EXDATE, and zero or more RDATE.\n\n**UI editor constraints:** The shift-based schedule editor can\nonly load an event when the RRULE satisfies all of the following:\n1. A `FREQ` parameter is present.\n2. `FREQ` is one of `WEEKLY`, `DAILY`, `MONTHLY`, or `HOURLY`.\n3. All `BYDAY` values are standard two-letter day codes\n   (`MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`).\n\nEvents that violate any condition display a\n\"can't be edited in the UI\" modal and must be managed via the API.\n"
+              description: "RFC 5545 recurrence rules. Must be an array containing exactly\none RRULE, zero or more EXDATE, and zero or more RDATE.\n\nThe RRULE can repeat at most once per hour.\n\n**UI editor constraints:** The shift-based schedule editor can\nonly load an event when the RRULE satisfies all of the following:\n1. A `FREQ` parameter is present.\n2. `FREQ` is one of `WEEKLY`, `DAILY`, `MONTHLY`, or `HOURLY`.\n3. All `BYDAY` values are standard two-letter day codes\n   (`MO`, `TU`, `WE`, `TH`, `FR`, `SA`, `SU`).\n\nEvents that violate any condition display a\n\"can't be edited in the UI\" modal and must be managed via the API.\n"
             assignment_strategy:
               $ref: '#/components/schemas/EventAssignmentStrategy'
     EventResponse:
@@ -18209,12 +18311,26 @@ components:
       properties:
         custom_shift:
           type: object
-          description: 'If the shift has already started,
+          description: 'The request replaces the full custom shift. Send every required
+
+            field, even the fields that do not change.
+
+
+            If the shift has already started,
 
             only `end_time` can be modified.
 
             '
+          required:
+            - type
+            - start_time
+            - end_time
+            - assignments
           properties:
+            type:
+              type: string
+              enum:
+                - custom_shift
             start_time:
               type: string
               format: date-time
@@ -18296,7 +18412,6 @@ components:
           items:
             type: object
             required:
-              - type
               - start_time
               - end_time
               - overridden_member
@@ -18306,6 +18421,7 @@ components:
                 type: string
                 enum:
                   - override_shift
+                description: Optional.
               rotation_id:
                 type: string
                 description: Mutually exclusive with custom_shift_id
@@ -18315,6 +18431,11 @@ components:
               start_time:
                 type: string
                 format: date-time
+                description: 'Must be within one year from now. A value in the past is set
+
+                  to the current time.
+
+                  '
               end_time:
                 type: string
                 format: date-time
@@ -18324,18 +18445,36 @@ components:
                 $ref: '#/components/schemas/ShiftMember'
     UpdateOverrideRequest:
       type: object
+      description: 'The request replaces the full override. Send every required field,
+
+        even the fields that do not change. An omitted `overridden_member`
+
+        is cleared.
+
+        '
       required:
         - override
       properties:
         override:
           type: object
+          required:
+            - type
+            - start_time
+            - end_time
+            - overriding_member
           properties:
+            type:
+              type: string
+              enum:
+                - override_shift
             start_time:
               type: string
               format: date-time
             end_time:
               type: string
               format: date-time
+            overridden_member:
+              $ref: '#/components/schemas/ShiftMember'
             overriding_member:
               $ref: '#/components/schemas/ShiftMember'
 paths:
@@ -28423,6 +28562,9 @@ paths:
         - If the account is not entitled to use AIOps features, a warning will be returned alongside the enablement data.
 
 
+        For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
+
+
         Scoped OAuth requires: `event_orchestrations.read`
 
         '
@@ -28472,6 +28614,9 @@ paths:
         **Warning conditions**:
 
         - If the account is not entitled to use AIOps features, the setting will be updated, but a warning will be returned.
+
+
+        For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
 
 
         Scoped OAuth requires: `event_orchestrations.write`
@@ -33765,6 +33910,82 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '402':
           $ref: '#/components/responses/PaymentRequired'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /incidents/{id}/scribe_transcripts:
+    description: Retrieve download links for an incident's Scribe transcripts.
+    get:
+      x-pd-requires-scope: incidents.read
+      tags:
+        - Incidents
+      operationId: getIncidentScribeTranscripts
+      description: "Get download links for the Scribe transcripts of the specified incident. Only Scribes that have completed are returned; a Scribe that is still in progress does not appear in the response.\n\nEach entry contains a presigned `download_url` for a single transcript format, selected with the `format` query parameter (`enhanced` by default, or `raw`). \n\nThe `download_url` is time-limited and expires after one hour, so request a new one if it has expired. `download_url` is `null` when the transcript is not available for the requested format.\n\nScoped OAuth requires: `incidents.read`\n"
+      summary: Get Scribe transcripts for an incident
+      parameters:
+        - $ref: '#/components/parameters/header_Accept'
+        - $ref: '#/components/parameters/header_Content-Type'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/scribe_transcript_format'
+      responses:
+        '200':
+          description: The completed Scribe transcripts for the specified incident.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scribe_transcripts:
+                    type: array
+                    description: The Scribe transcripts associated with the incident.
+                    items:
+                      type: object
+                      properties:
+                        scribe_id:
+                          type: string
+                          description: The ID of the Scribe.
+                        format:
+                          type: string
+                          description: The transcript format that `download_url` corresponds to.
+                          enum:
+                            - enhanced
+                            - raw
+                        started_at:
+                          type: string
+                          format: date-time
+                          description: The time the Scribe started.
+                        ended_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The time the Scribe ended.
+                        download_url:
+                          type: string
+                          nullable: true
+                          description: A presigned URL to download the transcript. Expires after one hour. `null` if the transcript is not available.
+                      required:
+                        - scribe_id
+                        - format
+                        - download_url
+                required:
+                  - scribe_transcripts
+              examples:
+                response:
+                  summary: Response Example
+                  value:
+                    scribe_transcripts:
+                      - format: enhanced
+                        started_at: '2026-09-28T09:22:57.896Z'
+                        scribe_id: AGQOOUXTMR3TPA3ULKC7KHPZCQ
+                        ended_at: '2026-09-28T09:24:50.097Z'
+                        download_url: https://s3.us-west-2.amazonaws.com/example-bucket/AGQOOUXTMR3TPA3ULKC7KHPZCQ_enhanced_transcript.json?X-Amz-Expires=3600&X-Amz-Signature=EXAMPLE
+        '400':
+          $ref: '#/components/responses/ArgumentError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
@@ -43076,6 +43297,9 @@ paths:
         - If the account is not entitled to use AIOps features, a warning will be returned alongside the enablement data.
 
 
+        For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
+
+
         Scoped OAuth requires: `services.read`
 
         '
@@ -43125,6 +43349,9 @@ paths:
         **Warning conditions**:
 
         - If the account is not entitled to use AIOps features, the setting will be updated, but a warning will be returned.
+
+
+        For PDRP customers, this feature is branded **Signal Intelligence** in the PagerDuty product UI. The API field names and values (e.g. `aiops`) are unchanged.
 
 
         Scoped OAuth requires: `services.write`
@@ -49357,7 +49584,7 @@ paths:
 
         > ### Deprecated
 
-        > This endpoint is deprecated, please use the [List OAuth Delegations endpoint](https://developer.pagerduty.com/api-reference/fc03ba9dffd1f-list-user-oauth-delegations) instead.
+        > This endpoint is deprecated, please use the [List OAuth Delegations endpoint](https://developer.pagerduty.com/api-reference/4f8e257df4468-list-a-user-s-delegations) instead.
 
 
         List active sessions of a PagerDuty user.
@@ -49473,7 +49700,7 @@ paths:
 
         > ### Deprecated
 
-        > This endpoint is deprecated, please use the [Get OAuth Delegation endpoint](https://developer.pagerduty.com/api-reference//e3c7cd550aa2b-get-a-user-oauth-delegation) instead.
+        > This endpoint is deprecated, please use the [Get OAuth Delegation endpoint](https://developer.pagerduty.com/api-reference/3e32112cd7324-get-a-user-s-delegation) instead.
 
         Get details about a user''s session.
 
@@ -50147,6 +50374,7 @@ paths:
         - $ref: '#/components/parameters/query'
         - $ref: '#/components/parameters/offset_total'
         - $ref: '#/components/parameters/team_ids'
+        - $ref: '#/components/parameters/schedule_v3_user_id'
       responses:
         '200':
           description: Schedules retrieved successfully
@@ -50345,9 +50573,11 @@ paths:
         > An upgrade tool for existing schedules is coming soon; your legacy schedules will keep working in the meantime. [Learn more](https://support.pagerduty.com/main/docs/shift-based-schedules-api-upgrade-examples).
 
 
-        Update schedule metadata (name, description, time zone). All fields are
+        Update schedule metadata (name, description, time zone). `time_zone`
 
-        optional — only provided fields are updated.
+        is required; `name` and `description` are optional and keep their
+
+        current values when omitted.
 
 
         To modify rotations or events, use their respective endpoints.
@@ -50543,6 +50773,9 @@ paths:
 
         **`since` and `until` are required.**
 
+
+        Returns every custom shift that overlaps the window.
+
         '
       operationId: listCustomShifts
       parameters:
@@ -50551,8 +50784,6 @@ paths:
         - $ref: '#/components/parameters/schedule_v3_until_required'
         - $ref: '#/components/parameters/schedule_v3_time_zone'
         - $ref: '#/components/parameters/schedule_v3_overflow'
-        - $ref: '#/components/parameters/schedule_v3_limit'
-        - $ref: '#/components/parameters/schedule_v3_offset'
       responses:
         '200':
           description: Custom shifts retrieved successfully
@@ -50567,20 +50798,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/CustomShift'
-                  limit:
-                    type: integer
-                  offset:
-                    type: integer
-                  more:
-                    type: boolean
               examples:
                 response:
                   summary: Example response
                   value:
                     custom_shifts: []
-                    limit: 25
-                    offset: 0
-                    more: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -50765,6 +50987,7 @@ paths:
               $ref: '#/components/schemas/UpdateCustomShiftRequest'
             example:
               custom_shift:
+                type: custom_shift
                 start_time: '2025-03-15T10:00:00Z'
                 end_time: '2025-03-15T18:00:00Z'
                 assignments:
@@ -50877,6 +51100,9 @@ paths:
 
         **`since` and `until` are required.**
 
+
+        Returns every override that overlaps the window.
+
         '
       operationId: listOverrides
       parameters:
@@ -50885,8 +51111,6 @@ paths:
         - $ref: '#/components/parameters/schedule_v3_until_required'
         - $ref: '#/components/parameters/schedule_v3_time_zone'
         - $ref: '#/components/parameters/schedule_v3_overflow'
-        - $ref: '#/components/parameters/schedule_v3_limit'
-        - $ref: '#/components/parameters/schedule_v3_offset'
       responses:
         '200':
           description: Overrides retrieved successfully
@@ -50901,20 +51125,11 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/OverrideShift'
-                  limit:
-                    type: integer
-                  offset:
-                    type: integer
-                  more:
-                    type: boolean
               examples:
                 response:
                   summary: Example response
                   value:
                     overrides: []
-                    limit: 25
-                    offset: 0
-                    more: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -51088,6 +51303,9 @@ paths:
 
         Update an existing override.
 
+
+        Once the override has started, only `end_time` can be changed.
+
         '
       operationId: updateOverride
       parameters:
@@ -51101,8 +51319,12 @@ paths:
               $ref: '#/components/schemas/UpdateOverrideRequest'
             example:
               override:
+                type: override_shift
                 start_time: '2025-03-15T10:00:00Z'
                 end_time: '2025-03-15T18:00:00Z'
+                overridden_member:
+                  type: user_member
+                  user_id: PUSER123
                 overriding_member:
                   type: user_member
                   user_id: PUSER789
@@ -51202,7 +51424,7 @@ paths:
       operationId: listRotations
       parameters:
         - $ref: '#/components/parameters/schedule_v3_id'
-        - $ref: '#/components/parameters/schedule_v3_limit'
+        - $ref: '#/components/parameters/schedule_v3_limit_rotations_events'
         - $ref: '#/components/parameters/schedule_v3_offset'
       responses:
         '200':
@@ -51329,8 +51551,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/schedule_v3_id'
         - $ref: '#/components/parameters/schedule_v3_rotation_id'
-        - $ref: '#/components/parameters/schedule_v3_since'
-        - $ref: '#/components/parameters/schedule_v3_until'
       responses:
         '200':
           description: Rotation retrieved successfully
@@ -51430,7 +51650,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/schedule_v3_id'
         - $ref: '#/components/parameters/schedule_v3_rotation_id'
-        - $ref: '#/components/parameters/schedule_v3_limit'
+        - $ref: '#/components/parameters/schedule_v3_limit_rotations_events'
         - $ref: '#/components/parameters/schedule_v3_offset'
       responses:
         '200':
@@ -51574,8 +51794,6 @@ paths:
         - $ref: '#/components/parameters/schedule_v3_id'
         - $ref: '#/components/parameters/schedule_v3_rotation_id'
         - $ref: '#/components/parameters/schedule_v3_event_id'
-        - $ref: '#/components/parameters/schedule_v3_since'
-        - $ref: '#/components/parameters/schedule_v3_until'
       responses:
         '200':
           description: Event retrieved successfully
@@ -51618,14 +51836,51 @@ paths:
             examples:
               extendActive:
                 summary: Extend an active event's end date
+                description: 'Send the full event. Only `effective_until` differs from
+
+                  the current values.
+
+                  '
                 value:
                   event:
+                    name: Weekly On-Call
+                    start_time:
+                      date_time: '2025-03-03T09:00:00Z'
+                      time_zone: America/New_York
+                    end_time:
+                      date_time: '2025-03-10T09:00:00Z'
+                      time_zone: America/New_York
+                    effective_since: '2025-03-03T00:00:00Z'
                     effective_until: '2025-09-01T00:00:00Z'
+                    recurrence:
+                      - RRULE:FREQ=WEEKLY
+                    assignment_strategy:
+                      type: rotating_member_assignment_strategy
+                      shifts_per_member: 1
+                      members:
+                        - type: user_member
+                          user_id: PUSER123
+                        - type: user_member
+                          user_id: PUSER456
               updateFuture:
                 summary: Update a future event
+                description: 'Send the full event. `name` and `assignment_strategy`
+
+                  differ from the current values.
+
+                  '
                 value:
                   event:
                     name: Updated Weekly On-Call
+                    start_time:
+                      date_time: '2025-10-06T09:00:00Z'
+                      time_zone: America/New_York
+                    end_time:
+                      date_time: '2025-10-13T09:00:00Z'
+                      time_zone: America/New_York
+                    effective_since: '2025-10-06T00:00:00Z'
+                    recurrence:
+                      - RRULE:FREQ=WEEKLY
                     assignment_strategy:
                       type: rotating_member_assignment_strategy
                       shifts_per_member: 1

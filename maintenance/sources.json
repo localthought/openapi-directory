@@ -150,7 +150,8 @@
       },
       "discovery": "Follow the official public REST description. info.version remains fixed at 2.0.0; content comparisons are required. Events and other PagerDuty APIs need separate audits.",
       "version_policy": "vendor",
-      "priority": "high"
+      "priority": "high",
+      "patches": ["maintenance/patches/pagerduty.json"]
     },
     {
       "id": "mongodb-atlas-admin",
