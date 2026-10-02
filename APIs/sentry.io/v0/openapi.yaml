@@ -11,8 +11,12 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/main/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/41d82c69208a3f24dafa36f584cca981d30cfde5/openapi-derefed.json
       version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/41d82c69208a3f24dafa36f584cca981d30cfde5/openapi-derefed.json at commit 41d82c69208a3f24dafa36f584cca981d30cfde5; entry source SHA-256 7688d900336172f1229e071f4938d0e551f53a3ba2c4a72fb95be2dba50992c9.
+    - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
+    - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 paths:
   /api/0/organizations/:
     get:
@@ -1814,17 +1818,7 @@ paths:
   /api/0/organizations/{organization_id_or_slug}/agents/conversations/:
     get:
       operationId: listOrganizationAIConversations
-      description: '**Experimental:** This API is under active development and may change.
-
-
-        Return AI conversations ordered by latest span time.
-
-
-        `query` uses Sentry search syntax against spans. A conversation matches when
-
-        any span matches. Summary values then include all conversation spans inside
-
-        selected project, environment, and time filters.'
+      description: "**Experimental:** This API is under active development and may change.\n\nReturn AI conversations ordered by latest span time.\n\n`query` uses Sentry search syntax.\n\n**Span filters**\n\n- Description: `\"payment failed\"`; status: `span.status:[error,internal_error]`.\n- Operation: `gen_ai.operation.type:tool`; tool: `gen_ai.tool.name:get_weather`.\n- Duration: `span.duration:>2s`; ID: `gen_ai.conversation.id:\"session:123\"`\n  or `conversation.conversationId:\"session:123\"`.\n\n**Conversation filters**\n\n- Calls: `conversation.llmCalls` or `conversation.messages`, and\n  `conversation.toolCalls`; failures: `conversation.errors` and\n  `conversation.toolErrors`.\n- Usage: `conversation.inputTokens`, `conversation.outputTokens`,\n  `conversation.totalTokens`, and `conversation.totalCost`.\n- Duration: `conversation.duration` sums AI spans;\n  `conversation.generationDuration` sums LLM calls.\n\nUse numeric comparisons such as `conversation.toolCalls:>2`. Queries return\nconversations, not spans. Each `AND` condition may match a different span.\nReturned totals include all AI spans in selected project, environment, and time\nfilters, not only matching spans.\n\nNegation means no span matches, including when an attribute is absent. Payloads\nare searchable only when recorded and not scrubbed. Payload failure text does\nnot mark a span as failed; set `span.status:error` for reliable failure search."
       summary: List an Organization's AI Conversations
       parameters:
         - in: path
@@ -1922,8 +1916,36 @@ paths:
                 items:
                   type: object
                   properties:
+                    endTimestamp:
+                      type: integer
+                    generationDuration:
+                      type: number
+                      format: double
+                    inputTokens:
+                      type: integer
+                    llmCalls:
+                      type: integer
+                    outputTokens:
+                      type: integer
+                    startTimestamp:
+                      type: integer
+                    toolCalls:
+                      type: integer
+                    toolErrors:
+                      type: integer
+                    toolNames:
+                      type: array
+                      items:
+                        type: string
+                    totalCost:
+                      type: number
+                      format: double
+                    totalTokens:
+                      type: integer
                     conversationId:
                       type: string
+                    errors:
+                      type: integer
                     title:
                       type: string
                       nullable: true
@@ -1934,28 +1956,6 @@ paths:
                       type: array
                       items:
                         type: string
-                    errors:
-                      type: integer
-                    llmCalls:
-                      type: integer
-                    toolCalls:
-                      type: integer
-                    totalTokens:
-                      type: integer
-                    inputTokens:
-                      type: integer
-                    outputTokens:
-                      type: integer
-                    totalCost:
-                      type: number
-                      format: double
-                    generationDuration:
-                      type: number
-                      format: double
-                    startTimestamp:
-                      type: integer
-                    endTimestamp:
-                      type: integer
                     traceCount:
                       type: integer
                     traceIds:
@@ -1989,12 +1989,6 @@ paths:
                         - ip_address
                         - username
                       nullable: true
-                    toolNames:
-                      type: array
-                      items:
-                        type: string
-                    toolErrors:
-                      type: integer
                     projects:
                       type: array
                       items:
@@ -2221,10 +2215,96 @@ paths:
                     items:
                       type: object
                       additionalProperties: {}
+                  stats:
+                    type: object
+                    properties:
+                      endTimestamp:
+                        type: integer
+                      generationDuration:
+                        type: number
+                        format: double
+                      inputTokens:
+                        type: integer
+                      llmCalls:
+                        type: integer
+                      outputTokens:
+                        type: integer
+                      startTimestamp:
+                        type: integer
+                      toolCalls:
+                        type: integer
+                      toolErrors:
+                        type: integer
+                      toolNames:
+                        type: array
+                        items:
+                          type: string
+                      totalCost:
+                        type: number
+                        format: double
+                      totalTokens:
+                        type: integer
+                      usageByModel:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            model:
+                              type: string
+                              nullable: true
+                            llmCalls:
+                              type: integer
+                            inputTokens:
+                              type: integer
+                            outputTokens:
+                              type: integer
+                            totalTokens:
+                              type: integer
+                            cacheReadTokens:
+                              type: integer
+                            cacheWriteTokens:
+                              type: integer
+                            reasoningTokens:
+                              type: integer
+                            inputCost:
+                              type: number
+                              format: double
+                            outputCost:
+                              type: number
+                              format: double
+                            totalCost:
+                              type: number
+                              format: double
+                          required:
+                            - cacheReadTokens
+                            - cacheWriteTokens
+                            - inputCost
+                            - inputTokens
+                            - llmCalls
+                            - model
+                            - outputCost
+                            - outputTokens
+                            - reasoningTokens
+                            - totalCost
+                            - totalTokens
+                    required:
+                      - endTimestamp
+                      - generationDuration
+                      - inputTokens
+                      - llmCalls
+                      - outputTokens
+                      - startTimestamp
+                      - toolCalls
+                      - toolErrors
+                      - toolNames
+                      - totalCost
+                      - totalTokens
+                      - usageByModel
                 required:
                   - conversationId
                   - projects
                   - spans
+                  - stats
                   - title
                   - webUrl
               examples:
@@ -2237,6 +2317,30 @@ paths:
                         name: Weather Assistant
                         slug: weather-assistant
                     webUrl: https://sentry.io/organizations/org-slug/explore/agents/conversations/01JQZ4W8X7J2Q9B4R5M6N7P8T9/?project=1
+                    stats:
+                      endTimestamp: 1743465601250
+                      generationDuration: 1250
+                      inputTokens: 0
+                      llmCalls: 1
+                      outputTokens: 0
+                      startTimestamp: 1743465600000
+                      toolCalls: 0
+                      toolErrors: 0
+                      toolNames: []
+                      totalCost: 0.0042
+                      totalTokens: 485
+                      usageByModel:
+                        - model: gpt-4o-mini-2024-07-18
+                          llmCalls: 1
+                          inputTokens: 0
+                          outputTokens: 0
+                          totalTokens: 485
+                          cacheReadTokens: 0
+                          cacheWriteTokens: 0
+                          reasoningTokens: 0
+                          inputCost: 0
+                          outputCost: 0
+                          totalCost: 0.0042
                     spans:
                       - span_id: a1b2c3d4e5f67890
                         trace: 4c79f60c11214eb38604f4ae0781bfb2
@@ -3660,6 +3764,8 @@ paths:
                           properties:
                             preferredPolarity:
                               type: string
+                            timeWindow:
+                              type: string
                             max_values:
                               type: object
                               additionalProperties:
@@ -4183,6 +4289,8 @@ paths:
                           type: object
                           properties:
                             preferredPolarity:
+                              type: string
+                            timeWindow:
                               type: string
                             max_values:
                               type: object
@@ -5008,6 +5116,8 @@ paths:
                           type: object
                           properties:
                             preferredPolarity:
+                              type: string
+                            timeWindow:
                               type: string
                             max_values:
                               type: object
@@ -8859,6 +8969,20 @@ paths:
                       routingHint:
                         type: string
                       debug_info: {}
+                      ingestion:
+                        type: object
+                        description: Ingestion status for the data behind a response.
+                        properties:
+                          status:
+                            type: string
+                          delaySeconds:
+                            type: number
+                            format: double
+                          completeThrough:
+                            type: number
+                            format: double
+                        required:
+                          - status
                 required:
                   - data
                   - meta
@@ -9172,14 +9296,20 @@ paths:
                             - reason
                             - start
                             - type
-                      estimatedIngestionDelaySeconds:
-                        type: number
-                        format: double
-                      completeThrough:
-                        type: number
-                        format: double
-                      ingestionDelayStatus:
-                        type: string
+                      ingestion:
+                        type: object
+                        description: Ingestion status for the data behind a response.
+                        properties:
+                          status:
+                            type: string
+                          delaySeconds:
+                            type: number
+                            format: double
+                          completeThrough:
+                            type: number
+                            format: double
+                        required:
+                          - status
                     required:
                       - dataset
                       - end
@@ -9365,6 +9495,7 @@ paths:
                     - slack_staging
                     - perforce
                     - gitlab
+                    - cursor_origin
                     - msteams
                     - custom_scm
                   type: string
@@ -9384,6 +9515,8 @@ paths:
                     * `perforce`
 
                     * `gitlab`
+
+                    * `cursor_origin`
 
                     * `msteams`
 
@@ -9530,6 +9663,7 @@ paths:
                     - slack_staging
                     - perforce
                     - gitlab
+                    - cursor_origin
                     - msteams
                     - custom_scm
                   type: string
@@ -9549,6 +9683,8 @@ paths:
                     * `perforce`
 
                     * `gitlab`
+
+                    * `cursor_origin`
 
                     * `msteams`
 
@@ -10941,6 +11077,22 @@ paths:
                     outOfDate:
                       type: boolean
                       nullable: true
+                    missingFeatures:
+                      type: array
+                      items:
+                        type: object
+                        description: 'A feature the installation can no longer support, named by the permission
+
+                          tier it falls short of, so the update-permissions modal can list them.'
+                        properties:
+                          key:
+                            type: string
+                          description:
+                            type: string
+                        required:
+                          - description
+                          - key
+                      nullable: true
                     status:
                       type: string
                     provider: {}
@@ -10964,6 +11116,7 @@ paths:
                     - gracePeriodEnd
                     - icon
                     - id
+                    - missingFeatures
                     - name
                     - organizationId
                     - organizationIntegrationStatus
@@ -10980,6 +11133,7 @@ paths:
                       domainName: alphabet-soup.slack.com
                       accountType: null
                       scopes:
+                        - app_mentions:read
                         - channels:read
                         - chat:write
                         - chat:write.customize
@@ -10993,6 +11147,7 @@ paths:
                         - team:read
                         - users:read
                       outOfDate: false
+                      missingFeatures: []
                       status: active
                       provider:
                         key: slack
@@ -11071,6 +11226,22 @@ paths:
                   outOfDate:
                     type: boolean
                     nullable: true
+                  missingFeatures:
+                    type: array
+                    items:
+                      type: object
+                      description: 'A feature the installation can no longer support, named by the permission
+
+                        tier it falls short of, so the update-permissions modal can list them.'
+                      properties:
+                        key:
+                          type: string
+                        description:
+                          type: string
+                      required:
+                        - description
+                        - key
+                    nullable: true
                   status:
                     type: string
                   provider: {}
@@ -11094,6 +11265,7 @@ paths:
                   - gracePeriodEnd
                   - icon
                   - id
+                  - missingFeatures
                   - name
                   - organizationId
                   - organizationIntegrationStatus
@@ -11110,6 +11282,7 @@ paths:
                     domainName: alphabet-soup.slack.com
                     accountType: null
                     scopes:
+                      - app_mentions:read
                       - channels:read
                       - chat:write
                       - chat:write.customize
@@ -11123,6 +11296,7 @@ paths:
                       - team:read
                       - users:read
                     outOfDate: false
+                    missingFeatures: []
                     status: active
                     provider:
                       key: slack
@@ -12136,6 +12310,36 @@ paths:
               type: integer
           description: The list of issue IDs to mutate. It is optional for status updates, in which an implicit `update all` is assumed.
         - in: query
+          name: statsPeriod
+          schema:
+            type: string
+          description: 'The period of time for the query, will override the start & end parameters, a number followed by one of:
+
+            - `d` for days
+
+            - `h` for hours
+
+            - `m` for minutes
+
+            - `s` for seconds
+
+            - `w` for weeks
+
+
+            For example, `24h`, to mean query data starting from 24 hours ago to now.'
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          description: The start of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: The end of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
+        - in: query
           name: query
           schema:
             type: string
@@ -12551,6 +12755,36 @@ paths:
             items:
               type: integer
           description: The list of issue IDs to be removed. If not provided, it will attempt to remove the first 1000 issues.
+        - in: query
+          name: statsPeriod
+          schema:
+            type: string
+          description: 'The period of time for the query, will override the start & end parameters, a number followed by one of:
+
+            - `d` for days
+
+            - `h` for hours
+
+            - `m` for minutes
+
+            - `s` for seconds
+
+            - `w` for weeks
+
+
+            For example, `24h`, to mean query data starting from 24 hours ago to now.'
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          description: The start of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: The end of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
         - in: query
           name: query
           schema:
@@ -38961,6 +39195,1879 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+  /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/codeowners/:
+    get:
+      operationId: listProjectCodeOwners
+      description: Return the CODEOWNERS configurations for a project.
+      summary: List a Project's CODEOWNERS Configurations
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: query
+          name: expand
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - codeMapping
+                - ownershipSyntax
+          description: Optional fields to expand.
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:read
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    codeMapping:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        projectId:
+                          type: string
+                        projectSlug:
+                          type: string
+                        repoId:
+                          type: string
+                        repoName:
+                          type: string
+                        integrationId:
+                          type: string
+                          nullable: true
+                        provider:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            slug:
+                              type: string
+                            name:
+                              type: string
+                            canAdd:
+                              type: boolean
+                            canDisable:
+                              type: boolean
+                            features:
+                              type: array
+                              items:
+                                type: string
+                            aspects:
+                              type: object
+                              additionalProperties: {}
+                          required:
+                            - aspects
+                            - canAdd
+                            - canDisable
+                            - features
+                            - key
+                            - name
+                            - slug
+                          nullable: true
+                        stackRoot:
+                          type: string
+                        sourceRoot:
+                          type: string
+                        defaultBranch:
+                          type: string
+                          nullable: true
+                        automaticallyGenerated:
+                          type: boolean
+                        hasCodeOwner:
+                          type: boolean
+                      required:
+                        - automaticallyGenerated
+                        - defaultBranch
+                        - hasCodeOwner
+                        - id
+                        - integrationId
+                        - projectId
+                        - projectSlug
+                        - provider
+                        - repoId
+                        - repoName
+                        - sourceRoot
+                        - stackRoot
+                    ownershipSyntax:
+                      type: string
+                    errors:
+                      type: object
+                      properties:
+                        missing_user_emails:
+                          type: array
+                          items:
+                            type: string
+                        missing_external_users:
+                          type: array
+                          items:
+                            type: string
+                        missing_external_teams:
+                          type: array
+                          items:
+                            type: string
+                        teams_without_access:
+                          type: array
+                          items:
+                            type: string
+                        users_without_access:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                        - missing_external_teams
+                        - missing_external_users
+                        - missing_user_emails
+                        - teams_without_access
+                        - users_without_access
+                    schema:
+                      anyOf:
+                        - type: object
+                          properties:
+                            $version:
+                              type: integer
+                            rules:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  matcher:
+                                    type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                      pattern:
+                                        type: string
+                                    required:
+                                      - pattern
+                                      - type
+                                  owners:
+                                    type: array
+                                    items:
+                                      type: object
+                                      description: Owner as it appears in the API response (after identifier->name rename).
+                                      properties:
+                                        type:
+                                          type: string
+                                        name:
+                                          type: string
+                                        id:
+                                          type: string
+                                      required:
+                                        - name
+                                        - type
+                                required:
+                                  - matcher
+                                  - owners
+                          required:
+                            - $version
+                            - rules
+                        - type: object
+                          description: Legacy CODEOWNERS records can have an empty schema before it is built.
+                    codeOwnersUrl:
+                      type: string
+                    id:
+                      type: string
+                    raw:
+                      type: string
+                    dateCreated:
+                      type: string
+                      format: date-time
+                    dateUpdated:
+                      type: string
+                      format: date-time
+                    dateSynced:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    codeMappingId:
+                      type: string
+                    provider:
+                      type: string
+                  required:
+                    - codeMappingId
+                    - dateCreated
+                    - dateSynced
+                    - dateUpdated
+                    - id
+                    - provider
+                    - raw
+              examples:
+                ListAProject'sCODEOWNERSConfigurations:
+                  value:
+                    - id: '42'
+                      raw: src/* user@example.com
+                      dateCreated: '2024-01-15T10:30:00Z'
+                      dateUpdated: '2024-01-15T10:30:00Z'
+                      dateSynced: '2024-01-15T10:30:00Z'
+                      codeMappingId: '7'
+                      provider: github
+                      errors:
+                        missing_external_teams: []
+                        missing_external_users: []
+                        missing_user_emails: []
+                        teams_without_access: []
+                        users_without_access: []
+                      schema:
+                        $version: 1
+                        rules:
+                          - matcher:
+                              type: codeowners
+                              pattern: src/*
+                            owners:
+                              - type: user
+                                id: '1'
+                                name: user@example.com
+                      codeOwnersUrl: https://github.com/example/repository/blob/main/CODEOWNERS
+                  summary: List a project's CODEOWNERS configurations
+          description: ''
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      operationId: createProjectCodeOwners
+      description: Create a CODEOWNERS configuration for a project.
+      summary: Create a CODEOWNERS Configuration for a Project
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+      tags:
+        - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                raw:
+                  type: string
+                  description: The raw contents of the CODEOWNERS file.
+                codeMappingId:
+                  type: string
+                  description: The ID of the code mapping used to translate repository paths to stack trace paths.
+              required:
+                - codeMappingId
+                - raw
+            examples:
+              CreateACODEOWNERSConfiguration:
+                value:
+                  raw: src/* user@example.com
+                  codeMappingId: '7'
+                summary: Create a CODEOWNERS configuration
+        required: true
+      security:
+        - auth_token:
+            - project:admin
+            - project:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codeMapping:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      projectId:
+                        type: string
+                      projectSlug:
+                        type: string
+                      repoId:
+                        type: string
+                      repoName:
+                        type: string
+                      integrationId:
+                        type: string
+                        nullable: true
+                      provider:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          slug:
+                            type: string
+                          name:
+                            type: string
+                          canAdd:
+                            type: boolean
+                          canDisable:
+                            type: boolean
+                          features:
+                            type: array
+                            items:
+                              type: string
+                          aspects:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - aspects
+                          - canAdd
+                          - canDisable
+                          - features
+                          - key
+                          - name
+                          - slug
+                        nullable: true
+                      stackRoot:
+                        type: string
+                      sourceRoot:
+                        type: string
+                      defaultBranch:
+                        type: string
+                        nullable: true
+                      automaticallyGenerated:
+                        type: boolean
+                      hasCodeOwner:
+                        type: boolean
+                    required:
+                      - automaticallyGenerated
+                      - defaultBranch
+                      - hasCodeOwner
+                      - id
+                      - integrationId
+                      - projectId
+                      - projectSlug
+                      - provider
+                      - repoId
+                      - repoName
+                      - sourceRoot
+                      - stackRoot
+                  ownershipSyntax:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      missing_user_emails:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_users:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_teams:
+                        type: array
+                        items:
+                          type: string
+                      teams_without_access:
+                        type: array
+                        items:
+                          type: string
+                      users_without_access:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - missing_external_teams
+                      - missing_external_users
+                      - missing_user_emails
+                      - teams_without_access
+                      - users_without_access
+                  schema:
+                    anyOf:
+                      - type: object
+                        properties:
+                          $version:
+                            type: integer
+                          rules:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                matcher:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                    pattern:
+                                      type: string
+                                  required:
+                                    - pattern
+                                    - type
+                                owners:
+                                  type: array
+                                  items:
+                                    type: object
+                                    description: Owner as it appears in the API response (after identifier->name rename).
+                                    properties:
+                                      type:
+                                        type: string
+                                      name:
+                                        type: string
+                                      id:
+                                        type: string
+                                    required:
+                                      - name
+                                      - type
+                              required:
+                                - matcher
+                                - owners
+                        required:
+                          - $version
+                          - rules
+                      - type: object
+                        description: Legacy CODEOWNERS records can have an empty schema before it is built.
+                  codeOwnersUrl:
+                    type: string
+                  id:
+                    type: string
+                  raw:
+                    type: string
+                  dateCreated:
+                    type: string
+                    format: date-time
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                  dateSynced:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  codeMappingId:
+                    type: string
+                  provider:
+                    type: string
+                required:
+                  - codeMappingId
+                  - dateCreated
+                  - dateSynced
+                  - dateUpdated
+                  - id
+                  - provider
+                  - raw
+              examples:
+                CreatedCODEOWNERSConfiguration:
+                  value:
+                    id: '42'
+                    raw: src/* user@example.com
+                    dateCreated: '2024-01-15T10:30:00Z'
+                    dateUpdated: '2024-01-15T10:30:00Z'
+                    dateSynced: '2024-01-15T10:30:00Z'
+                    codeMappingId: '7'
+                    provider: github
+                    errors:
+                      missing_external_teams: []
+                      missing_external_users: []
+                      missing_user_emails: []
+                      teams_without_access: []
+                      users_without_access: []
+                    schema:
+                      $version: 1
+                      rules:
+                        - matcher:
+                            type: codeowners
+                            pattern: src/*
+                          owners:
+                            - type: user
+                              id: '1'
+                              name: user@example.com
+                    codeOwnersUrl: https://github.com/example/repository/blob/main/CODEOWNERS
+                    ownershipSyntax: 'codeowners:src/* user@example.com
+
+                      '
+                  summary: Created CODEOWNERS configuration
+          description: ''
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/codeowners/{codeowners_id}/:
+    get:
+      operationId: retrieveProjectCodeOwners
+      description: Return a single CODEOWNERS configuration.
+      summary: Retrieve a Project's CODEOWNERS Configuration
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: codeowners_id
+          schema:
+            type: string
+          description: The ID of the CODEOWNERS configuration.
+          required: true
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:read
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codeMapping:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      projectId:
+                        type: string
+                      projectSlug:
+                        type: string
+                      repoId:
+                        type: string
+                      repoName:
+                        type: string
+                      integrationId:
+                        type: string
+                        nullable: true
+                      provider:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          slug:
+                            type: string
+                          name:
+                            type: string
+                          canAdd:
+                            type: boolean
+                          canDisable:
+                            type: boolean
+                          features:
+                            type: array
+                            items:
+                              type: string
+                          aspects:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - aspects
+                          - canAdd
+                          - canDisable
+                          - features
+                          - key
+                          - name
+                          - slug
+                        nullable: true
+                      stackRoot:
+                        type: string
+                      sourceRoot:
+                        type: string
+                      defaultBranch:
+                        type: string
+                        nullable: true
+                      automaticallyGenerated:
+                        type: boolean
+                      hasCodeOwner:
+                        type: boolean
+                    required:
+                      - automaticallyGenerated
+                      - defaultBranch
+                      - hasCodeOwner
+                      - id
+                      - integrationId
+                      - projectId
+                      - projectSlug
+                      - provider
+                      - repoId
+                      - repoName
+                      - sourceRoot
+                      - stackRoot
+                  ownershipSyntax:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      missing_user_emails:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_users:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_teams:
+                        type: array
+                        items:
+                          type: string
+                      teams_without_access:
+                        type: array
+                        items:
+                          type: string
+                      users_without_access:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - missing_external_teams
+                      - missing_external_users
+                      - missing_user_emails
+                      - teams_without_access
+                      - users_without_access
+                  schema:
+                    anyOf:
+                      - type: object
+                        properties:
+                          $version:
+                            type: integer
+                          rules:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                matcher:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                    pattern:
+                                      type: string
+                                  required:
+                                    - pattern
+                                    - type
+                                owners:
+                                  type: array
+                                  items:
+                                    type: object
+                                    description: Owner as it appears in the API response (after identifier->name rename).
+                                    properties:
+                                      type:
+                                        type: string
+                                      name:
+                                        type: string
+                                      id:
+                                        type: string
+                                    required:
+                                      - name
+                                      - type
+                              required:
+                                - matcher
+                                - owners
+                        required:
+                          - $version
+                          - rules
+                      - type: object
+                        description: Legacy CODEOWNERS records can have an empty schema before it is built.
+                  codeOwnersUrl:
+                    type: string
+                  id:
+                    type: string
+                  raw:
+                    type: string
+                  dateCreated:
+                    type: string
+                    format: date-time
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                  dateSynced:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  codeMappingId:
+                    type: string
+                  provider:
+                    type: string
+                required:
+                  - codeMappingId
+                  - dateCreated
+                  - dateSynced
+                  - dateUpdated
+                  - id
+                  - provider
+                  - raw
+              examples:
+                RetrieveACODEOWNERSConfiguration:
+                  value:
+                    id: '42'
+                    raw: src/* user@example.com
+                    dateCreated: '2024-01-15T10:30:00Z'
+                    dateUpdated: '2024-01-15T10:30:00Z'
+                    dateSynced: '2024-01-15T10:30:00Z'
+                    codeMappingId: '7'
+                    provider: github
+                    errors:
+                      missing_external_teams: []
+                      missing_external_users: []
+                      missing_user_emails: []
+                      teams_without_access: []
+                      users_without_access: []
+                    schema:
+                      $version: 1
+                      rules:
+                        - matcher:
+                            type: codeowners
+                            pattern: src/*
+                          owners:
+                            - type: user
+                              id: '1'
+                              name: user@example.com
+                    codeOwnersUrl: https://github.com/example/repository/blob/main/CODEOWNERS
+                  summary: Retrieve a CODEOWNERS configuration
+          description: ''
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      operationId: updateProjectCodeOwners
+      description: Update a CODEOWNERS configuration.
+      summary: Update a Project's CODEOWNERS Configuration
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: codeowners_id
+          schema:
+            type: string
+          description: The ID of the CODEOWNERS configuration.
+          required: true
+      tags:
+        - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                raw:
+                  type: string
+                  description: The raw contents of the CODEOWNERS file.
+                codeMappingId:
+                  type: string
+                  description: The ID of the code mapping used to translate repository paths to stack trace paths.
+            examples:
+              UpdateACODEOWNERSConfiguration:
+                value:
+                  raw: 'src/* #backend'
+                summary: Update a CODEOWNERS configuration
+      security:
+        - auth_token:
+            - project:admin
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  codeMapping:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      projectId:
+                        type: string
+                      projectSlug:
+                        type: string
+                      repoId:
+                        type: string
+                      repoName:
+                        type: string
+                      integrationId:
+                        type: string
+                        nullable: true
+                      provider:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                          slug:
+                            type: string
+                          name:
+                            type: string
+                          canAdd:
+                            type: boolean
+                          canDisable:
+                            type: boolean
+                          features:
+                            type: array
+                            items:
+                              type: string
+                          aspects:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - aspects
+                          - canAdd
+                          - canDisable
+                          - features
+                          - key
+                          - name
+                          - slug
+                        nullable: true
+                      stackRoot:
+                        type: string
+                      sourceRoot:
+                        type: string
+                      defaultBranch:
+                        type: string
+                        nullable: true
+                      automaticallyGenerated:
+                        type: boolean
+                      hasCodeOwner:
+                        type: boolean
+                    required:
+                      - automaticallyGenerated
+                      - defaultBranch
+                      - hasCodeOwner
+                      - id
+                      - integrationId
+                      - projectId
+                      - projectSlug
+                      - provider
+                      - repoId
+                      - repoName
+                      - sourceRoot
+                      - stackRoot
+                  ownershipSyntax:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      missing_user_emails:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_users:
+                        type: array
+                        items:
+                          type: string
+                      missing_external_teams:
+                        type: array
+                        items:
+                          type: string
+                      teams_without_access:
+                        type: array
+                        items:
+                          type: string
+                      users_without_access:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - missing_external_teams
+                      - missing_external_users
+                      - missing_user_emails
+                      - teams_without_access
+                      - users_without_access
+                  schema:
+                    anyOf:
+                      - type: object
+                        properties:
+                          $version:
+                            type: integer
+                          rules:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                matcher:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: string
+                                    pattern:
+                                      type: string
+                                  required:
+                                    - pattern
+                                    - type
+                                owners:
+                                  type: array
+                                  items:
+                                    type: object
+                                    description: Owner as it appears in the API response (after identifier->name rename).
+                                    properties:
+                                      type:
+                                        type: string
+                                      name:
+                                        type: string
+                                      id:
+                                        type: string
+                                    required:
+                                      - name
+                                      - type
+                              required:
+                                - matcher
+                                - owners
+                        required:
+                          - $version
+                          - rules
+                      - type: object
+                        description: Legacy CODEOWNERS records can have an empty schema before it is built.
+                  codeOwnersUrl:
+                    type: string
+                  id:
+                    type: string
+                  raw:
+                    type: string
+                  dateCreated:
+                    type: string
+                    format: date-time
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                  dateSynced:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  codeMappingId:
+                    type: string
+                  provider:
+                    type: string
+                required:
+                  - codeMappingId
+                  - dateCreated
+                  - dateSynced
+                  - dateUpdated
+                  - id
+                  - provider
+                  - raw
+              examples:
+                UpdatedCODEOWNERSConfiguration:
+                  value:
+                    id: '42'
+                    raw: src/* user@example.com
+                    dateCreated: '2024-01-15T10:30:00Z'
+                    dateUpdated: '2024-01-15T10:30:00Z'
+                    dateSynced: '2024-01-15T10:30:00Z'
+                    codeMappingId: '7'
+                    provider: github
+                    errors:
+                      missing_external_teams: []
+                      missing_external_users: []
+                      missing_user_emails: []
+                      teams_without_access: []
+                      users_without_access: []
+                    schema:
+                      $version: 1
+                      rules:
+                        - matcher:
+                            type: codeowners
+                            pattern: src/*
+                          owners:
+                            - type: user
+                              id: '1'
+                              name: user@example.com
+                    codeOwnersUrl: https://github.com/example/repository/blob/main/CODEOWNERS
+                    ownershipSyntax: 'codeowners:src/* user@example.com
+
+                      '
+                  summary: Updated CODEOWNERS configuration
+          description: ''
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      operationId: deleteProjectCodeOwners
+      description: Delete a CODEOWNERS configuration.
+      summary: Delete a Project's CODEOWNERS Configuration
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: codeowners_id
+          schema:
+            type: string
+          description: The ID of the CODEOWNERS configuration.
+          required: true
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/custom-inbound-filters/:
+    get:
+      operationId: List a Project's Custom Inbound Filters
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        List the custom inbound filters configured for a project.'
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:read
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      readOnly: true
+                      description: The ID of the filter.
+                    dataType:
+                      enum:
+                        - all
+                        - error
+                        - log
+                        - metric
+                        - span
+                      type: string
+                      description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                        * `all`
+
+                        * `error`
+
+                        * `log`
+
+                        * `metric`
+
+                        * `span`'
+                    conditions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type:
+                            enum:
+                              - error_type
+                              - error_message
+                              - log_message
+                              - metric_name
+                              - release
+                              - ip_address
+                            type: string
+                            description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                              * `error_type`
+
+                              * `error_message`
+
+                              * `log_message`
+
+                              * `metric_name`
+
+                              * `release`
+
+                              * `ip_address`'
+                          value:
+                            type: array
+                            items:
+                              type: string
+                            description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                        required:
+                          - type
+                          - value
+                      description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                    dateCreated:
+                      type: string
+                      format: date-time
+                      readOnly: true
+                      description: When the filter was created.
+                    dateUpdated:
+                      type: string
+                      format: date-time
+                      readOnly: true
+                      description: When the filter was last changed.
+                    name:
+                      type: string
+                      nullable: true
+                      description: A human-readable label for the filter.
+                      maxLength: 256
+                    active:
+                      type: boolean
+                      description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+                  required:
+                    - conditions
+                    - dataType
+                    - dateCreated
+                    - dateUpdated
+                    - id
+              examples:
+                ListCustomInboundFilters:
+                  value:
+                    - id: '42'
+                      name: Drop TypeErrors from the 1.x releases
+                      active: true
+                      dataType: error
+                      conditions:
+                        - type: error_type
+                          value:
+                            - TypeError
+                        - type: release
+                          value:
+                            - 1.*
+                      dateCreated: '2024-07-23T17:52:53.981206Z'
+                      dateUpdated: '2024-07-23T17:52:53.981206Z'
+                  summary: List custom inbound filters
+          description: ''
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
+    post:
+      operationId: Create a Custom Inbound Filter
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Create a custom inbound filter for a project.'
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+      tags:
+        - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  readOnly: true
+                  description: The ID of the filter.
+                dataType:
+                  enum:
+                    - all
+                    - error
+                    - log
+                    - metric
+                    - span
+                  type: string
+                  description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                    * `all`
+
+                    * `error`
+
+                    * `log`
+
+                    * `metric`
+
+                    * `span`'
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        enum:
+                          - error_type
+                          - error_message
+                          - log_message
+                          - metric_name
+                          - release
+                          - ip_address
+                        type: string
+                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                          * `error_type`
+
+                          * `error_message`
+
+                          * `log_message`
+
+                          * `metric_name`
+
+                          * `release`
+
+                          * `ip_address`'
+                      value:
+                        type: array
+                        items:
+                          type: string
+                        description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                    required:
+                      - type
+                      - value
+                  description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                dateCreated:
+                  type: string
+                  format: date-time
+                  readOnly: true
+                  description: When the filter was created.
+                dateUpdated:
+                  type: string
+                  format: date-time
+                  readOnly: true
+                  description: When the filter was last changed.
+                name:
+                  type: string
+                  nullable: true
+                  description: A human-readable label for the filter.
+                  maxLength: 256
+                active:
+                  type: boolean
+                  description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+              required:
+                - conditions
+                - dataType
+                - dateCreated
+                - dateUpdated
+                - id
+        required: true
+      security:
+        - auth_token:
+            - project:admin
+            - project:write
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    readOnly: true
+                    description: The ID of the filter.
+                  dataType:
+                    enum:
+                      - all
+                      - error
+                      - log
+                      - metric
+                      - span
+                    type: string
+                    description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                      * `all`
+
+                      * `error`
+
+                      * `log`
+
+                      * `metric`
+
+                      * `span`'
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          enum:
+                            - error_type
+                            - error_message
+                            - log_message
+                            - metric_name
+                            - release
+                            - ip_address
+                          type: string
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                            * `error_type`
+
+                            * `error_message`
+
+                            * `log_message`
+
+                            * `metric_name`
+
+                            * `release`
+
+                            * `ip_address`'
+                        value:
+                          type: array
+                          items:
+                            type: string
+                          description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                      required:
+                        - type
+                        - value
+                    description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                  dateCreated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was created.
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was last changed.
+                  name:
+                    type: string
+                    nullable: true
+                    description: A human-readable label for the filter.
+                    maxLength: 256
+                  active:
+                    type: boolean
+                    description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+                required:
+                  - conditions
+                  - dataType
+                  - dateCreated
+                  - dateUpdated
+                  - id
+              examples:
+                CustomInboundFilter:
+                  value:
+                    id: '42'
+                    name: Drop TypeErrors from the 1.x releases
+                    active: true
+                    dataType: error
+                    conditions:
+                      - type: error_type
+                        value:
+                          - TypeError
+                      - type: release
+                        value:
+                          - 1.*
+                    dateCreated: '2024-07-23T17:52:53.981206Z'
+                    dateUpdated: '2024-07-23T17:52:53.981206Z'
+                  summary: Custom inbound filter
+          description: ''
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
+  /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/custom-inbound-filters/{filter_id}/:
+    get:
+      operationId: Retrieve a Custom Inbound Filter
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Retrieve a single custom inbound filter.'
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: filter_id
+          schema:
+            type: string
+          description: The ID of the custom inbound filter.
+          required: true
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:read
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    readOnly: true
+                    description: The ID of the filter.
+                  dataType:
+                    enum:
+                      - all
+                      - error
+                      - log
+                      - metric
+                      - span
+                    type: string
+                    description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                      * `all`
+
+                      * `error`
+
+                      * `log`
+
+                      * `metric`
+
+                      * `span`'
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          enum:
+                            - error_type
+                            - error_message
+                            - log_message
+                            - metric_name
+                            - release
+                            - ip_address
+                          type: string
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                            * `error_type`
+
+                            * `error_message`
+
+                            * `log_message`
+
+                            * `metric_name`
+
+                            * `release`
+
+                            * `ip_address`'
+                        value:
+                          type: array
+                          items:
+                            type: string
+                          description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                      required:
+                        - type
+                        - value
+                    description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                  dateCreated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was created.
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was last changed.
+                  name:
+                    type: string
+                    nullable: true
+                    description: A human-readable label for the filter.
+                    maxLength: 256
+                  active:
+                    type: boolean
+                    description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+                required:
+                  - conditions
+                  - dataType
+                  - dateCreated
+                  - dateUpdated
+                  - id
+              examples:
+                CustomInboundFilter:
+                  value:
+                    id: '42'
+                    name: Drop TypeErrors from the 1.x releases
+                    active: true
+                    dataType: error
+                    conditions:
+                      - type: error_type
+                        value:
+                          - TypeError
+                      - type: release
+                        value:
+                          - 1.*
+                    dateCreated: '2024-07-23T17:52:53.981206Z'
+                    dateUpdated: '2024-07-23T17:52:53.981206Z'
+                  summary: Custom inbound filter
+          description: ''
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
+    put:
+      operationId: Update a Custom Inbound Filter
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Update a custom inbound filter''s name, active state, or conditions.'
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: filter_id
+          schema:
+            type: string
+          description: The ID of the custom inbound filter.
+          required: true
+      tags:
+        - Projects
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  readOnly: true
+                  description: The ID of the filter.
+                dataType:
+                  enum:
+                    - all
+                    - error
+                    - log
+                    - metric
+                    - span
+                  type: string
+                  description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                    * `all`
+
+                    * `error`
+
+                    * `log`
+
+                    * `metric`
+
+                    * `span`'
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        enum:
+                          - error_type
+                          - error_message
+                          - log_message
+                          - metric_name
+                          - release
+                          - ip_address
+                        type: string
+                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                          * `error_type`
+
+                          * `error_message`
+
+                          * `log_message`
+
+                          * `metric_name`
+
+                          * `release`
+
+                          * `ip_address`'
+                      value:
+                        type: array
+                        items:
+                          type: string
+                        description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                    required:
+                      - type
+                      - value
+                  description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                dateCreated:
+                  type: string
+                  format: date-time
+                  readOnly: true
+                  description: When the filter was created.
+                dateUpdated:
+                  type: string
+                  format: date-time
+                  readOnly: true
+                  description: When the filter was last changed.
+                name:
+                  type: string
+                  nullable: true
+                  description: A human-readable label for the filter.
+                  maxLength: 256
+                active:
+                  type: boolean
+                  description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+              required:
+                - conditions
+                - dataType
+                - dateCreated
+                - dateUpdated
+                - id
+        required: true
+      security:
+        - auth_token:
+            - project:admin
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    readOnly: true
+                    description: The ID of the filter.
+                  dataType:
+                    enum:
+                      - all
+                      - error
+                      - log
+                      - metric
+                      - span
+                    type: string
+                    description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+                      * `all`
+
+                      * `error`
+
+                      * `log`
+
+                      * `metric`
+
+                      * `span`'
+                  conditions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          enum:
+                            - error_type
+                            - error_message
+                            - log_message
+                            - metric_name
+                            - release
+                            - ip_address
+                          type: string
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                            * `error_type`
+
+                            * `error_message`
+
+                            * `log_message`
+
+                            * `metric_name`
+
+                            * `release`
+
+                            * `ip_address`'
+                        value:
+                          type: array
+                          items:
+                            type: string
+                          description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+                      required:
+                        - type
+                        - value
+                    description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+                  dateCreated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was created.
+                  dateUpdated:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                    description: When the filter was last changed.
+                  name:
+                    type: string
+                    nullable: true
+                    description: A human-readable label for the filter.
+                    maxLength: 256
+                  active:
+                    type: boolean
+                    description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+                required:
+                  - conditions
+                  - dataType
+                  - dateCreated
+                  - dateUpdated
+                  - id
+              examples:
+                CustomInboundFilter:
+                  value:
+                    id: '42'
+                    name: Drop TypeErrors from the 1.x releases
+                    active: true
+                    dataType: error
+                    conditions:
+                      - type: error_type
+                        value:
+                          - TypeError
+                      - type: release
+                        value:
+                          - 1.*
+                    dateCreated: '2024-07-23T17:52:53.981206Z'
+                    dateUpdated: '2024-07-23T17:52:53.981206Z'
+                  summary: Custom inbound filter
+          description: ''
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
+    delete:
+      operationId: Delete a Custom Inbound Filter
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Delete a custom inbound filter.'
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: path
+          name: filter_id
+          schema:
+            type: string
+          description: The ID of the custom inbound filter.
+          required: true
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:write
+      responses:
+        '204':
+          description: No response body
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
   /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/environments/:
     get:
       operationId: listProjectEnvironments
@@ -48908,6 +51015,82 @@ paths:
         '404':
           description: Not Found
   /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/repo/:
+    get:
+      operationId: listProjectRepositories
+      description: 'List all repositories linked to a project.
+
+
+        Pass `?includeMappingCount=1` to include the number of code path mappings
+
+        per repository. Omitting it keeps the query cheaper for callers that
+
+        only need the list of connections.'
+      summary: List Repositories Linked to a Project
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: path
+          name: project_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the project the resource belongs to. Project slugs are unique within each organization.
+          required: true
+        - in: query
+          name: includeMappingCount
+          schema:
+            type: string
+          description: When set to `1`, each row includes a `mappingCount` field with the number of code path mappings for that repository. Omitted by default to keep the response lightweight.
+      tags:
+        - Projects
+      security:
+        - auth_token:
+            - project:admin
+            - project:read
+            - project:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    integrationId:
+                      type: string
+                      nullable: true
+                    externalId:
+                      type: string
+                      nullable: true
+                    projectId:
+                      type: string
+                    repositoryId:
+                      type: string
+                    repoName:
+                      type: string
+                    source:
+                      type: string
+                    providerKey:
+                      type: string
+                      nullable: true
+                    mappingCount:
+                      type: integer
+                  required:
+                    - externalId
+                    - id
+                    - integrationId
+                    - projectId
+                    - providerKey
+                    - repoName
+                    - repositoryId
+                    - source
+          description: ''
     post:
       operationId: linkProjectRepository
       description: 'Link a repository to a project. The repository must already exist
@@ -49430,6 +51613,106 @@ paths:
                         type:
                           type: string
                           enum:
+                            - azure
+                        account:
+                          type: string
+                          pattern: ^[a-z0-9]{3,24}$
+                        container:
+                          type: string
+                        tenant_id:
+                          type: string
+                        client_id:
+                          type: string
+                        client_secret:
+                          type: object
+                          properties:
+                            hidden-secret:
+                              type: boolean
+                              enum:
+                                - true
+                        prefix:
+                          type: string
+                        id:
+                          type: string
+                          minLength: 1
+                        name:
+                          type: string
+                        layout:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - native
+                                - symstore
+                                - symstore_index2
+                                - ssqp
+                                - unified
+                                - debuginfod
+                                - slashsymbols
+                            casing:
+                              type: string
+                              enum:
+                                - lowercase
+                                - uppercase
+                                - default
+                          required:
+                            - type
+                          additionalProperties: false
+                        filters:
+                          type: object
+                          properties:
+                            filetypes:
+                              type: array
+                              items:
+                                type: string
+                                enum:
+                                  - pe
+                                  - pdb
+                                  - portablepdb
+                                  - mach_debug
+                                  - mach_code
+                                  - elf_debug
+                                  - elf_code
+                                  - wasm_debug
+                                  - wasm_code
+                                  - breakpad
+                                  - sourcebundle
+                                  - uuidmap
+                                  - bcsymbolmap
+                                  - il2cpp
+                                  - proguard
+                                  - dartsymbolmap
+                            path_patterns:
+                              type: array
+                              items:
+                                type: string
+                            requires_checksum:
+                              type: boolean
+                          additionalProperties: false
+                        is_public:
+                          type: boolean
+                        has_index:
+                          type: boolean
+                        platforms:
+                          type: array
+                          items:
+                            type: string
+                      required:
+                        - type
+                        - id
+                        - account
+                        - container
+                        - tenant_id
+                        - client_id
+                        - client_secret
+                        - layout
+                      additionalProperties: false
+                    - type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
                             - appStoreConnect
                         id:
                           type: string
@@ -49524,6 +51807,7 @@ paths:
                     - http
                     - gcs
                     - s3
+                    - azure
                   type: string
                   description: 'The type of the source.
 
@@ -49532,7 +51816,9 @@ paths:
 
                     * `gcs` - Google Cloud Storage
 
-                    * `s3` - Amazon S3'
+                    * `s3` - Amazon S3
+
+                    * `azure` - Azure Blob Storage'
                 name:
                   type: string
                   description: The human-readable name of the source.
@@ -49739,13 +52025,28 @@ paths:
                   description: The [AWS Secret Access Key](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html#access-keys-and-secret-access-keys).Required for S3 sources, invalid for all others.
                 prefix:
                   type: string
-                  description: The GCS or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS and S3 sourcse, invalid for HTTP.
+                  description: The GCS, Azure or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS, Azure and S3 sources, invalid for HTTP.
                 client_email:
                   type: string
                   description: The GCS email address for authentication. Required for GCS sources, invalid for all others.
                 private_key:
                   type: string
                   description: The GCS private key. Required for GCS sources if not using impersonated tokens. Invalid for all others.
+                account:
+                  type: string
+                  description: The Azure storage account name. Required for Azure sources, invalid for all others.
+                container:
+                  type: string
+                  description: The Azure blob container name. Required for Azure sources, invalid for all others.
+                tenant_id:
+                  type: string
+                  description: The Microsoft Entra tenant ID. Required for Azure sources, invalid for all others.
+                client_id:
+                  type: string
+                  description: The Microsoft Entra application (client) ID. Required for Azure sources, invalid for all others.
+                client_secret:
+                  type: string
+                  description: The Microsoft Entra client secret. Required for Azure sources, invalid for all others.
               required:
                 - name
                 - type
@@ -50043,6 +52344,106 @@ paths:
                       type:
                         type: string
                         enum:
+                          - azure
+                      account:
+                        type: string
+                        pattern: ^[a-z0-9]{3,24}$
+                      container:
+                        type: string
+                      tenant_id:
+                        type: string
+                      client_id:
+                        type: string
+                      client_secret:
+                        type: object
+                        properties:
+                          hidden-secret:
+                            type: boolean
+                            enum:
+                              - true
+                      prefix:
+                        type: string
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                      layout:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                              - native
+                              - symstore
+                              - symstore_index2
+                              - ssqp
+                              - unified
+                              - debuginfod
+                              - slashsymbols
+                          casing:
+                            type: string
+                            enum:
+                              - lowercase
+                              - uppercase
+                              - default
+                        required:
+                          - type
+                        additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          filetypes:
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                                - pe
+                                - pdb
+                                - portablepdb
+                                - mach_debug
+                                - mach_code
+                                - elf_debug
+                                - elf_code
+                                - wasm_debug
+                                - wasm_code
+                                - breakpad
+                                - sourcebundle
+                                - uuidmap
+                                - bcsymbolmap
+                                - il2cpp
+                                - proguard
+                                - dartsymbolmap
+                          path_patterns:
+                            type: array
+                            items:
+                              type: string
+                          requires_checksum:
+                            type: boolean
+                        additionalProperties: false
+                      is_public:
+                        type: boolean
+                      has_index:
+                        type: boolean
+                      platforms:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - type
+                      - id
+                      - account
+                      - container
+                      - tenant_id
+                      - client_id
+                      - client_secret
+                      - layout
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
                           - appStoreConnect
                       id:
                         type: string
@@ -50134,6 +52535,7 @@ paths:
                     - http
                     - gcs
                     - s3
+                    - azure
                   type: string
                   description: 'The type of the source.
 
@@ -50142,7 +52544,9 @@ paths:
 
                     * `gcs` - Google Cloud Storage
 
-                    * `s3` - Amazon S3'
+                    * `s3` - Amazon S3
+
+                    * `azure` - Azure Blob Storage'
                 name:
                   type: string
                   description: The human-readable name of the source.
@@ -50349,13 +52753,28 @@ paths:
                   description: The [AWS Secret Access Key](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html#access-keys-and-secret-access-keys).Required for S3 sources, invalid for all others.
                 prefix:
                   type: string
-                  description: The GCS or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS and S3 sourcse, invalid for HTTP.
+                  description: The GCS, Azure or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS, Azure and S3 sources, invalid for HTTP.
                 client_email:
                   type: string
                   description: The GCS email address for authentication. Required for GCS sources, invalid for all others.
                 private_key:
                   type: string
                   description: The GCS private key. Required for GCS sources if not using impersonated tokens. Invalid for all others.
+                account:
+                  type: string
+                  description: The Azure storage account name. Required for Azure sources, invalid for all others.
+                container:
+                  type: string
+                  description: The Azure blob container name. Required for Azure sources, invalid for all others.
+                tenant_id:
+                  type: string
+                  description: The Microsoft Entra tenant ID. Required for Azure sources, invalid for all others.
+                client_id:
+                  type: string
+                  description: The Microsoft Entra application (client) ID. Required for Azure sources, invalid for all others.
+                client_secret:
+                  type: string
+                  description: The Microsoft Entra client secret. Required for Azure sources, invalid for all others.
               required:
                 - name
                 - type
@@ -50646,6 +53065,106 @@ paths:
                       - bucket
                       - client_email
                       - private_key
+                      - layout
+                    additionalProperties: false
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                          - azure
+                      account:
+                        type: string
+                        pattern: ^[a-z0-9]{3,24}$
+                      container:
+                        type: string
+                      tenant_id:
+                        type: string
+                      client_id:
+                        type: string
+                      client_secret:
+                        type: object
+                        properties:
+                          hidden-secret:
+                            type: boolean
+                            enum:
+                              - true
+                      prefix:
+                        type: string
+                      id:
+                        type: string
+                        minLength: 1
+                      name:
+                        type: string
+                      layout:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                              - native
+                              - symstore
+                              - symstore_index2
+                              - ssqp
+                              - unified
+                              - debuginfod
+                              - slashsymbols
+                          casing:
+                            type: string
+                            enum:
+                              - lowercase
+                              - uppercase
+                              - default
+                        required:
+                          - type
+                        additionalProperties: false
+                      filters:
+                        type: object
+                        properties:
+                          filetypes:
+                            type: array
+                            items:
+                              type: string
+                              enum:
+                                - pe
+                                - pdb
+                                - portablepdb
+                                - mach_debug
+                                - mach_code
+                                - elf_debug
+                                - elf_code
+                                - wasm_debug
+                                - wasm_code
+                                - breakpad
+                                - sourcebundle
+                                - uuidmap
+                                - bcsymbolmap
+                                - il2cpp
+                                - proguard
+                                - dartsymbolmap
+                          path_patterns:
+                            type: array
+                            items:
+                              type: string
+                          requires_checksum:
+                            type: boolean
+                        additionalProperties: false
+                      is_public:
+                        type: boolean
+                      has_index:
+                        type: boolean
+                      platforms:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - type
+                      - id
+                      - account
+                      - container
+                      - tenant_id
+                      - client_id
+                      - client_secret
                       - layout
                     additionalProperties: false
                   - type: object
@@ -51601,7 +54120,22 @@ paths:
 
         Invoke the installed app''s issue-link callback and store the returned association.
 
-        Submit the app-specific form fields alongside `groupId`, `action`, and `uri`.'
+        Submit the app-specific form fields alongside `groupId`, `action`, and `uri`.
+
+
+        For `action=link`, the optional `expectedExternalIssueUrl` query parameter
+
+        requires an exact canonical `webUrl` match. An existing matching link is
+
+        returned with HTTP 200 without calling the App; a different link
+
+        returns 409. The callback must also return this URL before a new link is
+
+        saved. Callback effects cannot be rolled back if its response conflicts.
+
+        A new association returns HTTP 201. Omitting the parameter preserves the
+
+        App''s existing replacement behavior and HTTP 200 response.'
       summary: Create or Link an External Issue Through a Sentry App
       parameters:
         - in: path
@@ -51610,6 +54144,13 @@ paths:
             type: string
           description: The UUID of the Sentry App installation.
           required: true
+        - in: query
+          name: expectedExternalIssueUrl
+          schema:
+            type: string
+            format: uri
+            minLength: 1
+          description: The exact canonical webUrl of the external issue to link. Only supported for action=link. An existing matching association is a no-op; a different association or callback URL returns 409 without replacing the link.
       tags:
         - Integration
       requestBody:
@@ -51664,6 +54205,29 @@ paths:
                   - serviceType
                   - webUrl
           description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  issueId:
+                    type: string
+                  serviceType:
+                    type: string
+                  displayName:
+                    type: string
+                  webUrl:
+                    type: string
+                required:
+                  - displayName
+                  - id
+                  - issueId
+                  - serviceType
+                  - webUrl
+          description: ''
         '400':
           description: Bad Request
         '401':
@@ -51672,6 +54236,8 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '409':
+          description: Conflict
       x-sentry-experimental: true
   /api/0/sentry-app-installations/{uuid}/external-requests/:
     get:
@@ -53171,6 +55737,7 @@ paths:
                     - slack_staging
                     - perforce
                     - gitlab
+                    - cursor_origin
                     - msteams
                     - custom_scm
                   type: string
@@ -53190,6 +55757,8 @@ paths:
                     * `perforce`
 
                     * `gitlab`
+
+                    * `cursor_origin`
 
                     * `msteams`
 
@@ -53339,6 +55908,7 @@ paths:
                     - slack_staging
                     - perforce
                     - gitlab
+                    - cursor_origin
                     - msteams
                     - custom_scm
                   type: string
@@ -53358,6 +55928,8 @@ paths:
                     * `perforce`
 
                     * `gitlab`
+
+                    * `cursor_origin`
 
                     * `msteams`
 
@@ -55792,6 +58364,8 @@ paths:
           description: Forbidden
         '404':
           description: External issue not found
+        '409':
+          description: This issue link is being updated. Try again.
       security:
         - auth_token:
             - event:write
@@ -58854,6 +61428,8 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '409':
+          description: Conflict
       x-sentry-experimental: true
   /api/0/organizations/{organization_id_or_slug}/issues/{issue_id}/hashes/:
     get:
@@ -59555,6 +62131,22 @@ paths:
                     outOfDate:
                       type: boolean
                       nullable: true
+                    missingFeatures:
+                      type: array
+                      items:
+                        type: object
+                        description: 'A feature the installation can no longer support, named by the permission
+
+                          tier it falls short of, so the update-permissions modal can list them.'
+                        properties:
+                          key:
+                            type: string
+                          description:
+                            type: string
+                        required:
+                          - description
+                          - key
+                      nullable: true
                     status:
                       type: string
                     provider:
@@ -59617,6 +62209,7 @@ paths:
                     - externalIssues
                     - icon
                     - id
+                    - missingFeatures
                     - name
                     - outOfDate
                     - provider
@@ -59697,6 +62290,22 @@ paths:
                   outOfDate:
                     type: boolean
                     nullable: true
+                  missingFeatures:
+                    type: array
+                    items:
+                      type: object
+                      description: 'A feature the installation can no longer support, named by the permission
+
+                        tier it falls short of, so the update-permissions modal can list them.'
+                      properties:
+                        key:
+                          type: string
+                        description:
+                          type: string
+                      required:
+                        - description
+                        - key
+                    nullable: true
                   status:
                     type: string
                   provider:
@@ -59742,6 +62351,7 @@ paths:
                   - domainName
                   - icon
                   - id
+                  - missingFeatures
                   - name
                   - outOfDate
                   - provider
@@ -59757,6 +62367,7 @@ paths:
                     accountType: null
                     scopes: null
                     outOfDate: null
+                    missingFeatures: null
                     status: active
                     provider:
                       key: jira
@@ -59793,6 +62404,7 @@ paths:
                     accountType: null
                     scopes: null
                     outOfDate: null
+                    missingFeatures: null
                     status: active
                     provider:
                       key: jira
@@ -59916,7 +62528,11 @@ paths:
 
         are integration-specific; fetch them from the `linkIssueConfig` returned by
 
-        the `GET` endpoint with `?action=link`.'
+        the `GET` endpoint with `?action=link`. Linking the same issue again returns
+
+        the existing link with HTTP 200, without repeating provider comments. A new
+
+        link returns HTTP 201.'
       parameters:
         - in: path
           name: organization_id_or_slug
@@ -59961,6 +62577,29 @@ paths:
             - event:admin
             - event:write
       responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  key:
+                    type: string
+                  url:
+                    type: string
+                  integrationId:
+                    type: integer
+                  displayName:
+                    type: string
+                required:
+                  - displayName
+                  - id
+                  - integrationId
+                  - key
+                  - url
+          description: ''
         '201':
           content:
             application/json:
@@ -59999,13 +62638,36 @@ paths:
           description: Unauthorized
         '404':
           description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'DRF''s standard error-body shape: `{"detail": str}`.
+
+
+                  Use in `Response[T] | Response[DetailResponse]` annotations on endpoints
+
+                  whose inline error returns are exactly `Response({"detail": "..."}, status=4xx)`.
+
+                  Endpoints whose error bodies have richer or different shapes should
+
+                  declare their own local TypedDicts instead.'
+                properties:
+                  detail:
+                    type: string
+                required:
+                  - detail
+          description: ''
     delete:
       operationId: Unlink an External Issue from an Issue
       description: 'Remove the link between a Sentry issue and an external issue. If no other
 
         Sentry issues reference the external issue, the link record is deleted
 
-        entirely. This does not delete the issue in the external provider.'
+        entirely. An absent link also returns 204. This does not delete the issue
+
+        in the external provider.'
       parameters:
         - in: path
           name: organization_id_or_slug
@@ -60046,6 +62708,27 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '409':
+          content:
+            application/json:
+              schema:
+                type: object
+                description: 'DRF''s standard error-body shape: `{"detail": str}`.
+
+
+                  Use in `Response[T] | Response[DetailResponse]` annotations on endpoints
+
+                  whose inline error returns are exactly `Response({"detail": "..."}, status=4xx)`.
+
+                  Endpoints whose error bodies have richer or different shapes should
+
+                  declare their own local TypedDicts instead.'
+                properties:
+                  detail:
+                    type: string
+                required:
+                  - detail
+          description: ''
   /api/0/organizations/{organization_id_or_slug}/issues/{issue_id}/tags/{key}/:
     get:
       operationId: getOrganizationIssueTag
@@ -63292,6 +65975,128 @@ components:
             - status
       required:
         - data
+    CustomInboundFilter:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+          description: The ID of the filter.
+        dataType:
+          enum:
+            - all
+            - error
+            - log
+            - metric
+            - span
+          type: string
+          description: 'The data the filter matches against. `all` is the catch-all: it filters every data type Sentry ingests, including ones added later, and accepts only the conditions that every data type carries a field for.
+
+
+            * `all`
+
+            * `error`
+
+            * `log`
+
+            * `metric`
+
+            * `span`'
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                enum:
+                  - error_type
+                  - error_message
+                  - log_message
+                  - metric_name
+                  - release
+                  - ip_address
+                type: string
+                description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+                  * `error_type`
+
+                  * `error_message`
+
+                  * `log_message`
+
+                  * `metric_name`
+
+                  * `release`
+
+                  * `ip_address`'
+              value:
+                type: array
+                items:
+                  type: string
+                description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+            required:
+              - type
+              - value
+          description: 'Conditions are combined with AND: an event must match every condition to be filtered out. There is no OR between conditions, so e.g. two release conditions can express a range (`>2 AND <4`). To broaden matching, widen a condition''s values or add separate filters.'
+        dateCreated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the filter was created.
+        dateUpdated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the filter was last changed.
+        name:
+          type: string
+          nullable: true
+          description: A human-readable label for the filter.
+          maxLength: 256
+        active:
+          type: boolean
+          description: Whether the filter drops matching data. An inactive filter is kept but ignored.
+      required:
+        - conditions
+        - dataType
+        - dateCreated
+        - dateUpdated
+        - id
+    CustomInboundFilterCondition:
+      type: object
+      properties:
+        type:
+          enum:
+            - error_type
+            - error_message
+            - log_message
+            - metric_name
+            - release
+            - ip_address
+          type: string
+          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+
+
+            * `error_type`
+
+            * `error_message`
+
+            * `log_message`
+
+            * `metric_name`
+
+            * `release`
+
+            * `ip_address`'
+        value:
+          type: array
+          items:
+            type: string
+          description: Glob patterns the field is matched against. The condition matches when any pattern matches, so multiple values act as OR.
+      required:
+        - type
+        - value
     Dashboard:
       type: object
       description: 'Allows parameters to be defined in snake case, but passed as camel case.
@@ -64318,6 +67123,8 @@ components:
                 type: object
                 properties:
                   preferredPolarity:
+                    type: string
+                  timeWindow:
                     type: string
                   max_values:
                     type: object
@@ -66939,6 +69746,7 @@ components:
             - slack_staging
             - perforce
             - gitlab
+            - cursor_origin
             - msteams
             - custom_scm
           type: string
@@ -66958,6 +69766,8 @@ components:
             * `perforce`
 
             * `gitlab`
+
+            * `cursor_origin`
 
             * `msteams`
 
@@ -66996,6 +69806,7 @@ components:
             - slack_staging
             - perforce
             - gitlab
+            - cursor_origin
             - msteams
             - custom_scm
           type: string
@@ -67015,6 +69826,8 @@ components:
             * `perforce`
 
             * `gitlab`
+
+            * `cursor_origin`
 
             * `msteams`
 
@@ -69285,6 +72098,22 @@ components:
         outOfDate:
           type: boolean
           nullable: true
+        missingFeatures:
+          type: array
+          items:
+            type: object
+            description: 'A feature the installation can no longer support, named by the permission
+
+              tier it falls short of, so the update-permissions modal can list them.'
+            properties:
+              key:
+                type: string
+              description:
+                type: string
+            required:
+              - description
+              - key
+          nullable: true
         status:
           type: string
         provider:
@@ -69330,6 +72159,7 @@ components:
         - domainName
         - icon
         - id
+        - missingFeatures
         - name
         - outOfDate
         - provider
@@ -69873,6 +72703,22 @@ components:
           outOfDate:
             type: boolean
             nullable: true
+          missingFeatures:
+            type: array
+            items:
+              type: object
+              description: 'A feature the installation can no longer support, named by the permission
+
+                tier it falls short of, so the update-permissions modal can list them.'
+              properties:
+                key:
+                  type: string
+                description:
+                  type: string
+              required:
+                - description
+                - key
+            nullable: true
           status:
             type: string
           provider:
@@ -69935,11 +72781,29 @@ components:
           - externalIssues
           - icon
           - id
+          - missingFeatures
           - name
           - outOfDate
           - provider
           - scopes
           - status
+    IssueLinkConflict:
+      type: object
+      description: 'DRF''s standard error-body shape: `{"detail": str}`.
+
+
+        Use in `Response[T] | Response[DetailResponse]` annotations on endpoints
+
+        whose inline error returns are exactly `Response({"detail": "..."}, status=4xx)`.
+
+        Endpoints whose error bodies have richer or different shapes should
+
+        declare their own local TypedDicts instead.'
+      properties:
+        detail:
+          type: string
+      required:
+        - detail
     LatestBaseSnapshotResponse:
       type: object
       properties:
@@ -71474,8 +74338,36 @@ components:
       items:
         type: object
         properties:
+          endTimestamp:
+            type: integer
+          generationDuration:
+            type: number
+            format: double
+          inputTokens:
+            type: integer
+          llmCalls:
+            type: integer
+          outputTokens:
+            type: integer
+          startTimestamp:
+            type: integer
+          toolCalls:
+            type: integer
+          toolErrors:
+            type: integer
+          toolNames:
+            type: array
+            items:
+              type: string
+          totalCost:
+            type: number
+            format: double
+          totalTokens:
+            type: integer
           conversationId:
             type: string
+          errors:
+            type: integer
           title:
             type: string
             nullable: true
@@ -71486,28 +74378,6 @@ components:
             type: array
             items:
               type: string
-          errors:
-            type: integer
-          llmCalls:
-            type: integer
-          toolCalls:
-            type: integer
-          totalTokens:
-            type: integer
-          inputTokens:
-            type: integer
-          outputTokens:
-            type: integer
-          totalCost:
-            type: number
-            format: double
-          generationDuration:
-            type: number
-            format: double
-          startTimestamp:
-            type: integer
-          endTimestamp:
-            type: integer
           traceCount:
             type: integer
           traceIds:
@@ -71541,12 +74411,6 @@ components:
               - ip_address
               - username
             nullable: true
-          toolNames:
-            type: array
-            items:
-              type: string
-          toolErrors:
-            type: integer
           projects:
             type: array
             items:
@@ -71742,6 +74606,22 @@ components:
           outOfDate:
             type: boolean
             nullable: true
+          missingFeatures:
+            type: array
+            items:
+              type: object
+              description: 'A feature the installation can no longer support, named by the permission
+
+                tier it falls short of, so the update-permissions modal can list them.'
+              properties:
+                key:
+                  type: string
+                description:
+                  type: string
+              required:
+                - description
+                - key
+            nullable: true
           status:
             type: string
           provider: {}
@@ -71765,6 +74645,7 @@ components:
           - gracePeriodEnd
           - icon
           - id
+          - missingFeatures
           - name
           - organizationId
           - organizationIntegrationStatus
@@ -78006,6 +80887,20 @@ components:
             routingHint:
               type: string
             debug_info: {}
+            ingestion:
+              type: object
+              description: Ingestion status for the data behind a response.
+              properties:
+                status:
+                  type: string
+                delaySeconds:
+                  type: number
+                  format: double
+                completeThrough:
+                  type: number
+                  format: double
+              required:
+                - status
       required:
         - data
         - meta
@@ -78095,14 +80990,20 @@ components:
                   - reason
                   - start
                   - type
-            estimatedIngestionDelaySeconds:
-              type: number
-              format: double
-            completeThrough:
-              type: number
-              format: double
-            ingestionDelayStatus:
-              type: string
+            ingestion:
+              type: object
+              description: Ingestion status for the data behind a response.
+              properties:
+                status:
+                  type: string
+                delaySeconds:
+                  type: number
+                  format: double
+                completeThrough:
+                  type: number
+                  format: double
+              required:
+                - status
           required:
             - dataset
             - end
@@ -78839,6 +81740,22 @@ components:
         outOfDate:
           type: boolean
           nullable: true
+        missingFeatures:
+          type: array
+          items:
+            type: object
+            description: 'A feature the installation can no longer support, named by the permission
+
+              tier it falls short of, so the update-permissions modal can list them.'
+            properties:
+              key:
+                type: string
+              description:
+                type: string
+            required:
+              - description
+              - key
+          nullable: true
         status:
           type: string
         provider: {}
@@ -78862,6 +81779,7 @@ components:
         - gracePeriodEnd
         - icon
         - id
+        - missingFeatures
         - name
         - organizationId
         - organizationIntegrationStatus
@@ -82250,6 +85168,379 @@ components:
         - digestsMinDelay
         - securityToken
         - securityTokenHeader
+    ProjectCodeOwners:
+      type: object
+      properties:
+        codeMapping:
+          type: object
+          properties:
+            id:
+              type: string
+            projectId:
+              type: string
+            projectSlug:
+              type: string
+            repoId:
+              type: string
+            repoName:
+              type: string
+            integrationId:
+              type: string
+              nullable: true
+            provider:
+              type: object
+              properties:
+                key:
+                  type: string
+                slug:
+                  type: string
+                name:
+                  type: string
+                canAdd:
+                  type: boolean
+                canDisable:
+                  type: boolean
+                features:
+                  type: array
+                  items:
+                    type: string
+                aspects:
+                  type: object
+                  additionalProperties: {}
+              required:
+                - aspects
+                - canAdd
+                - canDisable
+                - features
+                - key
+                - name
+                - slug
+              nullable: true
+            stackRoot:
+              type: string
+            sourceRoot:
+              type: string
+            defaultBranch:
+              type: string
+              nullable: true
+            automaticallyGenerated:
+              type: boolean
+            hasCodeOwner:
+              type: boolean
+          required:
+            - automaticallyGenerated
+            - defaultBranch
+            - hasCodeOwner
+            - id
+            - integrationId
+            - projectId
+            - projectSlug
+            - provider
+            - repoId
+            - repoName
+            - sourceRoot
+            - stackRoot
+        ownershipSyntax:
+          type: string
+        errors:
+          type: object
+          properties:
+            missing_user_emails:
+              type: array
+              items:
+                type: string
+            missing_external_users:
+              type: array
+              items:
+                type: string
+            missing_external_teams:
+              type: array
+              items:
+                type: string
+            teams_without_access:
+              type: array
+              items:
+                type: string
+            users_without_access:
+              type: array
+              items:
+                type: string
+          required:
+            - missing_external_teams
+            - missing_external_users
+            - missing_user_emails
+            - teams_without_access
+            - users_without_access
+        schema:
+          anyOf:
+            - type: object
+              properties:
+                $version:
+                  type: integer
+                rules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      matcher:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                          pattern:
+                            type: string
+                        required:
+                          - pattern
+                          - type
+                      owners:
+                        type: array
+                        items:
+                          type: object
+                          description: Owner as it appears in the API response (after identifier->name rename).
+                          properties:
+                            type:
+                              type: string
+                            name:
+                              type: string
+                            id:
+                              type: string
+                          required:
+                            - name
+                            - type
+                    required:
+                      - matcher
+                      - owners
+              required:
+                - $version
+                - rules
+            - type: object
+              description: Legacy CODEOWNERS records can have an empty schema before it is built.
+        codeOwnersUrl:
+          type: string
+        id:
+          type: string
+        raw:
+          type: string
+        dateCreated:
+          type: string
+          format: date-time
+        dateUpdated:
+          type: string
+          format: date-time
+        dateSynced:
+          type: string
+          format: date-time
+          nullable: true
+        codeMappingId:
+          type: string
+        provider:
+          type: string
+      required:
+        - codeMappingId
+        - dateCreated
+        - dateSynced
+        - dateUpdated
+        - id
+        - provider
+        - raw
+    ProjectCodeOwnersCreateRequest:
+      type: object
+      properties:
+        raw:
+          type: string
+          description: The raw contents of the CODEOWNERS file.
+        codeMappingId:
+          type: string
+          description: The ID of the code mapping used to translate repository paths to stack trace paths.
+      required:
+        - codeMappingId
+        - raw
+    ProjectCodeOwnersList:
+      type: array
+      items:
+        type: object
+        properties:
+          codeMapping:
+            type: object
+            properties:
+              id:
+                type: string
+              projectId:
+                type: string
+              projectSlug:
+                type: string
+              repoId:
+                type: string
+              repoName:
+                type: string
+              integrationId:
+                type: string
+                nullable: true
+              provider:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  slug:
+                    type: string
+                  name:
+                    type: string
+                  canAdd:
+                    type: boolean
+                  canDisable:
+                    type: boolean
+                  features:
+                    type: array
+                    items:
+                      type: string
+                  aspects:
+                    type: object
+                    additionalProperties: {}
+                required:
+                  - aspects
+                  - canAdd
+                  - canDisable
+                  - features
+                  - key
+                  - name
+                  - slug
+                nullable: true
+              stackRoot:
+                type: string
+              sourceRoot:
+                type: string
+              defaultBranch:
+                type: string
+                nullable: true
+              automaticallyGenerated:
+                type: boolean
+              hasCodeOwner:
+                type: boolean
+            required:
+              - automaticallyGenerated
+              - defaultBranch
+              - hasCodeOwner
+              - id
+              - integrationId
+              - projectId
+              - projectSlug
+              - provider
+              - repoId
+              - repoName
+              - sourceRoot
+              - stackRoot
+          ownershipSyntax:
+            type: string
+          errors:
+            type: object
+            properties:
+              missing_user_emails:
+                type: array
+                items:
+                  type: string
+              missing_external_users:
+                type: array
+                items:
+                  type: string
+              missing_external_teams:
+                type: array
+                items:
+                  type: string
+              teams_without_access:
+                type: array
+                items:
+                  type: string
+              users_without_access:
+                type: array
+                items:
+                  type: string
+            required:
+              - missing_external_teams
+              - missing_external_users
+              - missing_user_emails
+              - teams_without_access
+              - users_without_access
+          schema:
+            anyOf:
+              - type: object
+                properties:
+                  $version:
+                    type: integer
+                  rules:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        matcher:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            pattern:
+                              type: string
+                          required:
+                            - pattern
+                            - type
+                        owners:
+                          type: array
+                          items:
+                            type: object
+                            description: Owner as it appears in the API response (after identifier->name rename).
+                            properties:
+                              type:
+                                type: string
+                              name:
+                                type: string
+                              id:
+                                type: string
+                            required:
+                              - name
+                              - type
+                      required:
+                        - matcher
+                        - owners
+                required:
+                  - $version
+                  - rules
+              - type: object
+                description: Legacy CODEOWNERS records can have an empty schema before it is built.
+          codeOwnersUrl:
+            type: string
+          id:
+            type: string
+          raw:
+            type: string
+          dateCreated:
+            type: string
+            format: date-time
+          dateUpdated:
+            type: string
+            format: date-time
+          dateSynced:
+            type: string
+            format: date-time
+            nullable: true
+          codeMappingId:
+            type: string
+          provider:
+            type: string
+        required:
+          - codeMappingId
+          - dateCreated
+          - dateSynced
+          - dateUpdated
+          - id
+          - provider
+          - raw
+    ProjectCodeOwnersUpdateRequest:
+      type: object
+      properties:
+        raw:
+          type: string
+          description: The raw contents of the CODEOWNERS file.
+        codeMappingId:
+          type: string
+          description: The ID of the code mapping used to translate repository paths to stack trace paths.
     ProjectEventDetailsResponse:
       type: object
       properties:
@@ -83126,6 +86417,41 @@ components:
         - projectId
         - repositoryId
         - source
+    ProjectRepoListResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          integrationId:
+            type: string
+            nullable: true
+          externalId:
+            type: string
+            nullable: true
+          projectId:
+            type: string
+          repositoryId:
+            type: string
+          repoName:
+            type: string
+          source:
+            type: string
+          providerKey:
+            type: string
+            nullable: true
+          mappingCount:
+            type: integer
+        required:
+          - externalId
+          - id
+          - integrationId
+          - projectId
+          - providerKey
+          - repoName
+          - repositoryId
+          - source
     ProjectSizeStatusCheckRulesResponse:
       type: object
       properties:
@@ -84017,10 +87343,96 @@ components:
           items:
             type: object
             additionalProperties: {}
+        stats:
+          type: object
+          properties:
+            endTimestamp:
+              type: integer
+            generationDuration:
+              type: number
+              format: double
+            inputTokens:
+              type: integer
+            llmCalls:
+              type: integer
+            outputTokens:
+              type: integer
+            startTimestamp:
+              type: integer
+            toolCalls:
+              type: integer
+            toolErrors:
+              type: integer
+            toolNames:
+              type: array
+              items:
+                type: string
+            totalCost:
+              type: number
+              format: double
+            totalTokens:
+              type: integer
+            usageByModel:
+              type: array
+              items:
+                type: object
+                properties:
+                  model:
+                    type: string
+                    nullable: true
+                  llmCalls:
+                    type: integer
+                  inputTokens:
+                    type: integer
+                  outputTokens:
+                    type: integer
+                  totalTokens:
+                    type: integer
+                  cacheReadTokens:
+                    type: integer
+                  cacheWriteTokens:
+                    type: integer
+                  reasoningTokens:
+                    type: integer
+                  inputCost:
+                    type: number
+                    format: double
+                  outputCost:
+                    type: number
+                    format: double
+                  totalCost:
+                    type: number
+                    format: double
+                required:
+                  - cacheReadTokens
+                  - cacheWriteTokens
+                  - inputCost
+                  - inputTokens
+                  - llmCalls
+                  - model
+                  - outputCost
+                  - outputTokens
+                  - reasoningTokens
+                  - totalCost
+                  - totalTokens
+          required:
+            - endTimestamp
+            - generationDuration
+            - inputTokens
+            - llmCalls
+            - outputTokens
+            - startTimestamp
+            - toolCalls
+            - toolErrors
+            - toolNames
+            - totalCost
+            - totalTokens
+            - usageByModel
       required:
         - conversationId
         - projects
         - spans
+        - stats
         - title
         - webUrl
     SCIMListResponseEnvelopeSCIMMemberIndexResponse:
@@ -85975,6 +89387,7 @@ components:
             - http
             - gcs
             - s3
+            - azure
           type: string
           description: 'The type of the source.
 
@@ -85983,7 +89396,9 @@ components:
 
             * `gcs` - Google Cloud Storage
 
-            * `s3` - Amazon S3'
+            * `s3` - Amazon S3
+
+            * `azure` - Azure Blob Storage'
         name:
           type: string
           description: The human-readable name of the source.
@@ -86190,13 +89605,28 @@ components:
           description: The [AWS Secret Access Key](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html#access-keys-and-secret-access-keys).Required for S3 sources, invalid for all others.
         prefix:
           type: string
-          description: The GCS or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS and S3 sourcse, invalid for HTTP.
+          description: The GCS, Azure or [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-prefixes.html) prefix. Optional for GCS, Azure and S3 sources, invalid for HTTP.
         client_email:
           type: string
           description: The GCS email address for authentication. Required for GCS sources, invalid for all others.
         private_key:
           type: string
           description: The GCS private key. Required for GCS sources if not using impersonated tokens. Invalid for all others.
+        account:
+          type: string
+          description: The Azure storage account name. Required for Azure sources, invalid for all others.
+        container:
+          type: string
+          description: The Azure blob container name. Required for Azure sources, invalid for all others.
+        tenant_id:
+          type: string
+          description: The Microsoft Entra tenant ID. Required for Azure sources, invalid for all others.
+        client_id:
+          type: string
+          description: The Microsoft Entra application (client) ID. Required for Azure sources, invalid for all others.
+        client_secret:
+          type: string
+          description: The Microsoft Entra client secret. Required for Azure sources, invalid for all others.
       required:
         - name
         - type
