@@ -83,8 +83,13 @@ git diff --check
 The importer re-fetches and validates the official artifact, records provenance in its
 `info` block, preserves existing curation, creates a new directory for a new declared
 version, and refuses to overwrite local changes. If that version already exists, it is
-the comparison baseline; the old configured target is only the fallback. An unchanged
-import writes no file, avoiding timestamp churn. Versions must be safe directory names.
+the comparison baseline; otherwise the manifest target is the reviewed current baseline.
+A successful import advances that target to the imported version. Commit the manifest
+change with that API's new file, retaining historical directories. Version ordering is
+never guessed across vendor schemes. The report names the actual comparison baseline.
+An unchanged import writes no spec; it only repairs a lagging manifest target if needed.
+Manifest changes are checked before writing, preserving unrelated configuration and its
+formatting. Versions must be safe directory names.
 Empty versions and snapshot policies require an explicit future recipe, not an invented
 vendor version. Existing curation tags are merged by name, with vendor fields taking
 precedence and curated tags preserved.

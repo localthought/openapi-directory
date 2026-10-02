@@ -146,14 +146,119 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
         metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            manifest = root / "sources.json"
+            manifest.write_text(json.dumps({"schema_version": 1, "sources": [source]}))
             with patch.object(update, "ROOT", root), patch.object(update, "load_sources", return_value=[source]), \
                  patch.object(update, "fetch", return_value=(raw, metadata)), \
                  patch.object(update, "stored", return_value=old):
-                self.assertEqual(update.main(["import", "--source", "test", "--cache", str(root / "cache")]), 0)
+                self.assertEqual(update.main(["import", "--source", "test", "--manifest", str(manifest),
+                                              "--cache", str(root / "cache")]), 0)
             result = update.parse((root / "APIs/example.com/2.0/openapi.yaml").read_bytes())
         self.assertEqual(result["info"]["x-logo"], old["info"]["x-logo"])
         self.assertIn("Preserved existing APIs.guru curation metadata from APIs/example.com/2.0/openapi.yaml.",
                       result["info"]["x-conversion"])
+
+    def test_new_release_advances_reviewed_baseline_for_the_next_release(self):
+        source = {"id": "test", "target": "APIs/example.com/1.740/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        old = document("1.740")
+        old["info"]["x-logo"] = {"url": "https://example.com/current.svg"}
+        new = document("1.762")
+        new["paths"] = {"/new": {"post": {"responses": {"200": {"description": "OK"}}}}}
+        raw = json.dumps(new).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "sources.json"
+            original = json.dumps({"schema_version": 1, "sources": [source]}, indent=4) + "\n"
+            manifest.write_text(original)
+            def stored(path, base):
+                if path == source["target"]:
+                    return old
+                output = root / path
+                return update.parse(output.read_bytes()) if output.exists() else None
+            with patch.object(update, "ROOT", root), patch.object(update, "stored", side_effect=stored), \
+                 patch.object(update, "fetch", return_value=(raw, metadata)):
+                update.main(["import", "--source", "test", "--manifest", str(manifest),
+                             "--cache", str(root / "cache")])
+                current = update.load_sources(manifest)[0]
+                self.assertEqual(current["target"], "APIs/example.com/1.762/openapi.yaml")
+                self.assertEqual(manifest.read_text(), original.replace("1.740", "1.762"))
+                imported = stored(current["target"], "base")
+                self.assertEqual(imported["info"]["x-logo"], old["info"]["x-logo"])
+                self.assertIn(source["target"], imported["info"]["x-conversion"][-2])
+                upcoming = document("1.800")
+                upcoming["paths"] = {"/next": new["paths"]["/new"]}
+                with patch.object(update, "fetch", return_value=(json.dumps(upcoming).encode(), metadata)):
+                    result = update.audit(current, "base", root / "cache")
+                self.assertEqual(result["baseline"], current["target"])
+                self.assertEqual(result["removed_paths"], ["/new"])
+                self.assertEqual(result["added_paths"], ["/next"])
+
+    def test_invalid_release_leaves_manifest_and_destination_untouched(self):
+        source = {"id": "test", "target": "APIs/example.com/1.0/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        invalid = document("2.0")
+        invalid["paths"]["/items/{id}"]["get"]["responses"] = {}
+        raw = json.dumps(invalid).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "sources.json"
+            manifest.write_text(json.dumps({"schema_version": 1, "sources": [source]}))
+            original = manifest.read_bytes()
+            with patch.object(update, "ROOT", root), patch.object(update, "stored", return_value=None), \
+                 patch.object(update, "fetch", return_value=(raw, metadata)):
+                with self.assertRaisesRegex(ValueError, "Import blocked"):
+                    update.main(["import", "--source", "test", "--manifest", str(manifest),
+                                 "--cache", str(root / "cache")])
+            self.assertEqual(manifest.read_bytes(), original)
+            self.assertFalse((root / "APIs/example.com/2.0/openapi.yaml").exists())
+
+    def test_manifest_change_guard_and_matching_release_target_repair(self):
+        source = {"id": "test", "target": "APIs/example.com/1.0/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        raw = json.dumps(document("2.0")).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "sources.json"
+            manifest.write_text(json.dumps({"schema_version": 1, "sources": [{**source, "priority": "new"}]}))
+            with self.assertRaisesRegex(ValueError, "configuration changed"):
+                update.advance_target(manifest, source, Path("APIs/example.com/2.0/openapi.yaml"))
+            manifest.write_text(json.dumps({"schema_version": 1, "sources": [source]}))
+            with patch.object(update, "ROOT", root), patch.object(update, "stored", return_value=document("2.0")), \
+                 patch.object(update, "fetch", return_value=(raw, metadata)):
+                update.main(["import", "--source", "test", "--manifest", str(manifest),
+                             "--cache", str(root / "cache")])
+            self.assertEqual(update.load_sources(manifest)[0]["target"], "APIs/example.com/2.0/openapi.yaml")
+            self.assertFalse((root / "APIs").exists())
+
+    def test_concurrent_manifest_edit_during_validation_is_preserved(self):
+        source = {"id": "test", "target": "APIs/example.com/1.0/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        raw = json.dumps(document("2.0")).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "sources.json"
+            original = json.dumps({"schema_version": 1, "sources": [source]})
+            manifest.write_text(original)
+            def validate(spec):
+                manifest.write_text(original + "\n")
+                return []
+            with patch.object(update, "ROOT", root), patch.object(update, "stored", return_value=None), \
+                 patch.object(update, "fetch", return_value=(raw, metadata)), \
+                 patch.object(update, "validate_document", side_effect=validate):
+                with self.assertRaisesRegex(ValueError, "Manifest changed during validation"):
+                    update.main(["import", "--source", "test", "--manifest", str(manifest),
+                                 "--cache", str(root / "cache")])
+            self.assertEqual(manifest.read_text(), original + "\n")
+            self.assertFalse((root / "APIs").exists())
 
     def test_failed_fetch_does_not_advance_success_and_subset_report_keeps_other_apis(self):
         with tempfile.TemporaryDirectory() as directory:
