@@ -59,6 +59,15 @@
       "priority": "high"
     },
     {
+      "id": "snowflake-sql",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/sql/2.0.0/openapi.yaml",
+      "github": {"repository": "snowflakedb/snowflake-rest-api-specs", "ref": "main", "path": "specifications/sqlapi.yaml"},
+      "discovery": "Follow Snowflake's official SQL API description; this covers SQL statement execution, not the entire Snowflake REST catalog. Discover other public services separately.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
