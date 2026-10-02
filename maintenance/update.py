@@ -311,7 +311,7 @@ def preserve_curation(old, new):
     return result
 
 
-def import_document(source, new, metadata, old):
+def import_document(source, new, metadata, old, baseline_path=None):
     if source.get("import_blocker"):
         raise ValueError(source["import_blocker"])
     errors = validate_document(new)
@@ -332,7 +332,8 @@ def import_document(source, new, metadata, old):
             + ". Preview/prerelease directories and releases below " + catalog["minimum_version"] + " are excluded.")
     result["info"]["x-conversion"].extend(metadata.get("transformations", []))
     if old:
-        result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from " + source["target"] + ".")
+        result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from "
+                                           + (baseline_path or source["target"]) + ".")
     result["info"]["x-conversion"].append(
         "Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion."
         if metadata.get("transformations") else
@@ -515,7 +516,8 @@ def main(argv=None):
             expected = git("show", args.base + ":" + str(dest)) if old_dest else None
             if expected != output.read_bytes():
                 raise ValueError("Refusing to overwrite local changes: " + str(dest))
-        result = import_document(source, spec, metadata, old)
+        result = import_document(source, spec, metadata, old,
+                                 str(dest) if old_dest else source["target"])
         serialized = serialize_document(result)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(serialized)

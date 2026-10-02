@@ -134,6 +134,27 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
         with self.assertRaises(ValueError):
             update.import_document({**source, "import_blocker": "Not bundled"}, new, metadata, None)
 
+    def test_repeat_refresh_records_actual_curation_baseline_instead_of_manifest_fallback(self):
+        source = {"id": "test", "target": "APIs/example.com/1.0/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        old = document("2.0")
+        old["info"]["x-logo"] = {"url": "https://example.com/current-logo.svg"}
+        new = document("2.0")
+        new["info"]["description"] = "Vendor clarification"
+        raw = json.dumps(new).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(update, "ROOT", root), patch.object(update, "load_sources", return_value=[source]), \
+                 patch.object(update, "fetch", return_value=(raw, metadata)), \
+                 patch.object(update, "stored", return_value=old):
+                self.assertEqual(update.main(["import", "--source", "test", "--cache", str(root / "cache")]), 0)
+            result = update.parse((root / "APIs/example.com/2.0/openapi.yaml").read_bytes())
+        self.assertEqual(result["info"]["x-logo"], old["info"]["x-logo"])
+        self.assertIn("Preserved existing APIs.guru curation metadata from APIs/example.com/2.0/openapi.yaml.",
+                      result["info"]["x-conversion"])
+
     def test_failed_fetch_does_not_advance_success_and_subset_report_keeps_other_apis(self):
         with tempfile.TemporaryDirectory() as directory:
             report = Path(directory) / "report.json"
