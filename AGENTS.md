@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `fc16ad482` (PR #79 merged):
-729 provider domains; 4,254 files under `APIs/`, including 2,080
+**Last updated**: 2026-10-02. Audit of `origin/main` at `7dff5b044` (PR #84 merged):
+729 provider domains; 4,256 files under `APIs/`, including 2,082
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -113,6 +113,11 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #77 | Mistral `1.0.0` | New public OpenAPI 3.1 artifact; 212 paths / 299 operations; eleven checked streaming-reference corrections |
 | #78 | YAML string preservation and import round-trip guard | Quote scientific-looking vendor strings, reject serialization type/value changes; 29 tests pass locally and in CI |
 | #79 | GitHub example string types | Eight quote repairs across both public artifacts; paths/operations unchanged, vendor JSON values retained |
+| #80 | Deterministic curation serialization and progress | Identical imports across three Python hash seeds; 30 tests pass locally and in CI |
+| #81 | Four more official-source registrations | Stripe public GA, Figma, PagerDuty REST and Atlas Admin; 15 artifacts / 14 services monitored |
+| #82 | Figma `0.43.0` | New version directory; 47 paths / 54 operations; composed color values and `COLOR_OPACITY` scope |
+| #83 | Stripe `2026-09-30.endive` | New version directory; 454 paths / 644 operations; includes vendor GA v1+v2 coverage |
+| #84 | PagerDuty `2.0.0` | Fixed version refreshed in place; 274 paths / 466 operations; checked removal of one invalid default |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -193,7 +198,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-After PR #72 on 2026-10-02: 727 distinct provider domains, 4,252 tracked files under `APIs/`.
+After PR #84 on 2026-10-02: 729 distinct provider domains, 4,256 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -201,15 +206,57 @@ otherwise `git add` refuses with "paths ... outside of your sparse-checkout defi
 
 | Vendor | Source | Status |
 |---|---|---|
-| **Stripe** | `.../stripe/openapi/master/openapi/spec3.yaml` | **DONE, PR #44.** Use the **`.yaml`**, not the `.json` — the `.yaml` is what the existing spec's `x-origin` already cites, so no conversion is needed. |
-| Figma | `.../figma/rest-api-spec/main/openapi/openapi.yaml` | **DONE, PR #45.** OpenAPI 3.1.0, already YAML. |
+| **Stripe** | `.../stripe/openapi/master/latest/openapi.spec3.yaml` | **REFRESHED, PR #83**, `2026-09-30.endive`, 454 paths / 644 ops. Vendor-recommended public GA v1+v2 artifact; prior #44 used the maintained v1-only `openapi/spec3.yaml`. Use YAML, excluding preview and SDK variants. |
+| Figma | `.../figma/rest-api-spec/main/openapi/openapi.yaml` | **REFRESHED, PR #82**, `0.43.0`, 47 paths / 54 ops. OpenAPI 3.1.0; historical `0.42.0` preserved. |
 | Sentry | `.../getsentry/sentry-api-schema/main/openapi-derefed.json` | **DONE, PR #46.** Deref'd artifact: no `$ref`s, no `components.schemas`, everything inlined. That is upstream's doing, not a conversion fault. |
-| PagerDuty | `.../PagerDuty/api-schema/main/reference/REST/openapiv3.json` | **DONE, PR #47.** |
-| MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | **DONE, PR #48**, as `mongodb.com/atlas-admin/2.0`. |
+| PagerDuty | `.../PagerDuty/api-schema/main/reference/REST/openapiv3.json` | **REFRESHED, PR #84**, fixed `2.0.0`, 274 paths / 466 ops. Checked invalid-default removal is registered with the source. |
+| MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | Initial import #48, as `mongodb.com/atlas-admin/2.0`. **Refresh pending validation compatibility:** stored 333 / 541, source 339 / 549. See blocker below. |
 | Grafana | `.../grafana/grafana/main/public/api-merged.json` | **DONE, PR #50.** Swagger 2.0; converts cleanly (0 warnings). Version dir is `0.0.1` because that is literally Grafana's declared `info.version` — a placeholder they never bump. See the push-protection note below. |
 | Square | `.../square/connect-api-specification/master/api.json` | **DONE, PR #51** — a *refresh*, we already had `squareup.com/2.0`. |
 | DocuSign | `.../docusign/OpenAPI-Specifications/master/esignature.rest.swagger-v2.1.json` | **DONE, PR #52** — a *refresh*, we already had `docusign.net/v2.1`. Swagger 2.0. |
 | Intercom | `.../intercom/Intercom-OpenAPI/main/descriptions/2.14/api.intercom.io.yaml` | **DONE, PR #54.** See the 404 warning further down before writing this vendor off again. |
+
+**October follow-up audit:** all four newly registered vendor repositories were checked
+on 2026-10-02 and were maintained/unarchived. #81 registers their moving official sources,
+so future release/schema changes are checked weekly instead of relying on old import dates.
+
+**Stripe source selection:** vendor commit `6f855712dfc6a235a407136e630bf36a01c069a3`.
+The repository's README now recommends `latest/openapi.spec3.yaml` for public GA v1+v2
+coverage. The old `openapi/spec3.yaml` is still maintained but v1-only. At the same commit,
+the selected artifact retains all 431 v1-only paths / 612 operations and adds 23 v2 paths /
+32 operations. Shared v1 path items differ only by 1,079 explicit `explode` annotations;
+every one matches its OpenAPI-defined default. Compared with stored Dahlia, #83 adds
+35 paths / 50 operations and removes none. Historical versions and curation are preserved;
+no API patches or conversion. Do not accidentally switch back to the v1-only artifact or
+select preview/SDK variants.
+
+**Figma:** vendor commit `2a90e5adc67d8117d7c2da624f03a9bfa3027fb6`. `0.43.0` adds
+`VariableComposedColor` to variable-value unions and `COLOR_OPACITY` to the scope enum,
+despite unchanged endpoint counts. It passes full OpenAPI 3.1 and serialization checks.
+The vendor labels its description itself beta; this is its public REST artifact.
+
+**PagerDuty:** vendor commit `6ab7c72fb78ff76ba65670795a51d925c8b4df12`. #84 adds
+`GET /incidents/{id}/scribe_transcripts`, with no path/operation removals. The source assigns
+the invalid string default `20 - incident_summary` to the integer `sre_memories_limit`
+parameter (range 1–100). `maintenance/patches/pagerduty.json` removes only that exact
+default after type/range/value assertions. No replacement default or server behavior is
+inferred. The complete patched source validates and round-trips; a simulated vendor fix
+to integer `20` stops replay for deliberate recipe review.
+
+**MongoDB Atlas refresh blocker (not parked by the user):** official source commit
+`73acb6b70d908ede7f01fc1c02415231b31b8dd7` adds 6 paths / 8 operations and removes none,
+under fixed version `2.0`. The pinned validator 0.7.2 raises a recursion error, so no refresh
+was imported. Diagnostic validator 0.9.0 in `/tmp/openapi-validator-090` (bundled Python
+3.12.14) gets past recursion but rejects regex syntax unsupported by Python's `re`,
+including Unicode property escapes and named captures. Its optional jsonschema-rs backend
+produces the same format rejection. A Node syntax diagnostic compiles all 1,146 pattern
+occurrences without flags; universal Unicode mode instead rejects 32 occurrences of three
+patterns because of identity escapes such as `\:`. These checks diagnose regex dialect
+compatibility, not successful complete spec validation or matching semantics. No repository
+dependency pins were changed, and no regexes were rewritten or validation bypassed. Resolve
+the validator/dialect issue with meaningful regressions and a separate infrastructure PR
+before importing Atlas. Do not merely remove patterns or raise recursion limits to force it
+through. Raw source and the failed validation are retained in the report/cache.
 
 **Square and DocuSign are the cautionary entries here.** Both were originally recorded as
 "new" by an audit that ran `[ -d "APIs/$d" ]` inside a sparse-checkout worktree. Both were
@@ -592,7 +639,10 @@ checks every import's serialized round-trip before writing, with 29 passing loca
 tests. #79 repairs eight scientific-looking strings across both GitHub artifacts,
 retaining the same vendor revision, version, paths and operations. Preserved curation
 is now emitted in deterministic key order, tested across three Python hash seeds;
-30 offline tests pass. Eleven artifacts across ten services are now registered.
+30 offline tests pass. #81 registers Stripe GA, Figma, PagerDuty and Atlas; #82/#83/#84
+refresh the first three, with PagerDuty's checked default-removal recipe. Fifteen artifacts
+across fourteen services are now registered. Atlas is still blocked by validator/dialect
+compatibility, separately from Slack's archived-source blocker.
 Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
@@ -628,13 +678,26 @@ and source-health blocker. Source snapshots and the full report were published a
 the local `cache/maintenance/report.json` now contains that report. The deterministic
 curation change adds one further offline regression (30 total); it changes no API values.
 
-**Resume next:** extend the official-source registry to priority APIs already imported
-(for example Stripe, Square, Figma, PagerDuty and MongoDB Atlas), audit more distinct
-stable Snowflake services, and continue vendor discovery. Implement validated per-service
+Expanded network audit [37004222700](https://github.com/ontola/openapi-directory/actions/runs/37004222700)
+at main `7dff5b044` passed all 30 tests and fetched all fifteen registered artifacts.
+Thirteen supported OpenAPI artifacts match their sources with zero validation errors,
+including the refreshed Stripe GA, Figma and patched PagerDuty descriptions. The audit
+job remains nonzero for two recorded import blockers: Atlas's validator recursion failure
+and Slack's archived Swagger source. This does not establish freshness beyond the
+configured services. The complete report and raw snapshots are available in the
+`official-source-audit` workflow artifact, downloaded to
+`/tmp/openapi-ci-audit-37004222700`; the ignored local `cache/maintenance/report.json`
+contains this latest report. Recover from CI if the temporary files disappear.
+
+**Resume next:** resolve Atlas's validator/regex dialect compatibility before its refresh;
+extend the registry to other major imported APIs (for example Square, Sentry and Intercom),
+audit more distinct stable Snowflake services, and continue vendor discovery. Square still
+needs its conversion recipe and must retain the documented unresolved vendor schemas;
+do not invent them. Implement validated per-service
 PR generation and monthly discovery in separate infrastructure PRs; no blanket automatic
 merge. Update fork-facing README/CONTRIBUTING and consider fork publication only with
 verified consumer access. Slack's maintained official replacement remains unresolved.
-Cohere and Mistral are complete and their local checks match their sources. The registry
+Cohere, Mistral, Stripe, Figma and PagerDuty are complete. The registry
 and local report retain the latest checks;
 re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
 
