@@ -34,7 +34,8 @@ The JSON report records check times, successes, validation errors, separate addi
 removals, source revisions/hashes, and import blockers. A failed check preserves previous
 success timestamps. A check of selected sources keeps other report rows and their old
 timestamps. The command exits nonzero for fetch/parse failures, validation errors, and
-explicit blockers; valid content drift itself is an actionable finding, not a failed check.
+explicit blockers, including failed or adverse source-health checks; valid content drift
+itself is an actionable finding, not a failed check.
 Each row records its comparison base revision; retained older rows keep their old revision
 or show it as unrecorded. A readable Markdown report is written beside the JSON report
 (by default `cache/maintenance/report.md`). It distinguishes blocked matches from valid
@@ -45,6 +46,31 @@ source snapshots as an artifact, and publishes the readable report in the audit 
 even when individual services cause the check command to fail.
 If a custom JSON report filename already ends in `.md`, the readable companion uses
 `.summary.md` to avoid overwriting the machine-readable report.
+
+Each run also reads GitHub's [repository metadata endpoint](https://docs.github.com/en/rest/repos/repos#get-a-repository)
+for registered GitHub sources. It records the returned repository/owner identity, archived
+and disabled flags, default branch, fork status, repository activity dates, retrieval time
+and response hash. Exact response bytes and retrieval metadata are cached under
+`cache/maintenance/source-health/` and uploaded with the audit artifact. Services sharing
+a repository reuse one observation within a run, including failures; the next run checks
+again. No credentials or additional repository permissions are required for public metadata.
+
+`repository_available` means the configured public repository still resolves to the same
+name (case insensitive) and is neither archived nor disabled. It does not establish vendor
+ownership, description maintenance, stable releases or current API coverage. Repository
+`pushed_at` and `updated_at` dates can change for unrelated files. Hosted sources are
+explicitly `not_assessed` by this repository check; a successful description download alone
+does not assess their ongoing maintenance. Manual manifest source-health notes and existing
+import blockers remain visible independently of these live observations.
+
+Archived/disabled repositories and changed repository identities block imports. Failed or
+malformed metadata checks also block imports and make `check` exit nonzero. Content fetching,
+comparison and validation continue independently, so an archived source can still be shown
+to match without being counted as a valid update candidate. The report retains each attempt
+and the last successful source-health check; failed attempts preserve that successful date.
+An observed archive is a successful health check with an adverse finding. Previous successful
+dates never stand in for a failed current observation. Import commands repeat the health check
+before fetching or writing an artifact. These checks do not edit spec timestamps or remove APIs.
 
 Import one service on its own branch, widening the sparse cone first if necessary:
 

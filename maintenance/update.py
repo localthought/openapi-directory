@@ -21,6 +21,7 @@ import bundle
 import samples
 import releases
 import report
+import health
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -423,10 +424,12 @@ def prepare_document(source, raw, metadata=None, cache=None):
     return spec, transformations
 
 
-def audit(source, base, cache):
+def audit(source, base, cache, health_checker=None):
     result = {"id": source["id"], "target": source["target"], "checked_at": now(),
-              "source_health": source.get("source_health", "not_assessed"),
               "coverage": "Configured service only; freshness of the whole provider is not established."}
+    result.update((health_checker or health.Checker(request, now, cache)).check(source))
+    if source.get("source_health"):
+        result["declared_source_health"] = source["source_health"]
     try:
         raw, metadata = fetch(source)
         result.update(fetch=metadata, last_successful_fetch=metadata["fetched_at"])
@@ -457,7 +460,8 @@ def write_report(path, results, base):
     revision = git("rev-parse", base).decode().strip()
     for result in results:
         result["base_revision"] = revision
-        for field in ("last_successful_fetch", "last_successful_comparison", "last_successful_validation"):
+        for field in ("last_successful_fetch", "last_successful_comparison", "last_successful_validation",
+                      "last_successful_source_health_check"):
             if field not in result and field in previous.get(result["id"], {}):
                 result[field] = previous[result["id"]][field]
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -490,6 +494,11 @@ def main(argv=None):
         if len(sources) != 1:
             parser.error("Import exactly one source at a time using --source")
         source = sources[0]
+        observation = health.Checker(request, now, args.cache).check(source)
+        if observation.get("source_health_issue"):
+            raise ValueError(observation["source_health_issue"])
+        if source.get("import_blocker"):
+            raise ValueError(source["import_blocker"])
         raw, metadata = fetch(source)
         cache_snapshot(args.cache, source["id"], raw, metadata)
         spec, transformations = prepare_document(source, raw, metadata, args.cache)
@@ -513,13 +522,14 @@ def main(argv=None):
         print(str(dest))
         print(json.dumps(compare(old, spec), indent=2))
         return 0
-    results = [audit(source, args.base, args.cache) for source in sources]
+    health_checker = health.Checker(request, now, args.cache)
+    results = [audit(source, args.base, args.cache, health_checker) for source in sources]
     write_report(args.report, results, args.base)
     for result in results:
         print(result["id"] + ": " + result["status"] +
-              ("; import blocked" if result.get("import_blocker") or result.get("validation_errors") else ""))
+              ("; import blocked" if result.get("import_blocker") or result.get("validation_errors") or result.get("source_health_issue") else ""))
     print("Report: " + str(args.report))
-    return 1 if any(row["status"] == "failed" or row.get("validation_errors") or row.get("import_blocker") for row in results) else 0
+    return 1 if any(row["status"] == "failed" or row.get("validation_errors") or row.get("import_blocker") or row.get("source_health_issue") for row in results) else 0
 
 
 if __name__ == "__main__":

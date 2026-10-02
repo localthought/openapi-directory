@@ -13,7 +13,7 @@ def text(value):
 def state(row):
     if row.get("status") == "failed":
         return "Fetch/prepare failed"
-    if row.get("import_blocker") or row.get("validation_errors"):
+    if row.get("import_blocker") or row.get("validation_errors") or row.get("source_health_issue"):
         return "Import blocked"
     return {"matches_source": "Matches configured source", "changed": "Content changed",
             "missing": "Missing API"}.get(row.get("status"), "Not assessed")
@@ -38,7 +38,8 @@ def render(document):
              + " blocked; " + str(states.count("Fetch/prepare failed")) + " failed; "
              + str(states.count("Not assessed")) + " unassessed.", "",
              "Coverage is limited to configured services. A source match does not establish current vendor-wide coverage. "
-             "Archived or unassessed source health remains a separate finding. Subset runs retain older rows and dates; "
+             "Repository availability does not establish artifact maintenance or vendor ownership. "
+             "Archived, failed or unassessed source health remains a separate finding. Subset runs retain older rows and dates; "
              "failed attempts do not advance successful-check timestamps.", "",
              "| Service | Result | Stored | Source | Last attempt | Last successful validation | Source health |",
              "| --- | --- | --- | --- | --- | --- | --- |"]
@@ -48,6 +49,7 @@ def render(document):
         lines.append("| " + " | ".join(text(cell) for cell in cells) + " |")
     for row in rows:
         fetch = row.get("fetch", {})
+        health = row.get("source_health_check", {})
         lines.extend(["", "## " + text(row["id"]), "",
                       "- Target: " + text(row.get("destination", row.get("target"))),
                       "- Comparison base revision: " + text(row.get("base_revision")),
@@ -56,7 +58,17 @@ def render(document):
                       "- Entry SHA-256: " + text(fetch.get("sha256")),
                       "- Last successful fetch: " + text(row.get("last_successful_fetch")),
                       "- Last successful comparison: " + text(row.get("last_successful_comparison")),
+                      "- Source-health scope: " + text(health.get("scope")),
+                      "- Last source-health attempt: " + text(health.get("checked_at")),
+                      "- Last successful source-health check: " + text(row.get("last_successful_source_health_check")),
+                      "- Observed repository: " + text(health.get("full_name")),
+                      "- Repository last push (not artifact freshness): " + text(health.get("pushed_at")),
+                      "- Repository metadata URL: " + text(health.get("url")),
+                      "- Repository metadata SHA-256: " + text(health.get("sha256")),
+                      "- Repository metadata snapshot: " + text(health.get("snapshot")),
                       "- Pending PR: " + text(row.get("pending_pr"))])
+        if row.get("declared_source_health"):
+            lines.append("- Manifest source-health note: " + text(row["declared_source_health"]))
         for kind in ("paths", "operations"):
             added, removed = row.get("added_" + kind), row.get("removed_" + kind)
             if added is not None and removed is not None:
@@ -64,7 +76,7 @@ def render(document):
                 for label, changes in (("Added", added), ("Removed", removed)):
                     if changes:
                         lines.append("  - " + label + ": " + "; ".join(text(change) for change in changes))
-        for problem in ([row.get("error"), row.get("import_blocker")] + row.get("validation_errors", [])):
+        for problem in ([row.get("error"), row.get("import_blocker"), row.get("source_health_issue")] + row.get("validation_errors", [])):
             if problem:
                 lines.append("- Blocker/error: " + text(problem))
         for step in fetch.get("transformations", []):
