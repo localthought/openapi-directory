@@ -18,6 +18,7 @@ from pathlib import Path
 import yaml
 from openapi_spec_validator import validate
 import bundle
+import samples
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -43,6 +44,11 @@ Loader.yaml_implicit_resolvers = {
 }
 Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
                              re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"), list("tTfF"))
+# YAML 1.2 numbers such as 1e-08 are valid without a decimal point. PyYAML's
+# YAML 1.1 resolver leaves them as strings, corrupting numeric schema bounds.
+Loader.add_implicit_resolver("tag:yaml.org,2002:float",
+                             re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$"),
+                             list("-+0123456789."))
 
 
 class Dumper(yaml.SafeDumper):
@@ -325,12 +331,18 @@ def cache_snapshot(cache, source_id, raw, metadata):
 def prepare_document(source, raw, metadata=None, cache=None):
     """Replay reviewed exact replacements; source changes require recipe review."""
     transformations = []
+    if source.get("bundling") and source.get("code_samples"):
+        raise ValueError("Combined schema bundling and code sample recipes require explicit support")
     if source.get("bundling"):
         if metadata is None or cache is None:
             raise ValueError("Bundling requires fetch metadata and a source cache")
         raw, step = bundle.prepare(source, raw, metadata, cache, request, Loader)
         transformations.append(step)
     spec = parse(raw)
+    if source.get("code_samples"):
+        if metadata is None or cache is None:
+            raise ValueError("Code samples require fetch metadata and a source cache")
+        transformations.append(samples.prepare(source, spec, raw, metadata, cache, request))
     seen = set()
     for filename in source.get("patches", []):
         path = (ROOT / filename).resolve()
