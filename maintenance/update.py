@@ -46,14 +46,21 @@ Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
                              re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"), list("tTfF"))
 # YAML 1.2 numbers such as 1e-08 are valid without a decimal point. PyYAML's
 # YAML 1.1 resolver leaves them as strings, corrupting numeric schema bounds.
+SCIENTIFIC_NUMBER = re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$")
 Loader.add_implicit_resolver("tag:yaml.org,2002:float",
-                             re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$"),
+                             SCIENTIFIC_NUMBER,
                              list("-+0123456789."))
 
 
 class Dumper(yaml.SafeDumper):
     def increase_indent(self, flow=False, indentless=False):
         return super().increase_indent(flow, False)
+
+
+# Quote vendor strings that YAML 1.2 readers would otherwise turn into numbers.
+# Keep SafeDumper's other conservative quoting rules (dates, yes/on, etc.).
+Dumper.add_implicit_resolver("tag:yaml.org,2002:float", SCIENTIFIC_NUMBER,
+                             list("-+0123456789."))
 
 
 def git(*args):
