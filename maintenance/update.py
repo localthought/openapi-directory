@@ -465,7 +465,10 @@ def write_report(path, results, base):
     document = {"generated_at": now(), "base": base, "base_revision": revision,
                 "sources": list(merged.values())}
     path.write_text(json.dumps(document, indent=2) + "\n")
-    path.with_suffix(".md").write_text(report.render(document))
+    summary_path = path.with_suffix(".md")
+    if summary_path == path:
+        summary_path = path.with_suffix(".summary.md")
+    summary_path.write_text(report.render(document))
 
 
 def main(argv=None):

@@ -59,6 +59,14 @@ class ReportTests(unittest.TestCase):
         self.assertIn('\\# Heading', result)
         self.assertIn('\\`code\\`', result)
 
+    def test_custom_report_name_cannot_overwrite_json_with_markdown(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'custom.md'
+            with patch.object(update, 'git', return_value=b'base\n'):
+                update.write_report(path, [{'id': 'one', 'status': 'failed'}], 'origin/main')
+            self.assertEqual(json.loads(path.read_text())['sources'][0]['id'], 'one')
+            self.assertTrue(path.with_suffix('.summary.md').read_text().startswith('# Official-source audit'))
+
 
 if __name__ == '__main__':
     unittest.main()

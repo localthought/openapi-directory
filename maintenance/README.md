@@ -43,6 +43,8 @@ attempt/success dates, provenance and errors. Vendor text is escaped for Markdow
 The ignored cache is local state, not durable publication. CI uploads both reports and
 source snapshots as an artifact, and publishes the readable report in the audit job summary
 even when individual services cause the check command to fail.
+If a custom JSON report filename already ends in `.md`, the readable companion uses
+`.summary.md` to avoid overwriting the machine-readable report.
 
 Import one service on its own branch, widening the sparse cone first if necessary:
 
