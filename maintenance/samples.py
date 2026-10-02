@@ -57,13 +57,13 @@ def prepare(source, spec, raw, metadata, cache, request):
     for path in paths:
         url = ("https://raw.githubusercontent.com/" + github["repository"] + "/"
                + metadata["revision"] + "/" + urllib.parse.quote(path, safe="/"))
-        content, headers, final = request(url)
+        content, fetch_metadata = request(url)
         if len(content) > 1000000:
             raise ValueError("Code sample exceeds 1 MB: " + path)
         # Decode strictly and preserve whitespace; never execute vendor code.
         content.decode("utf-8")
         files[path] = content
-        fetches[path] = {"url": final, "sha256": sha256(content)}
+        fetches[path] = {**fetch_metadata, "sha256": sha256(content)}
     if sum(map(len, files.values())) > 10000000:
         raise ValueError("Code sample snapshot exceeds 10 MB")
     hashes = {path: sha256(content) for path, content in sorted(files.items())}

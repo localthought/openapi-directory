@@ -25,7 +25,7 @@ class SampleTests(unittest.TestCase):
 
     def prepare(self, cache, content):
         metadata = copy.deepcopy(self.metadata)
-        with patch.object(update, "request", return_value=(content, {}, "https://vendor.example/example.ts")) as request:
+        with patch.object(update, "request", return_value=(content, {"url": "https://vendor.example/example.ts"})) as request:
             spec, steps = update.prepare_document(self.source, self.raw, metadata, cache)
         return spec, metadata, steps, request
 
@@ -65,6 +65,23 @@ class SampleTests(unittest.TestCase):
         self.assertEqual(spec["components"], self.spec["components"])
         self.assertEqual(spec["x-other-extension"], self.spec["x-other-extension"])
         self.assertEqual(request.call_count, 1)
+
+    def test_real_fetch_helper_contract(self):
+        # Exercise request(), not a mock of its return shape: the importer must
+        # consume its (bytes, metadata) pair for supporting artifacts too.
+        from unittest.mock import MagicMock
+        response = MagicMock()
+        response.url = "https://raw.githubusercontent.com/vendor/docs/" + "a" * 40 + "/api/snippets/example.ts"
+        response.headers = {"ETag": "test-etag"}
+        response.read.return_value = b'// actual helper contract\n'
+        response.__enter__.return_value = response
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(update.urllib.request, "urlopen", return_value=response):
+            metadata = copy.deepcopy(self.metadata)
+            spec, _ = update.prepare_document(self.source, self.raw, metadata, Path(directory))
+        self.assertEqual(metadata["code_samples"]["files"]["api/snippets/example.ts"]["etag"], "test-etag")
+        self.assertEqual(spec["paths"]["/items/{id}"]["get"]["x-fern-examples"][0]["code-samples"][0]["code"],
+                         '// actual helper contract\n')
 
     def test_unsafe_or_changed_artifacts_block_before_fetching(self):
         for ref in ("https://other.example/a.ts", "//other/a.ts", "./snippets/a.ts?x=1",
