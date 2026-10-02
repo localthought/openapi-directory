@@ -1,0 +1,171 @@
+import copy
+import json
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+import conversion
+import update
+
+
+def swagger():
+    return {"swagger": "2.0", "info": {"title": "Legacy API", "version": "1.0"},
+            "host": "api.example.com", "schemes": ["https"], "basePath": "/v1",
+            "consumes": ["application/json"], "produces": ["application/json"],
+            "securityDefinitions": {"Key": {"type": "apiKey", "in": "header", "name": "X-Key"}},
+            "security": [{"Key": []}],
+            "paths": {"/items/{id}": {"parameters": [{"$ref": "#/parameters/Id"}],
+                       "put": {"parameters": [{"in": "body", "name": "body", "required": True,
+                                                "schema": {"$ref": "#/definitions/Record"}}],
+                               "responses": {"200": {"description": "OK", "schema": {"$ref": "#/definitions/Record"}}}}}},
+            "parameters": {"Id": {"in": "path", "name": "id", "required": True, "type": "string"}},
+            "definitions": {"Record": {"type": "object", "properties": {"name": {"type": "string", "minLength": 1}}}}}
+
+
+SOURCE = {"id": "legacy", "target": "APIs/example.com/1.0/openapi.yaml", "url": "https://vendor.example/api.json",
+          "conversion": {"tool": "swagger2openapi", "version": "7.0.8"}}
+
+
+def metadata(raw):
+    return {"url": SOURCE["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+
+
+class ConversionTests(unittest.TestCase):
+    def test_real_conversion_preserves_body_security_and_refs_and_records_format_chain(self):
+        spec = swagger()
+        original = copy.deepcopy(spec)
+        raw = json.dumps(spec).encode()
+        fetched = metadata(raw)
+        with tempfile.TemporaryDirectory() as directory:
+            converted, steps = update.prepare_document(SOURCE, raw, fetched, Path(directory))
+            fetched["transformations"] = steps
+            self.assertEqual(update.validate_document(converted), [])
+            self.assertEqual(converted["servers"], [{"url": "https://api.example.com/v1"}])
+            self.assertEqual(converted["security"], [{"Key": []}])
+            self.assertEqual(converted["components"]["securitySchemes"]["Key"]["name"], "X-Key")
+            operation = converted["paths"]["/items/{id}"]["put"]
+            self.assertTrue(operation["requestBody"]["required"])
+            self.assertEqual(operation["requestBody"]["content"]["application/json"]["schema"]["$ref"], "#/components/schemas/Record")
+            old = copy.deepcopy(converted)
+            old["info"]["x-logo"] = {"url": "https://example.com/logo.svg"}
+            imported = update.import_document(SOURCE, converted, fetched, old)
+            self.assertEqual([o["format"] for o in imported["info"]["x-origin"]], ["swagger", "openapi"])
+            self.assertEqual([o["version"] for o in imported["info"]["x-origin"]], ["2.0", "3.0"])
+            self.assertEqual(imported["info"]["x-logo"], old["info"]["x-logo"])
+            self.assertNotIn("no OpenAPI version conversion", " ".join(imported["info"]["x-conversion"]))
+            self.assertIn("resolve:false", " ".join(steps))
+            self.assertEqual(fetched["conversion"]["patches"], 0)
+            self.assertEqual(fetched["conversion"]["warnings"], [])
+            output = Path(directory) / SOURCE["id"] / fetched["sha256"] / "converted.json"
+            self.assertEqual(update.sha256(output.read_bytes()), fetched["conversion"]["converted_sha256"])
+            self.assertEqual(update.canonical(update.parse(update.serialize_document(imported).encode())), update.canonical(imported))
+        self.assertEqual(spec, original)
+
+    def test_unexpected_converter_patches_stop_and_reviewed_patches_still_require_validation(self):
+        spec = swagger()
+        spec["definitions"]["Record"]["properties"]["value"] = {"type": ["string", "null"]}
+        raw = json.dumps(spec).encode()
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            with self.assertRaisesRegex(ValueError, "warning/patch count changed"):
+                update.prepare_document(SOURCE, raw, metadata(raw), cache)
+            result = json.loads((cache / SOURCE["id"] / update.sha256(raw) / "conversion-result.json").read_text())
+            self.assertEqual(result["patches"], 1)
+            source = copy.deepcopy(SOURCE)
+            source["conversion"]["expected_patches"] = 1
+            converted, _ = update.prepare_document(source, raw, metadata(raw), cache)
+            self.assertEqual(update.validate_document(converted), [])
+
+    def test_warn_only_does_not_waive_missing_schema_validation(self):
+        spec = swagger()
+        spec["definitions"]["Record"]["properties"]["child"] = {"$ref": "#/definitions/Missing"}
+        # A real unsupported header collection format emits a converter warning.
+        # A missing schema alone is not flagged by this converter; validation
+        # must still reject it even after a reviewed warning count is accepted.
+        spec["paths"]["/items/{id}"]["put"]["parameters"].append({"in": "header", "name": "X-Ids",
+            "type": "array", "items": {"type": "string"}, "collectionFormat": "ssv"})
+        raw = json.dumps(spec).encode()
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            with self.assertRaisesRegex(ValueError, "warning/patch count changed"):
+                update.prepare_document(SOURCE, raw, metadata(raw), cache)
+            result = json.loads((cache / SOURCE["id"] / update.sha256(raw) / "conversion-result.json").read_text())
+            self.assertEqual(len(result["warnings"]), 1)
+            source = copy.deepcopy(SOURCE)
+            source["conversion"]["expected_warnings"] = 1
+            fetched = metadata(raw)
+            converted, _ = update.prepare_document(source, raw, fetched, cache)
+            self.assertTrue(update.validate_document(converted))
+            with self.assertRaisesRegex(ValueError, "Import blocked"):
+                update.import_document(source, converted, fetched, None)
+
+    def test_preflight_rejects_unpinned_refs_and_warning_marker_collisions_without_running_tool(self):
+        for ref in ("https://vendor.example/schema.json#/Item", "file:///tmp/item.json", "schema.json#/Item"):
+            spec = swagger()
+            spec["x-documentation"] = {"$ref": ref}
+            with tempfile.TemporaryDirectory() as directory, patch.object(conversion.subprocess, "run") as run:
+                with self.assertRaisesRegex(ValueError, "External references"):
+                    conversion.prepare(SOURCE, spec, metadata(b"raw"), Path(directory))
+                run.assert_not_called()
+        spec = swagger()
+        spec["x-s2o-warning"] = "Already converted warning"
+        with tempfile.TemporaryDirectory() as directory, patch.object(conversion.subprocess, "run") as run:
+            with self.assertRaisesRegex(ValueError, "warning markers"):
+                conversion.prepare(SOURCE, spec, metadata(b"raw"), Path(directory))
+            run.assert_not_called()
+
+    def test_changed_format_or_invalid_expectations_require_recipe_review(self):
+        cases = [(SOURCE, {"openapi": "3.0.0"}),
+                 ({**SOURCE, "conversion": {"tool": "swagger2openapi", "version": "different"}}, swagger()),
+                 ({**SOURCE, "conversion": {"tool": "swagger2openapi", "version": "7.0.8", "expected_patches": True}}, swagger())]
+        with tempfile.TemporaryDirectory() as directory, patch.object(conversion.subprocess, "run") as run:
+            for source, spec in cases:
+                with self.assertRaises(ValueError):
+                    conversion.prepare(source, spec, metadata(b"raw"), Path(directory))
+            run.assert_not_called()
+
+    def test_failed_conversion_audit_retains_original_bytes_and_no_success_comparison(self):
+        spec = swagger()
+        spec["definitions"]["Record"]["properties"]["value"] = {"type": ["string", "null"]}
+        raw = json.dumps(spec).encode()
+        with tempfile.TemporaryDirectory() as directory, patch.object(update, "fetch", return_value=(raw, metadata(raw))):
+            result = update.audit(SOURCE, "origin/main", Path(directory))
+            self.assertEqual(result["status"], "failed")
+            self.assertIn("warning/patch count changed", result["error"])
+            self.assertEqual(result["last_successful_fetch"], "today")
+            self.assertNotIn("last_successful_comparison", result)
+            self.assertNotIn("last_successful_validation", result)
+            snapshot = Path(directory) / SOURCE["id"] / update.sha256(raw)
+            self.assertEqual((snapshot / "source").read_bytes(), raw)
+            self.assertTrue((snapshot / "conversion-result.json").exists())
+
+    def test_exact_vendor_patches_apply_after_conversion(self):
+        raw = json.dumps(swagger()).encode()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            recipe = {"schema_version": 1, "description": "Reviewed schema correction", "operations": [
+                {"pointer": "#/components/schemas/Record/properties/name/minLength", "from": 1, "value": 3, "context": {"type": "string"}}]}
+            path = root / "maintenance/patches/test.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps(recipe))
+            source = {**SOURCE, "patches": ["maintenance/patches/test.json"]}
+            with patch.object(update, "ROOT", root):
+                converted, steps = update.prepare_document(source, raw, metadata(raw), root / "cache")
+            self.assertEqual(converted["components"]["schemas"]["Record"]["properties"]["name"]["minLength"], 3)
+            self.assertTrue(steps[0].startswith("Converted Swagger"))
+            self.assertTrue(steps[1].startswith("Applied maintenance/patches/test.json"))
+            self.assertEqual(update.validate_document(converted), [])
+
+    def test_missing_responses_are_blocked_before_the_converter_can_invent_defaults(self):
+        spec = swagger()
+        del spec["paths"]["/items/{id}"]["put"]["responses"]
+        raw = json.dumps(spec).encode()
+        with tempfile.TemporaryDirectory() as directory, patch.object(conversion.subprocess, "run") as run:
+            with self.assertRaisesRegex(ValueError, "refusing to let the converter invent"):
+                update.prepare_document(SOURCE, raw, metadata(raw), Path(directory))
+            run.assert_not_called()
+
+
+if __name__ == "__main__":
+    unittest.main()

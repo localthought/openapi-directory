@@ -256,6 +256,28 @@
       ]
     },
     {
+      "id": "grafana",
+      "provider": "grafana.com",
+      "target": "APIs/grafana.com/0.0.1/openapi.yaml",
+      "github": {"repository": "grafana/grafana", "ref": "main", "path": "public/api-merged.json"},
+      "discovery": "The official HTTP API reference identifies this Swagger 2.0 artifact as the canonical source; public/openapi3.json is vendor-converted from it. Monitor the existing legacy HTTP artifact, with fixed placeholder info.version 0.0.1. Grafana 13 deprecates legacy /api routes in favor of /apis; matching this artifact does not establish coverage of new resource APIs or Grafana Cloud. Discover those separately, preserving source example values and push-protection requirements.",
+      "coverage": "Legacy HTTP artifact only. Vendor documentation marks legacy /api routes deprecated in Grafana 13 (checked 2026-10-02). New /apis resource descriptions and Grafana Cloud are not monitored by this source.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "conversion": {"tool": "swagger2openapi", "version": "7.0.8", "expected_warnings": 0, "expected_patches": 0}
+    },
+    {
+      "id": "square",
+      "provider": "squareup.com",
+      "target": "APIs/squareup.com/2.0/openapi.yaml",
+      "github": {"repository": "square/connect-api-specification", "ref": "master", "path": "api.json"},
+      "discovery": "Follow the official Square public description under its fixed info.version 2.0. Replay the same two previously reviewed path-parameter/security corrections. The source still references undefined CurrencyExchange and AppFeeAllocation schemas (verified 2026-10-02); preserve the stored spec and monitor drift, without inventing schemas or bypassing full validation.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "patches": ["maintenance/patches/square.json"],
+      "import_blocker": "Official source references undefined CurrencyExchange and AppFeeAllocation schemas. Full validation blocks imports; do not invent missing schemas."
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

@@ -2,7 +2,12 @@
   "name": "openapi-directory-maintenance",
   "private": true,
   "version": "1.0.0",
-  "description": "Pinned OpenAPI reference bundling for official-source maintenance",
-  "engines": {"node": ">=22.12.0"},
-  "dependencies": {"@redocly/cli": "2.57.0"}
+  "description": "Pinned OpenAPI reference bundling and Swagger conversion for official-source maintenance",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@redocly/cli": "2.57.0",
+    "swagger2openapi": "7.0.8"
+  }
 }
