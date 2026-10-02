@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `f1a63de2b` (PR #100 merged):
-729 provider domains; 4,260 files under `APIs/`, including 2,086
+**Last updated**: 2026-10-02. Audit of `origin/main` at `845f81fff` (PR #104 merged):
+729 provider domains; 4,261 files under `APIs/`, including 2,087
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -876,22 +876,54 @@ Grafana's conversion output/hash were downloaded and verified at
 `/tmp/openapi-ci-audit-37048205733`; ignored local reports/health snapshots are updated.
 The Grafana service-specific legacy/new-resource coverage note appears in the report.
 
-**New drift queue from that audit:**
-- Plaid `2020-09-14_1.762.0`, vendor commit `325e2e192bcb422df708029bafe9d950c94df2fd`,
-  entry SHA-256 `e07a869352e83670e2ef077376db268358ce7a0dc4a8e97b8e1e980b91616a8c`.
-  Full validation passes. Against the actual last import `2020-09-14_1.740.1`, both have
-  360 paths / 351 operations: `/cra/report/create` and `/protect/cash_advance/feedback/upload`
-  are added; `/link_delivery/create` and `/link_delivery/get` are removed (all POST).
-  **Baseline caveat:** the manifest still names historical `1.345.1`. With a brand-new
-  destination, the updater falls back to that target and overstates incremental endpoint
-  changes. Correct/review the current baseline before importing; preserve curation from
-  `1.740.1`, keep all historical directories, and record the actual incremental removals.
-  Improve new-release baseline tracking reproducibly rather than trusting fallback counts.
-- Intercom fixed `2.16`, vendor commit `7b3a218f2b8a9c09ae24247270c764444cddaf70`,
-  entry SHA-256 `e007fe1902ceaa64e6dbaedfc064f2a2e4fc24bab6c86cf1c8f6900c2b0c42ca`.
-  Full validation and the existing exact reporting patches pass; 168 paths / 235 operations,
-  no endpoints added or removed. Compare content against #97 before its next refresh.
-Neither new refresh has a PR yet. Re-fetch and inspect open PRs before acting.
+**That drift queue is now complete (#102–#104):**
+- #102 corrects the reviewed current manifest targets for Plaid, Xero Accounting, Stripe,
+  Figma and Intercom. A successful new-version import advances its manifest target with
+  the API file; commit both together. No universal vendor version ordering is guessed.
+  Audits record the actual comparison/curation baseline. Matching imports can repair a
+  lagging target without rewriting the spec. Manifest edits preserve unrelated formatting;
+  source-configuration changes and edits during validation stop the import before writes.
+  Four additional regressions bring the suite to 61 passing local/CI tests, including
+  successive releases, invalid-release guards and preservation of concurrent edits.
+  Baseline pointers describe reviewed imports, not a claim about all other stored versions.
+- #103 imports Plaid `2020-09-14_1.762.0` from vendor commit
+  `325e2e192bcb422df708029bafe9d950c94df2fd`, entry SHA-256
+  `e07a869352e83670e2ef077376db268358ce7a0dc4a8e97b8e1e980b91616a8c`.
+  Against actual last import `1.740.1`, both have 360 paths / 351 operations:
+  POST `/cra/report/create` and `/protect/cash_advance/feedback/upload` are added;
+  POST `/link_delivery/create` and `/link_delivery/get` are removed. The vendor's pinned
+  CHANGELOG explicitly records these removals in 1.753.0 and the migration to
+  `/link/token/create` with `hosted_link`. Both historical versions remain unchanged,
+  curation comes from 1.740.1, and the reviewed manifest target advances to 1.762.0.
+  Full validation and YAML value/type round-trip pass; no conversion or content patches.
+  The vendor client-library artifact includes limited-availability fields; importing it
+  does not imply every described product is generally available.
+- #104 refreshes Intercom fixed public `2.16` from vendor commit
+  `7b3a218f2b8a9c09ae24247270c764444cddaf70`, entry SHA-256
+  `e007fe1902ceaa64e6dbaedfc064f2a2e4fc24bab6c86cf1c8f6900c2b0c42ca`.
+  Exactly one vendor description changes: DELETE `/companies/{company_id}` now states
+  the company record remains, contacts are detached without being deleted, detachment
+  cannot be reversed, and changes may take time to appear. Vendor PR #697 documents it.
+  168 paths / 235 operations, zero endpoint/schema/security changes; existing curation,
+  reporting-parameter patches and historical 2.14 remain. Full validation and exact
+  patched-vendor equivalence pass. No OpenAPI version conversion.
+All three PRs are merged and attached to this chat. Re-fetch before future comparisons;
+new vendor commits may appear independently of an unchanged version or endpoint count.
+
+
+Expanded network audit [37057748754](https://github.com/ontola/openapi-directory/actions/runs/37057748754)
+at main `845f81fff` passed all 61 tests and fetched all 22 registered artifacts. Nineteen
+match their sources, including the new Plaid version and Intercom clarification. The only
+three import blockers remain Atlas (validator/dialect), Square (invalid Info metadata and
+undefined schemas), and Slack (archived unsupported Swagger). No fetch/prepare failures
+or new valid content drift were found. The expected blockers make the audit exit nonzero;
+readable-summary publication and artifact upload succeeded. Every row names the actual
+comparison baseline. Downloaded reports, all 22 entry-source hashes and all sixteen unique
+repository-response hashes were verified at `/tmp/openapi-ci-audit-37057748754`; ignored
+local reports and health snapshots are updated. CI artifacts remain the recovery source
+when temporary files disappear. All 22 reviewed manifest targets exist on fetched main
+and agree with their stored `info.version` directory. No files were committed solely for
+check timestamps.
 
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
@@ -899,8 +931,8 @@ They explicitly identify upstream badges, API/RSS endpoints and contribution gui
 direct reproducible spec PRs are accepted in this fork. No fork collection endpoint has
 been published or claimed. Index publication still needs verified consumer access.
 
-**Resume next:** address Plaid's new-release baseline caveat and refresh Plaid/Intercom's
-new drift above, one PR per API. Resolve Atlas's validator/regex dialect compatibility before its refresh;
+**Resume next:** the Plaid/Intercom drift and baseline caveat are resolved. Resolve
+Atlas's validator/regex dialect compatibility before its refresh;
 extend the registry to other major imported APIs,
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 is registered as direct OpenAPI 3, with exact existing fixes replayed, but its undefined
