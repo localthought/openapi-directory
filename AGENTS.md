@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `8e40681fb` (PR #67 merged):
-726 provider domains; 4,250 files under `APIs/`, including 2,076
+**Last updated**: 2026-10-02. Audit of `origin/main` at `5c5b3a43e` (PR #72 merged):
+727 provider domains; 4,252 files under `APIs/`, including 2,078
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -104,6 +104,10 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #65 | GitHub public REST, both default and `2022-11-28` artifacts | Fixed `1.1.4` version refreshed in place; each 815 paths / 1,231 operations; seven monitored artifacts across six services |
 | #66 | Exact patch replay in updater | Checked JSON replacements, context assertions, recipe hashes/provenance; 16 passing regression tests |
 | #67 | Xero Accounting `19.1.0` | New version directory; 138 paths / 235 operations; historical version preserved |
+| #69 | Pinned repository reference bundling | Locked Redocly 2.57.0, source-file hashes, archive/reference checks, exact field removal; 21 tests pass locally and in CI |
+| #70 | DigitalOcean `2.0` | Fixed version refreshed in place; 515 paths / 757 operations; curation preserved |
+| #71 | Snowflake SQL `2.0.0` | New SQL execution service; 3 paths / 3 operations; no bundling or patches |
+| #72 | Snowflake Warehouse `0.0.1` | New management service; 12 paths / 15 operations; `common.yaml` bundled with zero warnings |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -120,6 +124,24 @@ After #67, a fresh updater audit against `origin/main` at `8e40681fb` reported
 `matches_source` with no validation errors for both GitHub artifacts, Plaid, Xero, and
 Hugging Face Inference Endpoints. This confirms the patched comparison does not keep
 proposing Xero's already-imported release.
+
+DigitalOcean adds 338 paths / 473 operations and removes 6 paths / 6 operations. Four
+registry paths move under `/repositories/`, retaining operation IDs; two App Platform
+tier paths were removed from the official source and marked deprecated in its own SDK.
+The reproducible build selects 3,134 data files from vendor commit
+`0267e38174220ec9ae115185ccb9717b3909c89a`. Its 21 naming warnings disambiguate different
+definitions sharing basenames. Comparison with the official published bundle found no
+reference-resolved API or shared-component content differences; only 14 generated aliases
+have different names between bundler versions. Two invalid GenAI `stop` null defaults are
+removed by a checked recipe, preserving all declared alternatives and nullable annotations.
+The bundled source and final YAML passed full validation and curation/content comparisons.
+
+Snowflake SQL and Warehouse use vendor commit `990e25d97236a11826c9eed40e587c2b859e5680`.
+Warehouse's two-file bundle has no patches or warnings. Both serialized specs passed full
+validation and source-content comparison; both source registrations passed 21-test CI.
+Other Snowflake services remain to be audited; these additions do not cover its whole API.
+Fresh local checks after #72 report `matches_source` with no validation errors for
+DigitalOcean and both Snowflake services. A full GitHub audit is recorded in §9.
 
 ---
 
@@ -166,7 +188,7 @@ for v in stripe square figma sentry pagerduty docusign mongodb grafana shopify o
 done
 ```
 
-After PR #67 on 2026-10-02: 726 distinct provider domains, 4,250 tracked files under `APIs/`.
+After PR #72 on 2026-10-02: 727 distinct provider domains, 4,252 tracked files under `APIs/`.
 To add a new spec you must first widen the cone: `git sparse-checkout add APIs/<domain>`,
 otherwise `git add` refuses with "paths ... outside of your sparse-checkout definition".
 
@@ -260,19 +282,19 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 
 ### Still to do
 
-- **Refresh the remaining confirmed stale APIs below**, one PR per API, extending the
-  reusable updater in §9. Plaid, GitHub REST, and Xero are done in PRs #63, #65, and #67.
-  DigitalOcean remains. Re-fetch sources before importing;
-  the figures are audit snapshots.
+- **Monitor the refreshed priority APIs below**, extending the reusable updater in §9.
+  All four confirmed stale APIs are done: Plaid #63, GitHub REST #65, Xero #67, and
+  DigitalOcean #70. The table retains the original audit snapshots, not current stored counts.
 - **Add the remaining verified missing providers below**, after bundling and full validation.
   Hugging Face Inference Endpoints is done in PR #62.
+  Snowflake SQL and Warehouse are done in #71/#72; audit remaining distinct public services.
 - **Extend the refresh audit across the rest of `APIs/`.** The October check was a sample,
   not a complete audit. Compare content as well as versions and path counts.
 - **Locate specs for the vendors below**, minding the 404 warning.
 - **HubSpot's 34 per-object CRM slices remain deliberately skipped.** Do not expand this
   scope without a fresh user instruction.
 
-### Confirmed refresh queue (official sources fetched 2026-10-02)
+### Initial confirmed refresh queue (2026-10-02 audit; all four now refreshed)
 
 | API | Stored version / paths | Source version / paths | Official source |
 |---|---|---|---|
@@ -283,8 +305,8 @@ and the base URL is the user's own cluster. Left absent rather than inventing a 
 
 GitHub's `api.github.com.2022-11-28` counterpart was included in #65 and is now registered
 alongside the default public artifact. Audit other GitHub products separately.
-DigitalOcean's source contains relative references to many files: fetch and bundle them,
-or use a verified official bundled artifact. Copying only the entry file is insufficient.
+DigitalOcean's relative references are now handled by its registered pinned bundling recipe.
+Copying only the entry file remains insufficient. Future imports must use the updater.
 The counts include all path entries, not necessarily one operation per path. New paths
 and removed paths must be reported separately; net growth can conceal removals.
 
@@ -299,11 +321,18 @@ The complete patched source passes validation. If a future vendor source fixes a
 changes its type, the recipe intentionally fails and needs review; remove or revise it
 deliberately. Never disable validation or coerce arbitrary vendor values.
 
+**DigitalOcean completed:** #70 refreshes fixed version `2.0` in place. The recipe in
+`maintenance/patches/digitalocean.json` removes only the two invalid null defaults in
+`chat_completion_request.stop` and `create_response_request.stop`, after asserting their
+source values and complete `oneOf` alternatives. It invents no replacement defaults or
+server behavior. A changed bundler warning count (currently 21) or patch precondition stops
+the updater for review. Logs, original data, source hashes, and the bundle remain cached.
+
 ### Verified missing official OADs (downloaded and parsed 2026-10-02)
 
 | Provider | Official source | Import notes |
 |---|---|---|
-| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | `sqlapi.yaml`: version `2.0.0`, 3 paths; `warehouse.yaml`: `0.0.1`, 12 paths. Audit the rest of the catalog, import distinct public APIs separately, and bundle references to `common.yaml`. Shared helper files are not separate APIs. |
+| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops) and Warehouse `0.0.1` (12 / 15) are DONE in #71/#72. Audit remaining distinct public APIs separately. Shared helper files are not separate APIs. |
 | Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | OpenAPI 3.1, version `1.0`, 32 paths. External `$ref` values in code-sample extensions refer to TypeScript snippets; distinguish those artifacts from schema references and handle them explicitly. |
 | Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | OpenAPI 3.1, version `1.0.0`. `openapi.yaml` has 131 paths; `openapi-public-doc.yaml` has 212. Establish which artifact matches the public API documentation before choosing an import; do not concatenate them. |
 | Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
@@ -312,6 +341,12 @@ None of these four providers was present at the initial audit, before PR #62 add
 Hugging Face Inference Endpoints `2.0.0` (40 paths / 46 operations). Parsing is evidence
 of a real downloadable OAD, not completion of reference resolution or spec validation.
 Search the full tree by domain, brand, service, and aliases again before adding anything.
+
+Snowflake's [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
+is generally available, but that umbrella page also lists individual preview products:
+[Code Bundles and their REST clients were announced in preview on 2026-09-24](https://docs.snowflake.com/en/release-notes/2026/other/2026-09-24-code-bundles).
+Check each service's own release status before importing more catalog entries. Do not
+treat compatibility specs named Cortex Generic Anthropic/OpenAI as those vendors' own OADs.
 
 ### Source health requires a separate check
 
@@ -517,19 +552,30 @@ That initial audit job exited nonzero for the then-known DigitalOcean bundling, 
 validation, and Slack conversion/source-health blockers, distinct from the successful
 test job. Xero's blocker is now resolved by #66's checked patch replay; 16 tests pass
 locally and in GitHub CI. PRs #62/#63/#65/#67 added Hugging Face and refreshed Plaid,
-both public GitHub REST artifacts, and Xero. Seven artifacts across six services are
-registered. Bundling, conversion, automatic PR generation, monthly discovery, and fork index publication
+both public GitHub REST artifacts, and Xero. #69 adds pinned repository bundling and exact
+field removal, with locked Node tooling and 21 passing local/CI tests; #70 refreshes
+DigitalOcean, and #71/#72 add Snowflake SQL and Warehouse. Nine artifacts across eight
+services are now registered. Conversion, automatic PR generation, monthly discovery, and fork index publication
 remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
 Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
 sleeps; do not prevent sleep or extend the deadline without a new request.
 
-**Resume next:** implement pinned reference bundling for DigitalOcean in its own
-infrastructure PR, then refresh that API in a separate PR. Afterwards import Snowflake's
-distinct public services, Cohere (handling snippet artifacts), and the verified public
-Mistral description. The source registry and local report retain the latest checks;
+Manual workflow run [36990592745](https://github.com/ontola/openapi-directory/actions/runs/36990592745)
+at main `5c5b3a43e` verified the Node installation and bundler on GitHub: all 21 tests
+passed, all nine configured artifacts fetched successfully, and all eight supported
+OpenAPI artifacts matched their sources with zero validation errors. DigitalOcean's
+bundle recorded 21 expected naming warnings; Warehouse recorded zero. The downloaded
+artifact includes the source archives, file hashes, bundles, and report. The audit job
+still exits nonzero solely for Slack's already-known archived Swagger/conversion blocker;
+unsupported-format comparison is not evidence of new Slack API drift or current coverage.
+
+**Resume next:** import Cohere after explicitly preserving/materializing its TypeScript
+snippet references, and establish which Mistral artifact matches its public API docs
+before importing it. Then audit more distinct stable Snowflake services and extend
+source freshness/discovery across other well-known providers. Automatic PR generation,
+monthly discovery, and fork publication remain implementation work. The source registry
+and local report retain the latest checks;
 re-fetch main and inspect open PRs before continuing. Do not repeat completed imports.
-DigitalOcean's official `package.json` uses `@redocly/cli` and an `openapi bundle` script;
-inspect its lockfile and Makefile for the vendor's own reproducible bundling recipe.
 
 ### Implementation order
 
