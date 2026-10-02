@@ -35,7 +35,14 @@ removals, source revisions/hashes, and import blockers. A failed check preserves
 success timestamps. A check of selected sources keeps other report rows and their old
 timestamps. The command exits nonzero for fetch/parse failures, validation errors, and
 explicit blockers; valid content drift itself is an actionable finding, not a failed check.
-The ignored cache is local state, not durable publication. CI uploads it as an artifact.
+Each row records its comparison base revision; retained older rows keep their old revision
+or show it as unrecorded. A readable Markdown report is written beside the JSON report
+(by default `cache/maintenance/report.md`). It distinguishes blocked matches from valid
+source matches, reports added and removed paths/operations separately, and shows per-service
+attempt/success dates, provenance and errors. Vendor text is escaped for Markdown display.
+The ignored cache is local state, not durable publication. CI uploads both reports and
+source snapshots as an artifact, and publishes the readable report in the audit job summary
+even when individual services cause the check command to fail.
 
 Import one service on its own branch, widening the sparse cone first if necessary:
 
@@ -96,6 +103,12 @@ official published bundle by resolving references across paths and common compon
 Two invalid null defaults in its GenAI `stop` schemas are removed by exact patches;
 all declared alternatives and nullable annotations remain. The complete patched bundle
 must pass validation. Other sources default to zero expected bundling warnings.
+
+Snowflake's Database, Schema and Table resource-management descriptions are registered
+separately from SQL execution and Warehouse management. Each is a two-file snapshot with
+`common.yaml`, bundled at the same pinned vendor commit with zero expected warnings.
+The public resource guides and descriptions carry no preview designation (checked
+2026-10-02); other catalog services still require their own scope/release-status review.
 
 Fern `x-fern-examples` code samples can register a `code_samples` recipe with
 `kind: fern`, a repository-relative `root`, and allowed file `extensions`. Only

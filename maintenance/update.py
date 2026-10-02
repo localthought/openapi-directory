@@ -20,6 +20,7 @@ from openapi_spec_validator import validate
 import bundle
 import samples
 import releases
+import report
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -453,15 +454,18 @@ def write_report(path, results, base):
     previous = {}
     if path.exists():
         previous = {row["id"]: row for row in json.loads(path.read_text()).get("sources", [])}
+    revision = git("rev-parse", base).decode().strip()
     for result in results:
+        result["base_revision"] = revision
         for field in ("last_successful_fetch", "last_successful_comparison", "last_successful_validation"):
             if field not in result and field in previous.get(result["id"], {}):
                 result[field] = previous[result["id"]][field]
     path.parent.mkdir(parents=True, exist_ok=True)
     merged = {**previous, **{row["id"]: row for row in results}}
-    path.write_text(json.dumps({"generated_at": now(), "base": base,
-                               "base_revision": git("rev-parse", base).decode().strip(),
-                               "sources": list(merged.values())}, indent=2) + "\n")
+    document = {"generated_at": now(), "base": base, "base_revision": revision,
+                "sources": list(merged.values())}
+    path.write_text(json.dumps(document, indent=2) + "\n")
+    path.with_suffix(".md").write_text(report.render(document))
 
 
 def main(argv=None):

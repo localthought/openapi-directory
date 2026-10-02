@@ -78,6 +78,60 @@
       "bundling": {"tool": "redocly", "version": "2.57.0", "root": "specifications"}
     },
     {
+      "id": "snowflake-database",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/database/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/database.yaml"
+      },
+      "discovery": "Follow the vendor's public Database resource-management API, listed in the generally available REST reference. Its service guide and source carry no preview designation (checked 2026-10-02). Keep it separate from SQL execution and other resources; bundle common.yaml from the same pinned revision. Audit the rest of the catalog separately.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
+      "id": "snowflake-schema",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/schema/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/schema.yaml"
+      },
+      "discovery": "Follow the vendor's public Schema resource-management API, listed in the generally available REST reference. Its service guide and source carry no preview designation (checked 2026-10-02). Keep it separate from SQL execution and other resources; bundle common.yaml from the same pinned revision. Audit the rest of the catalog separately.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
+      "id": "snowflake-table",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/table/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/table.yaml"
+      },
+      "discovery": "Follow the vendor's public Table resource-management API, listed in the generally available REST reference. Its service guide and source carry no preview designation (checked 2026-10-02). Keep it separate from SQL execution and other resources; bundle common.yaml from the same pinned revision. Audit the rest of the catalog separately.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
       "id": "cohere",
       "provider": "cohere.com",
       "target": "APIs/cohere.com/1.0/openapi.yaml",
