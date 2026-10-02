@@ -44,6 +44,7 @@
       "target": "APIs/xero.com/xero_accounting/2.9.4/openapi.yaml",
       "github": {"repository": "XeroAPI/Xero-OpenAPI", "ref": "master", "path": "xero_accounting.yaml"},
       "discovery": "Follow the official Accounting artifact; discover other Xero services separately.",
+      "patches": ["maintenance/patches/xero-accounting.json"],
       "version_policy": "vendor",
       "priority": "high"
     },

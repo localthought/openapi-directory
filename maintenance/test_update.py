@@ -155,6 +155,79 @@ class UpdaterTests(unittest.TestCase):
             self.assertEqual(result["status"], "matches_source")
             stored.assert_called_once_with("APIs/example.com/2.0/openapi.yaml", "origin/main")
 
+    def test_exact_patch_replay_provenance_and_source_preconditions(self):
+        spec = document()
+        spec["components"]["schemas"]["Flag"] = {"type": "boolean", "default": "false"}
+        raw = json.dumps(spec).encode()
+        recipe = {"schema_version": 1, "description": "Fixed a string boolean default.",
+                  "operations": [{"pointer": "#/components/schemas/Flag/default", "from": "false",
+                                  "value": False, "context": {"type": "boolean"}}]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/flag.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps(recipe))
+            source = {"patches": ["maintenance/patches/flag.json"]}
+            with patch.object(update, "ROOT", root):
+                result, steps = update.prepare_document(source, raw)
+                self.assertIs(result["components"]["schemas"]["Flag"]["default"], False)
+                self.assertEqual(update.validate_document(result), [])
+                self.assertEqual(json.loads(raw), spec)
+                self.assertIn(update.sha256(path.read_bytes()), steps[0])
+                imported = update.import_document(source, result, {
+                    "url": "https://example.com/openapi.json", "sha256": update.sha256(raw),
+                    "fetched_at": "today", "transformations": steps}, None)
+                self.assertIn(steps[0], imported["info"]["x-conversion"])
+                self.assertFalse(any("no API content patches" in s for s in imported["info"]["x-conversion"]))
+                # A vendor fix or unrelated type change must require recipe review.
+                for key, value in (("default", False), ("default", "true"), ("type", "string")):
+                    changed = copy.deepcopy(spec)
+                    changed["components"]["schemas"]["Flag"][key] = value
+                    with self.assertRaisesRegex(ValueError, "review recipe"):
+                        update.prepare_document(source, json.dumps(changed).encode())
+                del spec["components"]["schemas"]["Flag"]["default"]
+                with self.assertRaisesRegex(ValueError, "review recipe"):
+                    update.prepare_document(source, json.dumps(spec).encode())
+
+    def test_patch_types_duplicates_and_paths_fail_closed(self):
+        spec = document()
+        spec["components"]["schemas"]["Flag"] = {"type": "boolean", "default": False}
+        recipe = {"schema_version": 1, "description": "Test",
+                  "operations": [{"pointer": "#/components/schemas/Flag/default", "from": 0,
+                                  "value": True, "context": {"type": "boolean"}}]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/flag.json"
+            path.parent.mkdir(parents=True)
+            source = {"patches": ["maintenance/patches/flag.json"]}
+            with patch.object(update, "ROOT", root):
+                path.write_text(json.dumps(recipe))
+                with self.assertRaisesRegex(ValueError, "source value changed"):
+                    update.prepare_document(source, json.dumps(spec).encode())
+                recipe["operations"][0]["from"] = False
+                recipe["operations"][0]["value"] = False
+                recipe["operations"].append(copy.deepcopy(recipe["operations"][0]))
+                path.write_text(json.dumps(recipe))
+                with self.assertRaisesRegex(ValueError, "duplicate patch pointer"):
+                    update.prepare_document(source, json.dumps(spec).encode())
+                with self.assertRaisesRegex(ValueError, "under maintenance/patches"):
+                    update.prepare_document({"patches": ["../escape.json"]}, json.dumps(spec).encode())
+
+    def test_patch_failure_retains_raw_snapshot_and_does_not_report_success(self):
+        raw = json.dumps(document()).encode()
+        metadata = {"sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            with patch.object(update, "fetch", return_value=(raw, metadata)), \
+                 patch.object(update, "prepare_document", side_effect=ValueError("Review patch")):
+                result = update.audit({"id": "test", "target": "APIs/example.com/1.0/openapi.yaml"},
+                                      "origin/main", cache)
+            self.assertEqual(result["status"], "failed")
+            self.assertEqual(result["last_successful_fetch"], "today")
+            self.assertNotIn("last_successful_comparison", result)
+            self.assertNotIn("last_successful_validation", result)
+            self.assertEqual((cache / "test" / metadata["sha256"] / "source").read_bytes(), raw)
+
 
 if __name__ == "__main__":
     unittest.main()

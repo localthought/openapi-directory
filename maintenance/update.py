@@ -290,8 +290,11 @@ def import_document(source, new, metadata, old):
     revision = " at commit " + metadata["revision"] if metadata.get("revision") else " on " + metadata["fetched_at"]
     result["info"]["x-conversion"] = [
         "Fetched from " + metadata["url"] + revision + "; source SHA-256 " + metadata["sha256"] + ".",
-        "Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.",
+        ("Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no OpenAPI version conversion."
+         if metadata.get("transformations") else
+         "Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion."),
     ]
+    result["info"]["x-conversion"].extend(metadata.get("transformations", []))
     if old:
         result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from " + source["target"] + ".")
     errors = validate_document(result)
@@ -317,20 +320,65 @@ def cache_snapshot(cache, source_id, raw, metadata):
     (cached / "fetch.json").write_text(json.dumps(metadata, indent=2) + "\n")
 
 
+def prepare_document(source, raw):
+    """Replay reviewed exact replacements; source changes require recipe review."""
+    spec = parse(raw)
+    transformations = []
+    seen = set()
+    for filename in source.get("patches", []):
+        path = (ROOT / filename).resolve()
+        directory = (ROOT / "maintenance/patches").resolve()
+        if directory not in path.parents or path.suffix != ".json":
+            raise ValueError("Patch recipes must be JSON files under maintenance/patches")
+        recipe_raw = path.read_bytes()
+        recipe = json.loads(recipe_raw)
+        operations = recipe.get("operations")
+        if (recipe.get("schema_version") != 1 or not recipe.get("description")
+                or not isinstance(operations, list) or not operations):
+            raise ValueError("Invalid patch recipe: " + filename)
+        # Work on a separate parsed document. No caller's object or original
+        # cached bytes are modified, even if a later precondition fails.
+        for operation in operations:
+            if set(operation) != {"pointer", "from", "value", "context"}:
+                raise ValueError("Exact patches require pointer, from, value, and context")
+            ref = operation["pointer"]
+            if not isinstance(ref, str) or not ref.startswith("#/") or ref in seen:
+                raise ValueError("Invalid or duplicate patch pointer: " + str(ref))
+            seen.add(ref)
+            parent_ref, token = ref.rsplit("/", 1)
+            parent = pointer(spec, parent_ref)
+            token = urllib.parse.unquote(token).replace("~1", "/").replace("~0", "~")
+            context = operation["context"]
+            if not isinstance(parent, dict) or not isinstance(context, dict) or not context:
+                raise ValueError("Patch requires an object parent and nonempty context: " + ref)
+            for key, expected in context.items():
+                if key not in parent or canonical(parent[key]) != canonical(expected):
+                    raise ValueError("Patch context changed; review recipe: " + ref)
+            # JSON comparison distinguishes false from 0 and preserves types.
+            if token not in parent or canonical(parent[token]) != canonical(operation["from"]):
+                raise ValueError("Patch source value changed; review recipe: " + ref)
+            parent[token] = copy.deepcopy(operation["value"])
+        transformations.append("Applied " + filename + " (SHA-256 " + sha256(recipe_raw)
+                               + "): " + recipe["description"])
+    return spec, transformations
+
+
 def audit(source, base, cache):
     result = {"id": source["id"], "target": source["target"], "checked_at": now(),
               "source_health": source.get("source_health", "not_assessed"),
               "coverage": "Configured service only; freshness of the whole provider is not established."}
     try:
         raw, metadata = fetch(source)
-        spec = parse(raw)
+        result.update(fetch=metadata, last_successful_fetch=metadata["fetched_at"])
+        cache_snapshot(cache, source["id"], raw, metadata)
+        spec, transformations = prepare_document(source, raw)
+        metadata["transformations"] = transformations
         cache_snapshot(cache, source["id"], raw, metadata)
         dest = str(destination(source, spec))
         # Once a new version lands, compare that version rather than forever
         # comparing the old manifest target and generating duplicate updates.
         old = stored(dest, base) or stored(source["target"], base)
         result.update(compare(old, spec), fetch=metadata, destination=dest)
-        result["last_successful_fetch"] = metadata["fetched_at"]
         result["last_successful_comparison"] = now()
         result["validation_errors"] = validate_document(spec)
         if not result["validation_errors"]:
@@ -377,7 +425,9 @@ def main(argv=None):
             parser.error("Import exactly one source at a time using --source")
         source = sources[0]
         raw, metadata = fetch(source)
-        spec = parse(raw)
+        cache_snapshot(args.cache, source["id"], raw, metadata)
+        spec, transformations = prepare_document(source, raw)
+        metadata["transformations"] = transformations
         cache_snapshot(args.cache, source["id"], raw, metadata)
         dest = destination(source, spec)
         old_dest = stored(str(dest), args.base)

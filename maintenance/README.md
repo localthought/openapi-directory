@@ -3,7 +3,7 @@
 This initial updater checks six services through seven configured source artifacts,
 including both public GitHub REST descriptions. It does not claim coverage of the
 entire directory, discover every vendor release, bundle split descriptions, convert
-Swagger, apply patches, generate PRs, or merge them. Those remain explicit follow-up work
+Swagger, generate PRs, or merge them. Those remain explicit follow-up work
 in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
 
 Use Python 3.9+ and the pinned dependencies:
@@ -56,7 +56,22 @@ Run `check --source plaid` to select one service, or repeat `--source` for sever
 `--report PATH` and `--cache PATH` to retain state in an appropriate location. Add sources
 to `sources.json` only after verifying ownership, service scope, stable-release selection,
 and absence from the full main tree. Known upstream defects need documented patches or
-reviewed exceptions before import; this initial tool has no validation bypass.
+reviewed exceptions before import; this tool has no validation bypass.
+
+Exact patches are registered in a source's `patches` list, with JSON recipes under
+`maintenance/patches/`. Each replacement asserts both the original JSON value (including
+its type) and selected sibling context before changing anything. Missing fields, changed
+values, changed context, and duplicate pointers fail the run and require recipe review.
+If the vendor fixes a defect, remove or revise the recipe deliberately rather than
+silently skipping it. Original source bytes remain cached; comparisons and validation
+use the patched document. The report and imported `info.x-conversion` record the recipe,
+its hash, and its explanation, so the same transformation can be replayed.
+
+Xero Accounting's recipe fixes only the 46 string `'false'` defaults/examples on 23
+explicitly named boolean properties, verified in vendor commit
+`fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f`. Every replacement asserts `type: boolean`.
+There is no general string-to-boolean coercion. The complete patched document must still
+pass all normal OpenAPI and reference/parameter validation.
 
 The weekly GitHub workflow runs tests and publishes the configured-source report and raw
 snapshots. PRs changing the updater run its tests without network access. Automated PR
