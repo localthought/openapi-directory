@@ -78,6 +78,26 @@
       "bundling": {"tool": "redocly", "version": "2.57.0", "root": "specifications"}
     },
     {
+      "id": "cohere",
+      "provider": "cohere.com",
+      "target": "APIs/cohere.com/1.0/openapi.yaml",
+      "github": {
+        "repository": "cohere-ai/cohere-developer-experience",
+        "ref": "main",
+        "path": "cohere-openapi.yaml"
+      },
+      "discovery": "Follow the vendor-maintained OpenAPI description. Materialize Fern TypeScript code-sample artifacts at the same pinned commit; they are documentation, not schema references.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "code_samples": {
+        "kind": "fern",
+        "root": "snippets/node",
+        "extensions": [
+          ".ts"
+        ]
+      }
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
