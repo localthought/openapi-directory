@@ -234,6 +234,14 @@ def canonical(spec):
     return json.dumps(spec, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def serialize_document(spec):
+    text = yaml.dump(spec, Dumper=Dumper, default_flow_style=False,
+                     sort_keys=False, allow_unicode=True, width=100000)
+    if canonical(parse(text.encode("utf-8"))) != canonical(spec):
+        raise ValueError("YAML serialization changed document values or types; refusing to write")
+    return text
+
+
 def operation_set(spec):
     return {method.upper() + " " + path for path, item in spec["paths"].items()
             for method in METHODS & item.keys()}
@@ -472,9 +480,9 @@ def main(argv=None):
             if expected != output.read_bytes():
                 raise ValueError("Refusing to overwrite local changes: " + str(dest))
         result = import_document(source, spec, metadata, old)
+        serialized = serialize_document(result)
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(yaml.dump(result, Dumper=Dumper, default_flow_style=False,
-                                    sort_keys=False, allow_unicode=True, width=100000))
+        output.write_text(serialized)
         print(str(dest))
         print(json.dumps(compare(old, spec), indent=2))
         return 0

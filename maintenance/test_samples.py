@@ -133,3 +133,12 @@ components:
         self.assertEqual(parsed, spec)
         self.assertEqual([type(v) for v in parsed["components"]["schemas"]["Choice"]["example"]],
                          [type(v) for v in values])
+
+    def test_import_serialization_blocks_type_changes_before_writing(self):
+        spec = document()
+        spec["components"]["schemas"]["Choice"]["example"] = {"percentile": "0.16001e0"}
+        self.assertEqual(update.parse(update.serialize_document(spec).encode()), spec)
+        legacy = yaml.dump(spec, Dumper=yaml.SafeDumper, sort_keys=False)
+        with patch.object(update.yaml, "dump", return_value=legacy):
+            with self.assertRaisesRegex(ValueError, "serialization changed"):
+                update.serialize_document(spec)
