@@ -53,6 +53,7 @@ def render(document):
         lines.extend(["", "## " + text(row["id"]), "",
                       "- Target: " + text(row.get("destination", row.get("target"))),
                       "- Comparison/curation baseline: " + text(row.get("baseline")),
+                      "- Configured validation profile: " + text(row.get("validation_profile")),
                       "- Comparison base revision: " + text(row.get("base_revision")),
                       "- API coverage: " + text(row.get("coverage")),
                       "- Source: " + text(fetch.get("url")),

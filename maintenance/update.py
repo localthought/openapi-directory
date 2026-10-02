@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
-from openapi_spec_validator import validate
+from validation import validate, DESCRIPTION as VALIDATION_DESCRIPTION
 import bundle
 import samples
 import releases
@@ -361,6 +361,7 @@ def import_document(source, new, metadata, old, baseline_path=None):
             + catalog["url"] + "; catalog SHA-256 " + catalog["sha256"]
             + ". Preview/prerelease directories and releases below " + catalog["minimum_version"] + " are excluded.")
     result["info"]["x-conversion"].extend(metadata.get("transformations", []))
+    result["info"]["x-conversion"].append("Validated with " + VALIDATION_DESCRIPTION + "; no schema constraints removed.")
     if old:
         result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from "
                                            + (baseline_path or source["target"]) + ".")
@@ -462,6 +463,7 @@ def prepare_document(source, raw, metadata=None, cache=None):
 
 def audit(source, base, cache, health_checker=None):
     result = {"id": source["id"], "target": source["target"], "checked_at": now(),
+              "validation_profile": VALIDATION_DESCRIPTION,
               "coverage": source.get("coverage", "Configured service only; freshness of the whole provider is not established.")}
     result.update((health_checker or health.Checker(request, now, cache)).check(source))
     if source.get("source_health"):
