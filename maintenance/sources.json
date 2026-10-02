@@ -114,6 +114,58 @@
       ]
     },
     {
+      "id": "stripe",
+      "provider": "stripe.com",
+      "target": "APIs/stripe.com/2026-08-26.dahlia/openapi.yaml",
+      "github": {
+        "repository": "stripe/openapi",
+        "ref": "master",
+        "path": "latest/openapi.spec3.yaml"
+      },
+      "discovery": "Track the vendor-recommended latest GA public artifact, covering v1 and v2 endpoints. The vendor README distinguishes this from the maintained but v1-only legacy openapi/spec3.yaml and from preview/SDK variants. Declared release versions select new directories; never import preview or SDK artifacts here.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "figma",
+      "provider": "figma.com",
+      "target": "APIs/figma.com/0.42.0/openapi.yaml",
+      "github": {
+        "repository": "figma/rest-api-spec",
+        "ref": "main",
+        "path": "openapi/openapi.yaml"
+      },
+      "discovery": "Follow the vendor main-branch OpenAPI description linked from its developer documentation. The REST API is public; the vendor labels the description itself beta.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "pagerduty",
+      "provider": "pagerduty.com",
+      "target": "APIs/pagerduty.com/2.0.0/openapi.yaml",
+      "github": {
+        "repository": "PagerDuty/api-schema",
+        "ref": "main",
+        "path": "reference/REST/openapiv3.json"
+      },
+      "discovery": "Follow the official public REST description. info.version remains fixed at 2.0.0; content comparisons are required. Events and other PagerDuty APIs need separate audits.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "mongodb-atlas-admin",
+      "provider": "mongodb.com",
+      "target": "APIs/mongodb.com/atlas-admin/2.0/openapi.yaml",
+      "github": {
+        "repository": "mongodb/openapi",
+        "ref": "main",
+        "path": "openapi/v2.json"
+      },
+      "discovery": "Follow the vendor Atlas Administration v2 description, which includes multiple date-versioned content types under a fixed info.version. Discover other MongoDB services and future API major versions separately.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
