@@ -18,6 +18,7 @@ APIs/**/asyncapi.yaml
 # Temp output files
 tmp.yaml
 *.txt
+!maintenance/requirements.txt
 go*sh
 
 APIs/raw.githubusercontent.com/
@@ -51,6 +52,7 @@ build/Release
 # Commenting this out is preferred by some people, see
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
 node_modules
+**/__pycache__/
 
 # Users Environment Variables
 .lock-wscript

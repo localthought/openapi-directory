@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "github-rest",
+      "provider": "github.com",
+      "target": "APIs/github.com/api.github.com/1.1.4/openapi.yaml",
+      "github": {"repository": "github/rest-api-description", "ref": "main", "path": "descriptions/api.github.com/api.github.com.json"},
+      "discovery": "Follow the vendor's maintained public REST artifact; audit date-version and Enterprise products separately.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "digitalocean",
+      "provider": "digitalocean.com",
+      "target": "APIs/digitalocean.com/2.0/openapi.yaml",
+      "github": {"repository": "digitalocean/openapi", "ref": "main", "path": "specification/DigitalOcean-public.v2.yaml"},
+      "discovery": "Follow the vendor's maintained public v2 entry point.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "import_blocker": "The source is split across relative references. Add a pinned bundling recipe before importing."
+    },
+    {
+      "id": "plaid",
+      "provider": "plaid.com",
+      "target": "APIs/plaid.com/2020-09-14_1.345.1/openapi.yaml",
+      "github": {"repository": "plaid/plaid-openapi", "ref": "master", "path": "2020-09-14.yml"},
+      "discovery": "Follow the maintained stable artifact; its filename is the API date, while info.version also contains the SDK release.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-accounting",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero_accounting/2.9.4/openapi.yaml",
+      "github": {"repository": "XeroAPI/Xero-OpenAPI", "ref": "master", "path": "xero_accounting.yaml"},
+      "discovery": "Follow the official Accounting artifact; discover other Xero services separately.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "huggingface-endpoints",
+      "provider": "huggingface.co",
+      "target": "APIs/huggingface.co/inference-endpoints/2.0.0/openapi.yaml",
+      "url": "https://api.endpoints.huggingface.cloud/openapi.json",
+      "discovery": "Live vendor-published endpoint management description, linked from the official Hugging Face SDK documentation.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "slack-web",
+      "provider": "slack.com",
+      "target": "APIs/slack.com/1.7.0/openapi.yaml",
+      "github": {"repository": "slackapi/slack-api-specs", "ref": "master", "path": "web-api/slack_web_openapi_v2.json"},
+      "discovery": "Archived artifact. Find an official maintained replacement rather than treating a match as current API coverage.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "source_health": "archived",
+      "import_blocker": "Archived Swagger source; current API coverage is uncertain and conversion is not registered."
+    }
+  ]
+}
