@@ -97,6 +97,21 @@ Two invalid null defaults in its GenAI `stop` schemas are removed by exact patch
 all declared alternatives and nullable annotations remain. The complete patched bundle
 must pass validation. Other sources default to zero expected bundling warnings.
 
+Fern `x-fern-examples` code samples can register a `code_samples` recipe with
+`kind: fern`, a repository-relative `root`, and allowed file `extensions`. Only
+operation-level `code-samples[].code` objects containing exactly one `$ref` are
+materialized. Files must be relative UTF-8 artifacts inside the configured root;
+remote, query, fragment, escaped, and unexpected-extension references fail the check.
+They are fetched from the entry document's pinned GitHub commit, cached byte for byte,
+and substituted as code strings without execution or schema interpretation. Duplicate
+references fetch once. The snapshot hashes the entry and every snippet, detecting
+snippet-only drift. Provenance records the materialization and snapshot hash. Combined
+schema bundling and sample recipes require explicit future support.
+
+The YAML loader preserves unquoted scientific notation such as `1e-08` as a number,
+as required by YAML 1.2. Quoted strings remain strings. This avoids silently corrupting
+numeric schema constraints before OpenAPI 3.1 validation.
+
 The weekly GitHub workflow runs tests and publishes the configured-source report and raw
 snapshots. PRs changing the updater run its tests without network access. Automated PR
 creation and monthly discovery have not been implemented yet; the one-week Codex
