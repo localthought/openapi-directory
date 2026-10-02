@@ -6,7 +6,16 @@
       "provider": "github.com",
       "target": "APIs/github.com/api.github.com/1.1.4/openapi.yaml",
       "github": {"repository": "github/rest-api-description", "ref": "main", "path": "descriptions/api.github.com/api.github.com.json"},
-      "discovery": "Follow the vendor's maintained public REST artifact; audit date-version and Enterprise products separately.",
+      "discovery": "Follow the vendor's maintained public REST artifact; its 2022-11-28 counterpart is registered separately. Audit Enterprise products separately.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "github-rest-2022-11-28",
+      "provider": "github.com",
+      "target": "APIs/github.com/api.github.com.2022-11-28/1.1.4/openapi.yaml",
+      "github": {"repository": "github/rest-api-description", "ref": "main", "path": "descriptions/api.github.com/api.github.com.2022-11-28.json"},
+      "discovery": "Follow the vendor's explicitly date-versioned public REST description alongside the default public REST artifact.",
       "version_policy": "vendor",
       "priority": "high"
     },

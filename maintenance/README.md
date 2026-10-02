@@ -1,6 +1,7 @@
 # Official-source maintenance
 
-This initial updater checks six configured services. It does not claim coverage of the
+This initial updater checks six services through seven configured source artifacts,
+including both public GitHub REST descriptions. It does not claim coverage of the
 entire directory, discover every vendor release, bundle split descriptions, convert
 Swagger, apply patches, generate PRs, or merge them. Those remain explicit follow-up work
 in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
