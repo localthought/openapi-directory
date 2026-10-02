@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "description": "Fixed 23 boolean properties whose default and example were the string 'false' in Xero's official Accounting source; replaced only those 46 exact values with the boolean false, matching each declared boolean type.",
+  "operations": [
+    {
+      "pointer": "#/components/schemas/Account/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Account/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransaction/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransaction/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/FromIsReconciled/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/FromIsReconciled/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/ToIsReconciled/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/ToIsReconciled/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/BankTransfer/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Contact/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Contact/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Contact/properties/HasValidationErrors/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Contact/properties/HasValidationErrors/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/CreditNote/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/CreditNote/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/CreditNote/properties/HasErrors/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/CreditNote/properties/HasErrors/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Invoice/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Invoice/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Invoice/properties/HasErrors/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Invoice/properties/HasErrors/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/ManualJournal/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/ManualJournal/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Overpayment/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Overpayment/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Payment/properties/HasAccount/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Payment/properties/HasAccount/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Payment/properties/HasValidationErrors/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Payment/properties/HasValidationErrors/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Prepayment/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Prepayment/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/PurchaseOrder/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/PurchaseOrder/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Receipt/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/Receipt/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/HasAttachments/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/HasAttachments/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/ApprovedForSending/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/ApprovedForSending/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/SendCopy/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/SendCopy/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/MarkAsSent/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/MarkAsSent/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/IncludePDF/default",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    },
+    {
+      "pointer": "#/components/schemas/RepeatingInvoice/properties/IncludePDF/example",
+      "from": "false",
+      "value": false,
+      "context": {
+        "type": "boolean"
+      }
+    }
+  ]
+}
