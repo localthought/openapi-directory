@@ -464,6 +464,16 @@ APIs.guru, not a verified maintenance or publication service for this fork. The 
 is an implementation plan; do not describe these jobs as operational until implemented
 and verified.
 
+**Implementation progress (2026-10-02):** PR #60 merged these instructions. The initial
+updater is under `maintenance/`: six configured service sources, locked dependencies,
+offline regression tests, read-only source checks, and a validated single-API importer.
+The infrastructure change also includes weekly report-artifact and PR-test workflows;
+verify its PR and CI status before calling the schedule operational. Bundling, conversion,
+patch replay, automatic PR generation, monthly discovery, and fork index publication
+remain to do. A local hourly follow-up in this chat is active until 2026-10-09 08:55:58
+Europe/Amsterdam for the user's one-week work request. It may stop while the laptop
+sleeps; do not prevent sleep or extend the deadline without a new request.
+
 ### Implementation order
 
 1. Build the fetch, compare, validate, and import commands alongside the first refreshes
