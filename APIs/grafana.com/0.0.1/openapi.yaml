@@ -11,11 +11,16 @@ info:
   version: 0.0.1
   x-origin:
     - format: swagger
-      url: https://raw.githubusercontent.com/grafana/grafana/main/public/api-merged.json
+      url: https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json
       version: '2.0'
     - format: openapi
-      url: https://raw.githubusercontent.com/grafana/grafana/main/public/api-merged.json
+      url: https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json
       version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json at commit c58da1723a80496cc505922e457e2a0dc78993d0; entry source SHA-256 5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5.
+    - Converted Swagger 2.0 to OpenAPI 3.0.0 with swagger2openapi 7.0.8 (patch:true, warnOnly:true, resolve:false, targetVersion:3.0.0); 0 warnings and 0 converter patches. External resolution is disabled; the complete converted document must pass validation. Converted SHA-256 84895fb7bdb6cbd94d28f77202f4bf923cf20ec7f2c34579715596584cf0fb51.
+    - Preserved existing APIs.guru curation metadata from APIs/grafana.com/0.0.1/openapi.yaml.
+    - Serialized as YAML with PyYAML 6.0.3.
 paths:
   /access-control/roles:
     get:
@@ -104,7 +109,7 @@ paths:
         '500':
           $ref: '#/components/responses/internalServerError'
     put:
-      description: You need to have a permission with action `roles:write` and scope `permissions:type:delegate`. `permissions:type:delegate` scope ensures that users can only create custom roles with the same, or a subset of permissions which the user has.
+      description: You need to have a permission with action `roles:write` and scope `permissions:type:delegate`. `permissions:type:delegate` scope ensures that users can only update custom roles with permissions which the user has.
       tags:
         - access_control
         - enterprise
@@ -137,7 +142,7 @@ paths:
       description: 'Delete a role with the given UID, and it’s permissions. If the role is assigned to a built-in role, the deletion operation will fail, unless force query param is set to true, and in that case all assignments will also be deleted.
 
 
-        You need to have a permission with action `roles:delete` and scope `permissions:type:delegate`. `permissions:type:delegate` scope ensures that users can only delete a custom role with the same, or a subset of permissions which the user has. For example, if a user does not have required permissions for creating users, they won’t be able to delete a custom role which allows to do that.'
+        You need to have a permission with action `roles:delete` and scope `permissions:type:delegate`.'
       tags:
         - access_control
         - enterprise
@@ -297,7 +302,7 @@ paths:
         '500':
           $ref: '#/components/responses/internalServerError'
     put:
-      description: You need to have a permission with action `teams.roles:add` and `teams.roles:remove` and scope `permissions:type:delegate` for each.
+      description: You need to have a permission with action `teams.roles:add` and `teams.roles:remove` and scope `permissions:type:delegate` for each. The delegate scope is required for permissions on roles being added.
       tags:
         - access_control
         - enterprise
@@ -460,7 +465,7 @@ paths:
         If you want to add or remove a single role, consider using Add a user role assignment or Remove a user role assignment instead.
 
 
-        You need to have a permission with action `users.roles:add` and `users.roles:remove` and scope `permissions:type:delegate` for each. `permissions:type:delegate`  scope ensures that users can only assign or unassign roles which have same, or a subset of permissions which the user has. For example, if a user does not have required permissions for creating users, they won’t be able to assign or unassign a role which will allow to do that. This is done to prevent escalation of privileges.'
+        You need to have a permission with action `users.roles:add` and `users.roles:remove` and scope `permissions:type:delegate` for each. The delegate scope is required for permissions on roles being added.'
       tags:
         - access_control
         - enterprise
@@ -532,7 +537,7 @@ paths:
       description: 'Revoke a role from a user. For bulk updates consider Set user role assignments.
 
 
-        You need to have a permission with action `users.roles:remove` and scope `permissions:type:delegate`. `permissions:type:delegate` scope ensures that users can only unassign roles which have same, or a subset of permissions which the user has. For example, if a user does not have required permissions for creating users, they won’t be able to unassign a role which will allow to do that. This is done to prevent escalation of privileges.'
+        You need to have a permission with action `users.roles:remove` and scope `permissions:type:delegate`.'
       tags:
         - access_control
         - enterprise
@@ -11411,10 +11416,34 @@ components:
         users:
           type: boolean
     AttributeTypeAndValue:
-      description: 'AttributeTypeAndValue mirrors the ASN.1 structure of the same name in
+      description: 'When parsed as part of a pkix.Name structure in a crypto/x509 type,
+
+        the Value will be
+
+
+        - a string if the ASN.1 type is PrintableString, IA5String,
+
+        NumericString, BMPString, T61String, or UTF8String;
+
+        - an int64 if the ASN.1 type is INTEGER;
+
+        - an asn1.BitString if the ASN.1 type is BIT STRING;
+
+        - a []byte if the ASN.1 type is OCTET STRING;
+
+        - an asn1.ObjectIdentifier if the ASN.1 type is OBJECT IDENTIFIER;
+
+        - a time.Time if the ASN.1 type is UTCTIME or GENERALIZEDTIME;
+
+        - a bool if the ASN.1 type is BOOLEAN;
+
+        - nil if the ASN.1 type is NULL;
+
+        - an asn1.RawValue otherwise.'
+      type: object
+      title: 'AttributeTypeAndValue mirrors the ASN.1 structure of the same name in
 
         RFC 5280, Section 4.1.2.4.'
-      type: object
       properties:
         Type:
           $ref: '#/components/schemas/ObjectIdentifier'
@@ -11862,6 +11891,11 @@ components:
             type: integer
             format: uint8
         RawIssuer:
+          type: array
+          items:
+            type: integer
+            format: uint8
+        RawSignatureAlgorithm:
           type: array
           items:
             type: integer
