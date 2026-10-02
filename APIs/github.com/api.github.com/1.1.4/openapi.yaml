@@ -11,21 +11,21 @@ info:
     name: Support
     url: https://support.github.com/contact?tags=dotcom-rest-api
   x-github-plan: api.github.com
+  x-providerName: github.com
   x-serviceName: api.github.com
+  x-logo:
+    url: https://twitter.com/github/profile_image?size=original
   x-apisguru-categories:
     - collaboration
     - developer_tools
-  x-logo:
-    url: https://twitter.com/github/profile_image?size=original
-  x-providerName: github.com
   x-origin:
     - format: openapi
       url: https://raw.githubusercontent.com/github/rest-api-description/7bdf5f00553689c2dabb027685cf29081093767e/descriptions/api.github.com/api.github.com.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/7bdf5f00553689c2dabb027685cf29081093767e/descriptions/api.github.com/api.github.com.json at commit 7bdf5f00553689c2dabb027685cf29081093767e; source SHA-256 d3fb629730461a399929f5eb71406dd8b89e9ab7698918dfdb45f4b7b1d7c745.
-    - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
+    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/7bdf5f00553689c2dabb027685cf29081093767e/descriptions/api.github.com/api.github.com.json at commit 7bdf5f00553689c2dabb027685cf29081093767e; entry source SHA-256 d3fb629730461a399929f5eb71406dd8b89e9ab7698918dfdb45f4b7b1d7c745.
     - Preserved existing APIs.guru curation metadata from APIs/github.com/api.github.com/1.1.4/openapi.yaml.
+    - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 tags:
   - description: Endpoints to manage GitHub Actions using the REST API.
     name: actions
@@ -229766,7 +229766,7 @@ components:
               name: Uncontrolled Resource Consumption
           epss:
             percentage: 0.00045
-            percentile: 0.16001e0
+            percentile: '0.16001e0'
           credits:
             - user:
                 login: octocat
@@ -232637,7 +232637,7 @@ components:
                 score: 8.7
             epss:
               percentage: 0.00045
-              percentile: 0.16001e0
+              percentile: '0.16001e0'
             cwes:
               - cwe_id: CWE-200
                 name: Exposure of Sensitive Information to an Unauthorized Actor
@@ -247294,7 +247294,7 @@ components:
                 score: 8.7
             epss:
               percentage: 0.00045
-              percentile: 0.16001e0
+              percentile: '0.16001e0'
             cwes:
               - cwe_id: CWE-200
                 name: Exposure of Sensitive Information to an Unauthorized Actor
@@ -247497,7 +247497,7 @@ components:
               score: 8.5
           epss:
             percentage: 0.00045
-            percentile: 0.16001e0
+            percentile: '0.16001e0'
           cwes:
             - cwe_id: CWE-532
               name: Insertion of Sensitive Information into Log File
