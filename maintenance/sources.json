@@ -167,6 +167,41 @@
       "priority": "high"
     },
     {
+      "id": "sentry",
+      "provider": "sentry.io",
+      "target": "APIs/sentry.io/v0/openapi.yaml",
+      "github": {
+        "repository": "getsentry/sentry-api-schema",
+        "ref": "main",
+        "path": "openapi-derefed.json"
+      },
+      "discovery": "Follow the maintained official Sentry public API artifact. The vendor provides this dereferenced JSON with fixed version v0; compare full content rather than only endpoint counts or version. Other Sentry APIs need separate audits.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "intercom",
+      "provider": "intercom.com",
+      "target": "APIs/intercom.com/2.14/openapi.yaml",
+      "github": {
+        "repository": "intercom/Intercom-OpenAPI",
+        "ref": "main",
+        "path": "descriptions/2.16/api.intercom.io.yaml",
+        "release_catalog": {
+          "kind": "numeric-directories",
+          "directory": "descriptions",
+          "filename": "api.intercom.io.yaml",
+          "minimum_version": "2.16"
+        }
+      },
+      "discovery": "The official docs select public release 2.16 on 2026-10-02 and list Preview separately. Discover canonical major.minor release directories from the same pinned repository revision; exclude Preview (directory 0), prerelease names and versions below the reviewed minimum. Verify future selected releases against vendor docs before manual import/merge.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "patches": [
+        "maintenance/patches/intercom.json"
+      ]
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

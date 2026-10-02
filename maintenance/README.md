@@ -129,3 +129,22 @@ The weekly GitHub workflow runs tests and publishes the configured-source report
 snapshots. PRs changing the updater run its tests without network access. Automated PR
 creation and monthly discovery have not been implemented yet; the one-week Codex
 follow-up carries out that implementation and manual API delivery independently.
+
+Reviewed GitHub sources can use a `release_catalog` recipe of kind
+`numeric-directories`, with a repository-relative `directory`, `filename` and
+`minimum_version`. This policy is only for vendor catalogs where canonical `major.minor`
+directories denote published versions. It selects numerically (2.100 after 2.18), excludes
+prerelease names and older releases, and rejects empty, inconsistent or potentially
+truncated catalogs. Both the catalog and selected description come from the same pinned
+commit. The declared `info.version` must match the directory. The complete catalog response
+and its hash are cached and the release selection is recorded in the imported provenance.
+There is no fallback to the old configured path when discovery fails. External bundling
+or code-sample recipes combined with catalog selection need explicit future support.
+
+Intercom uses this recipe: official documentation selects release 2.16, with Preview
+listed separately (repository directory `0`). Future discovered versions still need their
+public-release status checked before manual import/merge. Two exact parameter-list patches
+retain all vendor headers/query parameters and restore the required string
+`job_identifier` path parameter for reporting status/download, as in the earlier 2.14
+import. Changed lists or operation context stop replay for recipe review. Sentry's
+dereferenced public description is also registered, with fixed declared version `v0`.

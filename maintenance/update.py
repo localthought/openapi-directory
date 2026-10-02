@@ -19,6 +19,7 @@ import yaml
 from openapi_spec_validator import validate
 import bundle
 import samples
+import releases
 
 ROOT = Path(__file__).resolve().parents[1]
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
@@ -114,6 +115,7 @@ def request(url):
 
 
 def fetch(source):
+    catalog = None
     if "github" in source:
         config = source["github"]
         repository = config["repository"]
@@ -122,12 +124,19 @@ def fetch(source):
         revision = json.loads(raw_commit)["sha"]
         if not re.fullmatch(r"[0-9a-f]{40}", revision):
             raise ValueError("Invalid source revision")
-        url = "https://raw.githubusercontent.com/" + repository + "/" + revision + "/" + config["path"]
+        path = config["path"]
+        if config.get("release_catalog"):
+            if source.get("bundling") or source.get("code_samples"):
+                raise ValueError("Release catalogs with external artifact recipes require explicit support")
+            path, catalog = releases.select(config, revision, request)
+        url = "https://raw.githubusercontent.com/" + repository + "/" + revision + "/" + path
     else:
         revision = None
         url = source["url"]
     raw, metadata = request(url)
     metadata.update(revision=revision, sha256=sha256(raw), fetched_at=now())
+    if catalog:
+        metadata["release_catalog"] = catalog
     return raw, metadata
 
 
@@ -313,6 +322,12 @@ def import_document(source, new, metadata, old):
     result["info"]["x-conversion"] = [
         "Fetched from " + metadata["url"] + revision + "; entry source SHA-256 " + metadata["sha256"] + ".",
     ]
+    if metadata.get("release_catalog"):
+        catalog = metadata["release_catalog"]
+        result["info"]["x-conversion"].append(
+            "Selected numeric release " + catalog["selected_version"] + " from the reviewed vendor catalog "
+            + catalog["url"] + "; catalog SHA-256 " + catalog["sha256"]
+            + ". Preview/prerelease directories and releases below " + catalog["minimum_version"] + " are excluded.")
     result["info"]["x-conversion"].extend(metadata.get("transformations", []))
     if old:
         result["info"]["x-conversion"].append("Preserved existing APIs.guru curation metadata from " + source["target"] + ".")
@@ -341,6 +356,8 @@ def cache_snapshot(cache, source_id, raw, metadata):
     cached.mkdir(parents=True, exist_ok=True)
     (cached / "source").write_bytes(raw)
     (cached / "fetch.json").write_text(json.dumps(metadata, indent=2) + "\n")
+    if metadata.get("release_catalog"):
+        (cached / "release-catalog.json").write_bytes(metadata["release_catalog"]["response_text"].encode("utf-8"))
 
 
 def prepare_document(source, raw, metadata=None, cache=None):
@@ -354,6 +371,9 @@ def prepare_document(source, raw, metadata=None, cache=None):
         raw, step = bundle.prepare(source, raw, metadata, cache, request, Loader)
         transformations.append(step)
     spec = parse(raw)
+    if metadata and metadata.get("release_catalog"):
+        if spec["info"]["version"] != metadata["release_catalog"]["selected_version"]:
+            raise ValueError("Declared API version does not match the selected release directory")
     if source.get("code_samples"):
         if metadata is None or cache is None:
             raise ValueError("Code samples require fetch metadata and a source cache")
