@@ -292,6 +292,33 @@ def destination(source, spec):
     return target.parent.parent / version / "openapi.yaml"
 
 
+def baseline(source, spec, base):
+    dest = str(destination(source, spec))
+    current = stored(dest, base)
+    if current is not None:
+        return dest, current
+    return source["target"], stored(source["target"], base)
+
+
+def advance_target(manifest, source, dest):
+    """Plan a reviewed baseline change without reformatting unrelated configuration."""
+    if str(dest) == source["target"]:
+        return None
+    original = manifest.read_bytes()
+    document = json.loads(original)
+    matches = [row for row in document["sources"] if row["id"] == source["id"]]
+    if len(matches) != 1 or matches[0] != source:
+        raise ValueError("Source configuration changed during import; retry after review")
+    old_token = json.dumps(source["target"]).encode()
+    if original.count(old_token) != 1:
+        raise ValueError("Ambiguous target in manifest; update the reviewed baseline manually")
+    updated = original.replace(old_token, json.dumps(str(dest)).encode(), 1)
+    matches[0]["target"] = str(dest)
+    if json.loads(updated) != document:
+        raise ValueError("Manifest target update changed unrelated configuration")
+    return original, updated
+
+
 def preserve_curation(old, new):
     result = copy.deepcopy(new)
     if old:
@@ -447,10 +474,9 @@ def audit(source, base, cache, health_checker=None):
         metadata["transformations"] = transformations
         cache_snapshot(cache, source["id"], raw, metadata)
         dest = str(destination(source, spec))
-        # Once a new version lands, compare that version rather than forever
-        # comparing the old manifest target and generating duplicate updates.
-        old = stored(dest, base) or stored(source["target"], base)
-        result.update(compare(old, spec), fetch=metadata, destination=dest)
+        baseline_path, old = baseline(source, spec, base)
+        result.update(compare(old, spec), fetch=metadata, destination=dest,
+                      baseline=baseline_path)
         result["last_successful_comparison"] = now()
         result["validation_errors"] = validate_document(spec)
         if not result["validation_errors"]:
@@ -515,8 +541,18 @@ def main(argv=None):
         cache_snapshot(args.cache, source["id"], raw, metadata)
         dest = destination(source, spec)
         old_dest = stored(str(dest), args.base)
-        old = old_dest or stored(source["target"], args.base)
+        baseline_path, old = baseline(source, spec, args.base)
+        manifest_change = advance_target(args.manifest, source, dest)
         if old_dest and compare(old_dest, spec)["status"] == "matches_source":
+            if manifest_change:
+                errors = validate_document(spec)
+                if errors:
+                    raise ValueError("Import blocked:\n" + "\n".join(errors))
+                if args.manifest.read_bytes() != manifest_change[0]:
+                    raise ValueError("Manifest changed during validation; refusing to advance target")
+                args.manifest.write_bytes(manifest_change[1])
+                print("Source already matches; advanced the manifest target to " + str(dest))
+                return 0
             print("Already matches the source; no file written.")
             return 0
         output = ROOT / dest
@@ -524,11 +560,14 @@ def main(argv=None):
             expected = git("show", args.base + ":" + str(dest)) if old_dest else None
             if expected != output.read_bytes():
                 raise ValueError("Refusing to overwrite local changes: " + str(dest))
-        result = import_document(source, spec, metadata, old,
-                                 str(dest) if old_dest else source["target"])
+        result = import_document(source, spec, metadata, old, baseline_path)
         serialized = serialize_document(result)
+        if manifest_change and args.manifest.read_bytes() != manifest_change[0]:
+            raise ValueError("Manifest changed during validation; refusing to write the import")
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(serialized)
+        if manifest_change:
+            args.manifest.write_bytes(manifest_change[1])
         print(str(dest))
         print(json.dumps(compare(old, spec), indent=2))
         return 0

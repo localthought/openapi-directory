@@ -52,6 +52,7 @@ def render(document):
         health = row.get("source_health_check", {})
         lines.extend(["", "## " + text(row["id"]), "",
                       "- Target: " + text(row.get("destination", row.get("target"))),
+                      "- Comparison/curation baseline: " + text(row.get("baseline")),
                       "- Comparison base revision: " + text(row.get("base_revision")),
                       "- API coverage: " + text(row.get("coverage")),
                       "- Source: " + text(fetch.get("url")),

@@ -33,7 +33,7 @@
     {
       "id": "plaid",
       "provider": "plaid.com",
-      "target": "APIs/plaid.com/2020-09-14_1.345.1/openapi.yaml",
+      "target": "APIs/plaid.com/2020-09-14_1.740.1/openapi.yaml",
       "github": {"repository": "plaid/plaid-openapi", "ref": "master", "path": "2020-09-14.yml"},
       "discovery": "Follow the maintained stable artifact; its filename is the API date, while info.version also contains the SDK release.",
       "version_policy": "vendor",
@@ -42,7 +42,7 @@
     {
       "id": "xero-accounting",
       "provider": "xero.com",
-      "target": "APIs/xero.com/xero_accounting/2.9.4/openapi.yaml",
+      "target": "APIs/xero.com/xero_accounting/19.1.0/openapi.yaml",
       "github": {"repository": "XeroAPI/Xero-OpenAPI", "ref": "master", "path": "xero_accounting.yaml"},
       "discovery": "Follow the official Accounting artifact; discover other Xero services separately.",
       "patches": ["maintenance/patches/xero-accounting.json"],
@@ -170,7 +170,7 @@
     {
       "id": "stripe",
       "provider": "stripe.com",
-      "target": "APIs/stripe.com/2026-08-26.dahlia/openapi.yaml",
+      "target": "APIs/stripe.com/2026-09-30.endive/openapi.yaml",
       "github": {
         "repository": "stripe/openapi",
         "ref": "master",
@@ -183,7 +183,7 @@
     {
       "id": "figma",
       "provider": "figma.com",
-      "target": "APIs/figma.com/0.42.0/openapi.yaml",
+      "target": "APIs/figma.com/0.43.0/openapi.yaml",
       "github": {
         "repository": "figma/rest-api-spec",
         "ref": "main",
@@ -236,7 +236,7 @@
     {
       "id": "intercom",
       "provider": "intercom.com",
-      "target": "APIs/intercom.com/2.14/openapi.yaml",
+      "target": "APIs/intercom.com/2.16/openapi.yaml",
       "github": {
         "repository": "intercom/Intercom-OpenAPI",
         "ref": "main",
