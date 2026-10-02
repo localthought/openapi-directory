@@ -11,11 +11,11 @@ info:
     url: https://spdx.org/licenses/MIT
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/70d74db6722480bad239eba2f049ff3c98744c5f/descriptions/2.16/api.intercom.io.yaml
+      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/7b3a218f2b8a9c09ae24247270c764444cddaf70/descriptions/2.16/api.intercom.io.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/70d74db6722480bad239eba2f049ff3c98744c5f/descriptions/2.16/api.intercom.io.yaml at commit 70d74db6722480bad239eba2f049ff3c98744c5f; entry source SHA-256 3274c2255a71c18f38fc146cf316c332503973f5adf0b5ca117f2c409971a4e3.
-    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=70d74db6722480bad239eba2f049ff3c98744c5f; catalog SHA-256 696240e93fa4cb6c584500bf208a55ed0842f21cae22b4254d82c2fe0351c930. Preview/prerelease directories and releases below 2.16 are excluded.
+    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/7b3a218f2b8a9c09ae24247270c764444cddaf70/descriptions/2.16/api.intercom.io.yaml at commit 7b3a218f2b8a9c09ae24247270c764444cddaf70; entry source SHA-256 e007fe1902ceaa64e6dbaedfc064f2a2e4fc24bab6c86cf1c8f6900c2b0c42ca.
+    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=7b3a218f2b8a9c09ae24247270c764444cddaf70; catalog SHA-256 2fc7ecaaf2afc73ad4b583cc43d93a349adfea67a136d092e91aaa225aa4fd11. Preview/prerelease directories and releases below 2.16 are excluded.
     - 'Applied maintenance/patches/intercom.json (SHA-256 6e2c3a0ec38f7a2b39e9d6f6428219c15fbf014c03bd3d5774bddfcd7212c2db): GET /export/reporting_data/{job_identifier} and GET /download/reporting_data/{job_identifier} omit the required path parameter. Add the same required string job_identifier path declaration used in the validated 2.14 import; retain every vendor query/header parameter and assert each complete original list plus operation summary/tags. No endpoint or response schema is invented.'
     - Preserved existing APIs.guru curation metadata from APIs/intercom.com/2.16/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
@@ -7232,10 +7232,7 @@ paths:
       description: 'Delete a single company.
 
 
-        This endpoint does not permanently remove the company. It archives the company record and detaches any contacts attached to it; the contacts themselves are not deleted. A `company.deleted` webhook is sent once archival completes.
-
-
-        The endpoint returns `200` with `"deleted": true` as soon as the request is accepted — archival is processed asynchronously.
+        The company record is kept in your workspace, but all contacts are detached. The contacts themselves are not deleted. Detaching contacts is permanent and can''t be reversed. A `company.deleted` webhook is sent when the company is deleted. These changes may take some time to be reflected in your workspace.
 
 
         {% admonition type="warning" %}
