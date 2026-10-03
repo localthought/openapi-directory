@@ -5,7 +5,7 @@ including both public GitHub REST descriptions. It does not claim coverage of th
 entire directory, discover every vendor release, generate PRs, or merge them. Those remain explicit follow-up work
 in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
 
-Use Python 3.9+, Node.js 22.12+ (CI uses Node 24), and the pinned dependencies:
+Use Python 3.10+, Node.js 22.12+ (CI uses Node 24), and the pinned dependencies:
 
 ```sh
 python3 -m venv /tmp/openapi-maintenance-venv
@@ -16,7 +16,7 @@ git fetch origin main
 /tmp/openapi-maintenance-venv/bin/python maintenance/update.py check
 ```
 
-`requirements.in` records the two direct dependencies; `requirements.txt` pins their
+`requirements.in` records the direct dependencies; `requirements.txt` pins their
 transitive dependencies too. `package-lock.json` pins the Redocly bundler package and its
 integrity; that release includes its runtime dependencies. Update and test both locks
 deliberately. GitHub Actions are
@@ -70,6 +70,32 @@ and the last successful source-health check; failed attempts preserve that succe
 An observed archive is a successful health check with an adverse finding. Previous successful
 dates never stand in for a failed current observation. Import commands repeat the health check
 before fetching or writing an artifact. These checks do not edit spec timestamps or remove APIs.
+
+Validation pins `openapi-spec-validator` and `openapi-schema-validator` 0.9.0 with
+`regress` 2026.9.1, using the schema validator's [official ECMAScript regex extra](https://github.com/python-openapi/openapi-schema-validator/blob/0.9.0/README.rst).
+Pattern syntax and default-value matching use ECMAScript semantics with no flags,
+including named captures and legacy identity escapes. No Unicode flag is inferred;
+that would change matching and reject some vendor patterns. Regression cases compare
+these semantics with Node's `new RegExp(pattern)`. A missing backend or changed reviewed
+validator/engine pin fails validation rather than falling back to Python regex.
+
+`validation.py` selects the Python jsonschema document backend explicitly and subclasses
+the pinned spec validators' schema keyword. Its only traversal change makes upstream
+property collection iterative with a visited-object guard over the same edges
+(`allOf`, `anyOf`, `oneOf`, `items`, `not`). This avoids infinite cycles while retaining
+required-property, schema/default, reference and document checks. It does not rewrite
+schemas, raise recursion limits, disable formats or modify global validator classes.
+Both OpenAPI 3.0 and 3.1 are covered by regressions; boolean schemas remain supported in
+3.1, and its discriminator remains an annotation. Imports record the validation profile
+in provenance; reports show it alongside actual success/error observations. Review the
+adapter and tests whenever upgrading its pinned upstream APIs. OpenAPI 3.2 import support
+remains outside the current updater scope.
+
+The stricter 3.1 schema checks expose Cohere's existing invalid
+`components.schemas.TruncationStrategy.oneOf: []` (official source commit
+`734aafbe1fe2ca5c7356609009ec0d9b74e6ac57`). It still matches its source, but validation
+blocks another import. No union alternatives are invented and no validation is waived.
+Look for a vendor correction; other existing source-specific defects remain reported.
 
 Import one service on its own branch, widening the sparse cone first if necessary:
 
