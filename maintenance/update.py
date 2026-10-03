@@ -23,6 +23,7 @@ import releases
 import report
 import health
 import conversion
+import response_keys
 
 ROOT = Path(__file__).resolve().parents[1]
 VALIDATION_DESCRIPTION = (SCHEMA_VALIDATION_DESCRIPTION
@@ -470,6 +471,8 @@ def prepare_document(source, raw, metadata=None, cache=None):
         raw, step = bundle.prepare(source, raw, metadata, cache, request, Loader)
         transformations.append(step)
     spec = parse(raw)
+    if "yaml_response_keys" in source:
+        transformations.append(response_keys.prepare(source, spec))
     if metadata and metadata.get("release_catalog"):
         if spec["info"]["version"] != metadata["release_catalog"]["selected_version"]:
             raise ValueError("Declared API version does not match the selected release directory")
