@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `993b3372f` (PR #130 merged):
-729 provider domains; 4,265 files under `APIs/`, including 2,091
+**Last updated**: 2026-10-03. Audit of `origin/main` at `8ec1aa871` (PR #133 merged):
+729 provider domains; 4,266 files under `APIs/`, including 2,092
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -151,6 +151,7 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #126 / #127 | Twilio classic REST monitoring / refresh | Declared version reset to 1.0.0; 121 paths / 197 ops, +3 paths/ops and private healthcheck omitted; history retained |
 | #129 | Twilio Messaging monitoring | Public resource-management artifact, including vendor-labelled Public Beta configuration; 30 registered artifacts / 29 services |
 | #130 | Twilio Messaging delivery guard | Fully validated 32-path / 58-op import retained locally; owner review needed for published example flagged by push protection |
+| #132 / #133 | Twilio Verify v2 monitoring / refresh | 33 paths / 57 ops, four private-beta Passkeys additions, none removed; actual vendor 1.0.0, history/curation retained |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1346,13 +1347,67 @@ are updated. Recover the durable `official-source-audit` artifact after reboot.
 #130's [CI 37138872113](https://github.com/ontola/openapi-directory/actions/runs/37138872113)
 also passed all 74 tests; its guarded manifest retains the stored `1.55.0` target.
 
-Next independent freshness lead: Twilio Verify v2 already exists at
-`APIs/twilio.com/twilio_verify_v2/1.55.0/openapi.yaml` and cites
-`twilio/twilio-oai/main/spec/json/twilio_verify_v2.json`. The existing metadata was
-read from fetched main, but its current artifact was **not fetched/compared or registered**
-in this run. Review lifecycle, full source changes and example protection independently;
-do not assume the Messaging blocker applies to every product, or retry its rejected
-push while awaiting the user's decision. All other parked items remain parked.
+**Twilio Verify v2 completed (#132/#133, 2026-10-03):**
+#132 registers the exact official `twilio/twilio-oai/spec/json/twilio_verify_v2.json`
+already cited by the stored `1.55.0` file. [CI 37143912190](https://github.com/ontola/openapi-directory/actions/runs/37143912190)
+and the local suite pass all 74 tests. Source revision
+`218b7821602a93ae63e83e20ab5e8637e870250f`, entry SHA-256
+`10559c28858caa9b00620ebec400aded2aaebe4ff6e4215ec00396df0ffda52c`.
+OpenAPI `3.0.1`, declared `1.0.0`. Both historical raw artifacts confirm the same
+`1.56.1` → `1.0.0` reset at vendor PR 111; do not use repository release `2.8.3`
+or numeric directory ordering to infer freshness.
+
+#133 adds `APIs/twilio.com/twilio_verify_v2/1.0.0/openapi.yaml` (8987 lines), retaining
+historical `1.55.0` bytes and advancing only this manifest target. **29 / 53 → 33 paths /
+57 operations**, four added paths/ops and **none removed**. All are POST under
+`/v2/Services/{ServiceSid}/Passkeys/`: ApproveChallenge, Challenges, Factors, VerifyFactor.
+The [Verify overview](https://www.twilio.com/docs/verify/api) selects v2; the
+[Passkeys overview](https://www.twilio.com/docs/verify/passkeys) explicitly labels Passkeys
+**private beta**. This refresh follows the same broad public artifact already stored;
+it is not a stable-only subset. Manifest/discovery/coverage reports and README record
+that limitation. Removed old maturity annotations and the OAD project's GA label do not
+establish feature graduation. Other Twilio service/preview artifacts and TwiML are separate.
+
+Full vendor changes include Passkeys/WhatsApp service settings, SNA client-token parameters,
+verification-check Templates, RBM attempt-channel enum values, composed nullable references,
+descriptions/examples and explicit top-level Basic authentication. The 45 schema keys are
+unchanged. No source patches, maturity reconstruction, conversion or bundling. All curation
+and historical bytes survive; strict schema/reference/path/response/security-name validation,
+full parsed vendor equality, exact raw hash/revision and typed YAML roundtrip pass.
+[Import CI 37144008055](https://github.com/ontola/openapi-directory/actions/runs/37144008055)
+passes 74 tests. Published account-SID examples use one repeated-character placeholder;
+the push succeeded with source examples unchanged and no protection bypass. Messaging's
+separate source-specific blocker remains pending the user's response; it was not retried.
+
+Reproduction scratch files: `/tmp/twilio-verify-import.log`,
+`/tmp/verify-twilio-verify-import.py`, `/tmp/twilio-verify-import-verification.log`,
+`/tmp/twilio-verify-content-diff.json`. Recover from pinned sources/CI evidence after reboot.
+The registry now monitors **31 artifacts / 30 services**. Fetched main `8ec1aa871`
+(after #133) has **729 domains / 4266 API files / 2092 openapi.yaml / 2168 swagger.yaml**;
+these are dated counts, not live inventory.
+
+Expanded [audit 37144078955](https://github.com/ontola/openapi-directory/actions/runs/37144078955)
+at main `8ec1aa87184c1e59e1466b88e0199b4d83d009ba` passes 74 tests and fetches/prepares all
+31 artifacts: **26 validated source matches / five known blockers** (Cohere, Square,
+archived Slack, native Meraki, Twilio Messaging delivery). No new fetch/prepare failures
+or unblocked drift. Verify matches at 33 / 57; its coverage explicitly records private-beta
+Passkeys. Messaging remains valid but publication-blocked. Twenty unique repository-health
+snapshots were checked; hosted Hugging Face remains unassessed by this repository checker.
+The audit's expected nonzero exit is caused by those blockers; tests, readable summary and
+complete artifact upload succeed. Both reports, all 31 raw entry hashes, all 20 repository
+metadata hashes, validation profiles, actual comparison base and classifications were
+downloaded/verified at `/tmp/openapi-ci-audit-37144078955`. Ignored local reports/health
+snapshots are updated. Recover the durable `official-source-audit` artifact after reboot.
+
+Next independent freshness lead: Asana already exists at
+`APIs/asana.com/1.0/openapi.yaml` with **126 paths / 167 operations**. Its recorded
+`x-origin` and vendor description cite
+`https://raw.githubusercontent.com/Asana/developer-docs/master/defs/asana_oas.yaml`.
+The current source/repository was **not fetched/compared, ownership/lifecycle checked
+or registered** in this run. Inspect the official repo root/branches and current public
+docs before dismissing a guessed 404 or substituting sources. Fixed `1.0` requires full
+content/removal comparison and preserved curation; do not mistake sparse checkout for
+missing coverage. All parked items and the Messaging publication decision remain pending.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
