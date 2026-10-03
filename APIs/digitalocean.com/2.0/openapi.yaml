@@ -10,17 +10,18 @@ info:
     name: DigitalOcean API Team
     email: api-engineering@digitalocean.com
   termsOfService: https://www.digitalocean.com/legal/terms-of-service-agreement/
-  x-providerName: digitalocean.com
   x-apisguru-categories:
     - hosting
+  x-providerName: digitalocean.com
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/digitalocean/openapi/0267e38174220ec9ae115185ccb9717b3909c89a/specification/DigitalOcean-public.v2.yaml
+      url: https://raw.githubusercontent.com/digitalocean/openapi/4a87b3bd8e541f72450c426cf4ba197724b0e479/specification/DigitalOcean-public.v2.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/digitalocean/openapi/0267e38174220ec9ae115185ccb9717b3909c89a/specification/DigitalOcean-public.v2.yaml at commit 0267e38174220ec9ae115185ccb9717b3909c89a; entry source SHA-256 10fc8825506628176d9d0161e3eda83244da7341f4e860137a828f48e71f1b6e.
-    - Bundled 3134 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 21 warnings. Source-file snapshot SHA-256 4cf7aea93b7f706ae722b4bfd65fc581573999114edb6effce4e2d9d199bfb52.
+    - Fetched from https://raw.githubusercontent.com/digitalocean/openapi/4a87b3bd8e541f72450c426cf4ba197724b0e479/specification/DigitalOcean-public.v2.yaml at commit 4a87b3bd8e541f72450c426cf4ba197724b0e479; entry source SHA-256 10fc8825506628176d9d0161e3eda83244da7341f4e860137a828f48e71f1b6e.
+    - Bundled 3134 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 21 warnings. Source-file snapshot SHA-256 2e022194ed65ecc9481e3f54677491e8fd7b807ae2ac57c6996490512f100d92.
     - 'Applied maintenance/patches/digitalocean.json (SHA-256 1a05c8c6a246c2d44570f685f0fd35f40779184872612e7b8d53fe2355d61759): Removed only the invalid null defaults from chat_completion_request.stop and create_response_request.stop: each oneOf admits strings or arrays, so null does not satisfy the declared alternatives. All types, alternatives, nullable annotations, and other constraints are preserved; no replacement default or server behavior is invented.'
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/digitalocean.com/2.0/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 servers:
@@ -31341,8 +31342,6 @@ paths:
             default: EVALUATION_DATASET_TYPE_UNKNOWN
             enum:
               - EVALUATION_DATASET_TYPE_UNKNOWN
-              - EVALUATION_DATASET_TYPE_ADK
-              - EVALUATION_DATASET_TYPE_NON_ADK
               - EVALUATION_DATASET_TYPE_MODEL
             type: string
         - description: Filter by evaluation dataset paradigm (row/content shape).
@@ -60715,8 +60714,6 @@ components:
       default: EVALUATION_DATASET_TYPE_UNKNOWN
       enum:
         - EVALUATION_DATASET_TYPE_UNKNOWN
-        - EVALUATION_DATASET_TYPE_ADK
-        - EVALUATION_DATASET_TYPE_NON_ADK
         - EVALUATION_DATASET_TYPE_MODEL
       example: EVALUATION_DATASET_TYPE_UNKNOWN
       type: string
@@ -62444,7 +62441,7 @@ components:
       description: Run an evaluation test case.
       properties:
         agent_deployment_names:
-          description: Agent deployment names to run the test case against (ADK agent workspaces).
+          description: Agent deployment names to run the test case against.
           example:
             - example string
           items:
