@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `8ec1aa871` (PR #133 merged):
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `caa19c1cf` (PR #136 merged):
 729 provider domains; 4,266 files under `APIs/`, including 2,092
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -152,6 +152,8 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #129 | Twilio Messaging monitoring | Public resource-management artifact, including vendor-labelled Public Beta configuration; 30 registered artifacts / 29 services |
 | #130 | Twilio Messaging delivery guard | Fully validated 32-path / 58-op import retained locally; owner review needed for published example flagged by push protection |
 | #132 / #133 | Twilio Verify v2 monitoring / refresh | 33 paths / 57 ops, four private-beta Passkeys additions, none removed; actual vendor 1.0.0, history/curation retained |
+| #135 | Asana REST monitoring / response-code key repair | Maintained official source replaces archive; checked JSON representation; 79 tests pass |
+| #136 | Asana REST `1.0` refresh | Fixed version; 177 paths / 251 ops; 52 paths / 87 ops added, one path / three ops moved/renamed; curation retained |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1399,15 +1401,10 @@ metadata hashes, validation profiles, actual comparison base and classifications
 downloaded/verified at `/tmp/openapi-ci-audit-37144078955`. Ignored local reports/health
 snapshots are updated. Recover the durable `official-source-audit` artifact after reboot.
 
-Next independent freshness lead: Asana already exists at
-`APIs/asana.com/1.0/openapi.yaml` with **126 paths / 167 operations**. Its recorded
-`x-origin` and vendor description cite
-`https://raw.githubusercontent.com/Asana/developer-docs/master/defs/asana_oas.yaml`.
-The current source/repository was **not fetched/compared, ownership/lifecycle checked
-or registered** in this run. Inspect the official repo root/branches and current public
-docs before dismissing a guessed 404 or substituting sources. Fixed `1.0` requires full
-content/removal comparison and preserved curation; do not mistake sparse checkout for
-missing coverage. All parked items and the Messaging publication decision remain pending.
+Asana's maintained official source is now registered (#135) and its fixed `1.0`
+REST artifact is refreshed (#136); do not repeat its import or archived-source search.
+Current evidence and independent discovery leads are recorded at the end of this file.
+All parked items and the Messaging publication decision remain pending.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
@@ -1531,8 +1528,8 @@ re-fetch main and inspect open PRs before continuing. Do not repeat completed im
   on actionable drift, failures, or decisions; avoid repetitive unchanged-status updates.
 
 
-**Asana source migration / representation repair (2026-10-03):** The stored
-`APIs/asana.com/1.0/openapi.yaml` has 126 paths / 167 operations. Its old source
+**Asana source migration / representation repair (2026-10-03):** The original stored
+`APIs/asana.com/1.0/openapi.yaml` had 126 paths / 167 operations. Its old source
 `Asana/developer-docs` redirects to `AsanaArchive/developer-docs`, archived 2025-02-24.
 The archived README explicitly points to [Asana/openapi](https://github.com/Asana/openapi).
 The [current public REST overview](https://developers.asana.com/reference/rest-api-reference)
@@ -1564,7 +1561,7 @@ public references before importing and record these as specification route chang
 not proof of runtime retirement. Infrastructure registration is separate from the API PR.
 
 
-**Asana REST import verified (2026-10-03, updater infrastructure #135 merged):**
+**Asana REST import completed (2026-10-03 UTC, #135/#136 merged):**
 The fixed `1.0` description is refreshed in place to **177 paths / 251 operations**:
 **52 paths / 87 operations added, one path / three operations removed**. All removals
 are published route changes, with operation IDs retained: GET/DELETE status updates
@@ -1599,30 +1596,69 @@ must not be represented as validating this addition. Messaging's publication dec
 still pending; no rejected push was retried.
 
 
-**Asana delivery blocker / resume first (2026-10-03 ~21:54 UTC):** Infrastructure
-[PR #135](https://github.com/ontola/openapi-directory/pull/135) is merged at
-`2f4c1a66a`; all 79 CI tests pass. The fully verified API import is committed on
-`codex/refresh-asana-rest`, commit `b58c91d9f59c6a10178916e7948793809edae46d`, and its
-push succeeded with vendor examples unchanged, no protection bypass. This branch changes
-only the Asana spec and this progress document. The worktree stays on that branch so
-these delivery notes are visible on resume; do not reset or replace its commits.
+**Asana delivery recovered (2026-10-03 23:02 UTC):** GitHub recovered after the earlier
+502/503/timeouts. Both GraphQL and REST branch-specific all-state PR searches confirmed
+that the stalled attempt had created no PR; no existing PR was duplicated. The exact remote
+head `825a0d8ee653b32719a7edb761776a73aa81ae28` matched the local branch, including its
+additional handoff notes. Re-fetching the maintained Asana source confirmed unchanged
+revision/hash, complete validation and live repository health. [PR #136](https://github.com/ontola/openapi-directory/pull/136)
+was created, attached, verified CLEAN/MERGEABLE with exactly the Asana spec and AGENTS.md,
+and merged with an exact-head guard. Merge commit `caa19c1cf7c4b931b51ac86d64e42be126c8a7cb`.
+The API-only PR had no infrastructure CI checks because of the workflow path filter;
+post-merge audit below verifies all 79 tests and the actual imported main. The creation
+uncertainty and GitHub delivery outage are resolved. Do not retry creation or import.
 
-PR creation was attempted with `/tmp/openapi-pr-asana-refresh.md` but never returned
-success. GitHub API reads timed out (15/25-second bounded requests returned zero bytes),
-and the GitHub pull-list page returned HTTP 503. The stalled create/read processes were
-terminated after several minutes; **creation outcome is unconfirmed**. No API PR is known
-merged, no merge was attempted, and no post-import full audit was dispatched. An assumed
-#136 attachment was removed because the URL could not be verified; do not treat #136 as
-an existing PR without checking. Inspect open/closed PRs by the exact branch and commit
-before retrying creation; attach an existing matching API PR if one was created. If none
-exists, create one from the already-pushed branch/body. Recheck exact file list, current
-head and mergeability, then merge under standing authorization. Push these additional
-handoff notes if needed; review current local/remote head differences first.
+**Expanded network audit verified (2026-10-03 UTC; local 2026-10-04):**
+[Run 37160446576](https://github.com/ontola/openapi-directory/actions/runs/37160446576)
+at main `caa19c1cf7c4b931b51ac86d64e42be126c8a7cb` passes all **79 tests**, fetches/prepares
+all **32 registered artifacts / 31 services**, and reports **27 validated source matches /
+five known import blockers**: Cohere, Square, archived Slack, native Meraki and Twilio
+Messaging delivery. No new fetch/prepare failures or unblocked drift. Asana matches at
+177 / 251 with zero errors and the recorded 1,556-key transformation. Its coverage retains
+preview/beta limitations. Twilio Messaging is still valid but push-protection-blocked;
+its pending owner choice was neither answered nor retried. All other parked items remain.
 
-After confirmed merge, dispatch the read-only full maintenance workflow against main.
-Expect 32 sources: Asana should match at 177 paths / 251 ops with zero errors and a
-recorded response-key transformation. Other five known blockers remain separate. Verify
-the reports and source/hash/health snapshots before recording actual results; the last
-verified full audit remains 37144078955 (31 sources at main 8ec1aa871). GitHub delivery
-outage is separate from an API validation error or the pending Twilio Messaging owner
-choice. No duplicate API import, extra recurring automation or protection retry was made.
+The audit's expected nonzero exit comes from these known blockers. Test job, readable
+summary publication and complete artifact upload succeeded. Both reports, all 32 entry
+hashes and 21 distinct repository-health metadata hashes, validation profiles, actual
+comparison base, classifications and the Asana-specific row were downloaded and verified
+at `/tmp/openapi-ci-audit-37160446576`; ignored local reports/health snapshots are updated.
+Verifier/log: `/tmp/verify-asana-full-audit.py`, `/tmp/asana-audit-verification.log`.
+Recover the durable `official-source-audit` workflow artifact after reboot. The fetched
+main inventory remains 729 domains / 4266 API files / 2092 openapi.yaml / 2168 swagger.yaml;
+Asana is an in-place refresh, not a new provider/version directory.
+
+**Independent discovery queue (2026-10-04 local):**
+- **OpenRouter** is missing from the full fetched main tree (domain/service/brand search).
+  Its [official API overview](https://openrouter.ai/docs/api_reference/overview) explicitly
+  links `https://openrouter.ai/openapi.json` and `.yaml`. The JSON fetched at
+  `2026-10-03T23:39:02.409720+00:00` is OpenAPI 3.1.0, declared 1.0.0, **113 paths / 151
+  operations**, hash `8d4747322d09b4848572dc30bdb713b3e74e6f0642dc8507482ce58154324f4a`.
+  No external references; hosted source has no revision/ETag/Last-Modified. It is a vendor
+  description of OpenRouter's own routing service, not those underlying model vendors'
+  APIs or a generic OpenAI protocol import. **Not registered/imported**: strict validation
+  rejects boolean `exclusiveMaximum`/`exclusiveMinimum` in four schemas, which require
+  numeric bounds in 3.1. Exact locations: EndpointDocumentV2.discount_to_user;
+  ModelInputV2.oneOf[2/3].params.max_duration_seconds.value; VideoGenerationRequest.upscale_factor.
+  Look for official correction or review an exact evidenced repair separately; do not
+  downgrade the artifact, invent bounds or waive validation. It also includes
+  `/api/alpha/decisions`, v2 models and other experimental-looking products. Review each
+  feature's official lifecycle/public scope before selecting this broad artifact; the docs'
+  word “complete” is not a blanket GA guarantee. Snapshots remain in ignored
+  `cache/maintenance/discovery/openrouter/<hash>/` and `/tmp/openrouter-source*.json`.
+- **Vercel** already exists at `APIs/vercel.com/0.0.1/openapi.yaml`: 85 paths / 113 ops,
+  OpenAPI 3.1.0; recorded origin `https://openapi.vercel.sh` (origin's 3.0 label differs
+  from the actual stored 3.1). Its source has **not been fetched/compared or registered**.
+  Confirm current official REST publishing input and feature scope before refreshing;
+  official `vercel.json` JSON-Schema links under that host are configuration schemas,
+  not evidence that every document there describes REST operations.
+- Zoom likewise already exists (`zoom.us/2.0.0`, 265 / 373); the stored marketplace OAD
+  URL is a lead, not a verified current artifact. Jira's stored snapshot failed the
+  current YAML loader on `tag:yaml.org,2002:value`; no source was fetched or content
+  silently rewritten. Keep these separate from the actionable Vercel/source discovery.
+
+**Resume next:** Continue independent major-provider official-source audit/discovery,
+starting with Vercel's existing REST artifact or a verified stable missing provider.
+Asana delivery is complete, and the 32-source audit is the latest verified evidence.
+Infrastructure PR generation/monthly discovery remain authorized future work; keep them
+separate from API PRs and never introduce blanket automatic merging.
