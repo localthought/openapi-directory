@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `09ef770b4` (PR #119 merged):
-729 provider domains; 4,263 files under `APIs/`, including 2,089
+**Last updated**: 2026-10-03. Audit of `origin/main` at `ec209bd7e` (PR #124 merged):
+729 provider domains; 4,264 files under `APIs/`, including 2,090
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -145,6 +145,9 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #116 | Datadog v2 monitoring | Existing official public SDK-generation source registered; vendor unstable annotations retained; 69 local/CI tests pass |
 | #117 | Datadog v2 `1.0` refresh | 1042 paths / 1647 ops; 35 paths / 57 ops added, one path / op retired; fixed version, no source patches |
 | #119 | Security requirement validation / Meraki monitoring | Scheme-name resolution across document, operations, callbacks and webhooks; 74 local/CI tests; native Meraki import blocked on undefined OAuth |
+| #121 / #122 | Snowflake Task monitoring / `0.0.1` addition | New distinct resource API, 13 paths / 16 ops; two-file bundle, no warnings/patches; deprecated graph routes retained |
+| #123 | GitHub REST review re-request endpoint | Both public artifacts: one path / operation added, 816 paths / 1232 ops; no removals, fixed version |
+| #124 | DigitalOcean ADK documentation deprecation | Three parsed source changes, documented enums narrowed; runtime values still accepted per vendor; 515 paths / 757 ops unchanged |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1138,6 +1141,91 @@ repository metadata snapshots were downloaded and verified at
 `/tmp/openapi-ci-audit-37111842991`; ignored local reports/health snapshots are updated.
 CI remains the durable recovery source. Hosted Hugging Face source health remains
 unassessed independently of its validated source match.
+
+**Snowflake Task completed (#121/#122, 2026-10-03):** the source registry now
+covers 28 artifacts across 27 services. Task is a distinct resource-management API,
+absent from the full main tree before import. The
+[GA tutorial overview](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tutorials-overview)
+explicitly covers tasks; its
+[service guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tasks/tasks-introduction)
+and [complete reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/task)
+carry no preview designation. Native `specifications/task.yaml` plus `common.yaml`
+were bundled from vendor `990e25d97236a11826c9eed40e587c2b859e5680` with Redocly 2.57.0:
+two files, zero warnings, no patches or OpenAPI version conversion. Declared `0.0.1`
+and OpenAPI 3.0.0 are unchanged. Entry SHA-256
+`9dc282435a8aea6304d61a12ba78eb2c31f89d28f0581ba44d2d244f3fc04649`;
+source-file snapshot SHA-256
+`e81d2befebadbb10d9afeb680bb19281dcbec7c0597f7c2ff0d5f041f413e894`.
+
+The 13 paths / 16 operations cover CRUD, execute/resume/suspend, dependents, current /
+completed graph runs and tag actions. Both deprecated underscored graph routes and their
+hyphenated replacements remain exactly as the vendor publishes them. Complete parsed
+vendor-bundle equality, raw hash/provenance, all references, security names, full schema
+validation and typed YAML roundtrip pass. New curation was not invented. Imported
+Snowflake coverage is now eight distinct descriptions, **78 paths / 97 operations**;
+other catalog services still need lifecycle/validation review. This is not complete
+SQL task command coverage. Local and [infrastructure CI 37116607239](https://github.com/ontola/openapi-directory/actions/runs/37116607239)
+pass all 74 tests. Temporary verifier/import files are `/tmp/verify-snowflake-import.py`
+and `/tmp/snowflake-task-import.log`; recover source evidence from the audit artifact
+rather than relying on scratch files after reboot.
+
+**Fresh drift caught and resolved (#123/#124, 2026-10-03):** the
+[28-source audit 37119806342](https://github.com/ontola/openapi-directory/actions/runs/37119806342)
+at main `f6c035ba8` passed 74 tests and found 21 validated matches, three valid drifts
+(two GitHub artifacts and DigitalOcean), and four known blockers. Task matched its
+new import. All 28 entry hashes, both reports and nineteen distinct repository-health
+snapshots were downloaded/verified at `/tmp/openapi-ci-audit-37119806342`; there were
+no fetch/prepare failures. Those new vendor changes arrived during this run.
+
+GitHub source `836ce198db13a6fb194547e53eea99c6ddae495b` adds only POST
+`/repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest` in each public
+artifact. Each fixed `1.1.4` / OpenAPI 3.0.3 description now has 816 paths / 1232 ops,
+with one path / op added and none removed. Removing that single added path makes
+complete parsed content equal to the prior stored description, excluding generated
+provenance. Curation is preserved. Entry hashes (default / 2022-11-28):
+`f3efa055b46b43f5f133ecf792a36a7f50cf8a4378cbd177390bc2bf8c6097cd` /
+`28b908e1fd554f785e31368e334a897fb01a0439b6988e669c0011c64c77efd9`.
+The vendor-published artifacts are the release evidence; the indexed linked review-request
+reference had not exposed the new section when checked. No runtime/notification endpoint
+was invoked. Other GitHub products still need independent review.
+
+DigitalOcean source `4a87b3bd8e541f72450c426cf4ba197724b0e479` has exactly three parsed
+changes: remove `EVALUATION_DATASET_TYPE_ADK` / `EVALUATION_DATASET_TYPE_NON_ADK` from
+both documented dataset-type enums, and remove the ADK-workspace description qualifier.
+[Vendor PR #1249](https://github.com/digitalocean/openapi/pull/1249) explicitly explains
+ADK deprecation and says the API still accepts/returns the removed values. This is a
+published-documentation narrowing, not evidence of runtime rejection; downstream generators
+may expose narrower enums. Fixed `2.0`, OpenAPI 3.0.0 and 515 paths / 757 ops are unchanged.
+The entry-file SHA-256 is also unchanged (`10fc8825506628176d9d0161e3eda83244da7341f4e860137a828f48e71f1b6e`):
+only referenced files changed, demonstrating why the pinned bundle/content comparison matters.
+New 3134-file snapshot SHA-256 `2e022194ed65ecc9481e3f54677491e8fd7b807ae2ac57c6996490512f100d92`;
+Redocly still emits the same 21 reviewed naming warnings and the exact two-default patch
+replays unchanged. No new corrections were introduced.
+
+Both refreshes pass complete vendor/curation equality, full schema/reference/path/security
+validation and typed YAML roundtrip checks. Temporary parsed diffs/verifiers are
+`/tmp/github-rest-oct3-changes.json`, `/tmp/digitalocean-oct3-changes.json` and
+`/tmp/verify-oct3-source-imports.py`; recover pinned source bytes from the CI artifact
+or re-fetch them instead of relying on scratch files after reboot.
+
+Post-refresh [audit 37126831458](https://github.com/ontola/openapi-directory/actions/runs/37126831458)
+at main `ec209bd7e` passes 74 tests and fetches/prepares all 28 artifacts: **24 validated
+source matches / four known blockers** (Cohere, Square, archived Slack, native Meraki).
+No fetch/prepare failures or unblocked drift remain. Summary and source-artifact upload
+succeed despite the expected nonzero audit exit for blockers. Both reports, every entry
+hash and nineteen repository metadata snapshots were downloaded/verified at
+`/tmp/openapi-ci-audit-37126831458`; ignored local reports/health snapshots are updated.
+Recover this durable CI artifact after reboot. Hosted-source health remains independently
+unassessed. The full-tree inventory is 729 provider domains / 4264 API files / 2090
+openapi.yaml / 2168 swagger.yaml; GitHub and DigitalOcean updates changed no file counts.
+
+A useful next freshness lead is Twilio's existing classic REST artifact at
+`APIs/twilio.com/api/1.55.0/openapi.yaml`. Its recorded official source is
+`twilio/twilio-oai/main/spec/json/twilio_api_v2010.json`; the repository root still
+exists and has `spec/`. The current source was **not fetched/compared or registered**
+in this run. Review this one service before expanding into Twilio's many other
+products, deprecated APIs or preview artifacts. Do not mistake its existing files
+for missing coverage because of sparse checkout.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
