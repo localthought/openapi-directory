@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-02. Audit of `origin/main` at `845f81fff` (PR #104 merged):
+**Last updated**: 2026-10-03. Audit of `origin/main` at `3388295d9` (PR #107 merged):
 729 provider domains; 4,261 files under `APIs/`, including 2,087
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -133,6 +133,10 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #97 | Intercom `2.16` wording refresh | Two vendor contact-verification descriptions; version, 168 paths / 235 operations unchanged |
 | #99 | Reproducible Swagger conversion; Grafana/Square monitoring | Locked converter, zero-default warning/patch expectations, response/path safeguards, format-chain provenance; 57 tests pass locally/CI; 22 artifacts / 21 services registered |
 | #100 | Grafana `0.0.1` content refresh | New certificate field, ASN.1 documentation and RBAC wording; fixed version, 207 paths / 314 operations unchanged; zero converter warnings/patches |
+| #102 / #103 / #104 | Current baseline tracking; Plaid/Intercom refreshes | 61 tests; reviewed baseline advances with imports; Plaid 1.762.0 and Intercom company-deletion clarification; details in §9 |
+| #105 | Baseline/import audit progress | 22-source audit evidence and next-run queue |
+| #106 | ECMAScript and cyclic-schema validation | Pinned validator/regex engine; scoped cycle guard; 69 local/CI tests; Cohere's empty union now correctly blocks import |
+| #107 | MongoDB Atlas Admin `2.0` | Fixed version refreshed; 339 paths / 549 ops; 6 paths / 8 ops added, none removed; no source patches |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -246,7 +250,7 @@ otherwise `git add` refuses with "paths ... outside of your sparse-checkout defi
 | Figma | `.../figma/rest-api-spec/main/openapi/openapi.yaml` | **REFRESHED, PR #82**, `0.43.0`, 47 paths / 54 ops. OpenAPI 3.1.0; historical `0.42.0` preserved. |
 | Sentry | `.../getsentry/sentry-api-schema/main/openapi-derefed.json` | **REFRESHED, PR #87**, fixed `v0`, 151 paths / 245 ops. Vendor dereferenced artifact; inlining is upstream's doing. Weekly content checks registered in #86. |
 | PagerDuty | `.../PagerDuty/api-schema/main/reference/REST/openapiv3.json` | **REFRESHED, PR #84**, fixed `2.0.0`, 274 paths / 466 ops. Checked invalid-default removal is registered with the source. |
-| MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | Initial import #48, as `mongodb.com/atlas-admin/2.0`. **Refresh pending validation compatibility:** stored 333 / 541, source 339 / 549. See blocker below. |
+| MongoDB Atlas | `.../mongodb/openapi/main/openapi/v2.json` | **REFRESHED, PR #107**, fixed `2.0`, 339 paths / 549 ops, as `mongodb.com/atlas-admin/2.0`. Validator/dialect compatibility resolved in #106; no source patches. |
 | Grafana | `.../grafana/grafana/main/public/api-merged.json` | **REFRESHED, PR #100.** Canonical Swagger 2.0, monitored through #99's locked conversion recipe, zero warnings/patches. Fixed placeholder `0.0.1`, 207 paths / 314 operations. This legacy artifact does not cover every new `/apis` resource or Grafana Cloud. See the push-protection note below. |
 | Square | `.../square/connect-api-specification/master/api.json` | Stored refresh #51; **monitoring registered #99**, direct OpenAPI 3.0.0. Fixed `2.0`, 253 paths / 332 operations. Three source metadata additions detected, but refresh blocked by two missing vendor schemas; do not invent them. |
 | DocuSign | `.../docusign/OpenAPI-Specifications/master/esignature.rest.swagger-v2.1.json` | **DONE, PR #52** — a *refresh*, we already had `docusign.net/v2.1`. Swagger 2.0. |
@@ -279,20 +283,41 @@ default after type/range/value assertions. No replacement default or server beha
 inferred. The complete patched source validates and round-trips; a simulated vendor fix
 to integer `20` stops replay for deliberate recipe review.
 
-**MongoDB Atlas refresh blocker (not parked by the user):** official source commit
-`73acb6b70d908ede7f01fc1c02415231b31b8dd7` adds 6 paths / 8 operations and removes none,
-under fixed version `2.0`. The pinned validator 0.7.2 raises a recursion error, so no refresh
-was imported. Diagnostic validator 0.9.0 in `/tmp/openapi-validator-090` (bundled Python
-3.12.14) gets past recursion but rejects regex syntax unsupported by Python's `re`,
-including Unicode property escapes and named captures. Its optional jsonschema-rs backend
-produces the same format rejection. A Node syntax diagnostic compiles all 1,146 pattern
-occurrences without flags; universal Unicode mode instead rejects 32 occurrences of three
-patterns because of identity escapes such as `\:`. These checks diagnose regex dialect
-compatibility, not successful complete spec validation or matching semantics. No repository
-dependency pins were changed, and no regexes were rewritten or validation bypassed. Resolve
-the validator/dialect issue with meaningful regressions and a separate infrastructure PR
-before importing Atlas. Do not merely remove patterns or raise recursion limits to force it
-through. Raw source and the failed validation are retained in the report/cache.
+**MongoDB Atlas blocker resolved (#106/#107):** the old validator recursed while collecting
+properties through cyclic compositions. Diagnostic 0.9.0 initially rejected ECMAScript
+regex syntax through Python regex, then exposed the same property-collection cycle once
+the official `ecma-regex` extra was installed. #106 pins OpenAPI spec/schema validators
+0.9.0 and regress 2026.9.1. Its scoped subclass iterates the same upstream property edges
+with a resolved-object cycle guard; no schema constraints are removed, recursion limit
+raised, global classes monkey-patched or formats disabled. The document backend is
+explicitly Python jsonschema. Pattern syntax/default matching uses ECMAScript with no
+flags, tested against Node (named captures, identity escapes, Unicode-property escape
+behavior). Do not infer Unicode mode universally; it changes semantics and rejects some
+vendor identity escapes. Missing backends/changed reviewed engine pins fail validation.
+69 regressions pass locally and in GitHub CI. Python 3.10+ is now required; CI uses 3.11,
+and the clean local environment is `/tmp/openapi-maintenance-ecma` (bundled Python 3.12).
+The older Python 3.9 venv does not satisfy these dependencies; recreate rather than
+silently using it. `maintenance/requirements.txt` is the reproducible dependency source.
+
+#107 refreshes the fixed `2.0` Atlas Admin file from 333 paths / 541 operations to 339 / 549,
+adding six paths / eight operations and removing none. Private endpoint connection strings,
+Stream Processing workspace private endpoints and ephemeral clusters account for the
+added paths; vendor schema/parameter/documentation changes also remain. Source commit
+`ab07390d4ef9ba960d467a156ef99d5e0afb4e10`, entry SHA-256
+`db2c6f2500a5f05fc74f8dd818db4f9db38d0e67140a6b9ce82364e9738cca66`.
+Complete validation, parsed vendor-content equivalence, curation preservation and YAML
+round-trip pass without source patches or OpenAPI conversion. Provenance records the
+validation profile. This is Atlas Administration only, not every MongoDB product.
+
+**Newly exposed Cohere defect:** validator 0.9.0 correctly rejects the existing official
+`components.schemas.TruncationStrategy.oneOf: []`, with an empty discriminator mapping.
+The same invalid empty union is present at official source commit
+`734aafbe1fe2ca5c7356609009ec0d9b74e6ac57`; live re-fetch/source comparison confirms it.
+Its description claims a default of 'none', but no union variants are defined there.
+Cohere still matches its source; a matching hash is not successful validation. Do not
+invent alternatives or waive validation. Look for a vendor correction or a separately
+reviewed, exactly checked correction with demonstrated semantics. Keep the existing
+import in place; no destructive removal or new Cohere refresh PR was created.
 
 **Intercom release discovery and import:** official
 [introduction](https://developers.intercom.com/docs/references/introduction) and
@@ -925,14 +950,30 @@ when temporary files disappear. All 22 reviewed manifest targets exist on fetche
 and agree with their stored `info.version` directory. No files were committed solely for
 check timestamps.
 
+
+Expanded network audit [37084738252](https://github.com/ontola/openapi-directory/actions/runs/37084738252)
+at main `3388295d9` passed 69 tests under Python 3.11 and fetched all 22 descriptions.
+Nineteen have valid source matches, including the refreshed Atlas Admin. Cohere matches
+its configured source but is blocked by the newly detected empty `TruncationStrategy`
+union; Square's invalid metadata/missing schemas and Slack's archived unsupported Swagger
+remain the other blockers. No fetch/prepare failures or unblocked content drift were
+found. The report distinguishes the blocked Cohere match from validated matches and
+names the explicit validation profile for every row. The expected three blockers make
+the audit exit nonzero. Readable-summary publication and source-artifact upload succeed.
+Both reports, all 22 entry-source hashes and all sixteen unique repository metadata
+hashes were downloaded and verified at `/tmp/openapi-ci-audit-37084738252`; ignored local
+reports and health snapshots are updated. Recover original evidence from CI if temporary
+files disappear. No vendor spec was changed solely for a check timestamp.
+
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
 They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
 direct reproducible spec PRs are accepted in this fork. No fork collection endpoint has
 been published or claimed. Index publication still needs verified consumer access.
 
-**Resume next:** the Plaid/Intercom drift and baseline caveat are resolved. Resolve
-Atlas's validator/regex dialect compatibility before its refresh;
+**Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
+empty union now needs vendor-correction discovery or a separately reviewed exact
+correction; do not invent variants or relax validation. Continue to
 extend the registry to other major imported APIs,
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 is registered as direct OpenAPI 3, with exact existing fixes replayed, but its undefined
