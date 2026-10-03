@@ -1562,3 +1562,38 @@ Two removals are the status-update path parameter rename `status_gid` → `statu
 the third is PUT /teams, with PUT /teams/{team_gid} now published. Audit the corresponding
 public references before importing and record these as specification route changes,
 not proof of runtime retirement. Infrastructure registration is separate from the API PR.
+
+
+**Asana REST import verified (2026-10-03, updater infrastructure #135 merged):**
+The fixed `1.0` description is refreshed in place to **177 paths / 251 operations**:
+**52 paths / 87 operations added, one path / three operations removed**. All removals
+are published route changes, with operation IDs retained: GET/DELETE status updates
+rename `{status_gid}` to `{status_update_gid}` and PUT /teams moves to
+PUT /teams/{team_gid}. The current [get-status](https://developers.asana.com/reference/getstatus),
+[delete-status](https://developers.asana.com/reference/deletestatus) and
+[update-team](https://developers.asana.com/reference/updateteam) references confirm the
+new routes; this says nothing about old runtime route availability.
+
+Full source changes cover access requests, agents / AI Studio usage, allocations/budgets,
+custom types, graph/resource exports, goals, generalized memberships, out-of-office entries,
+portfolio/project settings, rates/roles/reactions, rule triggers, task templates, time tracking,
+timesheet approval statuses and additional workspace resources. Components grow 165 → 280
+schemas (118 added, three vendor definitions removed: ProjectMembershipResponse, TagRequest,
+TaskRequest). Existing operations gain OAuth scope requirements and refined request/response
+schemas, enums, required fields, query options and descriptions. Top-level PAT/OAuth
+alternatives remain. No schemas, scopes or runtime behavior were invented.
+
+Pinned entry hash/revision above, equality with the vendor's JSON representation after the
+reviewed response-key repair, complete prepared-source plus curation equality, strict
+schema/reference/path/response/security-name validation and typed YAML roundtrip all pass.
+All 2,575 references resolve locally. Curation/Twitter/curated tags are retained. No bundling,
+OpenAPI version conversion or other source repairs; preview Project briefs, beta rule-trigger
+wording and deprecated routes remain. The repair is described in `info.x-conversion` and
+`x-origin` now names the pinned maintained source. Manifest target remains `1.0`.
+Infrastructure #135's [CI 37153285326](https://github.com/ontola/openapi-directory/actions/runs/37153285326)
+passes all 79 tests. Local verifier/log: `/tmp/verify-asana-import.py`,
+`/tmp/asana-import-verification.log`; parsed-change inventory `/tmp/asana-content-diff.json`.
+The registry covers **32 artifacts / 31 services**. Run the full network audit after merge
+and record its actual base, source snapshots and classification; earlier 31-source evidence
+must not be represented as validating this addition. Messaging's publication decision is
+still pending; no rejected push was retried.
