@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `6b74e530c` (PR #117 merged):
+**Last updated**: 2026-10-03. Audit of `origin/main` at `09ef770b4` (PR #119 merged):
 729 provider domains; 4,263 files under `APIs/`, including 2,089
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -144,6 +144,7 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #114 | Discord HTTP `10` authorization refresh | GET channel messages now permits OAuth2 as an alternative to BotToken; 153 paths / 246 ops unchanged |
 | #116 | Datadog v2 monitoring | Existing official public SDK-generation source registered; vendor unstable annotations retained; 69 local/CI tests pass |
 | #117 | Datadog v2 `1.0` refresh | 1042 paths / 1647 ops; 35 paths / 57 ops added, one path / op retired; fixed version, no source patches |
+| #119 | Security requirement validation / Meraki monitoring | Scheme-name resolution across document, operations, callbacks and webhooks; 74 local/CI tests; native Meraki import blocked on undefined OAuth |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1087,9 +1088,61 @@ all 26 entry hashes and eighteen unique repository metadata hashes were download
 verified at `/tmp/openapi-ci-audit-37110790919`. Ignored local reports/health snapshots
 are updated; CI remains the recovery source after reboot.
 
+**2026-10-03 Meraki / security semantics:** PR #119 merged the semantic security-name
+check and native Meraki Dashboard source registration. The registry now covers 27
+artifacts across 26 services. [Infrastructure CI 37111751120](https://github.com/ontola/openapi-directory/actions/runs/37111751120)
+and local tests pass all 74 cases. Structural validation alone accepted unknown security
+scheme names; the additional check enforces the OpenAPI requirement to declare them in
+`components.securitySchemes`. It traverses document security, operations, referenced
+path items, reusable path/callback components, callback operations and 3.1 webhooks.
+Recursive callback graphs terminate; anonymous alternatives, empty security and defined
+reference aliases remain valid. Examples and extensions are not security declarations.
+Undefined names are aggregated with occurrence counts and first locations, and imports
+fail before writing files. The report/import validation profile records this check.
+
+The [official docs configuration](https://github.com/CiscoDevNet/Meraki-Dashboard-API-v1-Documentation/blob/e598959273954662886eda26b8dc2392a4616ef6/config%20copy.json)
+uses `master/openapi/spec3.json` for public API Reference and `v1-beta` for Early Access.
+The [public overview](https://developer.cisco.com/meraki/api-v1/overview/) confirms
+released `1.74.0`. Source revision `9029d122861222bbe912193b77d8f2bc442900d4`, entry
+SHA-256 `9c770522d456668aae1dfde78f7076a1cc994b41ff7f20dcd8864b3209f3e6b3`,
+has 701 paths / 998 operations in OpenAPI 3.0.1. The companion Swagger at the same SHA
+has the identical path/operation sets and hashes to
+`bbdb2c81d5bf41cbfa8c3796b89a127076529fd3399cd21945e7c206c6036ec7`.
+A review-only Swagger conversion exactly matches the stored 1.74.0 content after curation;
+its 748 converter patches were only observed, not accepted as an import recipe.
+This is deliberate discovery of a richer native artifact, not evidence of a new vendor
+release or stale Swagger content. Native source adds 15 callback declarations and 13
+vendor deprecation notices, but 822 operations reference an undefined `oauth2` scheme.
+Only `meraki_api_key` and `bearerAuth` are declared. **No Meraki API refresh was made.**
+Do not fabricate an OAuth scheme, remove requirements, substitute beta/streaming feeds,
+or decide the parked `x-preferred` policy. Find an official correction or separately
+review a reproducible exact repair before importing.
+
+The docs repository's `specs/ga/spec3.json` at
+`e598959273954662886eda26b8dc2392a4616ef6` is byte-for-byte the same artifact/hash and
+has the same defect; it is not a corrected alternative. Vendor issue #62 lists general
+spec inaccuracies but does not supply this correction; no upstream message was sent.
+Temporary review files are `/tmp/meraki-content-changes.json`,
+`/tmp/meraki-official-docs-ga.json`, `/tmp/meraki-spec2.json` and
+`/tmp/meraki-security-tests.log`. Re-fetch pinned sources / recover CI artifacts after
+reboot instead of depending on those files.
+
+Post-merge audit [37111842991](https://github.com/ontola/openapi-directory/actions/runs/37111842991)
+at main `09ef770b4` passes 74 tests and fetches/prepares all 27 descriptions. Twenty-three
+have validated source matches; Cohere, Square, archived Slack and native Meraki are the
+four import blockers. No fetch/prepare failures or unblocked content drift. The new
+security-name check introduces no additional defects in the other registered sources.
+The audit intentionally exits nonzero for those blockers, while summary and the complete
+artifact upload succeed. Both reports, all 27 entry hashes and nineteen distinct
+repository metadata snapshots were downloaded and verified at
+`/tmp/openapi-ci-audit-37111842991`; ignored local reports/health snapshots are updated.
+CI remains the durable recovery source. Hosted Hugging Face source health remains
+unassessed independently of its validated source match.
+
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
-correction; do not invent variants or relax validation. Continue to
+correction; Meraki's native artifact needs its missing security scheme resolved from
+verified official evidence. Do not invent variants/schemes or relax validation. Continue to
 extend the registry to other major imported APIs,
 audit more distinct stable Snowflake services, and continue vendor discovery. Square still
 is registered as direct OpenAPI 3, with exact existing fixes replayed, but its undefined
