@@ -11,19 +11,20 @@ info:
     name: Support
     url: https://support.github.com/contact?tags=dotcom-rest-api
   x-github-plan: api.github.com
-  x-providerName: github.com
-  x-serviceName: api.github.com
-  x-logo:
-    url: https://twitter.com/github/profile_image?size=original
   x-apisguru-categories:
     - collaboration
     - developer_tools
+  x-logo:
+    url: https://twitter.com/github/profile_image?size=original
+  x-providerName: github.com
+  x-serviceName: api.github.com
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/github/rest-api-description/7bdf5f00553689c2dabb027685cf29081093767e/descriptions/api.github.com/api.github.com.json
+      url: https://raw.githubusercontent.com/github/rest-api-description/836ce198db13a6fb194547e53eea99c6ddae495b/descriptions/api.github.com/api.github.com.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/7bdf5f00553689c2dabb027685cf29081093767e/descriptions/api.github.com/api.github.com.json at commit 7bdf5f00553689c2dabb027685cf29081093767e; entry source SHA-256 d3fb629730461a399929f5eb71406dd8b89e9ab7698918dfdb45f4b7b1d7c745.
+    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/836ce198db13a6fb194547e53eea99c6ddae495b/descriptions/api.github.com/api.github.com.json at commit 836ce198db13a6fb194547e53eea99c6ddae495b; entry source SHA-256 f3efa055b46b43f5f133ecf792a36a7f50cf8a4378cbd177390bc2bf8c6097cd.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/github.com/api.github.com/1.1.4/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 tags:
@@ -53362,6 +53363,73 @@ paths:
         '422':
           $ref: '#/components/responses/validation_failed'
       x-github:
+        githubCloudOnly: false
+        enabledForGitHubApps: true
+        category: pulls
+        subcategory: review-requests
+  /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers/rerequest:
+    post:
+      summary: Rerequest reviewers for a pull request
+      description: 'Rerequests reviews for a pull request from a given set of users and/or teams.
+
+        This endpoint triggers [notifications](https://docs.github.com/github/managing-subscriptions-and-notifications-on-github/about-notifications). Creating content too quickly using this endpoint may result in secondary rate limiting. For more information, see "[Rate limits for the API](https://docs.github.com/rest/using-the-rest-api/rate-limits-for-the-rest-api#about-secondary-rate-limits)" and "[Best practices for using the REST API](https://docs.github.com/rest/guides/best-practices-for-using-the-rest-api)."'
+      tags:
+        - pulls
+      operationId: pulls/rerequest-reviewers
+      externalDocs:
+        description: API method documentation
+        url: https://docs.github.com/rest/pulls/review-requests#rerequest-reviewers-for-a-pull-request
+      parameters:
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/repo'
+        - $ref: '#/components/parameters/pull-number'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reviewers:
+                  type: array
+                  description: An array of user `login`s whose reviews will be rerequested.
+                  items:
+                    type: string
+                team_reviewers:
+                  type: array
+                  description: An array of team `slug`s whose reviews will be rerequested.
+                  items:
+                    type: string
+              anyOf:
+                - required:
+                    - reviewers
+                - required:
+                    - team_reviewers
+            examples:
+              default:
+                value:
+                  reviewers:
+                    - octocat
+                    - hubot
+                    - other_user
+                  team_reviewers:
+                    - justice-league
+      responses:
+        '201':
+          description: Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/pull-request-simple'
+              examples:
+                default:
+                  $ref: '#/components/examples/pull-request-review-request'
+        '422':
+          description: Unprocessable Entity if user is not a collaborator
+        '403':
+          $ref: '#/components/responses/forbidden'
+      x-github:
+        triggersNotification: true
         githubCloudOnly: false
         enabledForGitHubApps: true
         category: pulls
