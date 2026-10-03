@@ -1597,3 +1597,32 @@ The registry covers **32 artifacts / 31 services**. Run the full network audit a
 and record its actual base, source snapshots and classification; earlier 31-source evidence
 must not be represented as validating this addition. Messaging's publication decision is
 still pending; no rejected push was retried.
+
+
+**Asana delivery blocker / resume first (2026-10-03 ~21:54 UTC):** Infrastructure
+[PR #135](https://github.com/ontola/openapi-directory/pull/135) is merged at
+`2f4c1a66a`; all 79 CI tests pass. The fully verified API import is committed on
+`codex/refresh-asana-rest`, commit `b58c91d9f59c6a10178916e7948793809edae46d`, and its
+push succeeded with vendor examples unchanged, no protection bypass. This branch changes
+only the Asana spec and this progress document. The worktree stays on that branch so
+these delivery notes are visible on resume; do not reset or replace its commits.
+
+PR creation was attempted with `/tmp/openapi-pr-asana-refresh.md` but never returned
+success. GitHub API reads timed out (15/25-second bounded requests returned zero bytes),
+and the GitHub pull-list page returned HTTP 503. The stalled create/read processes were
+terminated after several minutes; **creation outcome is unconfirmed**. No API PR is known
+merged, no merge was attempted, and no post-import full audit was dispatched. An assumed
+#136 attachment was removed because the URL could not be verified; do not treat #136 as
+an existing PR without checking. Inspect open/closed PRs by the exact branch and commit
+before retrying creation; attach an existing matching API PR if one was created. If none
+exists, create one from the already-pushed branch/body. Recheck exact file list, current
+head and mergeability, then merge under standing authorization. Push these additional
+handoff notes if needed; review current local/remote head differences first.
+
+After confirmed merge, dispatch the read-only full maintenance workflow against main.
+Expect 32 sources: Asana should match at 177 paths / 251 ops with zero errors and a
+recorded response-key transformation. Other five known blockers remain separate. Verify
+the reports and source/hash/health snapshots before recording actual results; the last
+verified full audit remains 37144078955 (31 sources at main 8ec1aa871). GitHub delivery
+outage is separate from an API validation error or the pending Twilio Messaging owner
+choice. No duplicate API import, extra recurring automation or protection retry was made.
