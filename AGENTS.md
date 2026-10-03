@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `ec209bd7e` (PR #124 merged):
-729 provider domains; 4,264 files under `APIs/`, including 2,090
+**Last updated**: 2026-10-03. Audit of `origin/main` at `993b3372f` (PR #130 merged):
+729 provider domains; 4,265 files under `APIs/`, including 2,091
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -148,6 +148,9 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #121 / #122 | Snowflake Task monitoring / `0.0.1` addition | New distinct resource API, 13 paths / 16 ops; two-file bundle, no warnings/patches; deprecated graph routes retained |
 | #123 | GitHub REST review re-request endpoint | Both public artifacts: one path / operation added, 816 paths / 1232 ops; no removals, fixed version |
 | #124 | DigitalOcean ADK documentation deprecation | Three parsed source changes, documented enums narrowed; runtime values still accepted per vendor; 515 paths / 757 ops unchanged |
+| #126 / #127 | Twilio classic REST monitoring / refresh | Declared version reset to 1.0.0; 121 paths / 197 ops, +3 paths/ops and private healthcheck omitted; history retained |
+| #129 | Twilio Messaging monitoring | Public resource-management artifact, including vendor-labelled Public Beta configuration; 30 registered artifacts / 29 services |
+| #130 | Twilio Messaging delivery guard | Fully validated 32-path / 58-op import retained locally; owner review needed for published example flagged by push protection |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1325,6 +1328,31 @@ The user was asked to choose owner review/allowlisting or an exact documented re
 retry rejected pushes unchanged, or mark this import merged. The manifest retains the
 old target and records a source-specific delivery blocker; read-only audit still validates
 and compares the new source. Continue independent maintenance while that decision is pending.
+
+Expanded [audit 37140907056](https://github.com/ontola/openapi-directory/actions/runs/37140907056)
+at main `993b3372f4f70a496795dc73e7377017ab6988b4` passes all 74 tests and fetches/prepares
+all 30 artifacts. It records **25 validated source matches / five import blockers**:
+Cohere, Square, archived Slack, native Meraki, plus Twilio Messaging's delivery blocker.
+No new fetch failures or unblocked drift. Messaging still has zero validation errors;
+its 28 / 50 → 32 / 58 comparison, four/eight additions and no removals are present.
+Its coverage explicitly says Public Beta configuration; the blocker is push protection,
+not invalid OpenAPI. Source-health observations cover twenty distinct repositories;
+hosted Hugging Face remains unassessed by this repository check.
+The expected audit exit is nonzero; tests, readable-summary publication and complete
+artifact upload succeed. Both reports, all 30 raw entry hashes, 20 repository metadata
+hashes, validation profiles, comparison base and blocker classifications were downloaded
+and verified at `/tmp/openapi-ci-audit-37140907056`. Ignored local reports/health snapshots
+are updated. Recover the durable `official-source-audit` artifact after reboot.
+#130's [CI 37138872113](https://github.com/ontola/openapi-directory/actions/runs/37138872113)
+also passed all 74 tests; its guarded manifest retains the stored `1.55.0` target.
+
+Next independent freshness lead: Twilio Verify v2 already exists at
+`APIs/twilio.com/twilio_verify_v2/1.55.0/openapi.yaml` and cites
+`twilio/twilio-oai/main/spec/json/twilio_verify_v2.json`. The existing metadata was
+read from fetched main, but its current artifact was **not fetched/compared or registered**
+in this run. Review lifecycle, full source changes and example protection independently;
+do not assume the Messaging blocker applies to every product, or retry its rejected
+push while awaiting the user's decision. All other parked items remain parked.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
