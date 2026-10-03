@@ -1219,13 +1219,68 @@ Recover this durable CI artifact after reboot. Hosted-source health remains inde
 unassessed. The full-tree inventory is 729 provider domains / 4264 API files / 2090
 openapi.yaml / 2168 swagger.yaml; GitHub and DigitalOcean updates changed no file counts.
 
-A useful next freshness lead is Twilio's existing classic REST artifact at
-`APIs/twilio.com/api/1.55.0/openapi.yaml`. Its recorded official source is
-`twilio/twilio-oai/main/spec/json/twilio_api_v2010.json`; the repository root still
-exists and has `spec/`. The current source was **not fetched/compared or registered**
-in this run. Review this one service before expanding into Twilio's many other
-products, deprecated APIs or preview artifacts. Do not mistake its existing files
-for missing coverage because of sparse checkout.
+**Twilio classic REST completed (2026-10-03, PRs #126 / #127):**
+#126 registers the exact official artifact already cited by the old spec,
+`twilio/twilio-oai/spec/json/twilio_api_v2010.json`, and documents its scope/version
+policy. All 74 offline tests pass locally and in CI
+[37127871086](https://github.com/ontola/openapi-directory/actions/runs/37127871086).
+The vendor README labels the OpenAPI project GA and actively maintained; that does not
+establish GA status or complete coverage for every operation or Twilio service.
+
+#127 adds `APIs/twilio.com/api/1.0.0/openapi.yaml`, retaining the historical `1.55.0`
+file byte-for-byte and advancing only this manifest target. The declared vendor version
+**decreased**: before the [June 2024 MVR release, vendor PR 111](https://github.com/twilio/twilio-oai/pull/111),
+the artifact declared `1.56.1`; at that merge it declared `1.0.0`, still used today.
+Both pinned historical raw files were checked. Do not substitute the repository release
+`2.8.3`, rename the vendor's version, or assume numeric ordering identifies freshness.
+Source revision and retrieval evidence distinguish current content from older releases.
+
+Current source revision `218b7821602a93ae63e83e20ab5e8637e870250f`, entry SHA-256
+`78e76cc93c355a259e241866c241663eddb6ce0ed528f066c6cf0958648f5637`.
+OpenAPI `3.0.1`; 119 / 195 becomes **121 paths / 197 operations**:
+- Three paths/operations added: POST start/stop Calls real-time transcription, and GET
+  Recording Add-On Result Payload Data. The transcription routes have a
+  [public vendor reference](https://www.twilio.com/docs/voice/api/realtime-transcription-resource).
+- One path/operation removed from this public snapshot: GET `/healthcheck`. The old
+  vendor extensions already say `docs_visibility: private`, `libraryVisibility: private`,
+  and `x-skip-path: true`; this is not evidence that the runtime endpoint was retired.
+  The historical file remains available.
+- Full content refreshed, including top-level Basic authentication, payment enums,
+  messaging/call fields, reusable enum/nullable-schema changes and SDK annotation cleanup.
+  Callback-method enums narrow to GET/POST at 111 source positions. Four existing POST
+  responses change their documented status from 201 to 200. Ten usage-category enum
+  schemas become strings; eleven schemas are added. Available-phone-number-country list
+  response pagination metadata disappears. These documented choices/types may affect
+  generators; no local API content was reconstructed or invented.
+
+All parsed vendor content equals the imported file after preserved curation; categories,
+logo, provider/service metadata and curated tags survive. Strict validation, references,
+path parameters, responses/security requirement names, raw hash and typed YAML roundtrip
+passed. No conversion, bundling, warnings or patches. All 74 tests pass on the import PR
+[37127994150](https://github.com/ontola/openapi-directory/actions/runs/37127994150).
+The registry now monitors **29 artifacts across 28 services**. Main `9b1101b18`
+(after #127) has **729 domains / 4265 API files / 2091 openapi.yaml / 2168 swagger.yaml**;
+these are dated counts, not live totals.
+
+Expanded audit [37128042128](https://github.com/ontola/openapi-directory/actions/runs/37128042128)
+at main `9b1101b1809cae8f71dc5d05ef8cc4118db94c79` fetched/prepared all 29 artifacts,
+passed 74 tests, and found **25 validated source matches / four existing blockers**
+(Cohere, Square, Slack, Meraki), with no new failures or unblocked drift. Twilio matches
+its pinned source at 121 / 197. Twenty unique repository-health snapshots were verified;
+hosted Hugging Face remains unassessed by that repository checker, and Slack remains
+archived. The audit's expected nonzero exit is caused by those four blockers; summary
+publication and complete artifact upload succeeded. Both reports, all 29 raw entry hashes,
+all 20 repository metadata hashes, validation profiles, classifications and comparison
+base were checked in `/tmp/openapi-ci-audit-37128042128`; ignored local reports/health
+snapshots are updated. Recover the `official-source-audit` artifact from CI after reboot.
+
+Next freshness lead: Twilio Messaging's existing
+`APIs/twilio.com/twilio_messaging_v1/1.55.0/openapi.yaml` cites
+`twilio/twilio-oai/main/spec/json/twilio_messaging_v1.json`. Its current artifact was
+**not fetched/compared or registered** in this run. Review this separate service's
+lifecycle and removals before importing. Other Twilio descriptions include deprecated
+products and explicit previews; do not bulk import the catalog or treat sparse checkout
+as missing coverage. Classic REST above is complete; do not repeat its registration/import.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
