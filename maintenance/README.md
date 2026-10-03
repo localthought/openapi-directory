@@ -146,6 +146,17 @@ helper files are not separate APIs. Both declare version `0.0.1`; compare their 
 rather than assuming this placeholder advances with changes. Other Snowflake services,
 especially individually designated previews, still need their own lifecycle review.
 
+Snowflake Task is a distinct resource API registered from `specifications/task.yaml`.
+The [GA REST tutorial overview](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tutorials-overview)
+explicitly includes task management, and the [Task guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tasks/tasks-introduction)
+and [complete reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/task)
+carry no preview designation (checked 2026-10-03). Retain the vendor's deprecated
+`current_graphs` / `complete_graphs` endpoints alongside their hyphenated replacements,
+including their annotations. Bundle only the task entry and `common.yaml` from one pinned
+revision. The declared `0.0.1` is kept unchanged; full-content comparisons are required.
+This artifact describes Task REST management, not every SQL task command or other
+Snowflake services. Shared helper files are not APIs.
+
 Discord follows `discord/discord-api-spec/specs/openapi.json`, the vendor's standard
 stable public v10 HTTP artifact. The [vendor README](https://github.com/discord/discord-api-spec/blob/main/README.md)
 distinguishes it from `openapi_preview.json`, which includes experimental features.
