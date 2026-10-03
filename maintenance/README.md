@@ -126,6 +126,18 @@ to `sources.json` only after verifying ownership, service scope, stable-release 
 and absence from the full main tree. Known upstream defects need documented patches or
 reviewed exceptions before import; this tool has no validation bypass.
 
+Snowflake's View and Stage services are registered separately from its other resources.
+The [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
+identifies the public catalog as generally available. Their
+[View guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/view/view-introduction)
+and [Stage guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/stages/stages-introduction)
+carry no preview designation (checked 2026-10-03). These guides summarize service scope;
+they are not a replacement for the complete source description. View bundles `common.yaml`;
+Stage also bundles `common-file-format.yaml`, all from the same pinned revision. Shared
+helper files are not separate APIs. Both declare version `0.0.1`; compare their content
+rather than assuming this placeholder advances with changes. Other Snowflake services,
+especially individually designated previews, still need their own lifecycle review.
+
 Swagger 2.0 sources can register a `conversion` recipe with `tool: swagger2openapi`,
 `version: 7.0.8`, and reviewed integer `expected_warnings` / `expected_patches` counts
 (both default to zero). The pinned local converter uses `patch:true`, `warnOnly:true`,

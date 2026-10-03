@@ -132,6 +132,42 @@
       }
     },
     {
+      "id": "snowflake-view",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/view/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/view.yaml"
+      },
+      "discovery": "Follow Snowflake's distinct public View resource-management API. Listed in the generally available REST reference; its service guide (https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/view/view-introduction) and source carry no preview designation, checked 2026-10-03. Bundle common.yaml from the same pinned revision; this is not full SQL command coverage or a helper-file API.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
+      "id": "snowflake-stage",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/stage/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/stage.yaml"
+      },
+      "discovery": "Follow Snowflake's distinct public Stage resource-management API. Listed in the generally available REST reference; its service guide (https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/stages/stages-introduction) and source carry no preview designation, checked 2026-10-03. Bundle common.yaml from the same pinned revision; this is not full SQL command coverage or a helper-file API.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
       "id": "cohere",
       "provider": "cohere.com",
       "target": "APIs/cohere.com/1.0/openapi.yaml",
