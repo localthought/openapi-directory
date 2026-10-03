@@ -418,6 +418,23 @@
       "priority": "high"
     },
     {
+      "id": "asana-rest",
+      "provider": "asana.com",
+      "target": "APIs/asana.com/1.0/openapi.yaml",
+      "github": {
+        "repository": "Asana/openapi",
+        "ref": "master",
+        "path": "defs/asana_oas.yaml"
+      },
+      "discovery": "The old Asana/developer-docs repository redirects to archived AsanaArchive/developer-docs; its README explicitly directs users to Asana/openapi. The current public REST overview links defs/asana_oas.yaml, and the active repository README distinguishes that REST artifact from app_components_oas.yaml and asana_sdk_oas.yaml (checked 2026-10-03). The official publishing workflow uses convert_yaml_to_json.py to stringify YAML mapping keys before uploading this same description. Quote only the reviewed 1556 integer HTTP response-code keys; require the exact count and no collisions. Follow fixed declared version 1.0; audit app components separately.",
+      "coverage": "Official app.asana.com/api/1.0 REST description, including vendor-labelled preview Project briefs and beta RuleTriggerRequest wording. Preserve those lifecycle annotations and deprecated endpoints; not a stable-only subset. App components, SDK-specific description, SCIM and MCP are separate scope.",
+      "yaml_response_keys": {
+        "expected_conversions": 1556
+      },
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

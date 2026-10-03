@@ -1529,3 +1529,36 @@ re-fetch main and inspect open PRs before continuing. Do not repeat completed im
 - The monthly discovery job should produce a deduplicated queue of official candidates
   for well-known APIs, with URLs, ownership evidence, scope, and import obstacles. Notify
   on actionable drift, failures, or decisions; avoid repetitive unchanged-status updates.
+
+
+**Asana source migration / representation repair (2026-10-03):** The stored
+`APIs/asana.com/1.0/openapi.yaml` has 126 paths / 167 operations. Its old source
+`Asana/developer-docs` redirects to `AsanaArchive/developer-docs`, archived 2025-02-24.
+The archived README explicitly points to [Asana/openapi](https://github.com/Asana/openapi).
+The [current public REST overview](https://developers.asana.com/reference/rest-api-reference)
+links `defs/asana_oas.yaml`; the active repository README distinguishes that description
+from app components and the SDK artifact. This is an evidenced official replacement,
+not a guessed substitution. Source revision `1b1c15108d490fc5b780bb83e070293b5815d522`,
+entry SHA-256 `7c4c198fda7627c28be82ca0d85886fd034c93b16ed13c7d96a13d2f3534eaa6`:
+OpenAPI 3.0.0, fixed vendor version 1.0, 177 paths / 251 operations.
+
+The source has 1,556 unquoted response-code mapping keys. PyYAML reads these as integers;
+the structural validator rejects them. The vendor's pinned `convert_yaml_to_json.py`
+and `.github/workflows/push_openapi_spec_to_readme.yml` convert exactly this YAML to JSON
+before publication, making those object keys strings. The opt-in `yaml_response_keys`
+recipe quotes only integer 100–599 keys in path-operation Responses Objects, checking
+an exact reviewed count and absence of collisions before mutation. Payload keys, schema
+values and all response content remain unchanged. Shared YAML mappings are counted once.
+No global coercion, API version conversion, fabricated responses or validation waiver.
+The prepared full source validates with zero errors; all 2,575 local references resolve.
+Keep this step and explanation in the imported spec's own provenance. If vendor keys
+are fixed or the count changes, review/remove/update the recipe deliberately.
+
+The complete public artifact includes preview Project briefs and beta wording in
+RuleTriggerRequest; retain and report that limitation instead of claiming all features GA.
+App components, SDK-specific OAD, SCIM and MCP are separate scope. The current source has
+52 added paths / 87 added operations and one removed path / three removed operations.
+Two removals are the status-update path parameter rename `status_gid` → `status_update_gid`;
+the third is PUT /teams, with PUT /teams/{team_gid} now published. Audit the corresponding
+public references before importing and record these as specification route changes,
+not proof of runtime retirement. Infrastructure registration is separate from the API PR.

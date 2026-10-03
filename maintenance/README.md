@@ -359,3 +359,18 @@ retain all vendor headers/query parameters and restore the required string
 `job_identifier` path parameter for reporting status/download, as in the earlier 2.14
 import. Changed lists or operation context stop replay for recipe review. Sentry's
 dereferenced public description is also registered, with fixed declared version `v0`.
+
+Asana REST monitoring follows `Asana/openapi/defs/asana_oas.yaml`, the artifact linked
+by the current public REST overview. The old `Asana/developer-docs` repository redirects
+to an archived repository whose README explicitly names this replacement. App components
+and the SDK-specific artifact are separate scope. The public description retains preview
+Project briefs and beta rule-trigger wording; keep those limitations and deprecated routes.
+
+Asana's own publishing workflow converts YAML to JSON before uploading its REST reference.
+That conversion represents unquoted HTTP response-code keys as strings. Its reviewed
+`yaml_response_keys` recipe does the same only for integer keys in path-operation Responses
+Objects. It requires an exact count (1,556), codes 100–599, and no existing string-key
+collision before any mutation. Shared YAML mappings are checked once. Response values,
+payload keys, schema defaults and all other content retain their types; full validation
+still applies. A changed count, vendor quotation fix or invalid key stops for review.
+This is an opt-in representation repair, not global YAML coercion or an OpenAPI downgrade.
