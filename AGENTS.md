@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `8dd9bb082` (PR #114 merged):
+**Last updated**: 2026-10-03. Audit of `origin/main` at `6b74e530c` (PR #117 merged):
 729 provider domains; 4,263 files under `APIs/`, including 2,089
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -142,6 +142,8 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #111 | Snowflake Stage `0.0.1` | New, 4 paths / 6 ops; entry + common.yaml + common-file-format.yaml bundled, no warnings/patches |
 | #113 | Discord HTTP monitoring | Official stable-public v10 artifact registered; description remains preview-labelled; 69 local/CI tests pass |
 | #114 | Discord HTTP `10` authorization refresh | GET channel messages now permits OAuth2 as an alternative to BotToken; 153 paths / 246 ops unchanged |
+| #116 | Datadog v2 monitoring | Existing official public SDK-generation source registered; vendor unstable annotations retained; 69 local/CI tests pass |
+| #117 | Datadog v2 `1.0` refresh | 1042 paths / 1647 ops; 35 paths / 57 ops added, one path / op retired; fixed version, no source patches |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1040,6 +1042,50 @@ succeed. Both reports, all 25 entry hashes and seventeen unique repository metad
 hashes were downloaded and verified at `/tmp/openapi-ci-audit-37102924090`. Ignored
 local reports/health snapshots are updated; recover evidence from CI after reboot.
 
+
+**Datadog v2 refresh completed (#116/#117, 2026-10-03):** registry coverage is now
+26 descriptions across 25 services. Continue the exact official SDK-generation source
+already cited by the stored spec: `DataDog/datadog-api-client-python`,
+`.generator/schemas/v2/openapi.yaml`. Its README identifies generation from public
+OpenAPI descriptions and warns about opt-in unstable endpoints. Preserve those labels;
+this is not a stable-only subset. v1 and other Datadog product artifacts need separate
+coverage review. The source repository is available and unarchived.
+
+Pinned source `2240a46b47e2d135962176dfc9dc665f506628af`, entry SHA-256
+`2b3da388fca085e5c9dfef7fdf4617af85fc8126695e3065f7ad46badaa0118b`,
+retains declared `1.0` and OpenAPI 3.0.0. Coverage grows 1008 / 1591 → 1042 / 1647
+paths / operations: **35 paths / 57 operations added; one path / operation removed**.
+Component schemas grow 8334 → 8673 (355 added, 16 removed, 84 changed). New operations
+include 48 Experiments operations, five Databricks Integration operations, two Logs
+Archive Searches operations and one each for Security Monitoring entity context and
+SPA recommendations. Those last nine operations retain the vendor's preview/unstable
+annotations. Do not infer that an unlabelled operation is generally available.
+
+Removed POST `/api/v2/rum/query/insight/aggregated_signals_problems` is explicitly
+retired in vendor [PR #4077](https://github.com/DataDog/datadog-api-client-python/pull/4077),
+merged 2026-10-02 at `975eef9c6aa4c11d7af1746b1935333651c59427`. The generated client
+and models are removed too. Public search results/reference titles still mention it;
+retirement was verified from the vendor's explicit change, not guessed from absence
+in a source artifact. All endpoint additions/removals are listed in #117.
+
+Complete source/curation equivalence, raw hash/pinned provenance, separate endpoint
+counts, full validation and typed YAML roundtrip pass. Curation and lifecycle labels
+survive; info.x-origin/x-conversion now record reproducible provenance. No source
+patches, bundling or OpenAPI conversion. The large diff includes deterministic YAML
+sequence indentation. Infrastructure CI
+[37107858460](https://github.com/ontola/openapi-directory/actions/runs/37107858460)
+and local tests pass all 69 cases. Original upstream lead remains
+[issue #1392](https://github.com/APIs-guru/openapi-directory/issues/1392), linked in
+the API PR body.
+Post-merge audit [37110790919](https://github.com/ontola/openapi-directory/actions/runs/37110790919)
+at main `6b74e530c` passes 69 tests and fetches all 26 descriptions. Twenty-three
+have validated source matches, including Datadog. Cohere's empty union, Square's invalid
+metadata/missing schemas and Slack's archived unsupported Swagger remain the only three
+blockers; no fetch/prepare failures or unblocked drift. Expected blockers make the audit
+exit nonzero; summary and complete source/report artifacts are published. Both reports,
+all 26 entry hashes and eighteen unique repository metadata hashes were downloaded and
+verified at `/tmp/openapi-ci-audit-37110790919`. Ignored local reports/health snapshots
+are updated; CI remains the recovery source after reboot.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
