@@ -406,7 +406,7 @@
     {
       "id": "twilio-verify",
       "provider": "twilio.com",
-      "target": "APIs/twilio.com/twilio_verify_v2/1.55.0/openapi.yaml",
+      "target": "APIs/twilio.com/twilio_verify_v2/1.0.0/openapi.yaml",
       "github": {
         "repository": "twilio/twilio-oai",
         "ref": "main",
