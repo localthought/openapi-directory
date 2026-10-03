@@ -49,6 +49,66 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
         new = dict(reversed(list(old.items())))
         self.assertEqual(update.compare(old, new)["status"], "matches_source")
 
+    def test_undefined_security_scheme_blocks_validation_and_import(self):
+        spec = document()
+        spec["paths"]["/items/{id}"]["get"]["security"] = [{"oauth2": ["items:read"]}]
+        # The library's structural validation alone does not reject this name.
+        update.validate(spec)
+        self.assertTrue(any("Undefined security scheme oauth2" in error
+                            for error in update.validate_document(spec)))
+        with self.assertRaisesRegex(ValueError, "Undefined security scheme oauth2"):
+            update.import_document({"target": "APIs/example.com/1.0/openapi.yaml"}, spec,
+                                   {"url": "https://example.com/spec.json", "sha256": "test"}, None)
+
+    def test_security_names_at_global_referenced_path_callback_and_webhook_locations(self):
+        spec = document()
+        spec["security"] = [{"GlobalMissing": []}]
+        spec["components"]["pathItems"] = {"x-Named": {"get": {
+            "responses": {"200": {"description": "OK"}}, "security": [{"PathMissing": []}]}}}
+        spec["paths"]["/alias"] = {"$ref": "#/components/pathItems/x-Named"}
+        spec["webhooks"] = {"change": {"post": {
+            "responses": {"200": {"description": "OK"}}, "security": [{"WebhookMissing": []}]}}}
+        spec["components"]["callbacks"] = {"Notify": {"{$request.query.url}": {"post": {
+            "responses": {"200": {"description": "OK"}}, "security": [{"CallbackMissing": []}]}}}}
+        spec["paths"]["/items/{id}"]["get"]["callbacks"] = {
+            "notify": {"$ref": "#/components/callbacks/Notify"}}
+        errors = update.security_requirement_errors(spec)
+        for name in ("GlobalMissing", "PathMissing", "WebhookMissing", "CallbackMissing"):
+            self.assertTrue(any("Undefined security scheme " + name in error for error in errors))
+        self.assertEqual(len(errors), 4)
+
+    def test_defined_security_alternatives_anonymous_and_payload_names_are_accepted(self):
+        spec = document()
+        spec["components"]["securitySchemes"] = {
+            "Key": {"type": "apiKey", "in": "header", "name": "X-Key"},
+            "Alias": {"$ref": "#/components/securitySchemes/Key"}}
+        spec["security"] = [{"Key": []}, {}]
+        spec["paths"]["/items/{id}"]["get"]["security"] = [{"Alias": []}]
+        spec["components"]["schemas"]["Payload"] = {"type": "object", "properties": {
+            "security": {"type": "array"}}, "example": {"security": [{"PayloadName": []}]}}
+        spec["x-config"] = {"security": [{"ExtensionName": []}]}
+        self.assertEqual(update.validate_document(spec), [])
+        spec["paths"]["/items/{id}"]["get"]["security"] = []
+        self.assertEqual(update.validate_document(spec), [])
+
+    def test_recursive_callback_security_traversal_terminates_and_aggregates(self):
+        spec = document()
+        spec["components"]["pathItems"] = {"Recursive": {"post": {
+            "responses": {"200": {"description": "OK"}}, "security": [{"Missing": []}],
+            "callbacks": {"again": {"{$request.query.url}": {
+                "$ref": "#/components/pathItems/Recursive"}}}}}}
+        spec["paths"]["/other"] = {"get": {
+            "responses": {"200": {"description": "OK"}}, "security": [{"Missing": []}]}}
+        errors = update.security_requirement_errors(spec)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("2 requirement(s)", errors[0])
+
+    def test_security_traversal_failure_is_an_import_blocker(self):
+        spec = document()
+        spec["paths"]["/bad"] = {"$ref": "#/components/pathItems/Missing"}
+        self.assertTrue(any("Security requirement traversal" in error
+                            for error in update.validate_document(spec)))
+
     def test_curation_survives_without_perpetual_drift(self):
         old = document()
         old["info"].update({key: "curated" for key in update.CURATION})
