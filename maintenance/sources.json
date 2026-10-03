@@ -404,6 +404,20 @@
       "import_blocker": "GitHub push protection rejected the vendor-published account SID example during the validated import (2026-10-03). Local branch codex/refresh-twilio-messaging is verified; retain the stored spec until the repo owner reviews allowlisting or authorizes an exact documented example redaction. Do not bypass protection or change vendor examples unilaterally."
     },
     {
+      "id": "twilio-verify",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_verify_v2/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_verify_v2.json"
+      },
+      "discovery": "Follow the exact official Verify v2 artifact cited by the stored x-origin. The vendor labels its OpenAPI project GA and actively maintained; review feature lifecycle separately. The June 2024 MVR release reset artifact versions to 1.0.0; use declared info.version and pinned content, not repository release numbers or numeric directory order (checked 2026-10-03). The official Verify overview selects /v2; its Passkeys overview explicitly labels the feature private beta. Main's public description includes those four operations and fields; this is a refresh of the existing broad artifact, not a stable-only subset. Missing old x-maturity extensions do not prove feature graduation.",
+      "coverage": "Official verify.twilio.com v2 description, including vendor-documented private-beta Passkeys operations and fields. Not a stable-only subset. The spec project GA label and absent maturity extensions do not establish GA status for each feature. Preserve the published description; other Twilio services, preview artifacts and TwiML are separate scope.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

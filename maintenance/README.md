@@ -163,6 +163,17 @@ attempts while preserving read-only freshness checks. The repo owner must review
 allowlisting or authorize an exact, documented redaction; do not bypass protection or
 silently modify the example. This is a delivery blocker, not a schema-validation failure.
 
+Twilio Verify follows the existing official `spec/json/twilio_verify_v2.json` artifact
+and the [Verify v2 API overview](https://www.twilio.com/docs/verify/api). Its complete
+public description includes Passkeys, which the [vendor overview](https://www.twilio.com/docs/verify/passkeys)
+explicitly labels **private beta** (checked 2026-10-03). This refresh monitors the same
+broad artifact already stored here; it is not a stable-only subset. Record that feature
+limitation in coverage reports. Removed old maturity annotations and the spec project's
+GA label do not establish feature graduation. This artifact's declared version also
+resets from `1.56.1` to `1.0.0` at vendor PR 111; preserve historical directories and
+compare pinned content rather than numeric version order. Other Twilio services,
+preview artifacts and TwiML remain separate scope.
+
 Snowflake's View and Stage services are registered separately from its other resources.
 The [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
 identifies the public catalog as generally available. Their
