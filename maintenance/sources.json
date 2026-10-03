@@ -375,6 +375,20 @@
       "import_blocker": "Official source references undefined CurrencyExchange and AppFeeAllocation schemas. Full validation blocks imports; do not invent missing schemas."
     },
     {
+      "id": "twilio-rest",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/api/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_api_v2010.json"
+      },
+      "discovery": "Continue the exact official classic REST artifact cited by the stored spec. The vendor repository README labels the OpenAPI project GA and actively maintained (checked 2026-10-03). Follow declared info.version releases on main, preserving product lifecycle annotations; audit other Twilio products and preview artifacts separately. The vendor's June 2024 MVR release (PR 111) reset this artifact's info.version from 1.56.1 to 1.0.0; repository release 2.8.3 is not this document's info.version. Keep historical 1.55.0 and import the actual declared 1.0.0 without inventing a version or using numeric ordering.",
+      "coverage": "Classic api.twilio.com REST API (2010-04-01 routes) only, including Messaging, Voice, account and number resources present in this official artifact. Does not monitor Twilio's other service descriptions or guarantee every included operation is GA; preserve vendor deprecation and lifecycle annotations.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
