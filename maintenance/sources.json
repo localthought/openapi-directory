@@ -292,6 +292,20 @@
       ]
     },
     {
+      "id": "datadog-v2",
+      "provider": "datadoghq.com",
+      "target": "APIs/datadoghq.com/v2/1.0/openapi.yaml",
+      "github": {
+        "repository": "DataDog/datadog-api-client-python",
+        "ref": "master",
+        "path": ".generator/schemas/v2/openapi.yaml"
+      },
+      "discovery": "Continue the exact official v2 generation artifact already cited by the stored spec's x-origin. The vendor README identifies generation from public OpenAPI descriptions and warns that the client includes opt-in unstable endpoints (checked 2026-10-03). Preserve all vendor lifecycle annotations; this artifact is not a stable-only subset. Audit v1, private products and other public artifacts separately.",
+      "coverage": "Official public v2 SDK-generation description, including vendor-labelled unstable endpoints; not a guarantee of GA status for every operation. Does not monitor v1 or establish coverage of the entire Datadog platform.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "discord-http",
       "provider": "discord.com",
       "target": "APIs/discord.com/10/openapi.yaml",

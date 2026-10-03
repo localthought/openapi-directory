@@ -149,6 +149,16 @@ claim that a source match establishes complete or production-ready documentation
 The declared version stays `10`, so content comparisons are required even when endpoint
 counts stay fixed.
 
+Datadog v2 follows the exact SDK-generation artifact already cited by the stored spec:
+`DataDog/datadog-api-client-python/.generator/schemas/v2/openapi.yaml`. The
+[vendor README](https://github.com/DataDog/datadog-api-client-python/blob/master/README.md)
+identifies generation from public OpenAPI descriptions and explains opt-in unstable
+endpoints. Preserve the artifact's lifecycle annotations; this is not a stable-only
+subset. Monitoring covers this v2 artifact, independently of v1 and other Datadog
+products. The fixed declared version is `1.0`, so compare full content, including
+separate endpoint additions and removals. A source-artifact removal is not proof that
+the running API was retired; cross-check public documentation before merging removals.
+
 Swagger 2.0 sources can register a `conversion` recipe with `tool: swagger2openapi`,
 `version: 7.0.8`, and reviewed integer `expected_warnings` / `expected_patches` counts
 (both default to zero). The pinned local converter uses `patch:true`, `warnOnly:true`,
