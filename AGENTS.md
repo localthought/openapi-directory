@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `5f0b8a4c7` (PR #111 merged):
+**Last updated**: 2026-10-03. Audit of `origin/main` at `8dd9bb082` (PR #114 merged):
 729 provider domains; 4,263 files under `APIs/`, including 2,089
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -140,6 +140,8 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #109 | — | Registered official Snowflake View / Stage sources and lifecycle evidence; 69 local/CI tests pass |
 | #110 | Snowflake View `0.0.1` | New, 5 paths / 7 ops; entry + common.yaml bundled, no warnings/patches |
 | #111 | Snowflake Stage `0.0.1` | New, 4 paths / 6 ops; entry + common.yaml + common-file-format.yaml bundled, no warnings/patches |
+| #113 | Discord HTTP monitoring | Official stable-public v10 artifact registered; description remains preview-labelled; 69 local/CI tests pass |
+| #114 | Discord HTTP `10` authorization refresh | GET channel messages now permits OAuth2 as an alternative to BotToken; 153 paths / 246 ops unchanged |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1006,6 +1008,38 @@ report-artifact access, validated manual import/PR process and source-specific r
 They explicitly identify upstream badges, API/RSS endpoints and contribution guidance;
 direct reproducible spec PRs are accepted in this fork. No fork collection endpoint has
 been published or claimed. Index publication still needs verified consumer access.
+
+**Discord HTTP refresh completed (#113/#114, 2026-10-03):** the registry now monitors
+25 descriptions across 24 services. The official
+[repository README](https://github.com/discord/discord-api-spec/blob/main/README.md)
+distinguishes `specs/openapi.json` (stable public HTTP API) from experimental
+`openapi_preview.json`. The OpenAPI description itself remains a public preview;
+retain its original title and source limitations. The vendor's API reference lists
+v10 as Available. Gateway events and experimental features are outside this scope,
+and source matches do not prove complete coverage.
+
+Vendor commit `9426d3c1d4b103484283d7feb568f2ef142712de`, entry SHA-256
+`c946facea80a4d356a9e930062c4d05cb6e96ec2638e532493e557805bb6c408`,
+adds OAuth2 as an alternative to BotToken for GET `/channels/{channel_id}/messages`.
+Declared `10`, OpenAPI 3.1.0, 153 paths / 246 operations remain unchanged; zero
+endpoint additions/removals. Reversing this one security-list addition makes the
+complete parsed vendor content identical to the prior stored file. No source patches,
+bundling, conversion or invented scopes. Existing curation/externalDocs are preserved;
+missing info.x-origin/x-conversion provenance is now recorded. The large text diff is
+indented sequence serialization, not additional API changes. Full validation, exact
+source-content/hash comparison and typed YAML roundtrip pass. Infrastructure CI
+[37100774347](https://github.com/ontola/openapi-directory/actions/runs/37100774347)
+and local tests pass all 69 cases.
+Post-merge audit [37102924090](https://github.com/ontola/openapi-directory/actions/runs/37102924090)
+at main `8dd9bb082` passes 69 tests and fetches all 25 descriptions. Twenty-two have
+validated source matches, including Discord. Cohere's empty union, Square's invalid
+metadata/missing schemas, and Slack's archived unsupported Swagger remain the only
+three blockers; no fetch/prepare failures or unblocked changes. The expected blockers
+make the audit exit nonzero; readable summary and source/report artifact publication
+succeed. Both reports, all 25 entry hashes and seventeen unique repository metadata
+hashes were downloaded and verified at `/tmp/openapi-ci-audit-37102924090`. Ignored
+local reports/health snapshots are updated; recover evidence from CI after reboot.
+
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact
