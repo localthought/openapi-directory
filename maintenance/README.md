@@ -147,6 +147,17 @@ the repository's GA label is not a guarantee that every included operation is GA
 The latest source omits `/healthcheck`, which the stored vendor metadata already labelled
 private; report that removal without claiming the runtime endpoint was retired.
 
+Twilio Messaging is registered separately from classic REST, following
+`spec/json/twilio_messaging_v1.json` and monitoring `messaging.twilio.com` v1 resource
+management only. Its [DestinationAlphaSenders](https://www.twilio.com/docs/messaging/api/destination-alphasender-resource)
+and [ChannelSenders](https://www.twilio.com/docs/messaging/api/messaging-service-channelsender-resource)
+references label REST Messaging Service configuration **Public Beta**, while message
+sending is GA (checked 2026-10-03). Preserve the complete public vendor artifact, including
+those features, and report that lifecycle limitation. The source's removal of old
+`x-maturity` annotations is not evidence of graduation to GA. This artifact also resets
+from `1.56.1` to `1.0.0` at vendor PR 111; retain historical versions. Classic Message
+sending routes, other service descriptions, previews and TwiML are separate scope.
+
 Snowflake's View and Stage services are registered separately from its other resources.
 The [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
 identifies the public catalog as generally available. Their
