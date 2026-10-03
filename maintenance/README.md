@@ -138,6 +138,17 @@ helper files are not separate APIs. Both declare version `0.0.1`; compare their 
 rather than assuming this placeholder advances with changes. Other Snowflake services,
 especially individually designated previews, still need their own lifecycle review.
 
+Discord follows `discord/discord-api-spec/specs/openapi.json`, the vendor's standard
+stable public v10 HTTP artifact. The [vendor README](https://github.com/discord/discord-api-spec/blob/main/README.md)
+distinguishes it from `openapi_preview.json`, which includes experimental features.
+The description itself remains a public preview, as its original title says; retain
+that label. Discord's [API reference](https://docs.discord.com/developers/reference)
+lists v10 as Available (checked 2026-10-03). The report explicitly limits coverage to
+this HTTP artifact, excluding Gateway events and experimental features, and does not
+claim that a source match establishes complete or production-ready documentation.
+The declared version stays `10`, so content comparisons are required even when endpoint
+counts stay fixed.
+
 Swagger 2.0 sources can register a `conversion` recipe with `tool: swagger2openapi`,
 `version: 7.0.8`, and reviewed integer `expected_warnings` / `expected_patches` counts
 (both default to zero). The pinned local converter uses `patch:true`, `warnOnly:true`,
