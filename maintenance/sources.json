@@ -292,6 +292,20 @@
       ]
     },
     {
+      "id": "discord-http",
+      "provider": "discord.com",
+      "target": "APIs/discord.com/10/openapi.yaml",
+      "github": {
+        "repository": "discord/discord-api-spec",
+        "ref": "main",
+        "path": "specs/openapi.json"
+      },
+      "discovery": "The official repository README identifies specs/openapi.json as the stable public v10 HTTP API and distinguishes specs/openapi_preview.json as experimental features. The description itself remains a public preview (including its title); preserve this limitation and follow vendor docs for discrepancies. The official API reference lists v10 as Available (checked 2026-10-03). Gateway events and preview features are separate scope.",
+      "coverage": "Stable public v10 HTTP API only; the OpenAPI description itself remains a vendor-labelled public preview. Excludes openapi_preview.json experimental features and Gateway events. A source match is not proof of complete documentation coverage.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "grafana",
       "provider": "grafana.com",
       "target": "APIs/grafana.com/0.0.1/openapi.yaml",
