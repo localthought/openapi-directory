@@ -1562,3 +1562,67 @@ Two removals are the status-update path parameter rename `status_gid` → `statu
 the third is PUT /teams, with PUT /teams/{team_gid} now published. Audit the corresponding
 public references before importing and record these as specification route changes,
 not proof of runtime retirement. Infrastructure registration is separate from the API PR.
+
+
+**Asana REST import verified (2026-10-03, updater infrastructure #135 merged):**
+The fixed `1.0` description is refreshed in place to **177 paths / 251 operations**:
+**52 paths / 87 operations added, one path / three operations removed**. All removals
+are published route changes, with operation IDs retained: GET/DELETE status updates
+rename `{status_gid}` to `{status_update_gid}` and PUT /teams moves to
+PUT /teams/{team_gid}. The current [get-status](https://developers.asana.com/reference/getstatus),
+[delete-status](https://developers.asana.com/reference/deletestatus) and
+[update-team](https://developers.asana.com/reference/updateteam) references confirm the
+new routes; this says nothing about old runtime route availability.
+
+Full source changes cover access requests, agents / AI Studio usage, allocations/budgets,
+custom types, graph/resource exports, goals, generalized memberships, out-of-office entries,
+portfolio/project settings, rates/roles/reactions, rule triggers, task templates, time tracking,
+timesheet approval statuses and additional workspace resources. Components grow 165 → 280
+schemas (118 added, three vendor definitions removed: ProjectMembershipResponse, TagRequest,
+TaskRequest). Existing operations gain OAuth scope requirements and refined request/response
+schemas, enums, required fields, query options and descriptions. Top-level PAT/OAuth
+alternatives remain. No schemas, scopes or runtime behavior were invented.
+
+Pinned entry hash/revision above, equality with the vendor's JSON representation after the
+reviewed response-key repair, complete prepared-source plus curation equality, strict
+schema/reference/path/response/security-name validation and typed YAML roundtrip all pass.
+All 2,575 references resolve locally. Curation/Twitter/curated tags are retained. No bundling,
+OpenAPI version conversion or other source repairs; preview Project briefs, beta rule-trigger
+wording and deprecated routes remain. The repair is described in `info.x-conversion` and
+`x-origin` now names the pinned maintained source. Manifest target remains `1.0`.
+Infrastructure #135's [CI 37153285326](https://github.com/ontola/openapi-directory/actions/runs/37153285326)
+passes all 79 tests. Local verifier/log: `/tmp/verify-asana-import.py`,
+`/tmp/asana-import-verification.log`; parsed-change inventory `/tmp/asana-content-diff.json`.
+The registry covers **32 artifacts / 31 services**. Run the full network audit after merge
+and record its actual base, source snapshots and classification; earlier 31-source evidence
+must not be represented as validating this addition. Messaging's publication decision is
+still pending; no rejected push was retried.
+
+
+**Asana delivery blocker / resume first (2026-10-03 ~21:54 UTC):** Infrastructure
+[PR #135](https://github.com/ontola/openapi-directory/pull/135) is merged at
+`2f4c1a66a`; all 79 CI tests pass. The fully verified API import is committed on
+`codex/refresh-asana-rest`, commit `b58c91d9f59c6a10178916e7948793809edae46d`, and its
+push succeeded with vendor examples unchanged, no protection bypass. This branch changes
+only the Asana spec and this progress document. The worktree stays on that branch so
+these delivery notes are visible on resume; do not reset or replace its commits.
+
+PR creation was attempted with `/tmp/openapi-pr-asana-refresh.md` but never returned
+success. GitHub API reads timed out (15/25-second bounded requests returned zero bytes),
+and the GitHub pull-list page returned HTTP 503. The stalled create/read processes were
+terminated after several minutes; **creation outcome is unconfirmed**. No API PR is known
+merged, no merge was attempted, and no post-import full audit was dispatched. An assumed
+#136 attachment was removed because the URL could not be verified; do not treat #136 as
+an existing PR without checking. Inspect open/closed PRs by the exact branch and commit
+before retrying creation; attach an existing matching API PR if one was created. If none
+exists, create one from the already-pushed branch/body. Recheck exact file list, current
+head and mergeability, then merge under standing authorization. Push these additional
+handoff notes if needed; review current local/remote head differences first.
+
+After confirmed merge, dispatch the read-only full maintenance workflow against main.
+Expect 32 sources: Asana should match at 177 paths / 251 ops with zero errors and a
+recorded response-key transformation. Other five known blockers remain separate. Verify
+the reports and source/hash/health snapshots before recording actual results; the last
+verified full audit remains 37144078955 (31 sources at main 8ec1aa871). GitHub delivery
+outage is separate from an API validation error or the pending Twilio Messaging owner
+choice. No duplicate API import, extra recurring automation or protection retry was made.
