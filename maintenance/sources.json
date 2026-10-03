@@ -377,7 +377,7 @@
     {
       "id": "twilio-rest",
       "provider": "twilio.com",
-      "target": "APIs/twilio.com/api/1.55.0/openapi.yaml",
+      "target": "APIs/twilio.com/api/1.0.0/openapi.yaml",
       "github": {
         "repository": "twilio/twilio-oai",
         "ref": "main",
