@@ -134,6 +134,19 @@ to `sources.json` only after verifying ownership, service scope, stable-release 
 and absence from the full main tree. Known upstream defects need documented patches or
 reviewed exceptions before import; this tool has no validation bypass.
 
+Twilio's classic REST artifact follows the exact `spec/json/twilio_api_v2010.json`
+source cited by the stored `api/1.55.0` description. The [official repository](https://github.com/twilio/twilio-oai)
+labels the specification project GA and actively maintained (checked 2026-10-03).
+The vendor's [June 2024 MVR release](https://github.com/twilio/twilio-oai/pull/111)
+reset this artifact's declared version from `1.56.1` to `1.0.0`; the repository's
+`2.8.3` release number is a different version. Preserve the old directory and use the
+actual source `info.version` for imports, without assuming numeric version ordering.
+This source monitors classic `api.twilio.com` REST routes only. Other Twilio service
+artifacts, preview APIs and TwiML need separate review. Keep vendor lifecycle annotations;
+the repository's GA label is not a guarantee that every included operation is GA.
+The latest source omits `/healthcheck`, which the stored vendor metadata already labelled
+private; report that removal without claiming the runtime endpoint was retired.
+
 Snowflake's View and Stage services are registered separately from its other resources.
 The [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
 identifies the public catalog as generally available. Their
