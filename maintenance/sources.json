@@ -292,6 +292,20 @@
       ]
     },
     {
+      "id": "meraki-dashboard",
+      "provider": "meraki.com",
+      "target": "APIs/meraki.com/1.74.0/openapi.yaml",
+      "github": {
+        "repository": "meraki/openapi",
+        "ref": "master",
+        "path": "openapi/spec3.json"
+      },
+      "discovery": "The vendor's CiscoDevNet/Meraki-Dashboard-API-v1-Documentation configuration uses master/openapi/spec3.json for its public API Reference and v1-beta for Early Access. Follow the vendor-published OpenAPI 3 artifact on master; no local Swagger conversion is needed. Verify declared releases against the public overview and vendor release notes before import. The existing spec's Swagger origin is the companion spec2.json for this same Dashboard API. Do not substitute the live streaming feed or beta branch (checked 2026-10-03).",
+      "coverage": "Released public Meraki Dashboard v1 reference artifact only; excludes the v1-beta Early Access branch, streaming feed, Secure Connect and other Meraki APIs. Preserve existing curation without deciding the parked x-preferred policy.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "datadog-v2",
       "provider": "datadoghq.com",
       "target": "APIs/datadoghq.com/v2/1.0/openapi.yaml",

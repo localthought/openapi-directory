@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
-from validation import validate, DESCRIPTION as VALIDATION_DESCRIPTION
+from validation import validate, DESCRIPTION as SCHEMA_VALIDATION_DESCRIPTION
 import bundle
 import samples
 import releases
@@ -25,6 +25,8 @@ import health
 import conversion
 
 ROOT = Path(__file__).resolve().parents[1]
+VALIDATION_DESCRIPTION = (SCHEMA_VALIDATION_DESCRIPTION
+                          + ", plus security requirement name resolution across operations, callbacks and webhooks")
 METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
 CURATION = {
     "x-apisguru-categories", "x-logo", "x-preferred", "x-permalink",
@@ -194,6 +196,68 @@ def dereference(spec, value):
     return value
 
 
+def security_requirement_errors(spec):
+    """Check scheme names in actual requirements, never in schemas or examples."""
+    components = spec.get("components", {})
+    if not isinstance(components, dict):
+        components = {}
+    schemes = components.get("securitySchemes", {})
+    if not isinstance(schemes, dict):
+        schemes = {}
+    missing = {}
+    seen_paths, seen_callbacks = set(), set()
+
+    def check(owner, location):
+        requirements = owner.get("security", [])
+        # The structural validator reports malformed lists/objects separately.
+        if not isinstance(requirements, list):
+            return
+        for requirement in requirements:
+            if isinstance(requirement, dict):
+                for name in requirement:
+                    if name not in schemes:
+                        missing.setdefault(name, []).append(location)
+
+    def callback(value, location):
+        value = dereference(spec, value)
+        if not isinstance(value, dict) or id(value) in seen_callbacks:
+            return
+        seen_callbacks.add(id(value))
+        for expression, item in value.items():
+            if not str(expression).startswith("x-"):
+                path_item(item, location + "/" + expression)
+
+    def path_item(value, location):
+        value = dereference(spec, value)
+        if not isinstance(value, dict) or id(value) in seen_paths:
+            return
+        seen_paths.add(id(value))
+        for method in sorted(METHODS & value.keys()):
+            operation = value[method]
+            if not isinstance(operation, dict):
+                continue
+            label = method.upper() + " " + location
+            check(operation, label)
+            for name, value in operation.get("callbacks", {}).items():
+                callback(value, label + " callback " + name)
+
+    try:
+        check(spec, "document")
+        for field, mapping in (("paths", spec.get("paths", {})),
+                               ("webhooks", spec.get("webhooks", {})),
+                               ("components/pathItems", components.get("pathItems", {}))):
+            for name, item in mapping.items():
+                if field != "paths" or not str(name).startswith("x-"):
+                    path_item(item, field + "/" + name)
+        for name, value in components.get("callbacks", {}).items():
+            callback(value, "components/callbacks/" + name)
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError) as error:
+        return ["Security requirement traversal: " + str(error)]
+    return ["Undefined security scheme " + str(name) + " in " + str(len(locations))
+            + " requirement(s); first locations: " + "; ".join(locations[:3])
+            for name, locations in sorted(missing.items(), key=lambda item: str(item[0]))]
+
+
 def validate_document(spec):
     errors = []
     refs = list(reference_objects(spec))
@@ -206,6 +270,7 @@ def validate_document(spec):
         validate(spec)
     except Exception as error:
         errors.append("OpenAPI validation: " + str(error)[:1500])
+    errors.extend(security_requirement_errors(spec))
     try:
         for path, item in spec["paths"].items():
             item = dereference(spec, item)

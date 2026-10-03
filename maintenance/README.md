@@ -29,6 +29,14 @@ and compares paths, operations, schemas, security, and other vendor content. Ver
 alone are insufficient. An unchanged source is reported as `matches_source`; it is not
 a guarantee that the vendor still maintains that source or that it covers the current API.
 
+Security requirement names must resolve to `components.securitySchemes`, as required by
+the [OpenAPI specification](https://spec.openapis.org/oas/v3.0.1.html#security-requirement-object).
+The additional semantic check covers document security, operations, referenced path items,
+callbacks and OpenAPI 3.1 webhooks, with guards for recursive callback graphs. It ignores
+example payloads and extensions, accepts anonymous alternatives and explicit empty security,
+and aggregates undefined names rather than flooding the report with repeated errors.
+This check complements structural validation; it does not invent schemes or infer scopes.
+
 The JSON report records check times, successes, validation errors, separate additions and
 removals, source revisions/hashes, and import blockers. A failed check preserves previous
 success timestamps. A check of selected sources keeps other report rows and their old
@@ -148,6 +156,21 @@ this HTTP artifact, excluding Gateway events and experimental features, and does
 claim that a source match establishes complete or production-ready documentation.
 The declared version stays `10`, so content comparisons are required even when endpoint
 counts stay fixed.
+
+Meraki Dashboard follows the vendor-published `master/openapi/spec3.json`, used for the
+public API Reference in the [official docs configuration](https://github.com/CiscoDevNet/Meraki-Dashboard-API-v1-Documentation/blob/e598959273954662886eda26b8dc2392a4616ef6/config%20copy.json).
+The same configuration selects `v1-beta` for Early Access; do not substitute that branch
+or the live streaming feed. The [public overview](https://developer.cisco.com/meraki/api-v1/overview/)
+confirms release `1.74.0` (checked 2026-10-03). This deliberately reviews the native
+OpenAPI 3 artifact alongside the Swagger companion already cited by the stored file.
+Both have 701 paths / 998 operations, but the native artifact includes 15 callback
+declarations and 13 deprecation notices absent from the converted Swagger companion.
+It also references an undefined `oauth2` security scheme in 822 operations at source
+revision `9029d122861222bbe912193b77d8f2bc442900d4`. Semantic validation therefore blocks
+import; keep the existing spec until an official correction or a separately reviewed
+exact repair is available. Do not fabricate an OAuth scheme or discard requirements.
+The parked `x-preferred` policy remains unresolved. Other Meraki products need separate
+source and lifecycle reviews.
 
 Datadog v2 follows the exact SDK-generation artifact already cited by the stored spec:
 `DataDog/datadog-api-client-python/.generator/schemas/v2/openapi.yaml`. The
