@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-03. Audit of `origin/main` at `3388295d9` (PR #107 merged):
-729 provider domains; 4,261 files under `APIs/`, including 2,087
+**Last updated**: 2026-10-03. Audit of `origin/main` at `5f0b8a4c7` (PR #111 merged):
+729 provider domains; 4,263 files under `APIs/`, including 2,089
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -137,6 +137,9 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #105 | Baseline/import audit progress | 22-source audit evidence and next-run queue |
 | #106 | ECMAScript and cyclic-schema validation | Pinned validator/regex engine; scoped cycle guard; 69 local/CI tests; Cohere's empty union now correctly blocks import |
 | #107 | MongoDB Atlas Admin `2.0` | Fixed version refreshed; 339 paths / 549 ops; 6 paths / 8 ops added, none removed; no source patches |
+| #109 | — | Registered official Snowflake View / Stage sources and lifecycle evidence; 69 local/CI tests pass |
+| #110 | Snowflake View `0.0.1` | New, 5 paths / 7 ops; entry + common.yaml bundled, no warnings/patches |
+| #111 | Snowflake Stage `0.0.1` | New, 4 paths / 6 ops; entry + common.yaml + common-file-format.yaml bundled, no warnings/patches |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -189,7 +192,24 @@ and [Table](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tab
 Snapshot hashes respectively: `f6d644eee01cc2e9a3cdda65004c7dd3b294de32ce67b74ffb8cf831b93f86d1`,
 `08d1eb8d0ace124c5bcee97d79786314e6839aea6ab17e5a17e9e10548411309`, and
 `bef7f216bc08a628ffaf339d427ecc0062fec846d6b22f9e70fd447de967c353`.
-Five Snowflake service descriptions are now imported (56 paths / 68 operations total).
+The first five Snowflake service descriptions total 56 paths / 68 operations.
+View and Stage (#110/#111) bring imported coverage to seven descriptions, 65 paths /
+81 operations, as of 2026-10-03.
+The [View guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/view/view-introduction)
+and [Stage guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/stages/stages-introduction)
+carry no preview designation (checked 2026-10-03). Both are distinct services in the
+generally available REST reference. The View guide lists only four core operations;
+the [full reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/view)
+and pinned vendor spec also include set/unset/get tag actions. Retain the complete spec,
+not a hand-built slice of the guide. Stage bundles the shared file-format helper too.
+Both use commit `990e25d97236a11826c9eed40e587c2b859e5680`, declare `0.0.1`, and pass
+full validation, pinned bundling (zero warnings), raw hash and typed YAML roundtrip
+checks, plus full bundled-content equivalence. No source patches, conversion or curation
+were added. View entry/snapshot hashes: `d0798ce6502634ee22625a1a6229b2ca494e94001b8b50594420e649343c86e6` /
+`7ac9ef64f84a51fe952145630f84a5126e71186b82f956b7e49603df4010557e`.
+Stage entry/snapshot hashes: `85634e14fda822de7354f90fe9829f1b8a46d12efcecd2f45916185c6db6881e` /
+`a7436cc6afa9dbd8f4e8a123743649a3561dbc7986ddcf36f3c6bda201f0b563`.
+
 Remaining catalog products need their own release/scope review; do not blindly import
 every filename, preview-only resource or compatibility description.
 
@@ -478,7 +498,7 @@ the updater for review. Logs, original data, source hashes, and the bundle remai
 
 | Provider | Official source | Import notes |
 |---|---|---|
-| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops), Warehouse `0.0.1` (12 / 15), Database (15 / 18), Schema (7 / 10) and Table (19 / 22) are DONE in #71/#72/#91–#93. The three new resource APIs also declare `0.0.1`. Audit remaining distinct public APIs separately; helper files are not APIs. |
+| Snowflake | [specifications directory](https://github.com/snowflakedb/snowflake-rest-api-specs/tree/main/specifications) | SQL `2.0.0` (3 paths / 3 ops), Warehouse `0.0.1` (12 / 15), Database (15 / 18), Schema (7 / 10) and Table (19 / 22) are DONE in #71/#72/#91–#93. View (5 / 7) and Stage (4 / 6), also `0.0.1`, are DONE in #110/#111. Stage also bundles common-file-format.yaml. Audit remaining distinct public APIs separately; helper files are not APIs. |
 | Cohere | [cohere-openapi.yaml](https://raw.githubusercontent.com/cohere-ai/cohere-developer-experience/main/cohere-openapi.yaml) | DONE #76: OpenAPI 3.1, version `1.0`, 32 paths / 42 ops. Seven referenced TypeScript snippets are explicitly materialized as code strings and included in freshness snapshots. |
 | Mistral | [official docs repository](https://github.com/mistralai/platform-docs-public) | DONE #77: OpenAPI 3.1, version `1.0.0`, 212 paths / 299 ops. `openapi-public-doc.yaml` is the verified public download; do not substitute or concatenate the separate 131-path `openapi.yaml`. |
 | Hugging Face Inference Endpoints | [openapi.json](https://api.endpoints.huggingface.cloud/openapi.json) | OpenAPI 3.1, version `2.0.0`, 40 paths. This describes endpoint management, not the entire Hugging Face Hub or each model's inference API. |
@@ -964,6 +984,22 @@ Both reports, all 22 entry-source hashes and all sixteen unique repository metad
 hashes were downloaded and verified at `/tmp/openapi-ci-audit-37084738252`; ignored local
 reports and health snapshots are updated. Recover original evidence from CI if temporary
 files disappear. No vendor spec was changed solely for a check timestamp.
+
+PR #109 extends the registry to 24 descriptions across 23 services with Snowflake
+View and Stage. Infrastructure CI [37094348658](https://github.com/ontola/openapi-directory/actions/runs/37094348658)
+passes all 69 offline tests. Imports #110/#111 are merged with exact verified heads.
+Expanded audit [37096774816](https://github.com/ontola/openapi-directory/actions/runs/37096774816)
+at main `5f0b8a4c7` passes 69 tests and fetches all 24 registered descriptions. Twenty-one
+have valid source matches, including both new Snowflake services. The same three blockers
+remain: Cohere's empty union, Square's invalid metadata/missing schemas, and Slack's
+archived unsupported Swagger. There are no fetch/prepare failures or unblocked changes.
+The expected blockers make the audit exit nonzero; summary publication and complete
+source/report artifact upload succeed. Downloaded both reports, verified all 24 entry
+source hashes and all sixteen unique repository-health snapshots at
+`/tmp/openapi-ci-audit-37096774816`, and refreshed ignored local reports/health snapshots.
+Recover this evidence from the CI artifact if `/tmp` disappears. No timestamps were
+committed solely to assert freshness.
+
 
 Fork-facing README and CONTRIBUTING now explain the registered-source weekly audit,
 report-artifact access, validated manual import/PR process and source-specific recipes.
