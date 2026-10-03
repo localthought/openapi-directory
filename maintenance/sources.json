@@ -400,7 +400,8 @@
       "discovery": "Follow the exact official messaging.twilio.com v1 artifact cited by the stored spec. The vendor README labels the spec project GA and actively maintained; this is not a guarantee of GA status for every operation. The June 2024 MVR release reset artifact versions to 1.0.0; use actual info.version, not repository release numbers or numeric ordering. Preserve lifecycle annotations and audit other services separately (checked 2026-10-03). Public vendor DestinationAlphaSenders and ChannelSenders references label REST Messaging Service configuration Public Beta, while message sending is GA. Record this distinction; this monitored artifact is not a stable-only subset. The latest artifact omits old x-maturity extensions, so their absence is not evidence that beta features graduated.",
       "coverage": "Public messaging.twilio.com v1 resource-management artifact, including vendor-documented Public Beta Messaging Service configuration (DestinationAlphaSenders/ChannelSenders). Not a stable-only description. Preserve published vendor content and lifecycle annotations; their absence is not proof of GA. Excludes classic api.twilio.com Messages sending routes, other products and TwiML; source matching does not establish full platform coverage.",
       "version_policy": "vendor",
-      "priority": "high"
+      "priority": "high",
+      "import_blocker": "GitHub push protection rejected the vendor-published account SID example during the validated import (2026-10-03). Local branch codex/refresh-twilio-messaging is verified; retain the stored spec until the repo owner reviews allowlisting or authorizes an exact documented example redaction. Do not bypass protection or change vendor examples unilaterally."
     },
     {
       "id": "slack-web",
