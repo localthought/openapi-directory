@@ -1274,13 +1274,57 @@ all 20 repository metadata hashes, validation profiles, classifications and comp
 base were checked in `/tmp/openapi-ci-audit-37128042128`; ignored local reports/health
 snapshots are updated. Recover the `official-source-audit` artifact from CI after reboot.
 
-Next freshness lead: Twilio Messaging's existing
-`APIs/twilio.com/twilio_messaging_v1/1.55.0/openapi.yaml` cites
-`twilio/twilio-oai/main/spec/json/twilio_messaging_v1.json`. Its current artifact was
-**not fetched/compared or registered** in this run. Review this separate service's
-lifecycle and removals before importing. Other Twilio descriptions include deprecated
-products and explicit previews; do not bulk import the catalog or treat sparse checkout
-as missing coverage. Classic REST above is complete; do not repeat its registration/import.
+**Twilio Messaging audited; publication blocked (2026-10-03, #129 merged):**
+#129 registers `twilio/twilio-oai/spec/json/twilio_messaging_v1.json`, the exact source
+already cited by `APIs/twilio.com/twilio_messaging_v1/1.55.0/openapi.yaml`. All 74 tests
+pass locally and in [CI 37135121007](https://github.com/ontola/openapi-directory/actions/runs/37135121007).
+The registry now covers **30 artifacts / 29 services**. Only `messaging.twilio.com` v1
+resource management is monitored, separately from classic Message sending and TwiML.
+
+Source `218b7821602a93ae63e83e20ab5e8637e870250f`, entry SHA-256
+`28993c66048625cb9421c8534609d9b3573365d0e25a5170b5026806634b3f9a`, OpenAPI `3.0.1`,
+declared `1.0.0` (same vendor reset at PR 111 as classic REST, verified in both pinned
+historical files). It has **32 paths / 58 operations**, versus stored 28 / 50:
+four added paths, eight added operations, **no removed paths/operations**. Added routes
+cover DestinationAlphaSenders CRUD/list, create/delete ChannelSenders, requesting a
+managed Link Shortening certificate and validating domain DNS. Public
+[DestinationAlphaSenders](https://www.twilio.com/docs/messaging/api/destination-alphasender-resource)
+and [ChannelSenders](https://www.twilio.com/docs/messaging/api/messaging-service-channelsender-resource)
+docs cover the sender operations but explicitly label REST Messaging Service configuration
+**Public Beta**; sending is GA. The OAD project is GA, not every included product.
+The [Link Shortening onboarding guide](https://www.twilio.com/docs/messaging/features/link-shortening/onboarding-guide)
+documents RequestManagedCert; the published OAD is evidence for ValidateDns.
+Missing old `x-maturity` annotations do not prove graduation to GA. Preserve the complete
+published artifact with that lifecycle limitation in manifest/reports/docs.
+
+Full changes include twelve added schemas (none removed), typed toll-free use-case arrays,
+business-registration/vetting/help/privacy/consent fields, Aegis vetting, explicit Basic
+security, brand-status enum changes and callback methods narrowed to GET/POST at six
+positions. Vendor removes `DELETED` and adds `DELETION_PENDING`, `DELETION_FAILED`,
+`SUSPENDED`; opt-in enum includes `IMPORT` / `IMPORT_PLEASE_REPLACE` as published.
+No runtime behavior was asserted, source patches invented or annotations restored.
+
+The complete import is committed **locally** on `codex/refresh-twilio-messaging`, commit
+`8bf3ab52f17aabcdbb42c0dd059f4d0880f05522`: new `1.0.0/openapi.yaml` (8664 lines) and
+manifest target advance only. Historical bytes, all curation, full parsed source equality,
+strict schema/reference/path/response/security-name validation, raw hash and typed YAML
+roundtrip pass; no conversion, bundling or patches. Verifier/log/body:
+`/tmp/verify-twilio-messaging-import.py`, `/tmp/twilio-messaging-import-verification.log`,
+`/tmp/openapi-pr-twilio-messaging-refresh.md`. Recover from the local branch and pinned
+source if scratch files disappear. **No API PR was created**: the push was rejected,
+and remote branch absence was verified; subsequent PR creation failed for missing head.
+
+GitHub GH013 flags the same published account-SID example at YAML lines
+2028 / 2102 / 2449 / 2485 / 2558. Each exact value was confirmed in the pinned vendor JSON;
+SHA-256 of the flagged identifier is
+`8f635d37958654d4ca9daaa71b92fe67bb8efa7c0b4b37f7f7a2ed2892d634a1`.
+Do not quote the literal here: that can make handoff files unpushable too.
+[Repo-owner review/allow link](https://github.com/ontola/openapi-directory/security/secret-scanning/unblock-secret/3KBwDoPE9Bb9YRpwIpSKhIDc7Hs).
+The user was asked to choose owner review/allowlisting or an exact documented redaction;
+**no response/authorization received yet**. Do not bypass protection, redact on your own,
+retry rejected pushes unchanged, or mark this import merged. The manifest retains the
+old target and records a source-specific delivery blocker; read-only audit still validates
+and compares the new source. Continue independent maintenance while that decision is pending.
 
 **Resume next:** Atlas's validator/dialect blocker and refresh are resolved. Cohere's
 empty union now needs vendor-correction discovery or a separately reviewed exact

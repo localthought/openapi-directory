@@ -157,6 +157,11 @@ those features, and report that lifecycle limitation. The source's removal of ol
 `x-maturity` annotations is not evidence of graduation to GA. This artifact also resets
 from `1.56.1` to `1.0.0` at vendor PR 111; retain historical versions. Classic Message
 sending routes, other service descriptions, previews and TwiML are separate scope.
+The validated import is currently blocked by GitHub push protection on a published
+account-SID example (checked 2026-10-03). A source-specific import guard prevents repeated
+attempts while preserving read-only freshness checks. The repo owner must review
+allowlisting or authorize an exact, documented redaction; do not bypass protection or
+silently modify the example. This is a delivery blocker, not a schema-validation failure.
 
 Snowflake's View and Stage services are registered separately from its other resources.
 The [REST reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference)
