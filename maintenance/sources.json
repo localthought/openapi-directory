@@ -168,6 +168,25 @@
       }
     },
     {
+      "id": "snowflake-task",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/task/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/task.yaml"
+      },
+      "discovery": "Follow Snowflake's distinct public Task resource-management API. Its task-management guide and generally available REST tutorial describe this service without a preview designation (checked 2026-10-03). Keep deprecated graph endpoints and their annotations alongside replacements. Bundle common.yaml from the same pinned revision; this is not complete SQL task coverage or a helper-file API.",
+      "coverage": "Snowflake Task REST management artifact, including vendor-deprecated routes; excludes other Snowflake resource APIs and full SQL task command coverage. Service guide: https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tasks/tasks-introduction ; GA tutorial: https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/tutorials-overview .",
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      }
+    },
+    {
       "id": "cohere",
       "provider": "cohere.com",
       "target": "APIs/cohere.com/1.0/openapi.yaml",
