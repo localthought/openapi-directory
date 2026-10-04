@@ -1991,3 +1991,28 @@ Verifier/log `/tmp/verify-zoom-clean-import.py users`,
 `/tmp/zoom-users-import-verification.log`; local branch `codex/add-zoom-users`.
 Deliver this API-specific PR before proceeding with Accounts in its own PR; full
 36-source audit follows both merges and must use the actual merged base.
+
+
+**Zoom Users delivered / Accounts import prepared (2026-10-04 UTC):**
+[#144](https://github.com/ontola/openapi-directory/pull/144) merged with exact Users head
+`c0f19a5384f149779fae79da210258ae8a2bdd12`, merge
+`f6b35019052eb68eeab293c666b9d968d7c44515`; verified CLEAN/MERGEABLE, exactly the new
+Users YAML plus AGENTS.md, zero deletions. Push succeeded without protection exceptions.
+No duplicate Users PR/import is needed. API-only CI is absent due to workflow path filter;
+the expanded network audit after Accounts must verify both actual imported files.
+
+The updater fetched Accounts at `2026-10-04T11:39:58.873157+00:00`, unchanged SHA-256
+`868e9e60f64152024a77ae56b718319d069c0cbdc8943fba1e0510ea1039254f`, generating
+`APIs/zoom.us/accounts/2/openapi.yaml`: native 3.0.0, actual vendor version 2,
+**66 paths / 87 ops**, 29,930 YAML lines. No content patches, bundling or conversion;
+no local/external refs, because vendor schemas are inlined. Original OAuth scope
+requirements, defaults/examples, deprecated fields and license/master-account restrictions
+remain intact. Prepared/imported strict validation, full unmodified vendor-content equality,
+source/date/hash provenance and typed YAML roundtrip pass; no invented curation.
+Legacy combined Zoom, Meetings and the new Users file remain byte-identical to main.
+Accounts contributes 32 paths / 47 ops absent from the historical combined snapshot,
+which remains intact; no prior routes are removed or declared retired.
+Verifier/log `/tmp/verify-zoom-clean-import.py accounts`,
+`/tmp/zoom-accounts-import-verification.log`; branch `codex/add-zoom-accounts`.
+Deliver this separate API PR, then run/verify the full 36-source audit on the merged base.
+Phone, Vercel, OpenRouter and other recorded blockers/parked items remain untouched.
