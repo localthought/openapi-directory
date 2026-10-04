@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `f16fa55cd` (PR #146 merged):
-729 provider domains; 4,269 files under `APIs/`, including 2,095
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `be3d1fe31` (PR #149 merged):
+729 provider domains; 4,270 files under `APIs/`, including 2,096
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2185,3 +2185,55 @@ Verifier/log: `/tmp/verify-mailchimp-import.py`, `/tmp/mailchimp-import-verifica
 branch `codex/add-official-mailchimp-transactional`. Deliver this separate API PR then
 verify the expanded 37-source audit on actual merged main. All recorded blockers and
 parked decisions remain untouched.
+
+
+**Mailchimp Transactional delivered (2026-10-04 UTC):**
+[#149](https://github.com/ontola/openapi-directory/pull/149) merged and attached,
+exact head `bad886d70dcebd9c36e37a173a5db8cd448d1d50`, merge
+`be3d1fe310356d7f8797227f34df7cac9174aa64`. Verified CLEAN/MERGEABLE and exactly
+two expected files: new 1.4.0 OpenAPI YAML plus AGENTS.md, 8453 added lines, zero deletions.
+Push succeeded without protection exceptions; no historical file or old unofficial label
+was changed. API-only PR has no infrastructure CI due to workflow path filter; #148's
+source/baseline CI passes 89 tests and the expanded network audit follows on actual merged
+main. Inventory recomputed from fetched tree: 729 domains / 4270 API files /
+2096 openapi.yaml / 2168 swagger.yaml. This is new official-release coverage under an
+existing provider, not a wholly missing vendor. Do not duplicate registration/import.
+
+
+**Expanded 37-source audit verified (2026-10-04 UTC):**
+[Run 37221885851](https://github.com/ontola/openapi-directory/actions/runs/37221885851)
+at actual merged main `be3d1fe310356d7f8797227f34df7cac9174aa64` passes all **89 tests**,
+fetches/prepares all **37 artifacts / 36 services**, and reports **31 validated matches /
+six known import blockers**. No new fetch/prepare failures or unblocked drift. Mailchimp
+Transactional matches its imported native 3.1.0 / declared 1.4.0 / 99 paths / 99 ops,
+source SHA-256 `c7e5fe9ee7376cf7becdfc3f12c8ea5d276e06b8da60687938506b4be339915c`,
+revision `74feb256f8ba8bb9d5a322de83c92b42306831fd`, no transformations or validation errors.
+Its actual comparison baseline is now `mandrillapp.com/1.4.0/openapi.yaml`, proving that
+subsequent audits prefer the current official import over the initial community Swagger.
+No path/operation additions or removals relative to the new imported file. The historical
+community snapshot remains unchanged; Marketing still requires separate conversion review.
+
+The six blockers remain Cohere, Square, archived unsupported Slack, native Meraki,
+Twilio Messaging delivery and Vercel. Strict validation and all import guards remain in
+force; the nonzero audit exit is solely these recorded blockers. Tests, readable summary
+and complete artifact upload succeed. All 37 original entry hashes, 22 distinct GitHub
+repository metadata hashes, per-row actual comparison bases, validation profiles,
+classifications, Mailchimp/Zoom/Twilio/Vercel transformation rows and rendered Markdown
+were verified in `/tmp/openapi-ci-audit-37221885851`. Hosted health for three Zoom
+products, Hugging Face and Vercel remains unassessed. Ignored local reports/health cache
+is updated. Recover the durable `official-source-audit` artifact after reboot.
+Verifier/log `/tmp/verify-mailchimp-37-full-audit.py`,
+`/tmp/mailchimp-37-full-audit-verification.log`; CI log `/tmp/mailchimp-full-audit-ci.log`.
+A local watch experienced a connection reset; the workflow continued normally, with no
+duplicate dispatch or interrupted job. Inventory remains 729 domains / 4270 files /
+2096 openapi.yaml / 2168 swagger.yaml; no check-only timestamp API commits.
+
+**Resume next:** This is the latest complete verified audit. Mailchimp Transactional
+source/baseline infrastructure #148 and official import #149 are delivered, attached and
+require no duplicate PR. Continue independent well-known provider discovery or separately
+scoped updater PR-generation/monthly-discovery infrastructure. Mailchimp Marketing's 218
+converter patches require a precise review before enabling conversion; cached diagnostics
+are leads, not a validated source. Zoom Phone, OpenRouter, Vercel and other vendor schema
+blockers need official evidence; do not fabricate repairs or relax validation. Messaging's
+local verified branch and unanswered owner choice remain intact. Respect all parked
+items, the one-week deadline and local laptop sleep policy; no additional chat automation.
