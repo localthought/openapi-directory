@@ -1829,3 +1829,28 @@ SHA-256 `b4b91c12a36bdfce98c74b584845049b3ce2b7138dfe4243f7903073934176a4`, fail
 requestBody lacks required content. Do not invent its missing schema. Inspect public
 product docs/vendor correction separately. Discovery snapshots remain ignored; no Phone
 API files were changed, no parked decision or Messaging owner choice was actioned.
+
+
+**Zoom Meetings service import prepared (2026-10-04 UTC):**
+Infrastructure [#140](https://github.com/ontola/openapi-directory/pull/140) merged at
+`2594640f3f215fd7c6927024ed7be0f9a408aa89`, exact PR head
+`8d2546c0f50a026eca644b20243908d63b54263a`; [CI 37191129818](https://github.com/ontola/openapi-directory/actions/runs/37191129818)
+passes all 83 tests. The live selected source check reports missing/new product artifact,
+zero validation errors, one recorded patch, hosted health unassessed, same raw hash.
+
+The updater fetched the unchanged official download at `2026-10-04T09:09:02.834482+00:00`
+and generated `APIs/zoom.us/meetings/2/openapi.yaml`: native **3.0.0**, actual vendor **2**,
+**131 paths / 186 operations**, 29,611 YAML lines, no external or local references
+(vendor inlines schemas). The one exact enum repair is recorded with recipe SHA-256
+`3c1336f698ec80692879d54eefbdf56b88dcf21d370a485db0153816852247aa` in `info.x-conversion`;
+`x-origin` names the original official download. All other vendor data, including original
+OAuth scope requirements, defaults, examples, deprecated fields and license restrictions,
+is retained. No bundling, conversion, invented curation or additional content repairs.
+Full prepared/imported validation, parsed vendor equality after exactly that repair,
+source/recipe provenance, typed YAML roundtrip and byte equality of the historical combined
+`zoom.us/2.0.0` all pass. This is a product-specific current publication, not a destructive
+replacement of historical broader coverage. It adds one file and changes no existing API.
+Verifier/log: `/tmp/verify-zoom-meetings-import.py`,
+`/tmp/zoom-meetings-import-verification.log`; branch `codex/add-zoom-meetings`.
+Deliver this API in its own PR, verify push/create/file list, then run the expanded
+34-source audit against its actual merged main. Earlier audits do not validate this import.
