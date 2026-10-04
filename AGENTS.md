@@ -2161,3 +2161,27 @@ Transactional Swagger similarly records 101 patches, avoided by the explicitly l
 native source. Do not waive conversion expectations or claim Marketing freshly validated.
 Marketing snapshots/diagnostics remain discovery-only; no spec edits. Parked decisions,
 Messaging owner choice and original deadline/local-sleep constraint remain in force.
+
+
+**Mailchimp Transactional official import prepared (2026-10-04 UTC):**
+[#148](https://github.com/ontola/openapi-directory/pull/148) infrastructure merged at
+`a775ab199ac7def1ce815c153180aded28d77173`, exact head
+`e5514875debc27d08553d8d8552216650c4ec5f2`;
+[CI 37219014419](https://github.com/ontola/openapi-directory/actions/runs/37219014419)
+passes all 89 tests. Live source check validates the native artifact and repository
+health, recording historical Swagger as initial comparison/curation baseline.
+
+The updater re-fetched unchanged native source at `2026-10-04T17:13:44.212069+00:00`
+and generated `APIs/mandrillapp.com/1.4.0/openapi.yaml`: native **3.1.0**, actual declared
+**1.4.0**, **99 paths / 99 operations**, 8429 YAML lines. All 778 local references
+resolve; zero external references. No content patches, bundling or version conversion.
+Full strict source/import validation, complete vendor-content equality after curation,
+source/revision/hash provenance and typed YAML roundtrip pass. Existing categories, logo,
+provider name and externalDocs are preserved from `1.0/swagger.yaml`, which remains
+byte-identical and retains its historical unofficial label. The new vendor-published file
+is not labelled unofficial; that source-classification flag is not curation to copy.
+No invented metadata or changes to vendor paths, servers, schemas/defaults or body keys.
+Verifier/log: `/tmp/verify-mailchimp-import.py`, `/tmp/mailchimp-import-verification.log`;
+branch `codex/add-official-mailchimp-transactional`. Deliver this separate API PR then
+verify the expanded 37-source audit on actual merged main. All recorded blockers and
+parked decisions remain untouched.
