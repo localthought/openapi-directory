@@ -1968,3 +1968,26 @@ are in ignored `cache/maintenance/discovery/zoom-users/<hash>/` and `zoom-accoun
 Review script/outputs: `/tmp/verify-zoom-product-source.py`,
 `/tmp/zoom-users-source-review.json`, `/tmp/zoom-accounts-source-review.json`.
 Phone remains blocked and all parked work/Messaging owner choice remain untouched.
+
+
+**Zoom Users import prepared / source infrastructure delivered (2026-10-04 UTC):**
+[#143](https://github.com/ontola/openapi-directory/pull/143) merged at
+`40aebc5ad722c74740421600f24f3cd9dff7820c`, exact head
+`37203eefdac1a47491f92de6e094c6f39d2c32bb`;
+[CI 37196429832](https://github.com/ontola/openapi-directory/actions/runs/37196429832)
+passes all 83 tests. Brief PR-create connection failure was reconciled by an all-state
+REST head search before retry; no duplicate PR was created. Sources/README/AGENTS only.
+
+The updater re-fetched Users at `2026-10-04T10:53:00.030778+00:00` with unchanged hash
+`c83ce0ee31d51bf9715c9a95930b05feb0dbf360e87c012a25e170841a761d0f`, and generated
+`APIs/zoom.us/users/2/openapi.yaml`: native 3.0.0, declared version 2, **46 paths / 76 ops**,
+20,624 YAML lines. No patches, bundling, conversion or local/external refs; vendor inlines
+schemas. Full prepared/imported validation, complete unmodified vendor-content equality,
+source/date/hash provenance and typed YAML roundtrip pass. No invented curation; legacy
+combined Zoom and existing Meetings are byte-identical. Original OAuth scopes, defaults,
+examples, deprecated fields and license restrictions remain. This product contributes
+21 paths / 34 ops absent from historical combined coverage, which remains intact.
+Verifier/log `/tmp/verify-zoom-clean-import.py users`,
+`/tmp/zoom-users-import-verification.log`; local branch `codex/add-zoom-users`.
+Deliver this API-specific PR before proceeding with Accounts in its own PR; full
+36-source audit follows both merges and must use the actual merged base.
