@@ -369,11 +369,26 @@ def destination(source, spec):
 
 
 def baseline(source, spec, base):
+    initial = source.get("initial_baseline")
+    if initial is not None:
+        path = Path(initial) if isinstance(initial, str) else None
+        if (path is None or path.parts[:2] != ("APIs", source["provider"])
+                or ".." in path.parts or path.name not in {"swagger.yaml", "openapi.yaml"}
+                or str(path) != initial):
+            raise ValueError("Initial baseline must be a canonical spec path inside the provider directory")
     dest = str(destination(source, spec))
     current = stored(dest, base)
     if current is not None:
         return dest, current
-    return source["target"], stored(source["target"], base)
+    current = stored(source["target"], base)
+    if current is not None:
+        return source["target"], current
+    if initial is not None:
+        current = stored(initial, base)
+        if current is None:
+            raise ValueError("Configured initial baseline is absent from the comparison tree: " + initial)
+        return initial, current
+    return source["target"], None
 
 
 def advance_target(manifest, source, dest):

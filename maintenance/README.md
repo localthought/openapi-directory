@@ -433,3 +433,21 @@ services use `zoom.us/users/2` and `zoom.us/accounts/2`, retaining the broader h
 combined spec. They do not duplicate the Meetings artifact's operations. Review other
 products separately; hosted source health remains unassessed, and public documentation
 is not a guarantee of GA status for every feature.
+
+A source may declare an `initial_baseline` for a historical `swagger.yaml` or
+`openapi.yaml` inside the same provider directory. This is used only when neither the
+new vendor-version destination nor the reviewed current `target` exists on the comparison
+base. It preserves curation during migration to the first official OpenAPI release without
+rewriting or deleting the historical Swagger file. Unsafe paths or missing configured
+history fail the check/import. Once imported, the current destination/target takes priority;
+future release comparisons and curation do not fall back to the old snapshot.
+
+Mailchimp Transactional (`mailchimp-transactional`) monitors the vendor's native OpenAPI
+3.1 input linked directly from its [public reference](https://mailchimp.com/developer/transactional/api/),
+under the existing `mandrillapp.com` provider (Transactional Email was formerly Mandrill).
+The artifact declares **1.4.0**, while the reference's display and separate Swagger SDK
+input say **1.4.1**. Preserve the actual native version and dialect; do not concatenate
+or convert the two descriptions. It covers 99 operations including public SMS routes,
+not Mailchimp Marketing or every product's release guarantees. The older unofficial
+`1.0/swagger.yaml` remains intact as the initial curation baseline. Human route comparisons
+may account for its legacy `.json` suffix; the importer retains the exact vendor paths.

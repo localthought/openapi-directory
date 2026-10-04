@@ -256,6 +256,58 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
                 self.assertEqual(result["removed_paths"], ["/new"])
                 self.assertEqual(result["added_paths"], ["/next"])
 
+    def test_initial_swagger_baseline_preserves_curation_then_yields_to_current_release(self):
+        source = {"id": "test", "target": "APIs/example.com/2.0/openapi.yaml",
+                  "initial_baseline": "APIs/example.com/1.0/swagger.yaml",
+                  "provider": "example.com", "version_policy": "vendor",
+                  "url": "https://vendor.example/api.json"}
+        legacy = {"swagger": "2.0", "info": {"title": "Community description", "version": "1.0",
+                   "x-logo": {"url": "https://example.com/logo.svg"}, "x-unofficialSpec": True},
+                  "paths": {"/legacy": {"get": {"responses": {"200": {"description": "OK"}}}}},
+                  "externalDocs": {"url": "https://example.com/docs"}}
+        new = document("2.0")
+        raw = json.dumps(new).encode()
+        metadata = {"url": source["url"], "sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / "sources.json"
+            manifest.write_text(json.dumps({"schema_version": 1, "sources": [source]}))
+            legacy_file = root / source["initial_baseline"]
+            legacy_file.parent.mkdir(parents=True)
+            legacy_file.write_text(json.dumps(legacy))
+            original = legacy_file.read_bytes()
+            def stored(path, base):
+                output = root / path
+                return update.parse(output.read_bytes()) if output.exists() else None
+            with patch.object(update, "ROOT", root), patch.object(update, "stored", side_effect=stored), \
+                    patch.object(update, "fetch", return_value=(raw, metadata)):
+                self.assertEqual(update.main(["import", "--source", "test", "--manifest", str(manifest),
+                                              "--cache", str(root / "cache")]), 0)
+                imported = stored(source["target"], "base")
+                self.assertEqual(imported["info"]["x-logo"], legacy["info"]["x-logo"])
+                self.assertEqual(imported["externalDocs"], legacy["externalDocs"])
+                self.assertNotIn("x-unofficialSpec", imported["info"])
+                self.assertTrue(any(source["initial_baseline"] in s for s in imported["info"]["x-conversion"]))
+                self.assertEqual(legacy_file.read_bytes(), original)
+                self.assertEqual(update.baseline(source, new, "base"), (source["target"], imported))
+                self.assertEqual(update.baseline(source, document("3.0"), "base"),
+                                 (source["target"], imported))
+
+    def test_initial_baseline_rejects_unsafe_paths_and_missing_history(self):
+        source = {"id": "test", "target": "APIs/example.com/2.0/openapi.yaml",
+                  "provider": "example.com", "version_policy": "vendor"}
+        for path in ("APIs/other.com/1.0/swagger.yaml", "APIs/example.com/../1.0/swagger.yaml",
+                     "/APIs/example.com/1.0/swagger.yaml", "APIs/example.com/1.0/spec.json",
+                     "APIs//example.com/1.0/swagger.yaml", 42):
+            with self.subTest(path=path), patch.object(update, "stored") as stored:
+                with self.assertRaisesRegex(ValueError, "canonical spec path"):
+                    update.baseline({**source, "initial_baseline": path}, document("2.0"), "base")
+                stored.assert_not_called()
+        with patch.object(update, "stored", return_value=None):
+            with self.assertRaisesRegex(ValueError, "absent from the comparison tree"):
+                update.baseline({**source, "initial_baseline": "APIs/example.com/1.0/swagger.yaml"},
+                                document("2.0"), "base")
+
     def test_invalid_release_leaves_manifest_and_destination_untouched(self):
         source = {"id": "test", "target": "APIs/example.com/1.0/openapi.yaml",
                   "provider": "example.com", "version_policy": "vendor",
