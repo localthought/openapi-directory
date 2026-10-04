@@ -412,3 +412,13 @@ layout. The older combined `zoom.us/2.0.0` spans additional products and remains
 this narrower service artifact cannot replace it. Preserve deprecated fields and licensing
 restrictions, review other product artifacts separately, and do not treat public-reference
 publication as a guarantee that every feature is GA. Hosted source health is unassessed.
+
+Zoom Users and Accounts follow the separate downloads named by their current public
+product references and pinned official inventories. Each native 3.0.0 artifact declares
+vendor version `2`, validates without patches and retains original OAuth requirements,
+deprecated fields and plan/account restrictions. The viewer's simplified authentication
+and markdown 3.1.1 label are not substitutes for the downloadable artifact. These distinct
+services use `zoom.us/users/2` and `zoom.us/accounts/2`, retaining the broader historical
+combined spec. They do not duplicate the Meetings artifact's operations. Review other
+products separately; hosted source health remains unassessed, and public documentation
+is not a guarantee of GA status for every feature.

@@ -1930,3 +1930,41 @@ needs evidenced vendor correction or exact repair review; do not invent its miss
 Continue other major-provider discovery and authorized separate updater PR-generation /
 monthly-discovery infrastructure. Keep all explicit parked items, Messaging owner decision,
 source-validation blockers, local sleep constraints and the one-week deadline in force.
+
+
+**Zoom Users / Accounts source review and registration (2026-10-04 UTC):**
+The current public [Users](https://developers.zoom.us/docs/api/users/) and
+[Accounts](https://developers.zoom.us/docs/api/accounts/) pages explicitly name their
+`/api-hub/<product>/methods/endpoints.json` downloads in serialized page data. Each embeds
+native 3.0.0/version 2. All non-security content matches the fetched download; the viewer
+simplifies authentication, as with Meetings. Preserve original OAuth scope requirements
+and API-key scheme, not the viewer's altered auth. The markdown rendering's 3.1.1 label
+is not the actual artifact's dialect. The pinned official inventories cited above confirm
+both inputs independently. No OpenAPI conversion, patches or bundling needed.
+
+Fresh downloads at `2026-10-04T10:11:10.620452+00:00` (Users) and
+`2026-10-04T10:11:10.699509+00:00` (Accounts) retain the exact hashes/ETags/Last-Modified
+values recorded in discovery above. **Users: 46 paths / 76 ops**, user/group/contact-group
+administration, settings and provisioning; **Accounts: 66 / 87**, account/subaccount
+administration, settings, roles, dashboards, information barriers and data compliance.
+Both fully validate without repairs, with zero local/external references (inlined schemas).
+No beta/preview/experimental string mentions were found in either full artifact. This
+is a current public product description, not proof every licensed/master-account feature
+is GA; preserve deprecated fields and plan/account restrictions. Hosted health unassessed.
+
+Full fetched main contains only the legacy combined Zoom spec and the newly maintained
+Meetings product, not these separate product layouts. No operations overlap Users vs
+Accounts or either with Meetings. These are distinct public product descriptions, not
+HubSpot-style duplicated object slices. Users adds 21 paths / 34 ops absent from the
+legacy combined snapshot; Accounts adds 32 / 47. Leave historical combined coverage
+byte-for-byte intact; do not replace its broader services or copy its generic curation/
+permalinks to new services. New layouts: `zoom.us/users/2` and `zoom.us/accounts/2`,
+actual declared version `2` each; no invented curation. Registry expands to **36 artifacts /
+35 services** in a separate infrastructure PR before the two API-specific imports.
+The previous full audit still covers only 34, until this expanded audit is completed.
+
+Current-page HTML/fetch evidence, page data, original bytes and pinned vendor references
+are in ignored `cache/maintenance/discovery/zoom-users/<hash>/` and `zoom-accounts/<hash>/`.
+Review script/outputs: `/tmp/verify-zoom-product-source.py`,
+`/tmp/zoom-users-source-review.json`, `/tmp/zoom-accounts-source-review.json`.
+Phone remains blocked and all parked work/Messaging owner choice remain untouched.

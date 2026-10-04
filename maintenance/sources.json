@@ -459,6 +459,26 @@
       "priority": "high"
     },
     {
+      "id": "zoom-users",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/users/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/users/methods/endpoints.json",
+      "discovery": "The current public product reference at https://developers.zoom.us/docs/api/users/ explicitly names this downloadPath and embeds native OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the original OAuth requirements and API-key scheme. The official zoom/skills inventory at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently names this product input. Rendered markdown advertises 3.1.1 but the actual downloadable/embedded artifact declares 3.0.0: retain its native dialect without conversion (checked 2026-10-04). Follow fixed vendor version 2 and content changes. The broader historical zoom.us/2.0.0 remains intact; this distinct current service is not a replacement of its other product coverage.",
+      "coverage": "Official public Zoom Users REST description: users, user groups, contact groups, settings and provisioning. Preserve original OAuth scopes, deprecated fields and account/license restrictions. Accounts, Meetings/Webinars, Phone, Rooms and other products are separate publishing artifacts; not complete platform coverage. Public-reference publication and absent preview labels do not prove all features GA. Hosted source health is unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "zoom-accounts",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/accounts/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/accounts/methods/endpoints.json",
+      "discovery": "The current public product reference at https://developers.zoom.us/docs/api/accounts/ explicitly names this downloadPath and embeds native OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the original OAuth requirements and API-key scheme. The official zoom/skills inventory at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently names this product input. Rendered markdown advertises 3.1.1 but the actual downloadable/embedded artifact declares 3.0.0: retain its native dialect without conversion (checked 2026-10-04). Follow fixed vendor version 2 and content changes. The broader historical zoom.us/2.0.0 remains intact; this distinct current service is not a replacement of its other product coverage.",
+      "coverage": "Official public Zoom Accounts REST description: account/subaccount administration, settings, roles, dashboards, reports, information barriers and data compliance. Preserve original OAuth scopes, deprecated fields and account/license/master-account restrictions. Users, Meetings/Webinars, Phone, Rooms and other products are separate publishing artifacts; not complete platform coverage. Public-reference publication and absent preview labels do not prove all features GA. Hosted source health is unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
