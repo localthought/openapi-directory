@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `be3d1fe31` (PR #149 merged):
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `15ba8fba7` (PR #151 merged):
 729 provider domains; 4,270 files under `APIs/`, including 2,096
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -2289,3 +2289,48 @@ this expansion is verified. Discovery scripts/logs `/tmp/trace-mailchimp-convers
 fetch metadata, complete diffs, converted outputs and trace script. Source health, all
 existing blockers, parked items, Messaging owner choice, deadline and sleep constraints
 remain unchanged. Continue independent implementation/discovery after recording delivery.
+
+
+**Mailchimp Marketing monitoring delivered / 38-source audit verified (2026-10-04 UTC):**
+[#151](https://github.com/ontola/openapi-directory/pull/151) merged and attached,
+exact head `d98148d10705fb1e7aa8b3a7671405aee5c07e97`, merge
+`15ba8fba732d3b6a6f16f7a4f2e5321e4d1fe46c`. Four expected infrastructure/instruction
+files, all additions, no API data changes; CLEAN/MERGEABLE before merge.
+[CI 37227031064](https://github.com/ontola/openapi-directory/actions/runs/37227031064)
+passes all **90 tests**, including the real-converter default/import guard regression.
+No API refresh is delivered or claimed: Marketing remains blocked on native vendor defaults.
+
+Expanded [audit 37228165440](https://github.com/ontola/openapi-directory/actions/runs/37228165440)
+at actual merged main `15ba8fba732d3b6a6f16f7a4f2e5321e4d1fe46c` passes all **90 tests**,
+fetches/prepares all **38 artifacts / 37 services**, and reports **31 validated matches /
+seven recorded import blockers**. No new fetch/prepare failures or unblocked drift.
+Marketing's live production artifact has the reviewed raw hash
+`064cfd877f087cf4c6679681f44f6e0f1d10c667d4f524e34e25ee68f46010bc`, actual baseline
+`mailchimp.com/3.0.91/openapi.yaml`, unchanged 181 paths / 298 operations / version3.0.91,
+zero endpoint additions/removals, one complete conversion with **218 counts / zero warnings**.
+The exact string-notification/default validation pointer is reported, with no successful
+validation timestamp; content drift is visible without treating its old stored file as
+updated. Source health for Marketing is hosted/unassessed. The other six blockers remain
+Cohere, Square, archived unsupported Slack, native Meraki, Messaging delivery and Vercel.
+Strict validation and import guards remain enforced. The audit's nonzero exit is solely
+these seven blockers; tests, readable-summary publication and complete artifact upload succeed.
+
+All 38 entry-source hashes, 22 distinct GitHub repository metadata hashes, actual per-row
+comparison bases, validation profiles, classifications, conversion evidence, specific
+Mailchimp/Zoom/Twilio/Vercel rows and rendered Markdown were verified at
+`/tmp/openapi-ci-audit-37228165440`. Six hosted artifacts (three Zoom products, Hugging Face,
+Vercel and Marketing) remain health-unassessed. Ignored local reports/health cache updated;
+recover the durable `official-source-audit` artifact after reboot. Verifier/log
+`/tmp/verify-mailchimp-38-full-audit.py`, `/tmp/mailchimp-38-full-audit-verification.log`;
+CI log `/tmp/mailchimp-marketing-full-audit-ci.log`. API inventory stays 729 domains /
+4270 files / 2096 openapi.yaml / 2168 swagger.yaml. No timestamp-only spec commits.
+
+**Resume next:** This is the latest complete verified audit. Marketing monitoring #151
+is done; do not duplicate registration or import invalid vendor defaults. SDK/production
+drift is now tracked, including webhook signing, language enums and SMS bounds. A future
+API refresh needs separate exact correction evidence or a vendor fix; do not silently
+remove/coerce defaults or fabricate allowed types. Continue independent well-known
+provider discovery or authorized separate updater PR-generation/monthly-discovery work.
+All previously recorded vendor blockers, explicitly parked items, Messaging's local
+verified branch and unanswered owner choice remain in force. Keep the original one-week
+deadline and local sleep policy; no extra recurring chat automation.
