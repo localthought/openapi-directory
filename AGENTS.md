@@ -1647,18 +1647,68 @@ Asana is an in-place refresh, not a new provider/version directory.
   word “complete” is not a blanket GA guarantee. Snapshots remain in ignored
   `cache/maintenance/discovery/openrouter/<hash>/` and `/tmp/openrouter-source*.json`.
 - **Vercel** already exists at `APIs/vercel.com/0.0.1/openapi.yaml`: 85 paths / 113 ops,
-  OpenAPI 3.1.0; recorded origin `https://openapi.vercel.sh` (origin's 3.0 label differs
-  from the actual stored 3.1). Its source has **not been fetched/compared or registered**.
-  Confirm current official REST publishing input and feature scope before refreshing;
-  official `vercel.json` JSON-Schema links under that host are configuration schemas,
-  not evidence that every document there describes REST operations.
+  OpenAPI 3.1.0. Its hosted official REST source is now fetched, compared and registered
+  below; the newer artifact fails validation. No API import was made. Configuration
+  JSON Schemas on that host remain separate from the REST description.
 - Zoom likewise already exists (`zoom.us/2.0.0`, 265 / 373); the stored marketplace OAD
   URL is a lead, not a verified current artifact. Jira's stored snapshot failed the
   current YAML loader on `tag:yaml.org,2002:value`; no source was fetched or content
   silently rewritten. Keep these separate from the actionable Vercel/source discovery.
 
 **Resume next:** Continue independent major-provider official-source audit/discovery,
-starting with Vercel's existing REST artifact or a verified stable missing provider.
-Asana delivery is complete, and the 32-source audit is the latest verified evidence.
+Vercel is registered with the blocker below; continue with another major provider or a
+verified stable missing provider. Asana delivery is complete. The 32-source audit above
+is the latest verified full network run until the expanded audit is completed.
 Infrastructure PR generation/monthly discovery remain authorized future work; keep them
 separate from API PRs and never introduce blanket automatic merging.
+
+
+**Vercel official source / validation diagnostics (2026-10-04 UTC):**
+The official [vercel/sdk](https://github.com/vercel/sdk) publishing input is confirmed at
+commit `ad18800891417be665d96d6c5a09737410b5f5ac`: its
+[Speakeasy workflow](https://github.com/vercel/sdk/blob/ad18800891417be665d96d6c5a09737410b5f5ac/.speakeasy/workflow.yaml)
+uses `https://openapi.vercel.sh/` before an SDK-specific overlay. This is the same URL
+cited by the stored REST description, with current vendor evidence rather than a guess.
+The public SDK repository was unarchived/active; that observation does not assess the
+hosted artifact's ongoing health. The updater correctly reports hosted health unassessed.
+
+Fetches at `2026-10-04T00:30:54.446427+00:00` and
+`2026-10-04T08:39:05.082847+00:00` have identical SHA-256
+`2c463a1d98b1d93e95a0e5aac33d210c18cb68f704ffeeadd3b4a0b408e18ae5`,
+ETag `"2e448742d1ec429f32556c82e45050a3"`, Last-Modified
+`Sat, 03 Oct 2026 21:58:11 GMT`, and no revision. Declared placeholder version stays
+**0.0.1**, but native dialect is **3.0.3**, with **321 paths / 443 operations** versus
+stored 85 / 113: **263 paths / 368 ops added, 27 paths / 38 ops removed**. No external
+references or preparation transformations. Removed routes include version moves and
+renames; review each individually before any eventual import, and do not infer runtime
+retirement from this difference. Broad public artifact retains preview custom-environment
+APIs, deprecated log drains and plan restrictions; this is not stable-only coverage.
+
+**Import blocked:** native 3.0.3 fails strict validation on unsupported schema keywords
+including `const` and `patternProperties`, plus other structure failures. Independent
+structural iteration found 33 failures; the updater's caught top-level failure remains
+one aggregate finding, now with exact nested schema pointers. The SDK's separate
+`vercel-spec.json` at the same pinned revision has 315 paths / 435 ops, hash
+`b6b52dcccc93788459188642c6c8a735183804cc8379ba1556496af9cdc10281`, and also fails;
+it is an overlaid, different snapshot, not a valid substitution. Preserve the old spec
+until a vendor correction or separately reviewed exact evidenced repair. Do not drop
+constraints, change declared dialect, invent schemas or waive validation. The registry
+now has **33 artifacts / 32 services**, including explicit `vercel-rest` import guard.
+The selected read-only check reports changed/blocked, zero transformations and no
+successful-validation date; source snapshot and report are in ignored maintenance cache.
+No file under APIs/ was changed and import refusal was verified before fetching/writing.
+
+Validation reports previously truncated the repr of a huge failed response schema before
+showing the actual defect. The new bounded formatter follows nested error context,
+prints escaped JSON Pointer locations plus keyword/type findings, omits redundant
+missing-$ref alternative branches when actual failures exist, and limits output to five
+distinct leaf findings / 1,500 characters. This does not enumerate every document error.
+For schema-meta/default errors the pinned validator emits schema-relative paths; location
+annotations are attached after its normal exception conversion, so its outer wrapper
+preserves them. Resolved targets are located by object identity with cycle guards,
+including referenced component definitions. Validation semantics remain unchanged.
+Four regression tests cover actual 3.0/3.1 rejection, pointer escaping, nested keyword
+causes, empty unions, numeric bounds, invalid defaults, omitted payload/default values,
+referenced target locations and unchanged input. All **83 tests pass locally**. Separate
+infrastructure PR and full 33-source CI audit still need delivery/verification; do not
+represent the earlier 32-source run as validating this registration.

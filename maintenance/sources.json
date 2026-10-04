@@ -435,6 +435,17 @@
       "priority": "high"
     },
     {
+      "id": "vercel-rest",
+      "provider": "vercel.com",
+      "target": "APIs/vercel.com/0.0.1/openapi.yaml",
+      "url": "https://openapi.vercel.sh/",
+      "discovery": "Continue the hosted official REST artifact already cited by the stored spec. The official vercel/sdk repository workflow at ad18800891417be665d96d6c5a09737410b5f5ac uses this exact URL as its REST SDK input; the older vendor-owned community answer also identifies it (checked 2026-10-04). Follow fixed placeholder info.version 0.0.1 and content changes, not numeric version sorting. The SDK generated vercel-spec.json is a different overlaid snapshot and also fails validation; do not silently substitute it. Hosted content hashes, ETag, Last-Modified and retrieval times record source observations; repository-health checks cannot assess this hosted artifact.",
+      "coverage": "Vendor-published Vercel platform REST description, including vendor-labelled preview custom-environment APIs and deprecated log-drain operations. Preserve published lifecycle/plan restrictions; not a stable-only subset. Configuration JSON Schemas on this host are separate artifacts. A match to this hosted source does not prove complete current API coverage or ongoing source health.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "import_blocker": "The official hosted document declares OpenAPI 3.0.3 but contains unsupported const/patternProperties schema keywords and other structural errors (33 schema-validator failures observed 2026-10-04). The SDK snapshot also fails. Preserve the stored API and monitor drift until a vendor correction or separately reviewed exact repair; do not change the declared dialect, drop constraints or waive validation."
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

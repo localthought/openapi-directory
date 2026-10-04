@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
-from validation import validate, DESCRIPTION as SCHEMA_VALIDATION_DESCRIPTION
+from validation import validate, describe_error, DESCRIPTION as SCHEMA_VALIDATION_DESCRIPTION
 import bundle
 import samples
 import releases
@@ -270,7 +270,7 @@ def validate_document(spec):
     try:
         validate(spec)
     except Exception as error:
-        errors.append("OpenAPI validation: " + str(error)[:1500])
+        errors.append("OpenAPI validation: " + describe_error(error, spec))
     errors.extend(security_requirement_errors(spec))
     try:
         for path, item in spec["paths"].items():

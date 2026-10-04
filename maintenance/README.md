@@ -374,3 +374,25 @@ collision before any mutation. Shared YAML mappings are checked once. Response v
 payload keys, schema defaults and all other content retain their types; full validation
 still applies. A changed count, vendor quotation fix or invalid key stops for review.
 This is an opt-in representation repair, not global YAML coercion or an OpenAPI downgrade.
+
+Vercel's public hosted REST description is registered at `https://openapi.vercel.sh/`,
+the same artifact cited by its stored spec and selected by the official SDK workflow.
+Its placeholder version stays `0.0.1` while content changes. The current 3.0.3 source
+contains schema keywords outside that dialect and fails validation; imports are explicitly
+blocked, while audits continue fetching, comparing and retaining evidence. The SDK's
+separate overlaid snapshot also fails and is not a replacement. Preserve preview/deprecated
+features and plan restrictions as published; hosted repository health remains unassessed.
+
+Validation diagnostics now identify JSON Pointer locations and nested failing keywords
+instead of dumping large response schemas or example/default values. Missing `$ref`
+errors from an alternative Reference Object branch are omitted when actual schema failures
+exist. This changes only error presentation: full pinned validation, reference and semantic
+checks remain in force, and invalid sources still block import. Summaries are bounded to
+five distinct leaf findings and 1,500 characters; the cached raw source remains the complete
+evidence. Validation count still represents the caught top-level failure, not every leaf
+or every subsequent structural failure in the document.
+
+The pinned validator's schema-meta and default-value failures use schema-relative paths.
+The adapter preserves location annotations through the library's normal error conversion;
+the formatter locates resolved reference targets in the original document with a cycle
+guard. These pointers identify the failing definition rather than the referring operation.
