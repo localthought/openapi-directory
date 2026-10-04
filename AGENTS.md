@@ -1779,3 +1779,53 @@ evidence. Do not replace broad existing coverage with a narrower service artifac
 Per-service PR generation and monthly repository discovery remain authorized future
 infrastructure work, with no blanket automatic merging. Respect the one-week deadline and
 local sleep constraint, and preserve Messaging's local verified branch awaiting user choice.
+
+
+**Zoom Meetings publishing / exact correction reviewed (2026-10-04 UTC):**
+The current `https://developers.zoom.us/docs/api/meetings/` HTML page's own serialized
+page data explicitly specifies downloadPath `/api-hub/meetings/methods/endpoints.json`.
+Its embedded native spec also declares 3.0.0, version 2, 131 paths / 186 ops. All
+non-security content is parsed-identical to the hosted download. The page viewer changes
+apiKey display to bearer and removes OAuth scope requirements; preserve the actual download,
+not this viewer representation. This resolves the prior 3.1.1 markdown-rendering discrepancy:
+that display label is not the downloadable/embedded artifact's declared dialect. No
+conversion or fabricated 3.1 version is needed. The pinned vendor inventory independently
+names the same URL; the older `/api-hub/meetings/` page itself returns 404, which does not
+invalidate its downloadable JSON or the current `/docs/api/meetings/` reference.
+
+Reviewed correction: query `recording_source_type` for GET /users/{userId}/recordings
+has string default `"null"`, and its own description explicitly documents that literal
+as the all-recordings mode alongside the two other modes. The exact same parameter is
+embedded in the live public page. Its enum accidentally omits that documented option.
+`maintenance/patches/zoom-meetings.json` appends literal string `"null"` to the two-value
+enum, preserving the declared default, example, complete query/path parameter list and all
+other fields. The recipe asserts the entire original list plus operationId `recordingsList`
+and summary, so changed meaning, moved parameters or an upstream correction stop replay.
+No actual JSON null coercion, default/constraint removal or invented mode. The fully patched
+native artifact validates with zero errors and zero external refs; manual guard tests reject
+a vendor-fixed enum, changed description and changed operation identity. All 83 offline tests
+pass. The exact typed recipe and its hash/explanation travel in in-spec provenance.
+
+Register this distinct current public Meetings/Webinars product description at
+`APIs/zoom.us/meetings/2/openapi.yaml`, retaining vendor version `2`. Full fetched main has
+only the broader historical `zoom.us/2.0.0` (265 paths / 373 ops across Users, Accounts,
+Phone, Rooms and other products); it remains byte-for-byte intact. Of the current product's
+131 paths / 186 ops, 70 paths overlap the historical combined snapshot and 61 paths /
+86 ops are absent there. This is an updated product-specific publication, not a replacement
+of broad combined coverage or proof of retired routes. Do not copy generic combined
+curation/permalinks to this new service or invent new curation. No API spec has been written
+yet; deliver registry/recipe in its separate infrastructure PR before the API import.
+The registry is now 34 artifacts / 33 services; previous full audit still covers only 33.
+
+Public current source retains deprecated parameters/fields and account/license restrictions;
+no preview/experimental operation labels were found. A beta keyword occurs only in dummy
+meeting-summary example prose, not as a lifecycle designation. Do not infer universal GA
+from this observation. Other products are separate. **Phone discovery only**, not registered
+or imported: official pinned inventory names
+`https://developers.zoom.us/api-hub/phone/methods/endpoints.json`. Fetched at
+`2026-10-04T09:00:58.708459+00:00`, native 3.0.0/version 2, 257 paths / 420 ops,
+SHA-256 `b4b91c12a36bdfce98c74b584845049b3ce2b7138dfe4243f7903073934176a4`, fails at DELETE
+/phone/call_queues/{callQueueId}/custom_groups/{customGroupId}/members/{extensionId}:
+requestBody lacks required content. Do not invent its missing schema. Inspect public
+product docs/vendor correction separately. Discovery snapshots remain ignored; no Phone
+API files were changed, no parked decision or Messaging owner choice was actioned.
