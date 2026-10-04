@@ -22,6 +22,17 @@ integrity; that release includes its runtime dependencies. Update and test both 
 deliberately. GitHub Actions are
 pinned to verified release commit SHAs.
 
+The audit step uses Actions' built-in `GITHUB_TOKEN` with the workflow's existing
+`contents: read` permission. Locally, an optional `GITHUB_TOKEN` environment variable
+authenticates GitHub API requests; otherwise they remain anonymous and can exhaust the
+shared anonymous IP quota. See GitHub's [REST authentication guide](https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api).
+Authentication is limited to HTTPS `api.github.com` on the default/443 port, without
+URL user information. Raw files, archives and other vendor hosts receive no token.
+The authorization header is dropped on every redirect, even within the same origin;
+use canonical API URLs rather than relying on authenticated redirects. Request headers
+are not recorded in fetch metadata or reports. A 403 fails without retrying or falling
+back to anonymous access; review the report and token permissions/quota before rerunning.
+
 `check` reads committed specs from `origin/main`, so sparse checkouts and stale feature
 branches cannot hide existing providers. It resolves GitHub sources to a commit before
 fetching, stores the exact original bytes and fetch metadata under `cache/maintenance/`,

@@ -5,6 +5,7 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -99,11 +100,20 @@ def parse(raw):
 
 
 def request(url):
-    if urllib.parse.urlsplit(url).scheme != "https":
+    origin = urllib.parse.urlsplit(url)
+    if origin.scheme != "https":
         raise ValueError("Sources must use HTTPS")
     for attempt in range(3):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "ontola-openapi-maintenance"})
+            if (origin.hostname == "api.github.com" and origin.port in (None, 443)
+                    and origin.username is None and origin.password is None):
+                token = os.environ.get("GITHUB_TOKEN")
+                if token:
+                    # urllib drops unredirected headers on every redirect, including
+                    # cross-origin redirects. Never send this token to vendor hosts,
+                    # raw files, archives or redirected destinations.
+                    req.add_unredirected_header("Authorization", "Bearer " + token)
             with urllib.request.urlopen(req, timeout=30) as response:
                 if urllib.parse.urlsplit(response.url).scheme != "https":
                     raise ValueError("Source redirected away from HTTPS")

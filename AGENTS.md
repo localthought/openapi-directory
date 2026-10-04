@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `1e278e601` (PR #141 merged):
-729 provider domains; 4,267 files under `APIs/`, including 2,093
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `8073e1124` (PR #145 merged):
+729 provider domains; 4,269 files under `APIs/`, including 2,095
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2016,3 +2016,41 @@ Verifier/log `/tmp/verify-zoom-clean-import.py accounts`,
 `/tmp/zoom-accounts-import-verification.log`; branch `codex/add-zoom-accounts`.
 Deliver this separate API PR, then run/verify the full 36-source audit on the merged base.
 Phone, Vercel, OpenRouter and other recorded blockers/parked items remain untouched.
+
+
+**Zoom Users / Accounts delivered; expanded audit fetch failure (2026-10-04 UTC):**
+[#144](https://github.com/ontola/openapi-directory/pull/144) Users and
+[#145](https://github.com/ontola/openapi-directory/pull/145) Accounts are merged and
+attached. Accounts exact head `b34a01305d97b7a622f70123c5344b6155424675`, merge
+`8073e1124f8cae3aee7ce99e44ab133d9d9f2764`. A connection reset during the merge was
+reconciled by reading its confirmed MERGED state and exact merge commit; do not retry.
+Both PRs contain only their new product YAML plus AGENTS.md, with zero deletions;
+legacy combined Zoom and existing product files remain unchanged. Inventory recomputed
+from fetched main: 729 domains / 4269 files / 2095 openapi.yaml / 2168 swagger.yaml.
+No duplicate registration or API imports are needed.
+
+Expanded [audit 37203709144](https://github.com/ontola/openapi-directory/actions/runs/37203709144)
+at actual main `8073e1124f8cae3aee7ce99e44ab133d9d9f2764` passes all 83 tests,
+but **31 GitHub-hosted sources fail with HTTP 403 rate limit exceeded**, including
+repository metadata. The five hosted inputs succeed: Users, Accounts, Meetings and
+Hugging Face match, while Vercel retains its known validation/import blocker. The summary
+and complete partial-result artifact upload succeed. This is not a complete 36-source
+validation; the latest complete verified audit remains 37191393072 (34 sources).
+Failed report/artifact preserved at `/tmp/openapi-ci-audit-37203709144`; log
+`/tmp/zoom-expanded-audit-ci.log`. Do not replace previous success evidence with a claim
+that GitHub sources were freshly checked.
+
+**Scoped GitHub API authentication implemented (2026-10-04 UTC; delivery pending):**
+The updater's optional `GITHUB_TOKEN` environment variable is used only for exact HTTPS
+`api.github.com`, default/443 port and no URL user information. The Actions audit step
+receives its built-in token under existing `contents: read`; no new permissions, PR
+creation or merging. Raw downloads, archives and third-party hosts remain unauthenticated.
+An unredirected Authorization header is discarded by urllib on every redirect, including
+same-origin redirects; configure canonical API URLs. Headers are not cached or reported.
+HTTP 403 remains a single failed attempt with no anonymous fallback or blind quota retry.
+All 87 offline tests pass (83 previous plus four HTTP regressions). They exercise API
+authentication/metadata, excluded hosts/authorities, real urllib redirect handling and
+fail-closed 403 behavior. Deliver this infrastructure
+separately, verify its exact-head CI, then rerun and verify the complete 36-source audit
+on merged main. Phone, OpenRouter, vendor validation defects, Messaging owner choice and
+all parked items remain untouched; maintain the original deadline and local sleep policy.
