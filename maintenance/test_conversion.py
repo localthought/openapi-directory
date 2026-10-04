@@ -100,6 +100,28 @@ class ConversionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Import blocked"):
                 update.import_document(source, converted, fetched, None)
 
+    def test_reviewed_empty_descriptions_and_disjoint_types_do_not_hide_invalid_defaults(self):
+        spec = swagger()
+        spec["paths"]["/items/{id}"]["put"]["responses"]["200"]["description"] = ""
+        properties = spec["definitions"]["Record"]["properties"]
+        properties["variant_id"] = {"type": ["string", "integer"]}
+        properties["notify_on_subscribe"] = {"type": "string", "default": False}
+        source = copy.deepcopy(SOURCE)
+        source["conversion"]["expected_patches"] = 2
+        raw = json.dumps(spec).encode()
+        fetched = metadata(raw)
+        with tempfile.TemporaryDirectory() as directory:
+            converted, _ = update.prepare_document(source, raw, fetched, Path(directory))
+            self.assertEqual(converted["paths"]["/items/{id}"]["put"]["responses"]["200"]["description"], "")
+            new_properties = converted["components"]["schemas"]["Record"]["properties"]
+            self.assertEqual(new_properties["variant_id"], {"oneOf": [{"type": "string"}, {"type": "integer"}]})
+            self.assertEqual(new_properties["notify_on_subscribe"], {"type": "string", "default": False})
+            errors = update.validate_document(converted)
+            self.assertTrue(any("notify_on_subscribe/default" in error for error in errors), errors)
+            with self.assertRaisesRegex(ValueError, "Import blocked"):
+                update.import_document(source, converted, fetched, None)
+        self.assertEqual(spec, update.parse(raw))
+
     def test_preflight_rejects_unpinned_refs_and_warning_marker_collisions_without_running_tool(self):
         for ref in ("https://vendor.example/schema.json#/Item", "file:///tmp/item.json", "schema.json#/Item"):
             spec = swagger()
