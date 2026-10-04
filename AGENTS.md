@@ -154,6 +154,7 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #132 / #133 | Twilio Verify v2 monitoring / refresh | 33 paths / 57 ops, four private-beta Passkeys additions, none removed; actual vendor 1.0.0, history/curation retained |
 | #135 | Asana REST monitoring / response-code key repair | Maintained official source replaces archive; checked JSON representation; 79 tests pass |
 | #136 | Asana REST `1.0` refresh | Fixed version; 177 paths / 251 ops; 52 paths / 87 ops added, one path / three ops moved/renamed; curation retained |
+| #138 | Vercel REST monitoring / bounded validation diagnostics | Hosted invalid artifact guarded; exact nested schema/default/ref pointers; 83 local/CI tests pass |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1709,6 +1710,72 @@ preserves them. Resolved targets are located by object identity with cycle guard
 including referenced component definitions. Validation semantics remain unchanged.
 Four regression tests cover actual 3.0/3.1 rejection, pointer escaping, nested keyword
 causes, empty unions, numeric bounds, invalid defaults, omitted payload/default values,
-referenced target locations and unchanged input. All **83 tests pass locally**. Separate
-infrastructure PR and full 33-source CI audit still need delivery/verification; do not
-represent the earlier 32-source run as validating this registration.
+referenced target locations and unchanged input. All **83 tests pass locally**. Infrastructure [PR #138](https://github.com/ontola/openapi-directory/pull/138) merged
+with exact head `78c32fb8ecb96c985ee059ee24e4da7dad7db2f2`, merge
+`4193a52552358a085fe4d538bac51629c2f2c83d`. [CI 37189747823](https://github.com/ontola/openapi-directory/actions/runs/37189747823)
+passes all 83 tests; only AGENTS.md and five maintenance files changed. The full 33-source
+audit was dispatched at this merged main as run 37189799727. Do not represent earlier
+32-source evidence as validating this registration; its completed results are recorded below.
+
+
+**Zoom Meetings discovery lead (2026-10-04 UTC; not registered/imported):**
+Zoom's own [Meetings inventory](https://github.com/zoom/skills/blob/2d75fba014118e5eafbc75c4143418fb2d934e29/skills/rest-api/references/meetings.md)
+explicitly names `https://developers.zoom.us/api-hub/meetings/methods/endpoints.json`
+as its canonical OpenAPI input, with `https://api.zoom.us/v2` base URL. Vendor repository
+reference pinned at `2d75fba014118e5eafbc75c4143418fb2d934e29`; its dated inventory is
+129 paths / 184 operations, so it cannot substitute for fetching the current description.
+The hosted artifact fetched at `2026-10-04T08:43:47.902356+00:00` is native **3.0.0**,
+declared version **2**, **131 paths / 186 operations**, SHA-256
+`969f8b111fe98ae12e4cb8c035fc3bfbc51a281217f0158ca3665d26efeab946`, ETag
+`"7b5b47313b8b713b584827ece8a5447e"`, Last-Modified
+`Mon, 28 Sep 2026 22:49:37 GMT`. No external references. **Validation fails** at GET
+/users/{userId}/recordings query `recording_source_type`: string default `"null"` is
+absent from its two-value enum, though described in vendor prose. Do not silently alter
+that enum, drop the default or waive validation; review an exact evidenced repair or
+vendor correction separately. New diagnostic points at the actual parameter/schema/default.
+
+Existing `zoom.us/2.0.0` has 265 paths / 373 ops and covers broader services. Do not replace
+it with this narrower Meetings-only artifact or imply that the old combined coverage is
+retired. The current [Meetings reference](https://developers.zoom.us/docs/api/meetings/)
+advertises OpenAPI 3.1.1 whereas this named hosted input declares 3.0.0: resolve that
+publication difference, public/stable feature lifecycle and product catalog/service
+boundaries before registration/import. Archived `zoom/api` is not a current replacement.
+Original bytes/fetch metadata are in ignored
+`cache/maintenance/discovery/zoom-meetings/<hash>/`, with pinned ownership reference
+alongside; temps `/tmp/zoom-meetings-source`, `/tmp/zoom-meetings-meta.json`,
+`/tmp/zoom-meetings-validation.json` and `/tmp/zoom-meetings-official-reference.md`.
+Continue this major-provider lead rather than repeating old guessed URLs.
+
+
+**Expanded 33-source audit verified (2026-10-04 UTC):**
+[Run 37189799727](https://github.com/ontola/openapi-directory/actions/runs/37189799727)
+at main `4193a52552358a085fe4d538bac51629c2f2c83d` passes all **83 tests**, fetches/prepares
+all **33 artifacts / 32 services**, and reports **27 validated matches / six known import
+blockers**: Cohere, Square, archived Slack, native Meraki, Twilio Messaging delivery and
+Vercel. No new fetch/prepare failures or unblocked drift. Vercel's native source is
+321 / 443 at the exact hash above, with an explicit import guard, exact nested `const`
+failures and no successful-validation date. Cohere now points directly to
+`#/components/schemas/TruncationStrategy/oneOf`; Square still fails on `info.externalDocs`
+with missing vendor definitions unresolved; Meraki retains 822 undefined OAuth2 requirements.
+Messaging remains valid but publication-blocked pending the existing unanswered owner
+choice. No rejected push was retried, no vendor example was redacted and parked work remains.
+
+The expected nonzero audit exit is solely these six blockers. Test job, readable summary
+and complete artifact upload succeeded. Downloaded reports, every one of the 33 entry
+hashes, 21 distinct repository metadata hashes, validation profiles, actual per-row base,
+classifications, Vercel/Asana/Twilio-specific rows and rendered Markdown were verified at
+`/tmp/openapi-ci-audit-37189799727`; ignored local reports/health snapshots are updated.
+Hosted sources Hugging Face and Vercel remain health-unassessed. Verifier/log:
+`/tmp/verify-vercel-full-audit.py`, `/tmp/vercel-full-audit-verification.log`; CI log
+`/tmp/vercel-full-audit-ci-complete.log`. Recover the durable `official-source-audit`
+artifact after reboot. API inventory remains 729 domains / 4266 files / 2092 openapi.yaml /
+2168 swagger.yaml; infrastructure registration changes no API spec.
+
+**Resume next:** This is the latest verified full audit; Vercel monitoring/diagnostics are
+merged and require no duplicate PR/import. Continue independent major-provider discovery,
+especially Zoom's current product-specific publishing sources/lifecycle or another stable
+missing provider. OpenRouter/Vercel schema repairs need separately reviewed official
+evidence. Do not replace broad existing coverage with a narrower service artifact.
+Per-service PR generation and monthly repository discovery remain authorized future
+infrastructure work, with no blanket automatic merging. Respect the one-week deadline and
+local sleep constraint, and preserve Messaging's local verified branch awaiting user choice.
