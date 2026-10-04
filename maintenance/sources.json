@@ -446,6 +446,19 @@
       "import_blocker": "The official hosted document declares OpenAPI 3.0.3 but contains unsupported const/patternProperties schema keywords and other structural errors (33 schema-validator failures observed 2026-10-04). The SDK snapshot also fails. Preserve the stored API and monitor drift until a vendor correction or separately reviewed exact repair; do not change the declared dialect, drop constraints or waive validation."
     },
     {
+      "id": "zoom-meetings",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/meetings/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/meetings/methods/endpoints.json",
+      "discovery": "The current public Meetings page at https://developers.zoom.us/docs/api/meetings/ explicitly names this downloadPath and embeds the same native OpenAPI 3.0.0 product description; all non-security content matches the hosted download. Its viewer replaces authentication display, so preserve the original downloadable OAuth scope requirements and API-key scheme rather than importing the viewer representation. The official zoom/skills Meetings reference at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently cites this exact input. The public markdown rendering advertises 3.1.1 but the actual embedded/downloadable artifact declares 3.0.0: retain that native version without conversion (checked 2026-10-04). Vendor version is fixed 2. Existing combined zoom.us/2.0.0 is broader and remains intact; this is a distinct maintained Meetings service description, not its replacement. Review other product catalog entries separately.",
+      "coverage": "Official public Zoom Meetings/Webinars REST product description, including cloud recording, archiving, reports, devices and meeting summaries. Retain vendor deprecated fields/routes and license/account restrictions; public product status is not proof all features are GA. Other Zoom products such as Accounts, Users, Phone, Rooms and Team Chat are separate publishing artifacts. Historical combined Zoom coverage is retained, not replaced by this narrower description. Hosted source health remains unassessed.",
+      "patches": [
+        "maintenance/patches/zoom-meetings.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

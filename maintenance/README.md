@@ -396,3 +396,19 @@ The pinned validator's schema-meta and default-value failures use schema-relativ
 The adapter preserves location annotations through the library's normal error conversion;
 the formatter locates resolved reference targets in the original document with a cycle
 guard. These pointers identify the failing definition rather than the referring operation.
+
+Zoom Meetings uses the product-specific JSON download named by its current public reference
+and official repository inventory. The live page embeds native OpenAPI 3.0.0 and simplifies
+authentication for its viewer; preserve the original download's OAuth requirements. Its
+markdown rendering's 3.1.1 label is not the artifact's declared dialect. The reviewed exact
+patch adds literal string `"null"` to `recording_source_type`'s enum, which omitted its own
+published default and documented all-recordings mode. Assert the entire original parameter
+list and operation identity; preserve both other alternatives, default, example and all
+other fields. A vendor fix or context change stops replay for review. No null coercion,
+constraint removal, version conversion or invented feature. Full validation still applies.
+
+The maintained Meetings/Webinars product description has its own `zoom.us/meetings/2`
+layout. The older combined `zoom.us/2.0.0` spans additional products and remains intact;
+this narrower service artifact cannot replace it. Preserve deprecated fields and licensing
+restrictions, review other product artifacts separately, and do not treat public-reference
+publication as a guarantee that every feature is GA. Hosted source health is unassessed.
