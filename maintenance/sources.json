@@ -488,6 +488,20 @@
       "priority": "high",
       "source_health": "archived",
       "import_blocker": "Archived Swagger source; current API coverage is uncertain and conversion is not registered."
+    },
+    {
+      "id": "mailchimp-transactional",
+      "provider": "mandrillapp.com",
+      "target": "APIs/mandrillapp.com/1.4.0/openapi.yaml",
+      "initial_baseline": "APIs/mandrillapp.com/1.0/swagger.yaml",
+      "github": {
+        "repository": "mailchimp/mailchimp-client-lib-codegen",
+        "ref": "main",
+        "path": "spec/transactional.openapi.json"
+      },
+      "discovery": "The public Mailchimp Transactional reference (https://mailchimp.com/developer/transactional/api/) directly links this native OpenAPI 3.1 artifact. It declares 1.4.0 even though the page and separate Swagger SDK input say 1.4.1; preserve the native vendor version, do not borrow the SDK label. Covers Transactional Email (formerly Mandrill) and public SMS routes, not Marketing. Initial historical community Swagger coverage and curation remain in place; audit after stripping legacy .json suffix only for human correspondence, never rewrite source paths. Public docs and artifact carry no preview designation (checked 2026-10-04); license/account restrictions still apply.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }

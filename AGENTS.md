@@ -2107,3 +2107,57 @@ reviewed vendor schema evidence. Do not invent schemas, relax validation, retry 
 rejected push, redact examples or action any explicitly parked item. Preserve its local
 verified branch and the existing unanswered owner choice. Keep the original one-week
 deadline and local laptop sleep policy; no additional chat automation.
+
+
+**Mailchimp Transactional official source / initial Swagger baseline (2026-10-04 UTC):**
+The [public Transactional reference](https://mailchimp.com/developer/transactional/api/)
+directly links `mailchimp/mailchimp-client-lib-codegen/spec/transactional.openapi.json`.
+Vendor repository README/spec instructions identify official SDK/docs generation inputs;
+Mailchimp's Tools page links these official clients. Transactional Email is formerly
+Mandrill, as its public overview says. Full fetched main already contains community
+`mandrillapp.com/1.0/swagger.yaml` (90 paths / 90 ops, explicitly unofficial), plus
+Marketing 3.0.55/3.0.91; no native Transactional release. This is a new official release
+of existing provider coverage, not discovery of a wholly missing API. Preserve history
+and curation under `APIs/mandrillapp.com/1.4.0/openapi.yaml`, not a duplicated provider.
+
+Pinned repository `74feb256f8ba8bb9d5a322de83c92b42306831fd`, native artifact SHA-256
+`c7e5fe9ee7376cf7becdfc3f12c8ea5d276e06b8da60687938506b4be339915c`, fetched
+`2026-10-04T15:57:42.146304+00:00`: **OpenAPI 3.1.0 / vendor 1.4.0 / 99 paths / 99 ops**,
+fully validates without patches, bundling or conversion. The public page's 1.4.1 display
+links this exact 1.4.0 native file; separate `transactional.json` Swagger SDK input declares
+1.4.1 and a different base API version, though it has the same operation/path set.
+Do not borrow that label, downgrade native 3.1 or silently substitute/concatenate SDK data.
+Repository is public, unarchived/undisabled with exact identity. No beta/preview/experimental/
+deprecated string designations in the native document; public documentation advertises
+email and SMS without a preview badge. Retain account/plan restrictions; this is not proof
+all features are GA. Body-key authentication is vendor content, not a missing security
+scheme to invent. All stored history is retained, including legacy unofficial labeling.
+
+Human comparison after stripping only legacy `.json` suffix: 15 added paths and six absent
+from the native description. Three whitelist methods have new allowlist counterparts;
+three old URL analytics methods are absent. Do not report all 90 raw renamed paths as
+actual retirements or delete the historical description. Added surface includes SMS and
+SMS rejection management, Mailchimp templates, allowlists, sender/tracking-domain deletion.
+The updater still reports literal path/operation additions and removals; provenance is
+scoped to the native vendor input. No route/server/schema or vendor-prose changes proposed.
+
+Infrastructure adds explicit `initial_baseline`, used only when the new destination and
+current manifest target are both missing. Safe same-provider canonical Swagger/OpenAPI
+paths only; missing configured history fails rather than discarding curation. Existing
+imported releases take priority for subsequent comparisons. Two regressions exercise a
+full Swagger-to-native first import, curation/provenance/history preservation, subsequent
+baseline selection and unsafe/missing history guards. **89 offline tests pass**.
+Register native Transactional separately before its API PR; registry becomes **37 artifacts /
+36 services**. Source cache/evidence in ignored `cache/maintenance/discovery/` includes
+native bytes, pinned README/spec instructions/scripts and repository metadata. Scripts/logs:
+`/tmp/review-mailchimp-native.py`, `/tmp/mailchimp-native-review.log`,
+`/tmp/mailchimp-baseline-tests.log`. Previous full audit covers 36 until expanded after import.
+
+Marketing discovery: official `spec/marketing.json` remains Swagger2/version3.0.91,
+181 paths, source hash `374046a5209daa8d68cdb5dd7e0244fcf214928af4321ff539755849641b9a21`.
+No native Marketing artifact in this pinned directory. The converter records 218 automatic
+patches and zero warnings, requiring detailed review before registering or importing;
+Transactional Swagger similarly records 101 patches, avoided by the explicitly linked
+native source. Do not waive conversion expectations or claim Marketing freshly validated.
+Marketing snapshots/diagnostics remain discovery-only; no spec edits. Parked decisions,
+Messaging owner choice and original deadline/local-sleep constraint remain in force.
