@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `caa19c1cf` (PR #136 merged):
-729 provider domains; 4,266 files under `APIs/`, including 2,092
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `1e278e601` (PR #141 merged):
+729 provider domains; 4,267 files under `APIs/`, including 2,093
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -155,6 +155,7 @@ Grafana's own spec; the repo owner reviewed it and allowed it. See §7.
 | #135 | Asana REST monitoring / response-code key repair | Maintained official source replaces archive; checked JSON representation; 79 tests pass |
 | #136 | Asana REST `1.0` refresh | Fixed version; 177 paths / 251 ops; 52 paths / 87 ops added, one path / three ops moved/renamed; curation retained |
 | #138 | Vercel REST monitoring / bounded validation diagnostics | Hosted invalid artifact guarded; exact nested schema/default/ref pointers; 83 local/CI tests pass |
+| #140 / #141 | Zoom Meetings monitoring / vendor `2` addition | Distinct current product; 131 paths / 186 ops, checked documented enum repair; legacy broader Zoom retained |
 
 GitHub's refresh adds 322 paths / 488 operations and removes 58 paths / 102 operations
 in each artifact. These removals are present in the official source, including retired
@@ -1854,3 +1855,78 @@ Verifier/log: `/tmp/verify-zoom-meetings-import.py`,
 `/tmp/zoom-meetings-import-verification.log`; branch `codex/add-zoom-meetings`.
 Deliver this API in its own PR, verify push/create/file list, then run the expanded
 34-source audit against its actual merged main. Earlier audits do not validate this import.
+
+
+**Zoom Meetings delivered (2026-10-04 UTC):**
+[PR #141](https://github.com/ontola/openapi-directory/pull/141) merged with exact head
+`a0a144cfdcb49bbfdc01459d6ca012dcf01307f1`, merge
+`1e278e601e264273c8b519155ed2262d37f9a3bd`; verified CLEAN/MERGEABLE and exactly two
+files: new Meetings service YAML plus AGENTS.md, zero deletions. Push succeeded without
+protection exceptions. No older combined spec or curation was changed. API-only PR has no
+infrastructure CI due to the workflow path filter; the expanded full audit below tests
+and compares the actual merged main. Source registration/recipe were delivered separately
+in #140. Full fetched main now has 729 domains / 4267 API files / 2093 openapi.yaml /
+2168 swagger.yaml. Do not duplicate this addition or confuse its product-specific scope
+with complete Zoom platform coverage.
+
+**Next Zoom product candidates (2026-10-04 UTC; discovery only):**
+The official `zoom/skills` references directory at pinned
+`2d75fba014118e5eafbc75c4143418fb2d934e29` contains separate Users and Accounts inventories,
+explicitly naming the following product JSON inputs. Both fetched/parsed and passed full
+validation without patches; this is not yet completion of public lifecycle/scope review
+or source registration. The broader legacy combined description covers these products,
+but distinct maintained product layouts are absent from the full fetched main. Preserve
+that legacy file; verify current public pages, original download auth and service
+boundaries before importing, one API PR per product.
+- **Users**: `https://developers.zoom.us/api-hub/users/methods/endpoints.json`, native
+  OpenAPI 3.0.0, declared version 2, **46 paths / 76 ops**, fetched
+  `2026-10-04T09:13:26.255129+00:00`, SHA-256
+  `c83ce0ee31d51bf9715c9a95930b05feb0dbf360e87c012a25e170841a761d0f`,
+  ETag `"5f31525a096323479cf1b3eb26c58654"`, Last-Modified
+  `Mon, 28 Sep 2026 22:49:41 GMT`.
+- **Accounts**: `https://developers.zoom.us/api-hub/accounts/methods/endpoints.json`, native
+  OpenAPI 3.0.0, declared version 2, **66 paths / 87 ops**, fetched
+  `2026-10-04T09:13:26.181811+00:00`, SHA-256
+  `868e9e60f64152024a77ae56b718319d069c0cbdc8943fba1e0510ea1039254f`,
+  ETag `"2ab076076726a6e4b2fae943b4fa3a02"`, Last-Modified
+  `Mon, 28 Sep 2026 22:49:34 GMT`.
+Both hosted sources have no revision and health remains unassessed. Complete source bytes,
+fetch metadata, pinned vendor inventory evidence and validation results are in ignored
+`cache/maintenance/discovery/zoom-users/<hash>/` and `zoom-accounts/<hash>/`.
+Discovery script/logs `/tmp/inspect-zoom-product.py`, `/tmp/zoom-users-discovery.json`,
+`/tmp/zoom-accounts-discovery.json`; reconstruct from pinned inventories after reboot.
+Phone remains blocked on missing requestBody content; do not fabricate a request schema.
+
+
+**Expanded 34-source audit verified (2026-10-04 UTC):**
+[Run 37191393072](https://github.com/ontola/openapi-directory/actions/runs/37191393072)
+at actual main `1e278e601e264273c8b519155ed2262d37f9a3bd` passes all **83 tests**,
+fetches/prepares all **34 artifacts / 33 services**, and reports **28 validated matches /
+six known import blockers** (Cohere, Square, archived Slack, native Meraki, Twilio Messaging
+delivery and Vercel). No new fetch/prepare failures or unblocked drift. Zoom Meetings matches
+its current official source at 131 paths / 186 ops, source hash
+`969f8b111fe98ae12e4cb8c035fc3bfbc51a281217f0158ca3665d26efeab946`, one exact documented
+repair with recipe hash `3c1336f698ec80692879d54eefbdf56b88dcf21d370a485db0153816852247aa`,
+zero validation errors and no added/removed paths or operations relative to its imported file.
+Historical combined Zoom bytes remain unchanged; this result does not establish freshness
+for unregistered Zoom products. Hosted source health for Zoom, Hugging Face and Vercel
+remains unassessed; 21 distinct GitHub repository metadata snapshots were verified.
+
+The nonzero audit exit is solely the six known blockers. Test job, readable job summary
+and complete artifact upload succeeded. Downloaded JSON/Markdown reports, all 34 entry
+hashes and 21 repository hashes, exact per-row comparison base, validation profiles,
+classifications and the Zoom-specific transformation/match row were verified at
+`/tmp/openapi-ci-audit-37191393072`; ignored local report/health cache is updated.
+Verifier/log: `/tmp/verify-zoom-full-audit.py`, `/tmp/zoom-full-audit-verification.log`;
+CI log `/tmp/zoom-full-audit-ci-complete.log`. Recover the durable `official-source-audit`
+artifact after reboot. No owner-only protection exception, redaction or parked work was
+actioned. All required work for #140/#141 is complete; no duplicate registration/import PR.
+
+**Resume next:** This 34-source run supersedes earlier full audits. Review the current
+public Users and Accounts publishing pages and lifecycle, confirm their original downloads,
+then register/import those valid distinct product descriptions one PR per API. Their
+previous fetched counts/hashes are discovery snapshots, not release guarantees. Phone
+needs evidenced vendor correction or exact repair review; do not invent its missing body.
+Continue other major-provider discovery and authorized separate updater PR-generation /
+monthly-discovery infrastructure. Keep all explicit parked items, Messaging owner decision,
+source-validation blockers, local sleep constraints and the one-week deadline in force.
