@@ -451,3 +451,19 @@ or convert the two descriptions. It covers 99 operations including public SMS ro
 not Mailchimp Marketing or every product's release guarantees. The older unofficial
 `1.0/swagger.yaml` remains intact as the initial curation baseline. Human route comparisons
 may account for its legacy `.json` suffix; the importer retains the exact vendor paths.
+
+Mailchimp Marketing (`mailchimp-marketing`) monitors the expanded production Swagger
+self-description linked by the vendor's [fundamentals](https://mailchimp.com/developer/marketing/docs/fundamentals/)
+and used by its SDK-update instructions. Its version/path/operation counts match the SDK
+snapshot while content differs, so the SDK label alone cannot establish production freshness.
+The existing broad artifact includes vendor-labelled Audiences beta and account/plan limits;
+monitoring it does not imply every feature is GA. This hosted source's health is unassessed.
+
+The locked converter's 218 reviewed patch counts comprise 210 unchanged empty response
+strings and eight explicit string-or-integer variant-ID unions translated to disjoint
+`oneOf` alternatives. Zero warnings and unchanged path/operation sets are required.
+Accepting these counts permits comparison, not import: boolean `false` defaults on string
+notification fields still fail strict validation. No defaults are coerced/removed, no
+schema is invented, and all stored Marketing versions remain unchanged pending a reviewed
+vendor correction. A real-converter regression confirms these conversions retain invalid
+string defaults and that the importer rejects them.

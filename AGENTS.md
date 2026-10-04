@@ -2237,3 +2237,55 @@ are leads, not a validated source. Zoom Phone, OpenRouter, Vercel and other vend
 blockers need official evidence; do not fabricate repairs or relax validation. Messaging's
 local verified branch and unanswered owner choice remain intact. Respect all parked
 items, the one-week deadline and local laptop sleep policy; no additional chat automation.
+
+
+**Mailchimp Marketing live publishing audit / monitoring (2026-10-04 UTC):**
+The official Marketing fundamentals' API self-description link and pinned vendor
+`spec/README.md` SDK instructions name
+`https://api.mailchimp.com/schema/3.0/Swagger.json?expand`, exactly the existing 3.0.91
+spec's `x-origin`. Fetch at `2026-10-04T18:08:50.165470+00:00`, raw SHA-256
+`064cfd877f087cf4c6679681f44f6e0f1d10c667d4f524e34e25ee68f46010bc`, no ETag or
+Last-Modified, native Swagger 2.0 / **3.0.91 / 181 paths / 298 ops**, zero external refs.
+Hosted repository health is explicitly unassessed. Do not substitute the older GitHub SDK
+snapshot just because its version/path/operation counts agree. At pinned repository
+`74feb256f8ba8bb9d5a322de83c92b42306831fd`, SDK raw hash
+`374046a5209daa8d68cdb5dd7e0244fcf214928af4321ff539755849641b9a21` differs at **23 raw
+source positions**: production adds webhook `signing_enabled` boolean metadata, permits
+empty language enum values, caps SMS media at one item, adds media MIME metadata and
+updates audience consent/stat/prose. No new/removed paths or operations. Conversion
+layout differences (e.g. generated requestBody aliases) are separate from this source drift.
+This demonstrates fixed-version/count equality is insufficient evidence of freshness.
+
+Reviewed the 218 converter counts against the actual locked 7.0.8 implementation:
+**210** processResponse increments for already-empty response descriptions leave their
+strings unchanged; **eight** fixUpSubSchema increments translate exact `type: [string,
+integer]` image variant-ID item schemas to disjoint string/integer `oneOf` alternatives.
+No null union or guessed missing type. All eight are explicit source fields in e-commerce
+order/product/image request schemas. No warnings; paths and operations survive exactly.
+Accept expected 218 converter counts for comparison, retaining complete strict validation.
+A real-converter regression verifies empty-description preservation, disjoint union shape,
+unchanged invalid boolean-on-string defaults and import rejection. **90 offline tests pass**.
+
+**Import remains blocked:** first exact validation error is
+`#/paths/~1lists/get/responses/200/content/application~1json/schema/properties/lists/items/properties/notify_on_subscribe/default`:
+expected string, got bool. Inspection finds **20 converted occurrences** of boolean false
+defaults on the two string notification fields (response representations repeat schemas).
+These exist in the original vendor input, not a parser/converter regression. Do not coerce
+to string, infer a schema union, remove default annotations or waive validation without a
+separately justified exact correction. The current stored 3.0.91 content remains intact,
+along with 3.0.55 history and all curation. No Marketing API refresh PR is proposed.
+The broad existing vendor publication includes Audiences marked BETA in public docs;
+retain its scope honestly, not a universal GA claim or arbitrary stable-only slice.
+
+Register live production source `mailchimp-marketing`, current baseline
+`APIs/mailchimp.com/3.0.91/openapi.yaml`, conversion expected 218 patches / zero warnings;
+registry becomes **38 artifacts / 37 services** in its own infrastructure PR. No API data
+changes, blanket merging or protection bypass. Expected live selected check is changed /
+validation-blocked, with zero added/removed endpoints. Previous full audit covers 37 until
+this expansion is verified. Discovery scripts/logs `/tmp/trace-mailchimp-conversion.cjs`,
+`/tmp/review-mailchimp-marketing.py`, `/tmp/prepare-mailchimp-marketing.py`,
+`/tmp/mailchimp-marketing-production-review.log`, `/tmp/mailchimp-marketing-prepared-review.log`,
+`/tmp/mailchimp-marketing-tests.log`; ignored cache stores original production/SDK bytes,
+fetch metadata, complete diffs, converted outputs and trace script. Source health, all
+existing blockers, parked items, Messaging owner choice, deadline and sleep constraints
+remain unchanged. Continue independent implementation/discovery after recording delivery.

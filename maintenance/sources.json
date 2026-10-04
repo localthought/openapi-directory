@@ -502,6 +502,21 @@
       "discovery": "The public Mailchimp Transactional reference (https://mailchimp.com/developer/transactional/api/) directly links this native OpenAPI 3.1 artifact. It declares 1.4.0 even though the page and separate Swagger SDK input say 1.4.1; preserve the native vendor version, do not borrow the SDK label. Covers Transactional Email (formerly Mandrill) and public SMS routes, not Marketing. Initial historical community Swagger coverage and curation remain in place; audit after stripping legacy .json suffix only for human correspondence, never rewrite source paths. Public docs and artifact carry no preview designation (checked 2026-10-04); license/account restrictions still apply.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "mailchimp-marketing",
+      "provider": "mailchimp.com",
+      "target": "APIs/mailchimp.com/3.0.91/openapi.yaml",
+      "url": "https://api.mailchimp.com/schema/3.0/Swagger.json?expand",
+      "discovery": "Follow the expanded production self-description linked by the official Marketing fundamentals and spec-generation instructions, matching existing x-origin. Native Swagger 2.0; the pinned SDK snapshot declares the same version/path/operation counts but differs in 23 source positions (2026-10-04 audit), so a matching SDK version is not evidence production content is unchanged. Includes vendor public Audiences (BETA) and account/plan restrictions; this is not universal GA coverage. The 218 reviewed converter counts are 210 unchanged empty response descriptions and eight disjoint string-or-integer variant-ID unions. Strict validation still blocks string notification fields with boolean defaults; no vendor-default coercion or schema fabrication. Hosted source health remains unassessed.",
+      "version_policy": "vendor",
+      "priority": "high",
+      "conversion": {
+        "tool": "swagger2openapi",
+        "version": "7.0.8",
+        "expected_warnings": 0,
+        "expected_patches": 218
+      }
     }
   ]
 }
