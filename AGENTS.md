@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `8073e1124` (PR #145 merged):
+**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `f16fa55cd` (PR #146 merged):
 729 provider domains; 4,269 files under `APIs/`, including 2,095
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -2054,3 +2054,56 @@ fail-closed 403 behavior. Deliver this infrastructure
 separately, verify its exact-head CI, then rerun and verify the complete 36-source audit
 on merged main. Phone, OpenRouter, vendor validation defects, Messaging owner choice and
 all parked items remain untouched; maintain the original deadline and local sleep policy.
+
+
+**Scoped authentication delivered / full 36-source audit verified (2026-10-04 UTC):**
+[#146](https://github.com/ontola/openapi-directory/pull/146) merged and attached,
+exact head `22639559ab3e06c68efefe59772108bb7d229595`, merge
+`f16fa55cdc0ca4ed8da667f6a6769dd6a706f649`. Its
+[CI 37209014620](https://github.com/ontola/openapi-directory/actions/runs/37209014620)
+passes all **87 tests**, including four new HTTP authentication/redirect regressions.
+Five expected infrastructure/instruction files only; CLEAN/MERGEABLE before merge;
+workflow permissions still `contents: read`. No API data or vendor examples changed.
+
+The subsequent full [audit 37211039800](https://github.com/ontola/openapi-directory/actions/runs/37211039800)
+at actual merged main `f16fa55cdc0ca4ed8da667f6a6769dd6a706f649` passes all **87 tests**,
+fetches/prepares all **36 artifacts / 35 services**, and reports **30 validated matches /
+six known import blockers**. All GitHub source and repository metadata requests now
+succeed; no new fetch/prepare failures or unblocked drift. The six blockers remain
+Cohere's empty union, Square's invalid Info metadata/undefined schemas, archived unsupported
+Slack, Meraki's undefined OAuth2 requirements, Twilio Messaging publication protection
+pending the existing owner choice, and Vercel's invalid native source. Validation and
+import guards remain enforced; the audit's nonzero exit is solely these known blockers.
+Readable summary and complete artifact upload succeed.
+
+Both new Zoom products match their imported native 3.0.0/version 2 files exactly:
+Users **46 paths / 76 ops**, raw SHA-256
+`c83ce0ee31d51bf9715c9a95930b05feb0dbf360e87c012a25e170841a761d0f`;
+Accounts **66 / 87**, raw SHA-256
+`868e9e60f64152024a77ae56b718319d069c0cbdc8943fba1e0510ea1039254f`.
+Zero validation errors, no transformations, no added/removed endpoints relative to their
+imports, no invented curation. Meetings also matches at 131 / 186 with its one reviewed
+exact repair. Legacy combined Zoom remains unchanged. This validates configured product
+artifacts, not every Zoom product or every feature's general availability. Hosted sources
+Zoom's three products, Hugging Face and Vercel remain health-unassessed; 21 distinct GitHub
+repository metadata snapshots were verified separately.
+
+Downloaded JSON/Markdown reports, every one of the 36 entry-source hashes, all 21
+repository metadata hashes, per-row actual comparison bases, validation profiles,
+classifications, transformation evidence and rendered Markdown were verified at
+`/tmp/openapi-ci-audit-37211039800`. Ignored local reports/health snapshots are refreshed.
+Verifier/log `/tmp/verify-zoom-36-full-audit.py`,
+`/tmp/zoom-36-full-audit-verification.log`; CI log `/tmp/source-auth-full-audit-ci.log`.
+Recover the durable `official-source-audit` artifact after reboot. Inventory remains
+729 domains / 4269 API files / 2095 openapi.yaml / 2168 swagger.yaml.
+
+**Resume next:** This is the latest complete verified audit, superseding the earlier
+34-source success and incomplete anonymous-rate-limited 36-source attempt. Users and
+Accounts (#144/#145), registrations (#143) and scoped authentication (#146) are done;
+do not duplicate their PRs. Continue independent well-known provider discovery or
+separately scoped updater PR-generation/monthly-discovery infrastructure. Zoom Phone
+still needs evidence for its missing requestBody content; OpenRouter and Vercel need
+reviewed vendor schema evidence. Do not invent schemas, relax validation, retry Messaging's
+rejected push, redact examples or action any explicitly parked item. Preserve its local
+verified branch and the existing unanswered owner choice. Keep the original one-week
+deadline and local laptop sleep policy; no additional chat automation.
