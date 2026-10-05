@@ -2803,26 +2803,7 @@ unlinked only those app attachments to free three slots; PRs/history unchanged, 
 and infrastructure attachments preserved. Every recorded blocker, parked item, unanswered
 Messaging owner choice and original one-week local/sleep deadline remain in force.
 
-**Datadog v1 monitoring delivered / API import verified (2026-10-05):**
-[#168](https://github.com/ontola/openapi-directory/pull/168) merged and attached,
-head `f7ccae10389f0aa1f2d8bdfb7b304392c0fe7f31`, merge
-`1e260131f7664113a72845a3e6cd29a67107c109`. Three expected infrastructure/instruction
-files, 60 additions / zero deletions, CLEAN/MERGEABLE; exact-head
-[CI 37283283221](https://github.com/ontola/openapi-directory/actions/runs/37283283221)
-passes all **93 tests**. Registry 45 artifacts / 44 services; no API data in this PR.
 
-Importer re-fetched exact reviewed bytes at 2026-10-05T08:24:47.463228Z, official commit
-`2240a46b47e2d135962176dfc9dc665f506628af`, entry hash
-`83353a2cbaec662aa74d12d1721daf40d81a574fe2a043f900fc595eea6dfd8f`, creating
-`APIs/datadoghq.com/v1/1.0/openapi.yaml`: **150 paths / 235 operations**, all previously
-absent. Full source/final strict validation, exact vendor-content equality after provenance,
-typed YAML round-trip and all 2794 local refs verified. No invented curation, patches,
-conversion, bundling, version invention, removals or historical edits. All 65 deprecated
-operations/four sunset labels, regional servers and authentication remain exact; stored
-v2 is byte-identical. Logs `/tmp/datadog-v1-import.log`,
-`/tmp/datadog-v1-import-verification.log`; verifier `/tmp/verify-datadog-v1-import.py`.
-Deliver the API in its own PR, then verify the complete expanded audit. Latest complete
-verified network audit remains 44 until expansion is checked; all prior constraints remain.
 
 **Hub monitoring delivered / API import verified (2026-10-05):**
 [#165](https://github.com/ontola/openapi-directory/pull/165) merged and attached,
@@ -2942,3 +2923,24 @@ Verified #112/#115/#118 were merged AGENTS-only progress superseded by later aud
 unlinked only their app attachments to free three slots; PRs/history unchanged and all
 API/infrastructure attachments preserved. Existing blockers, parked items, unanswered
 Messaging owner choice and original one-week local/sleep deadline remain in force.
+
+**Datadog v1 monitoring delivered / API import verified (2026-10-05):**
+[#168](https://github.com/ontola/openapi-directory/pull/168) merged and attached,
+head `f7ccae10389f0aa1f2d8bdfb7b304392c0fe7f31`, merge
+`1e260131f7664113a72845a3e6cd29a67107c109`. Three expected infrastructure/instruction
+files, 60 additions / zero deletions, CLEAN/MERGEABLE; exact-head
+[CI 37283283221](https://github.com/ontola/openapi-directory/actions/runs/37283283221)
+passes all **93 tests**. Registry 45 artifacts / 44 services; no API data in this PR.
+
+Importer re-fetched exact reviewed bytes at 2026-10-05T08:24:47.463228Z, official commit
+`2240a46b47e2d135962176dfc9dc665f506628af`, entry hash
+`83353a2cbaec662aa74d12d1721daf40d81a574fe2a043f900fc595eea6dfd8f`, creating
+`APIs/datadoghq.com/v1/1.0/openapi.yaml`: **150 paths / 235 operations**, all previously
+absent. Full source/final strict validation, exact vendor-content equality after provenance,
+typed YAML round-trip and all 2794 local refs verified. No invented curation, patches,
+conversion, bundling, version invention, removals or historical edits. All 65 deprecated
+operations/four sunset labels, regional servers and authentication remain exact; stored
+v2 is byte-identical. Logs `/tmp/datadog-v1-import.log`,
+`/tmp/datadog-v1-import-verification.log`; verifier `/tmp/verify-datadog-v1-import.py`.
+Deliver the API in its own PR, then verify the complete expanded audit. Latest complete
+verified network audit remains 44 until expansion is checked; all prior constraints remain.
