@@ -766,6 +766,58 @@ Worked examples: BMObot filed 15 issues in 47 seconds. The "SplunkES8.1" issue (
 
 ## 9. Build and maintain a reproducible update process
 
+**Coinbase CDP implementation prepared (2026-10-05):** `coinbase-cdp` registers the
+canonical hosted publication explicitly linked by maintained official
+`coinbase/cdp-sdk` Makefile at discovery commit
+`d40fb3975395033409643654faacfb3d4e4349ee`. Current plain and timestamp-query CDN
+bytes match, hash `156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302`,
+ETag and Last-Modified retained. The SDK mirror is 14 paths / 15 ops behind; no
+SDK Git revision is claimed for hosted bytes. Native 3.1.0 / vendor 2.0.0,
+140 paths / 169 ops, all 2594 local references resolve, none external. Target
+`APIs/coinbase.com/cdp/2.0.0/openapi.yaml`; provider absent from fetched main
+`cfb19aa445a5b9001f682af27a57c12dab03aaba`. Manifest now configures 54 artifacts.
+
+Checked `maintenance/patches/coinbase-cdp.json` removes only four unsupported
+`required:false` siblings from delegation/revocation Parameter Reference Objects.
+The exact referenced XDeveloperAuth header itself already declares required:false.
+Nine assertions cover the full header, four original parameter lists and operation
+IDs. All constraints/auth/reference targets stay intact; no inlining/conversion or
+endpoint removal. Vendor fixes, changed references, required:true, false-vs-zero,
+changed schema constraints and operation identities stop replay. **102 local tests
+pass**; complete patched source and preflight YAML validate, typed roundtrip and
+whole vendor-content equivalence pass except four reviewed flag removals/provenance.
+Public introduction confirms mixed GA/Beta groups, verified-business custodial
+restrictions and Prime-only payment methods. Preserve private-beta annotations and
+all native scope/lifecycle/auth restrictions, not a fabricated all-GA slice.
+
+CDN cache review at 20:41 UTC again confirms plain/fresh-query identical hashes;
+plain response is CloudFront RefreshHit with current Date and no stale Age value.
+Cache metadata, raw responses and official public introduction are retained under
+`cache/maintenance/discovery/coinbase-cdp/`. Do not freeze a timestamp query into
+source configuration; revisit caching if future publication evidence diverges.
+The chat reached its 100-attachment limit. Verified merged historical updater PRs
+#61 and #66 were unlinked from this chat to make room for the current deliveries;
+GitHub history, their in-repo code and AGENTS links remain intact. Current API PRs,
+updater delivery/dependencies and parked protection evidence remain attached.
+
+Selected-source audit against actual main reports valid missing CDP, no fetch or
+validation errors, hosted health unassessed. Cached original bytes and review under
+`cache/maintenance/discovery/coinbase-cdp/` and
+`cache/maintenance/coinbase-cdp/`; verifier `/tmp/verify-coinbase-cdp-import.py`,
+`/tmp/coinbase-cdp-import-review.json`, selected audit
+`/tmp/coinbase-cdp-selected-audit.json/.md`. Infrastructure and API delivery remain
+separate; do not represent the preflight as merged coverage.
+
+Existing Zendesk delivery: updater #195 remains OPEN at d4f05b3ec, Support API #196
+DRAFT at 8478b9bbf. Its 106 local tests pass, but both CI attempts on run 37362766037
+failed to acquire a hosted runner without executing any tests. Do not waive CI or
+rerun repeatedly during outage; merge #195 only after actual CI passes, then ready
+and recheck/merge #196. Both API/infra PRs already exist; no duplicates. Twilio
+Messaging and Zendesk Conversations push-protection owner choices remain unanswered.
+Full 53-source audit is recorded on pending Support branch in #196 (42 matches /
+11 known blocks, not a main-baseline claim); avoid redundant network audits.
+
+
 The 2026-10-02 audit found no GitHub Actions workflows or general updater in this fork.
 The generator under `APIs/moneybird.com/v2-readonly/` is specific to a derived subset.
 The README's weekly-update promise, badges, and collection API links describe upstream

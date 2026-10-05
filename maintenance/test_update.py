@@ -38,6 +38,89 @@ def document(version="1.0"):
 
 
 class UpdaterTests(unittest.TestCase):
+    def coinbase_delegation_fixture(self):
+        recipe = json.loads((update.ROOT / "maintenance/patches/coinbase-cdp.json").read_text())
+        spec = {"openapi": "3.1.0", "info": {"title": "CDP guard", "version": "2.0.0"},
+                "paths": {}, "components": {"parameters": {"XDeveloperAuth":
+                    copy.deepcopy(recipe["assertions"][0]["value"])}}}
+        for assertion in recipe["assertions"][1:]:
+            path, method, field = assertion["pointer"][8:].split("/")
+            path = path.replace("~1", "/").replace("~0", "~")
+            operation = spec["paths"].setdefault(path, {}).setdefault(method, {
+                "responses": {"200": {"description": "OK"}}})
+            operation[field] = copy.deepcopy(assertion["value"])
+        for reference in update.reference_objects(spec):
+            name = reference.rsplit("/", 1)[1]
+            if reference.startswith("#/components/schemas/"):
+                spec["components"].setdefault("schemas", {})[name] = {"type": "string"}
+            elif name != "XDeveloperAuth":
+                # Other vendor parameters are unchanged by this recipe; minimal
+                # independent definitions keep the bounded reference fixture valid.
+                spec["components"]["parameters"][name] = {
+                    "name": name, "in": "header", "required": False,
+                    "schema": {"type": "string"}}
+        return spec
+
+    def test_coinbase_reference_flags_preserve_optional_header_and_contract(self):
+        from jsonschema import Draft202012Validator
+        source = {"patches": ["maintenance/patches/coinbase-cdp.json"]}
+        spec = self.coinbase_delegation_fixture()
+        raw = json.dumps(spec).encode()
+        self.assertTrue(update.validate_document(spec))
+        result, steps = update.prepare_document(source, raw)
+        expected = copy.deepcopy(spec)
+        for operation in expected["paths"].values():
+            for method in operation.values():
+                del method["parameters"][1]["required"]
+        self.assertEqual(result, expected)
+        self.assertEqual(update.validate_document(result), [])
+        header = result["components"]["parameters"]["XDeveloperAuth"]
+        self.assertIs(header["required"], False)
+        validator = Draft202012Validator(header["schema"])
+        for instance, valid in (("", True), ("signed-token", True), (None, False),
+                                (False, False), (42, False), ({}, False)):
+            self.assertEqual(validator.is_valid(instance), valid)
+        for path in result["paths"].values():
+            for operation in path.values():
+                reference = operation["parameters"][1]
+                self.assertEqual(reference, {"$ref": "#/components/parameters/XDeveloperAuth"})
+                self.assertEqual(update.pointer(result, reference["$ref"]), header)
+        self.assertEqual(update.canonical(update.parse(update.serialize_document(result).encode())),
+                         update.canonical(result))
+        self.assertEqual(json.loads(raw), spec)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+
+    def test_coinbase_recipe_stops_on_vendor_fixes_and_referenced_header_changes(self):
+        source = {"patches": ["maintenance/patches/coinbase-cdp.json"]}
+        original = self.coinbase_delegation_fixture()
+        changes = []
+        for key, value in (("required", True), ("required", 0), ("in", "query"),
+                           ("schema", {"type": "string", "minLength": 1})):
+            spec = copy.deepcopy(original)
+            spec["components"]["parameters"]["XDeveloperAuth"][key] = value
+            changes.append(spec)
+        for path, item in original["paths"].items():
+            for method in item:
+                for value in (None, True, 0):
+                    spec = copy.deepcopy(original)
+                    parameter = spec["paths"][path][method]["parameters"][1]
+                    if value is None:
+                        del parameter["required"]  # Native vendor correction.
+                    else:
+                        parameter["required"] = value
+                    changes.append(spec)
+                spec = copy.deepcopy(original)
+                spec["paths"][path][method]["parameters"][1]["$ref"] = "#/components/parameters/Other"
+                changes.append(spec)
+                spec = copy.deepcopy(original)
+                spec["paths"][path][method]["operationId"] = "changed-contract"
+                changes.append(spec)
+        for index, spec in enumerate(changes):
+            raw = json.dumps(spec).encode()
+            with self.subTest(change=index), self.assertRaisesRegex(ValueError, "review recipe"):
+                update.prepare_document(source, raw)
+            self.assertEqual(json.loads(raw), spec)
+
     def test_zendesk_reference_dependency_retains_positive_and_negative_constraints(self):
         import itertools
         from jsonschema import Draft4Validator
