@@ -536,3 +536,19 @@ write. Unsupported explicit tags remain rejected. This repairs parser interpreta
 without editing vendor files or relaxing schema/security validation. Cloudflare imports
 remain blocked by an invalid DNS-order default and undefined assets upload security
 schemes. Report additions/removals separately; URL-variable renames are not retirements.
+
+
+Okta Admin Management follows the vendor's current `management-oneOfInheritance.yaml`
+publication in [`okta/okta-management-openapi-spec`](https://github.com/okta/okta-management-openapi-spec).
+This retains enum constraints, examples and explicit inheritance alternatives; noEnums,
+noExamples and development variants are not replacements. It declares 3.0.3 / `2026.09.1`
+with 485 paths / 731 operations at registration. Other Okta services and the existing
+community `okta.local` submission are separate. Preserve tenant servers, authentication,
+deprecation and native `x-okta-lifecycle` labels, including Early Access/Beta features.
+
+The unmodified source fails strict validation: GET `/api/v1/hook-keys/{id}` overrides
+its shared required path parameter with an inline declaration missing `required: true`.
+A diagnostic-only repair exposes a null default on the nonnullable string
+`Brand.customPrivacyPolicyUrl`. Neither repair is adopted; no schema constraints are
+weakened and no API import is made. Audits retain the exact official source and report
+validation failures. A vendor correction or separately reviewed exact recipe is needed.
