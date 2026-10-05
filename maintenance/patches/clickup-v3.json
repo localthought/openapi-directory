@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "description": "Removed only the invalid null default from PublicDocsCreateDocOptionsDto.parent: its allOf references a non-nullable PublicDocsParentDto object. Exact assertions check the complete parent-containing schema (including optionality) and the referenced object constraints before removal. All types, alternatives, required fields, descriptions and nullability remain unchanged; no replacement default or runtime behavior is inferred. A vendor correction, including nullable:true on the referenced object, stops replay for review.",
+  "assertions": [
+    {
+      "pointer": "#/components/schemas/PublicDocsCreateDocOptionsDto",
+      "value": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the new Doc.",
+            "type": "string",
+            "default": ""
+          },
+          "parent": {
+            "description": "The parent of the new Doc.",
+            "default": null,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PublicDocsParentDto"
+              }
+            ]
+          },
+          "visibility": {
+            "description": "The visibility of the new Doc. For example, `PUBLIC` or `PRIVATE`.",
+            "oneOf": [
+              {
+                "description": "The visibility of the new Doc",
+                "enum": [
+                  "PUBLIC",
+                  "PRIVATE",
+                  "PERSONAL",
+                  "HIDDEN"
+                ],
+                "type": "string"
+              },
+              {
+                "description": "The visibility of the new Doc",
+                "enum": [
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "type": "number"
+              }
+            ]
+          },
+          "create_page": {
+            "description": "Create a new page when creating the Doc.",
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    },
+    {
+      "pointer": "#/components/schemas/PublicDocsParentDto",
+      "value": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "description": "The parent Doc type. Use `4` for Space, `5` for Folder, `6` for List, `7` for Everything, and `12` for Workspace.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ]
+      }
+    }
+  ],
+  "operations": [
+    {
+      "pointer": "#/components/schemas/PublicDocsCreateDocOptionsDto/properties/parent/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "description": "The parent of the new Doc.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PublicDocsParentDto"
+          }
+        ]
+      }
+    }
+  ]
+}

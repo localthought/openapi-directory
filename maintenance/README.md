@@ -285,6 +285,14 @@ If the vendor fixes a defect, remove or revise the recipe deliberately rather th
 silently skipping it. Original source bytes remain cached; comparisons and validation
 use the patched document. The report and imported `info.x-conversion` record the recipe,
 its hash, and its explanation, so the same transformation can be replayed.
+Recipes may additionally declare a nonempty `assertions` list of exact
+`{pointer, value}` pairs. These compare complete JSON nodes (including types) before
+any operation in that recipe. Use them when a correction depends on a referenced
+schema or optionality outside its immediate siblings. Missing/changed nodes, malformed
+or duplicate assertions and unknown recipe fields fail closed; assertions do not
+modify content. Recipe hashes/provenance include these preconditions. A simulated
+valid vendor fix must stop replay, including changes to the referenced target.
+
 Recipes can also remove an explicitly asserted invalid field using `remove: true` in
 place of `value`. This never supplies a replacement value or infers server behavior.
 
@@ -597,3 +605,14 @@ with that sample, not a retired ClickUp endpoint. The historical file remains
 unchanged, and subsequent audits use the real v2 destination. Public v3 is separately
 published and currently fails native validation; it is not combined with v2.
 Hosted repository health remains unassessed.
+
+ClickUp v3 (`clickup-v3`) follows the separately published public collection at
+`ClickUp_PUBLIC_API_V3.yaml`. Its actual version is the literal `version`; preserve
+that placeholder and native 3.0.0. Chat is [experimental](https://developer.clickup.com/docs/chat);
+Docs/pages and other resources share this public artifact. Keep the complete mixed
+collection and native auth/server/plan restrictions. A single invalid `parent` null
+default is removed only after exact assertions on the complete containing schema
+and referenced non-nullable object. Adding `nullable: true` upstream makes the
+default valid and blocks replay for review. No nullability or replacement default
+is inferred. This new v3 service has no old curation/comparison baseline; keep v2
+and historical Polls bytes intact. Hosted health is unassessed.

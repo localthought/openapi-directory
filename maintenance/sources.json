@@ -663,6 +663,19 @@
       "discovery": "Current official https://developer.clickup.com/docs/open-api-spec explicitly links this public v2 collection separately from v3 (checked 2026-10-05). Native OpenAPI 3.1.0 / info.version 2.0 / 83 paths / 138 operations fully validates with all 234 local refs resolved and no patches, conversion or bundling. Hosted source repository health is not assessed. Follow content changes at the vendor-declared version; do not invent a release.",
       "coverage": "Real public ClickUp v2 resources, including tasks, lists, folders, spaces, teams/workspaces, users, custom fields, goals, time tracking and webhooks. Preserve native Authorization_Token, token/OAuth guidance and plan/admin/permission restrictions. Existing clickup.com/1.0.0 is an unrelated API Blueprint Polls sample. Explicit initial_baseline retains only its existing x-logo/x-providerName curation; before first import the report compares against that sample, so its /questions delta is not a retired ClickUp endpoint. After import the actual v2 destination takes priority. Preserve historical sample bytes; separately review v3 rather than merging endpoint sets.",
       "priority": "high"
+    },
+    {
+      "id": "clickup-v3",
+      "provider": "clickup.com",
+      "target": "APIs/clickup.com/v3/version/openapi.yaml",
+      "url": "https://developer.clickup.com/openapi/ClickUp_PUBLIC_API_V3.yaml",
+      "version_policy": "vendor",
+      "patches": [
+        "maintenance/patches/clickup-v3.json"
+      ],
+      "discovery": "Current official https://developer.clickup.com/docs/open-api-spec explicitly publishes this complete public v3 collection separately from v2 (checked 2026-10-05). Preserve native OpenAPI 3.0.0 and literal info.version version. https://developer.clickup.com/docs/chat calls Chat experimental; Docs has a current public limitations guide and the artifact is a mixed-lifecycle collection, not a preview-only or stable-only slice. Hosted repository health is unassessed. Native 23 paths / 35 operations / 268 local refs; exactly checked invalid-null-default removal with full referenced-schema assertions permits complete validation and fails replay on nullable vendor correction.",
+      "coverage": "Distinct public ClickUp v3 Chat, Docs/pages, attachments, privacy/access, audit logs, comment types and task movement/per-user estimates. Retain experimental Chat tags/guidance, native authHeader/server and plan/permission restrictions; public availability is not a GA guarantee. Keep all 23 paths / 35 operations and do not concatenate v2. This new v3 service has no previous baseline or curation; existing v2 and historical Polls file remain byte-identical. Vendor placeholder version is not runtime v3 or a generated date.",
+      "priority": "high"
     }
   ]
 }
