@@ -231,6 +231,59 @@ every filename, preview-only resource or compatibility description.
 
 ---
 
+**Support delivery prepared on 2026-10-05:** separate updater
+[#195](https://github.com/ontola/openapi-directory/pull/195) adds conservative unused
+pointer guards and a checked compatibility recipe; 106 local tests pass, exact-head
+CI run 37362766037 is queued. The API-only branch `codex/zendesk-support-api-only`
+adds official Support/Ticketing 2.0.0, native 3.0.3, **455 paths / 657 operations**,
+2,534 resolved local refs, zero external refs. All endpoint/auth/server/role/plan/tag/
+deprecation content remains. Only the documented null-only alternative and the exact
+unused invalid UserLogin parameter are corrected, plus provenance. Do not merge this
+API before #195 CI/merge; no infrastructure changes are duplicated in its PR diff.
+
+Original source SHA-256
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`, recipe SHA-256
+`38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5`.
+Independent full native/prepared/import comparisons, complete validation and typed
+YAML roundtrip pass; no version conversion or invented curation. Native basic-only
+security remains a documented limitation relative to current public OAuth guidance.
+All four deprecated operations and API-token lifecycle prose retained. Original raw
+bytes cached unchanged; hosted source health unassessed and no Git revision claimed.
+Detailed implementation/import/audit progress is also retained on pushed branch
+`codex/add-zendesk-support` at `2a61ee7eb`, based on updater head `d4f05b3ec`.
+The separate API-only branch avoids including pending infrastructure in its diff.
+
+Full **53-source local audit** at the prepared API commit `dd7b9568238c` (not main)
+finds **42 matches / 11 known blocks / no new unblocked drift or fetch/prepare failure**.
+All source/26 repository metadata hashes, per-row bases/profiles, endpoint deltas and
+Markdown/JSON parity checked; 14 hosted sources unassessed. Support matches its
+pending import, Atlas its delivered refresh. Only Stripe repository revision advanced
+(`3d9ffbb79e0ff25254c498b3b7623f710401a1fb`), independently re-fetched pinned bytes
+unchanged. Preserve the earlier 52-source CI snapshot as historical. Durable ignored
+report/review `cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/`;
+verifier/log `/tmp/verify-zendesk-support-53-local-audit.py`,
+`/tmp/zendesk-support-53-local-audit-verification.log`; import review/verifier/log
+`/tmp/zendesk-support-import-review.json`, `/tmp/verify-zendesk-support-import.py`,
+`/tmp/zendesk-support-import-verification.log`. Existing Conversations/Messaging
+owner choices remain unanswered; neither rejected push retried or redacted.
+
+**Anthropic discovery lead checked, no import:** search snippets still show an old
+Stainless GCS spec URL in official SDK `.stats.yml`. Fresh pinned TypeScript
+`d49bdab458000bcdffe77bd84b03293f31824fb3`, Python
+`18f25547f20cf5f01da69ac611e700e3bc9ebf21` and CLI
+`f8457f464b72d3ac54a13f45a90e1e686d724dcb` all publish only configured-endpoint counts
+in that file; the pointer has been removed. All three repos are public/unarchived/
+undisabled; complete untruncated filename trees contain no OpenAPI/Swagger artifact
+names. Do not register the older search-snippet URL as a maintained current source
+or reconstruct a spec from generated SDK types. This is a bounded search result,
+not proof the vendor publishes no spec anywhere. Original metadata/stats/tree bytes
+and hashes retained under ignored `cache/maintenance/discovery/anthropic/`; review
+`/tmp/anthropic-live-sdk-publication-review.json`. Continue current official-source
+publication discovery separately. Attachment cap: verified merged superseded
+AGENTS-only #60 and #194 unlinked; GitHub history/API/updater attachments retained.
+
+---
+
 ## 3. Triage progress
 
 Working dataset was `/tmp/all_issues.tsv` — **this is in `/tmp` and will not survive a reboot.** Regenerate with:
