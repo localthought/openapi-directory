@@ -695,6 +695,17 @@
       "discovery": "Current official https://developer.zendesk.com/documentation/conversations/references/openapi-specification/ identifies maintained master/openapi.yaml as the source used directly for the public reference; generated SDK wrappers and old v1.1 are deprecated, not this v2 specification. Checked 2026-10-05: public/unarchived/undisabled repository; native OpenAPI 3.0.2, vendor document version 17.13.2, 42 paths / 68 operations / 742 resolved local refs. Checked compatibility recipe retains the sourceType dependency and corrects malformed email-filter required syntax; https://developer.zendesk.com/api-reference/conversations/#operation/ListUsers explicitly requires identities.email. Original cached bytes and complete schema/parameter/prose assertions stop replay on changed semantics or vendor correction.",
       "coverage": "Sunshine Conversations public v2 messaging management, users, conversations/messages, integrations/webhooks, switchboards, attachments, clients/devices and partner OAuth. Vendor document release 17.13.2 is not runtime v2. Preserve native tenant Zendesk /sc server plus labelled legacy Smooch servers, basic/JWT authentication and account/app/integration scope limitations. Account provisioning is direct-account only; user-scoped SDK JWTs are not accepted by public v2. Retain native deprecations, preview/restriction prose and all operations; this is distinct from Zendesk Support/Ticketing. No cross-product curation baseline or invented metadata.",
       "priority": "high"
+    },
+    {
+      "id": "zendesk-support",
+      "provider": "zendesk.com",
+      "service": "support",
+      "target": "APIs/zendesk.com/support/2.0.0/openapi.yaml",
+      "url": "https://developer.zendesk.com/zendesk/oas.yaml",
+      "version_policy": "vendor",
+      "discovery": "Current official https://developer.zendesk.com/api-reference/ticketing/introduction/ directly publishes this hosted OAS download (checked 2026-10-05). Native OpenAPI 3.0.3/document 2.0.0 now has 455 paths / 657 operations / 2534 resolved local references, no external references. Hosted repository health is not assessed. Fixed declared version does not prove unchanged content: since initial discovery four ticket-task/subticket/link paths/five operations and parallel approval-request/schema content were added, no endpoint removals.",
+      "coverage": "Zendesk public Support v2/Ticketing and included custom-data/custom-object resources, not Sunshine Conversations or every Zendesk product. Preserve native tenant servers, authentication, role/plan permissions, lifecycle guidance and deprecated operations. Source monitoring is read-only: native unsupported AccessRuleCondition.value.oneOf[4].type:null blocks validation/import. A diagnostic null-only representation preserves declared values but exposes unused UserLogin in:path/style:deepObject; no correction, schema/parameter removal or dialect conversion is adopted. Review exact semantics and complete source validation before any future API import.",
+      "priority": "high"
     }
   ]
 }
