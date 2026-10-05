@@ -4274,3 +4274,30 @@ registration; record that snapshot separately and run a complete 53-source check
 on a later run after this registration is merged. Do not relabel its total.
 Merged AGENTS-only progress #101 was unlinked to make room at the attachment limit;
 all API/updater attachment records remain. Independent #179 remains untouched.
+
+**MongoDB Atlas content drift found in expanded 52-source audit:**
+Run [37358848624](https://github.com/ontola/openapi-directory/actions/runs/37358848624)
+at exact main `9a4d00029f41fd78b4a76bb4953403663ba69005` finds one unblocked Atlas
+content change, despite fixed version and unchanged endpoint counts. Current official
+source commit `f84bc82a8a0f85c83cbca399da3228223d6a397d`, SHA-256
+`8c15051acf24542238abb64a3e6fc5dda872337ce4fdceb9bf560c93580e2fd4`,
+**native 3.0.1 / fixed 2.0 / 339 paths / 549 operations**. Independent pinned and
+moving-source re-fetch plus public/unarchived/undisabled repository checks agree.
+Full parsed comparison is exactly three leaf changes: add `Agent Engine` to the
+CostExplorerFilterRequestBody.services and UsageDetailsFilterRequest.skuServices
+item enums, preserving all old alternatives/order; vendor `info.x-xgen-sha` updates.
+No endpoint additions/removals, authentication or server changes. This does not
+establish GA/account availability of the named product; retain source restrictions.
+
+Separate fixed-version import refreshes `APIs/mongodb.com/atlas-admin/2.0/openapi.yaml`
+in place with no source patches, conversion or bundling. All endpoints/auth/servers
+and existing APIs.guru curation retained. Native and serialized complete validation,
+exact typed curated vendor-content equivalence, all **8,593 local references** resolved
+(zero external), typed YAML roundtrip and SHA/commit/profile provenance pass.
+Fresh review `/tmp/review-atlas-52-audit.py`, log/review `/tmp/atlas-52-audit-review.log`,
+`/tmp/atlas-52-audit-review.json`; independent import checker/log
+`/tmp/verify-atlas-agent-engine-import.py`,
+`/tmp/atlas-agent-engine-import-verification.log`; import log
+`/tmp/atlas-agent-engine-import.log`. Original bytes/full diff/health cached in ignored
+`cache/maintenance/discovery/mongodb-atlas-admin/f84bc82a8a0f85c83cbca399da3228223d6a397d`.
+API PR delivery and audit-wide verification/closure will be recorded separately.
