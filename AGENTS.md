@@ -3456,3 +3456,45 @@ All ten blockers, explicitly parked items and unanswered Messaging owner choice 
 local branch remains `8bf3ab52f17aabcdbb42c0dd059f4d0880f05522`, no rejected-push
 retry/unblock/redaction. Original local one-week deadline/sleep rules remain in force.
 Docs-only progress delivery requires no repeat full network audit.
+
+
+### 2026-10-05 Box 2026 official-source registration
+
+Startup: clean detached main `79f4c676be7fb1708bae90128429469b6bc7ee2d`, sparse
+checkout reviewed; existing open #179 only edits Bunq/Codat/SendGrid YAML and does not
+overlap this work. No changes to that session's PR/files. Deadline not reached.
+
+Re-fetched exact official Box commit `5b055e333a802b10b8ca90fcc513643836dd92b4`,
+`openapi/openapi-v2026.0.json`, SHA-256
+`f46e2c894930ec58dedd1794d7b368f46f0844ab592b5b630f33ca2ca771d370`. Native
+**3.0.2 / 2026.0 / five paths / five operations**, all 53 local refs resolve; source/
+preflight import validation and typed YAML roundtrip pass. Every operation requires
+sole `box-version: 2026.0`; two Automate beta labels and three unmarked operations
+retained. Zero path/operation overlap with all three existing Box descriptions.
+Current public versioning guidance and endpoint references rechecked. This is a complete
+public mixed-lifecycle collection, consistent with existing public vendor collections
+containing labelled beta functionality; not a preview-only artifact or invented slice.
+No universal GA claim or compatibility replacement. Native source preserves auth,
+servers, Free Developer exclusions and all account/admin restrictions without copying
+classic curation. No patches, conversion or bundling.
+
+Fresh public-reference/hosted-download comparison again verifies the exact differences
+recorded above (five code-sample lists, 55 description line folds, root Mint extension).
+Do not infer lifecycle from filtered viewer snippets; both raw source and rendered
+navigation retain beta labels. Scripts `/tmp/refresh-box-2026-review.py`,
+`/tmp/fetch-box-2026-reference.py`, `/tmp/verify-box-2026-public-scope.py`; fresh review
+`/tmp/box-2026-fresh-review.json`, logs `/tmp/box-2026-fresh-review.log`,
+`/tmp/box-2026-public-scope-verification.log`. Pinned source/fetch/review evidence also
+in ignored Box discovery cache; durable URL/hash above recover originals after reboot.
+
+Register `box-platform-2026` against its own absent target, bringing monitoring to
+**49 artifacts**. API addition follows separately after registration checks. Attachment
+limit housekeeping: verified #164/#167/#170 were merged docs-only progress PRs, now
+superseded, and unlinked only their chat attachments; GitHub history unchanged and
+all API/updater attachments retained. All blockers/parked items and unanswered
+Messaging owner choice remain; no rejected push retry, unblock or redaction.
+
+Registration checks: all **93 local regressions pass**; selected-source audit finds
+expected missing distinct target, exact reviewed source/revision, healthy/unarchived
+vendor repository and successful full validation; no transformations/import blocker.
+Only AGENTS, maintenance README and source manifest changed; no API file yet.

@@ -576,3 +576,12 @@ collection, including Enterprise Advanced requirements. Preserve original auth,
 servers and account/admin restrictions. There is no cross-scope historical curation
 baseline or hand-built union of year files. Review the 2026 subset independently,
 including its explicit beta operations; a higher filename is not a broad replacement.
+
+Box Platform 2026 (`box-platform-2026`) follows native
+`openapi/openapi-v2026.0.json` as another distinct public route collection. All five
+operations require `box-version: 2026.0`. The vendor's current reference marks both
+Automate operations beta, while Notes conversion and the two query operations are
+unmarked (latest stable per vendor versioning guidance). Preserve both beta labels
+and native auth/server/account restrictions; there is no stable-only slice or
+cross-scope curation baseline. The public viewer's embedded snippets strip lifecycle
+extensions; use the full native artifact, and retain all prior Box histories.

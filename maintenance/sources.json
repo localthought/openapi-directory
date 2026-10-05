@@ -638,6 +638,20 @@
       "discovery": "Official Box year-versioned public subset, separate from root openapi.json compatibility coverage. Same-commit vendor README and current versioning guide identify per-endpoint version headers and unmarked/stable operations as latest stable. Current https://developer.box.com/guides/docgen explicitly describes released 2025.0 and Enterprise Advanced requirements; https://developer.box.com/guides/hubs-api/hubs/update-hub requires the 2025.0 header (checked 2026-10-05). All 37 reviewed operations require box-version with sole enum 2025.0 and have no stability/prerelease or deprecated designation. All 24 paths/37 operations are absent from both existing Box descriptions. Native OpenAPI 3.0.2/info.version 2025.0 validates with 383 resolved local refs and no patches, conversion or bundling. Do not select the highest year filename as a compatibility replacement.",
       "coverage": "Official additional Box 2025 route collection: Doc Gen templates/jobs/batches, Hubs/collaborations/items/documents, Shield lists, Archives, enterprise configuration and external-user deletion jobs. Preserve native OAuth/server definitions, required version headers and account/free-developer/admin restrictions. This is distinct coverage, not all Box APIs or a claim that compatibility endpoints retired. No cross-scope curation baseline; preserve both existing files. Review the separately published 2026 collection, including its explicit beta operations, independently.",
       "priority": "high"
+    },
+    {
+      "id": "box-platform-2026",
+      "provider": "box.com",
+      "target": "APIs/box.com/2026.0/openapi.yaml",
+      "github": {
+        "repository": "box/box-openapi",
+        "ref": "main",
+        "path": "openapi/openapi-v2026.0.json"
+      },
+      "version_policy": "vendor",
+      "discovery": "Official separately published Box year-versioned public collection at openapi/openapi-v2026.0.json, selected through vendor README and current public https://developer.box.com/_llms/en/api-reference.md v2026.0 section, which links https://developer.box.com/box-openapi-v2026.0.json and all five references under /reference/v2026.0/ (checked 2026-10-05). Vendor versioning guide defines unmarked operations as latest stable and explicitly marks beta; this complete public collection contains three unmarked Notes/query operations and two beta Automate operations. Rendered references confirm both beta labels; embedded snippets omit lifecycle extensions, so preserve native GitHub source. Hosted download differs only by five added code-sample lists, 55 exact description line folds and root Mint MCP extension. Native 3.0.2 / 2026.0 / five paths / five ops validates with 53 resolved local refs; zero overlap with all three existing Box files. No source patches, conversion or bundling.",
+      "coverage": "Additional Box 2026 public APIs: convert content to Box Note, query items, create query insights, list/start Automate workflows. Both Automate operations remain explicitly beta and excluded from Free Developer Plan; retain all native lifecycle/auth/server/account/admin restrictions. All five operations require box-version with sole enum 2026.0. This is a mixed-lifecycle public collection, not a preview-only or hand-built stable slice, not all Box APIs or a compatibility replacement. No cross-scope curation baseline; preserve all existing histories. Future yearly artifacts require separate release/scope review.",
+      "priority": "high"
     }
   ]
 }
