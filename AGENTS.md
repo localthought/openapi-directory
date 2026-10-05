@@ -2691,3 +2691,22 @@ Their PRs/history remain intact; API/infrastructure attachments preserved. No pr
 or approval bypass. All previous blockers, parked items, Messaging owner choice and the
 original local one-week/sleep deadline remain unchanged. Next deliver monitoring, then
 the fully validated Canvas API in its own PR; Rooms/Team Chat remain discovery blockers.
+
+**Canvas monitoring delivered / API import verified (2026-10-05):**
+[#162](https://github.com/ontola/openapi-directory/pull/162) merged and attached,
+head `faddedb0523c6b125facb81b6a80cd98b51dc865`, merge
+`294a3761067e7751d91eaacfe4fa48aa916f36b5`. Three expected infrastructure/instruction
+files, 63 additions / zero deletions, CLEAN/MERGEABLE; exact-head
+[CI 37278959442](https://github.com/ontola/openapi-directory/actions/runs/37278959442)
+passes all **93 tests**. No API data in monitoring PR; 43 artifacts / 42 services registered.
+
+Importer re-fetched the exact reviewed Canvas bytes at 2026-10-05T07:40:37.252584Z,
+hash `82cc4556a1ba6ff8770aae93bfe4de89ca13c51d5db82a4dc35bc13c4b65743c`, creating
+`APIs/zoom.us/canvas/2/openapi.yaml`: **29 paths / 39 operations**, all previously absent.
+Full strict source/final validation, exact vendor-content equality after provenance,
+typed YAML round-trip, no invented curation, native authentication and zero refs verified.
+No patches, conversion, bundling, version invention, removals or historical-file edits.
+All six prior Zoom files remain byte-identical. Logs `/tmp/zoom-canvas-import.log`,
+`/tmp/zoom-canvas-import-verification.log`; verifier `/tmp/verify-zoom-canvas-import.py`.
+Deliver the API separately, then verify a complete expanded network audit before claiming
+43-source coverage is current. All previous blockers, owner decisions and constraints remain.
