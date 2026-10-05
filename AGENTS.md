@@ -3323,3 +3323,30 @@ Registration validation: all **93 local regressions pass**. Selected-source audi
 finds the expected absent distinct target, healthy/unarchived vendor repository,
 exact pinned source hash/revision and successful complete validation; no transformations
 or import blocker. No API file is changed by this registration PR.
+
+
+### 2026-10-05 Box 2025 validated API addition
+
+Monitoring [#176](https://github.com/ontola/openapi-directory/pull/176) merged at
+`751aad470e2d59f94b03de9f4e0b7457b5e46d90`, exact head
+`7f70c94451ab7c9e9f60acdee853f7014ed13365`; all **93 regressions pass locally and
+in CI 37303172727**. Three expected files only, CLEAN/MERGEABLE before exact-head merge.
+
+Importer independently re-fetched the healthy official vendor repository/artifact
+and writes only new `APIs/box.com/2025.0/openapi.yaml` plus this progress record.
+Native **3.0.2 / 2025.0 / 24 paths / 37 operations**, pinned commit/raw hash as above.
+Complete source/final validation, exact typed vendor-content equivalence apart from
+provenance and typed YAML roundtrip all pass. All **383 local refs** resolve, including
+the shared `BoxVersionHeader`; all **37 operations** require the sole version 2025.0.
+No deprecated/stability flags, source patches, conversion, bundling, invented curation
+or cross-scope historical baseline. Original servers, security, account/admin/plan
+restrictions, externalDocs, tags and vendor fields retained verbatim in parsed content.
+Both existing Box 2.0.0 and 2024.0 files are byte-identical; zero path/operation overlap,
+no removals from either. This is separate current public coverage, not their replacement.
+
+Independent verifier `/tmp/verify-box-2025-import.py`, log
+`/tmp/box-2025-import-verification.log`, evidence `/tmp/box-2025-final-content-review.json`;
+import log `/tmp/box-2025-import.log`. The verifier resolves vendor shared parameter
+references before checking headers; no source changes to inline them. API-only paths
+and AGENTS do not trigger maintenance CI; full manual checks above are required, with
+expanded main audit after delivery. No 2026 collection import or blocker waiver.
