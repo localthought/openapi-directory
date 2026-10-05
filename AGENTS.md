@@ -3749,3 +3749,28 @@ expected explicit sample baseline/deltas and zero validation errors, hosted heal
 `not_assessed`, no transformations. Independent preflight with real legacy curation
 passes native/import/serialized validation and exact typed vendor-content comparison;
 only the two existing branding keys plus required provenance are added.
+
+
+**ClickUp v2 delivered in separate API PR preparation:** infrastructure #183 merged
+from exact head `2b784495b38f983f8ed93c4dac54bd1be4e7baef` as
+`950d436482540d2933741c186a295457ffcc9a51`; CLEAN/MERGEABLE and all **93 tests**
+passed locally and in CI [37317311436](https://github.com/ontola/openapi-directory/actions/runs/37317311436).
+
+Importer adds `APIs/clickup.com/v2/2.0/openapi.yaml` with **83 paths / 138 operations**,
+full native **3.1.0**, unchanged vendor `2.0`, `Authorization_Token` scheme, server,
+all original schemas/examples/prose and feature/plan restrictions. Guest and user
+management are vendor-labelled Enterprise-only; time-in-status requires owner/admin
+enablement. No invented OAuth scheme, schema, version, API patch or conversion.
+Both existing branding fields survive with current hosted SHA/date provenance in
+`info`; no new curation is invented. Separate current v3 remains unimported/native-
+invalid. Historical Polls `1.0.0` bytes remain exact SHA-256
+`55ca1f4f93a936c0fd023a8b6e47e5bda1d24393b1ec56349d14a239b6e30ab2`;
+no old paths claimed retired or old content copied.
+
+Independent live re-fetch confirms raw hash unchanged. Complete source/serialized
+validation, typed roundtrip, exact parsed vendor-content equality, all 234 local ref
+resolutions, native auth/server identity and two-field curation preservation pass.
+Script `/tmp/verify-clickup-v2-import.py`, log `/tmp/clickup-v2-import-verification.log`,
+import log `/tmp/clickup-v2-import.log`. API-only PR has no maintenance-triggered CI;
+these complete checks provide its validation. Follow with the expanded 50-source
+audit after merge, against the actual v2 baseline; no repeated historical comparison.
