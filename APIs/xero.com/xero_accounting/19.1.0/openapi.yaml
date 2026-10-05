@@ -8,19 +8,20 @@ info:
     email: api@xero.com
     url: https://developer.xero.com
     x-twitter: XeroAPI
-  x-serviceName: xero_accounting
   x-apisguru-categories:
     - financial
   x-providerName: xero.com
+  x-serviceName: xero_accounting
   x-origin:
     - format: openapi
       url: https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f/xero_accounting.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f/xero_accounting.yaml at commit fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f; source SHA-256 1afca0717bb0d323210c0f88f3802684c068059f6e5161ee24ddde7ee6294a64.
-    - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
+    - Fetched from https://raw.githubusercontent.com/XeroAPI/Xero-OpenAPI/fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f/xero_accounting.yaml at commit fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f; entry source SHA-256 1afca0717bb0d323210c0f88f3802684c068059f6e5161ee24ddde7ee6294a64.
     - 'Applied maintenance/patches/xero-accounting.json (SHA-256 782b419bbef21cca5d3190f31777cd9e6c994f39e309cb29e761f4718c3d9308): Fixed 23 boolean properties whose default and example were the string ''false'' in Xero''s official Accounting source; replaced only those 46 exact values with the boolean false, matching each declared boolean type.'
-    - Preserved existing APIs.guru curation metadata from APIs/xero.com/xero_accounting/2.9.4/openapi.yaml.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Preserved existing APIs.guru curation metadata from APIs/xero.com/xero_accounting/19.1.0/openapi.yaml.
+    - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 servers:
   - description: The Xero Accounting API exposes accounting and related functions of the main Xero application and can be used for a variety of purposes such as creating transactions like invoices and credit notes, right through to extracting accounting data via our reports endpoint.
     url: https://api.xero.com/api.xro/2.0
@@ -66,12 +67,12 @@ paths:
               example:
                 Accounts:
                   - AccountID: ebd06280-af70-4bed-97c6-7451a454ad85
-                    Code: 091
+                    Code: '091'
                     Name: Business Savings Account
                     Type: BANK
                     TaxType: NONE
                     EnablePaymentsToAccount: false
-                    BankAccountNumber: 0209087654321050
+                    BankAccountNumber: '0209087654321050'
                     BankAccountType: BANK
                     CurrencyCode: NZD
                   - AccountID: 7d05a53d-613d-4eb2-a2fc-dcb6adb80b80
@@ -1304,7 +1305,7 @@ paths:
                   - BankTransactionID: db54aab0-ad40-4ced-bcff-0940ba20db2c
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     BatchPayment:
                       Account:
@@ -1341,7 +1342,7 @@ paths:
                   - BankTransactionID: 29a69c45-64ca-4805-a1cc-34990de837b3
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Type: SPEND-OVERPAYMENT
                     IsReconciled: false
@@ -1368,7 +1369,7 @@ paths:
                   - BankTransactionID: 0b89bf5c-d40b-4514-96be-36a739fb0188
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Type: SPEND-OVERPAYMENT
                     IsReconciled: false
@@ -1554,7 +1555,7 @@ paths:
                   - BankTransactionID: 1289c190-e46d-434b-9628-463ffdb52f00
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Type: SPEND
                     Reference: ''
@@ -1811,7 +1812,7 @@ paths:
                   - BankTransactionID: 1289c190-e46d-434b-9628-463ffdb52f00
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Type: SPEND
                     Reference: ''
@@ -1904,7 +1905,7 @@ paths:
                       UnitAmount: 20
                       AccountCode: '400'
                   BankAccount:
-                    Code: 088
+                    Code: '088'
   /BankTransactions/{BankTransactionID}:
     parameters:
       - $ref: '#/components/parameters/requiredHeader'
@@ -1936,7 +1937,7 @@ paths:
                   - BankTransactionID: db54aab0-ad40-4ced-bcff-0940ba20db2c
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     BatchPayment:
                       Account:
@@ -2186,7 +2187,7 @@ paths:
                   - BankTransactionID: 1289c190-e46d-434b-9628-463ffdb52f00
                     BankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Type: SPEND
                     Reference: You just updated
@@ -2315,7 +2316,7 @@ paths:
                     ContactGroups: []
                   Lineitems: []
                   BankAccount:
-                    Code: 088
+                    Code: '088'
                     Name: Business Wells Fargo
                     AccountID: 00000000-0000-0000-0000-000000000000
                   IsReconciled: false
@@ -2757,11 +2758,11 @@ paths:
                     Status: AUTHORISED
                     FromBankAccount:
                       AccountID: 7e5e243b-9fcd-4aef-8e3a-c70be1e39bfa
-                      Code: 090
+                      Code: '090'
                       Name: My Savings
                     ToBankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     Amount: 50.0
                     FromBankTransactionID: e4059952-5acb-4a56-b076-53fad85f2930
@@ -2793,7 +2794,7 @@ paths:
             example:
               BankTransfers:
                 - FromBankAccount:
-                    Code: 090
+                    Code: '090'
                     Name: My Savings
                     AccountID: 00000000-0000-0000-0000-000000000000
                     Type: BANK
@@ -2810,7 +2811,7 @@ paths:
                     HasAttachments: false
                     UpdatedDateUTC: '2016-10-17T13:45:33.993-07:00'
                   ToBankAccount:
-                    Code: 088
+                    Code: '088'
                     Name: Business Wells Fargo
                     AccountID: 00000000-0000-0000-0000-000000000000
                     Type: BANK
@@ -2954,11 +2955,11 @@ paths:
                     Status: AUTHORISED
                     FromBankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     ToBankAccount:
                       AccountID: 7e5e243b-9fcd-4aef-8e3a-c70be1e39bfa
-                      Code: 090
+                      Code: '090'
                       Name: My Savings
                     Amount: 20.0
                     FromBankTransactionID: a3eca480-bc04-4292-9bbd-5c57b8ba12b4
@@ -3024,11 +3025,11 @@ paths:
                     Status: DELETED
                     FromBankAccount:
                       AccountID: 6f7594f2-f059-4d56-9e67-47ac9733bfe9
-                      Code: 088
+                      Code: '088'
                       Name: Business Wells Fargo
                     ToBankAccount:
                       AccountID: 7e5e243b-9fcd-4aef-8e3a-c70be1e39bfa
-                      Code: 090
+                      Code: '090'
                       Name: My Savings
                     Amount: 20.0
                     Reference: Sub 098801
@@ -21497,7 +21498,7 @@ components:
         AccountCode:
           description: See Accounts
           type: string
-          example: 090
+          example: 90
         BudgetBalances:
           type: array
           items:
@@ -22867,7 +22868,7 @@ components:
         AccountCode:
           description: See Accounts
           type: string
-          example: 090
+          example: 90
         AccountType:
           $ref: '#/components/schemas/AccountType'
           type: string

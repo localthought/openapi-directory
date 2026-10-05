@@ -2590,3 +2590,25 @@ YAML round-trip, tags/externalDocs/all curation, hashes and endpoint sets verifi
 Historical versions unchanged. Logs `/tmp/plaid-yaml12-import.log`,
 `/tmp/plaid-yaml12-import-verification.log`; same command-level verifier. Deliver Plaid
 separately, then Xero's remaining 19 quote repairs; expanded complete audit remains interim.
+
+**Plaid quoting repair delivered / Xero prepared (2026-10-05):**
+[#159](https://github.com/ontola/openapi-directory/pull/159) merged and attached,
+head `cec118189063b7e3b59b72717864c2e44213c4e4`, merge
+`13c40d552e19797f8362975016f6dfc1c8da173e`. Only current Plaid YAML (seven quotes and
+current validation/baseline provenance) plus progress; CLEAN/MERGEABLE. Full import
+verification passes. GitHub and Plaid representation repairs are done; no source versions,
+hashes, schemas, endpoint sets, curation or historical versions changed.
+
+Xero validated re-import uses unchanged official commit
+`fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f`, raw hash
+`1afca0717bb0d323210c0f88f3802684c068059f6e5161ee24ddde7ee6294a64`, quoting exactly
+19 digit-string account-code examples. Native 19.1.0 / 138 paths / 235 ops unchanged.
+The existing exact 46 boolean-value correction remains identical with recipe hash
+`782b419bbef21cca5d3190f31777cd9e6c994f39e309cb29e761f4718c3d9308`; no new source
+patch. Curation key placement becomes the updater's deterministic order without value
+changes; tag order/externalDocs stay exact. Provenance records current strict validation
+and actual 19.1.0 curation baseline instead of historical2.9.4. Full prepared-source equality
+with preserved curation/provenance, strict validation, typed YAML round-trip, unchanged
+raw hash and endpoint sets verified. Other files/history unchanged. Logs
+`/tmp/xero-yaml12-import.log`, `/tmp/xero-yaml12-import-verification.log`.
+Deliver this separately, then validate the complete 42-source audit after all four repairs.
