@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-04 (Europe/Amsterdam). Audit of `origin/main` at `15ba8fba7` (PR #151 merged):
-729 provider domains; 4,270 files under `APIs/`, including 2,096
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `ad461f223` (PR #155 merged):
+729 provider domains; 4,272 files under `APIs/`, including 2,098
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2418,3 +2418,49 @@ remain unchanged. Source/import logs `/tmp/zoom-scheduler-source-review.json`,
 `/tmp/zoom-scheduler-import.log`, `/tmp/zoom-scheduler-import-verification.log`.
 Deliver Scheduler separately, then verify an expanded complete audit. Latest complete
 verified network audit remains 38 until that new run is downloaded and checked.
+
+**Scheduler delivered / 40-source audit verified (2026-10-05 UTC):**
+[#155](https://github.com/ontola/openapi-directory/pull/155) merged and attached,
+head `138446035969552c42b9e8fc06cc0e250579ea99`, merge
+`ad461f223af141f9b43d66d17feae892306ae635`. Two expected files: new Scheduler YAML
+6028 lines and progress record; 6045 additions / zero deletions, CLEAN/MERGEABLE.
+Whiteboard #154 and Scheduler #155 are complete; do not duplicate imports. No patches,
+conversion, lifecycle annotation removal, history replacement or protection bypass.
+Their combined 41 paths / 67 operations were entirely absent from the old combined API.
+Existing combined, Meetings, Users and Accounts files remain intact. Inventory verified
+against this fetched main: **729 domains / 4272 files / 2098 openapi.yaml / 2168 swagger.yaml**.
+
+Expanded [audit 37256244045](https://github.com/ontola/openapi-directory/actions/runs/37256244045)
+at actual merged main `ad461f223af141f9b43d66d17feae892306ae635` passes all **90 tests**,
+fetches/prepares all **40 artifacts / 39 services**, and reports **33 validated matches /
+seven recorded import blockers**. No fetch/prepare failures or unblocked drift.
+Whiteboard and Scheduler are matches with actual baselines
+`APIs/zoom.us/{whiteboard,scheduler}/2/openapi.yaml`, exact reviewed raw hashes,
+native 3.0.0 / version 2, 25/43 and 16/24 counts, no transformations, full validation
+success dates, and zero endpoint additions/removals. Hosted health is explicitly unassessed.
+Other seven blockers remain Cohere, Square, archived unsupported Slack, native Meraki,
+Messaging delivery, Vercel and Marketing; strict validation/import guards are unchanged.
+The audit's nonzero exit is solely those blockers; tests, readable-summary publication
+and complete artifact upload succeed. A transient connection reset while reading run
+status was reconciled against the same completed run, without duplicate dispatch.
+
+All 40 raw entry hashes, 22 distinct GitHub repository-metadata snapshots, exact per-row
+comparison bases, profiles/classifications, transformation evidence, seven blocker rows,
+current Zoom/Mailchimp/Asana/Twilio/Vercel rows and the identical rendered Markdown were
+verified at `/tmp/openapi-ci-audit-37256244045`. Eight hosted sources (five Zoom products,
+Hugging Face, Vercel and Marketing) remain health-unassessed. Ignored local report.json /
+report.md and health snapshots updated. Recover the durable `official-source-audit`
+artifact from this run after reboot; temporary verifier/logs
+`/tmp/verify-zoom-40-full-audit.py`, `/tmp/zoom-40-full-audit-verification.log`,
+`/tmp/zoom-next-full-audit-ci.log`, `/tmp/zoom-next-full-audit-status.json`.
+No API commits were created solely for timestamps.
+
+**Resume next:** This is the latest complete verified audit. Whiteboard/Scheduler
+monitoring and both API additions are delivered (#153–#155). Rooms/Team Chat discovery
+blockers and the not-yet-selected Docs candidate are recorded above; no corrections to
+those invalid/mixed-scope sources have been adopted. Continue independent well-known
+provider discovery/freshness auditing (e.g. existing official Cloudflare/Auth0/OpenAI
+sources) or authorized separate updater PR-generation/monthly-discovery work. All prior
+vendor blockers, parked items and Messaging's unanswered owner choice remain in force.
+Preserve the original one-week deadline and local sleep policy; no additional chat
+automation or cloud execution.
