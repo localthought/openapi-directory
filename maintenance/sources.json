@@ -624,6 +624,20 @@
       "coverage": "Box Platform compatibility APIs assigned year version 2024.0 by the vendor; content continues to change. Preserve native stability annotations, authentication, tenant/server and plan/admin restrictions. This artifact is not a combined description of every newer year-versioned API.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "box-platform-2025",
+      "provider": "box.com",
+      "target": "APIs/box.com/2025.0/openapi.yaml",
+      "github": {
+        "repository": "box/box-openapi",
+        "ref": "main",
+        "path": "openapi/openapi-v2025.0.json"
+      },
+      "version_policy": "vendor",
+      "discovery": "Official Box year-versioned public subset, separate from root openapi.json compatibility coverage. Same-commit vendor README and current versioning guide identify per-endpoint version headers and unmarked/stable operations as latest stable. Current https://developer.box.com/guides/docgen explicitly describes released 2025.0 and Enterprise Advanced requirements; https://developer.box.com/guides/hubs-api/hubs/update-hub requires the 2025.0 header (checked 2026-10-05). All 37 reviewed operations require box-version with sole enum 2025.0 and have no stability/prerelease or deprecated designation. All 24 paths/37 operations are absent from both existing Box descriptions. Native OpenAPI 3.0.2/info.version 2025.0 validates with 383 resolved local refs and no patches, conversion or bundling. Do not select the highest year filename as a compatibility replacement.",
+      "coverage": "Official additional Box 2025 route collection: Doc Gen templates/jobs/batches, Hubs/collaborations/items/documents, Shield lists, Archives, enterprise configuration and external-user deletion jobs. Preserve native OAuth/server definitions, required version headers and account/free-developer/admin restrictions. This is distinct coverage, not all Box APIs or a claim that compatibility endpoints retired. No cross-scope curation baseline; preserve both existing files. Review the separately published 2026 collection, including its explicit beta operations, independently.",
+      "priority": "high"
     }
   ]
 }
