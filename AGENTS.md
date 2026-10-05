@@ -4191,3 +4191,34 @@ under ignored `cache/maintenance/discovery/zendesk`, prepared review
 To make attachment slots at the app limit, unlinked verified merged AGENTS-only
 progress PRs #68/#73/#85; GitHub records and all API/updater attachments stay intact.
 Independent #179 and all parked/delivery/deadline/local sleep rules remain unchanged.
+
+**Zendesk Conversations delivery held by push protection — do not retry:**
+Separate fully validated API addition remains local branch
+`codex/add-zendesk-conversations`, exact commit
+`afb95b89fdc7a4f9566e22495abe97627e7a82ed`; no API PR created, remote push rejected
+GH013. GitHub flags a Twilio Account String Identifier in the vendor's own example
+at `#/components/schemas/twilio/allOf/1/properties/accountSid/example` (serialized
+line 6174). Exact unchanged value verified in pinned original vendor bytes; no literal
+printed/recorded here. Same complete validation/content/reference/roundtrip evidence
+above, checker `/tmp/verify-zendesk-conversations-import.py`, review/log
+`/tmp/zendesk-conversations-import-review.json`,
+`/tmp/zendesk-conversations-import-verification.log`. Native example evidence with
+value omitted `/tmp/zendesk-conversations-push-protection-review.json`.
+
+Owner review link:
+https://github.com/ontola/openapi-directory/security/secret-scanning/unblock-secret/3KHixj4X70ysiwPZQDeAaA5dbR7
+Owner was asked once to allow this published Zendesk example or explicitly authorize
+an exactly checked neutral example replacement. Response pending; selected/default
+options and elapsed time are not authorization. Do not retry push, visit unblock,
+redact examples or bypass the block without a fresh applicable owner response.
+Existing separately parked Twilio Messaging choice remains unchanged.
+
+Registered source now has an explicit import delivery guard, so future checks fetch,
+prepare, fully validate and report this missing-but-valid description as import
+blocked; CLI import refuses new writes. Guard does not waive schema validation or
+change source bytes/compatibility recipe. Source registration/recipe #190 is merged
+and attached, 100 local/CI tests. Saved API branch also contains its independent
+source/import evidence in AGENTS; consult both it and this main progress record.
+Proceed with expanded 52-source audit, expecting delivery blockers separately from
+native defects, then Zendesk Support null-type compatibility investigation and
+other well-known official discovery. Adobe Sign remains native-invalid/unregistered.
