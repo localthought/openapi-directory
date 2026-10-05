@@ -467,3 +467,15 @@ notification fields still fail strict validation. No defaults are coerced/remove
 schema is invented, and all stored Marketing versions remain unchanged pending a reviewed
 vendor correction. A real-converter regression confirms these conversions retain invalid
 string defaults and that the importer rejects them.
+
+Zoom Whiteboard and Scheduler follow the exact native downloads named by their current
+[Whiteboard](https://developers.zoom.us/docs/api/whiteboard/) and
+[Scheduler](https://developers.zoom.us/docs/api/scheduler/) public references (reviewed
+2026-10-05). Both are OpenAPI 3.0.0 / vendor version `2`, with no content patches,
+conversion or bundling. The viewer changes authentication presentation; import the
+original downloadable OAuth requirements and API-key scheme. All non-security content
+matches the embedded public reference. Follow content changes at fixed version `2`,
+retain account/license restrictions, and do not infer all features are GA from product
+publication. Their 25/43 and 16/24 paths/operations are absent from historical combined
+Zoom coverage; preserve that file and every other separately published Zoom service.
+Hosted repository health remains unassessed. Other Zoom artifacts need separate review.
