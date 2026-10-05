@@ -2522,3 +2522,50 @@ diffs and validation evidence are in ignored `cache/maintenance/discovery/` unde
 `/tmp/cloudflare-pair-diff.json`, `/tmp/review-cloudflare.py`, `/tmp/cloudflare-review.json`,
 `/tmp/cloudflare-review.log`, `/tmp/auth0-cloudflare-tests.log`. No API files changed;
 all prior blockers, parked items, Messaging owner choice and local week/sleep policy remain.
+
+**Infrastructure delivered / expanded audit found four quoting repairs (2026-10-05):**
+[#157](https://github.com/ontola/openapi-directory/pull/157) merged and attached,
+head `473e90e8eb16d552644780196060f190c087317c`, merge
+`8d479d33dffab8f81fc32b1179e848e7d2ec855e`. Five expected infrastructure/instruction
+files; no API data. CLEAN/MERGEABLE, exact-head
+[CI 37270619896](https://github.com/ontola/openapi-directory/actions/runs/37270619896)
+passes all **93 tests**. Raw native Auth0 6046 and Cloudflare 24564 local refs independently
+resolve, with no external references; native schema/security defects still block imports.
+
+Expanded [audit 37273474074](https://github.com/ontola/openapi-directory/actions/runs/37273474074)
+at main `8d479d33dffab8f81fc32b1179e848e7d2ec855e` passes all 93 tests and successfully
+fetches/prepares all **42 artifacts / 41 services**. Verified result is **29 matches,
+nine import blockers, four valid content differences**. The previous seven blockers plus
+Auth0/Cloudflare are recorded native/delivery defects; no new fetch/prepare failures.
+All 42 entry hashes, 23 distinct repository metadata snapshots, exact per-row bases,
+validation profiles/classifications, raw endpoint deltas, transformations and rendered
+Markdown were verified in `/tmp/openapi-ci-audit-37273474074`. Nine hosted sources remain
+health-unassessed. Ignored reports/health cache updated; recover the durable CI artifact.
+Verifier/log `/tmp/verify-auth0-cloudflare-42-interim.py`,
+`/tmp/auth0-cloudflare-42-interim-verification.log`. This is an interim repair queue,
+not a claim that 33 artifacts currently match.
+
+All four content differences use **unchanged vendor hashes/revisions** already recorded
+in the old files. Full typed comparison finds only unquoted leading-zero digit strings
+containing 8/9: **19** each GitHub artifact, **7** Plaid, **19** Xero (64 total positions).
+The old YAML 1.1 dumper did not quote them because they could not be octal; YAML 1.2
+consumers parse them as decimal integers and lose the string type/leading zeros. Preserve
+the exact source strings by re-importing with #157's matching writer/reader. GitHub tag
+order differences in the first raw comparison are curation; compare after preserve_curation
+and retain that order exactly, rather than modifying tags. No vendor endpoint/version
+change, metadata stripping, invented example, schema weakening or historical-directory
+rewriting. Deliver repairs one PR per API (both GitHub counterparts together).
+
+**GitHub repair prepared:** re-fetched source commit
+`836ce198db13a6fb194547e53eea99c6ddae495b`, default hash
+`f3efa055b46b43f5f133ecf792a36a7f50cf8a4378cbd177390bc2bf8c6097cd`, date-versioned hash
+`28b908e1fd554f785e31368e334a897fb01a0439b6988e669c0011c64c77efd9`.
+Both remain 1.1.4 / 816 paths / 1232 ops. Only 19 quote additions per file; full strict
+validation, typed YAML, exact prepared vendor content, all curation/externalDocs/tag
+order and endpoint sets verified. Public-key IDs retain their
+vendor string values. No provenance-only timestamp changes. Logs
+`/tmp/github-yaml12-import.log`, `/tmp/github-yaml12-import-verification.log`, verifier
+`/tmp/verify-yaml12-current-import.py`; full reviewed diffs in
+`/tmp/{github-rest,github-rest-2022-11-28,plaid,xero-accounting}-parser-drift.json` and
+`/tmp/parser-drift-review.log`. Plaid/Xero repairs follow separately; afterward verify
+33 matches / nine blockers with a new complete audit before claiming queue completion.

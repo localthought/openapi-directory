@@ -12325,7 +12325,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: selected
                   selected_repository_ids:
                     - 1296269
@@ -13130,7 +13130,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: selected
                   selected_repository_ids:
                     - 1296269
@@ -17218,7 +17218,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: selected
                   selected_repository_ids:
                     - 1296269
@@ -20309,7 +20309,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: selected
                   selected_repository_ids:
                     - 1296269
@@ -24665,7 +24665,7 @@ paths:
                   username: monalisa
                   replaces_base: true
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: private
               org-private-registry-with-selected-visibility:
                 summary: Example of a private registry configuration with selected visibility
@@ -24674,7 +24674,7 @@ paths:
                   url: https://maven.pkg.github.com/organization/
                   username: monalisa
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   visibility: selected
                   selected_repository_ids:
                     - 1296269
@@ -24758,7 +24758,7 @@ paths:
                 properties:
                   key_id:
                     description: The identifier for the key.
-                    example: 012345678912345678
+                    example: '012345678912345678'
                     type: string
                   key:
                     description: The Base64 encoded public key.
@@ -24950,7 +24950,7 @@ paths:
                 value:
                   username: monalisa
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
               oidc-azure-update:
                 summary: Update an OIDC private registry (Azure)
                 value:
@@ -33064,7 +33064,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
       responses:
         '201':
           description: Response when creating a secret
@@ -33974,7 +33974,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
       responses:
         '201':
           description: Response when creating a secret
@@ -39503,7 +39503,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
       responses:
         '201':
           description: Response when creating a secret
@@ -41915,7 +41915,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
       responses:
         '201':
           description: Response when creating a secret
@@ -43534,7 +43534,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
       responses:
         '201':
           description: Response when creating a secret
@@ -60518,7 +60518,7 @@ paths:
               default:
                 value:
                   encrypted_value: c2VjcmV0
-                  key_id: 012345678912345678
+                  key_id: '012345678912345678'
                   selected_repository_ids:
                     - '1234567'
                     - '2345678'
@@ -235529,7 +235529,7 @@ components:
             selected_repositories_url: https://api.github.com/orgs/octo-org/actions/secrets/SUPER_SECRET/repositories
     actions-public-key:
       value:
-        key_id: 012345678912345678
+        key_id: '012345678912345678'
         key: 2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234
     organization-actions-secret:
       value:
@@ -236618,7 +236618,7 @@ components:
             visibility: all
     codespaces-public-key:
       value:
-        key_id: 012345678912345678
+        key_id: '012345678912345678'
         key: 2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234
     repo-codespaces-secret:
       value:
@@ -236906,7 +236906,7 @@ components:
             selected_repositories_url: https://api.github.com/orgs/octo-org/dependabot/secrets/SUPER_SECRET/repositories
     dependabot-public-key:
       value:
-        key_id: 012345678912345678
+        key_id: '012345678912345678'
         key: 2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234
     organization-dependabot-secret:
       value:
@@ -238438,7 +238438,7 @@ components:
         updated_at: '2020-01-10T14:59:22Z'
     private-registries-public-key:
       value:
-        key_id: 012345678912345678
+        key_id: '012345678912345678'
         key: 2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234
     projects-v2:
       value:
@@ -255076,7 +255076,7 @@ components:
           collaborators: 0
     codespaces-user-public-key:
       value:
-        key_id: 012345678912345678
+        key_id: '012345678912345678'
         key: 2Sg8iYjAxxmI2LvUXpJjkYrMxURPc8r+dB7TJyvv1234
     user-codespaces-secret:
       value:
