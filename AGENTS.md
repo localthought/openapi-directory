@@ -3710,3 +3710,42 @@ Existing open #179 remains an independent session's unrelated YAML fixes; do not
 overwrite, duplicate or merge it merely because it is open. All ten blockers, parked
 items, unanswered Twilio Messaging owner choice and original local deadline/sleep
 rules remain in force. No rejected-push retry, unblock or redaction.
+
+
+### 2026-10-05 13:22 UTC heartbeat — ClickUp v2 monitoring preparation
+
+Fresh main at `a9eb33b3c`; clean detached checkout, existing open #179 belongs to
+an independent session and is untouched. Current official OpenAPI/authentication
+guides still identify the two separately published public collections, personal
+tokens and OAuth with Workspace/user permissions; OAuth app creation requires
+Workspace owner/admin. Native v2 plan/admin restrictions remain unchanged.
+Re-fetched v2 byte-identical: SHA-256
+`a0a72ec97ddb4e4859b9ed89b997bb784ba5828412ff35119f41e87103069662`,
+OpenAPI **3.1.0 / vendor version 2.0 / 83 paths / 138 operations**, all 234 local
+refs resolve, no external refs/deprecated operations/patches/conversion/bundling.
+Native and preflight import validation plus typed YAML serialization pass. The
+source's old getting-started `/docs/index` URL returns 404; preserve vendor prose
+rather than rewriting it. This does not make the linked public artifact unavailable.
+
+Register `clickup-v2`, target `APIs/clickup.com/v2/2.0/openapi.yaml`, alongside
+independently published v3. An explicitly reviewed `initial_baseline` points to
+`APIs/clickup.com/1.0.0/openapi.yaml` solely to retain its actual `x-logo` and
+`x-providerName` curation during correction. Existing updater uses this as the
+initial comparison too: expect +83 paths/+138 operations and -1 path/-2 operations
+against the unrelated Polls sample before import. These are **not ClickUp retirements**.
+No endpoint overlap; keep all historical bytes. Subsequent audits select the actual
+v2 destination, so no ongoing cross-scope comparisons or copied Polls API content.
+Hosted repository health remains `not_assessed`; no GA/whole-platform guarantee.
+This separate infrastructure PR changes no API file and expands monitoring to 50
+artifacts. Deliver the full v2 correction in its own PR after tests/monitoring merge.
+
+For the app attachment cap, verified merged docs-only #172/#175/#178 were unlinked
+from this chat to attach these new deliveries. GitHub PRs and all API/updater
+attachments remain intact. No retry of rejected Twilio Messaging push, owner
+question, unblock/redaction, parked-item work or other-session changes.
+
+All **93 regression tests pass** locally. Selected check against main reports the
+expected explicit sample baseline/deltas and zero validation errors, hosted health
+`not_assessed`, no transformations. Independent preflight with real legacy curation
+passes native/import/serialized validation and exact typed vendor-content comparison;
+only the two existing branding keys plus required provenance are added.

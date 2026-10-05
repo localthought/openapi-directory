@@ -585,3 +585,15 @@ unmarked (latest stable per vendor versioning guidance). Preserve both beta labe
 and native auth/server/account restrictions; there is no stable-only slice or
 cross-scope curation baseline. The public viewer's embedded snippets strip lifecycle
 extensions; use the full native artifact, and retain all prior Box histories.
+
+ClickUp v2 (`clickup-v2`) follows the native public OpenAPI 3.1 description linked
+from the [official guide](https://developer.clickup.com/docs/open-api-spec). Preserve
+its declared `2.0`, native token security, OAuth guidance and plan/admin permissions.
+The existing `clickup.com/1.0.0` entry is an unrelated Polls sample. Its explicit
+`initial_baseline` preserves the two existing branding fields (`x-logo`,
+`x-providerName`) on the coverage correction; no Polls server, title or API data is
+copied. Before initial import the report's `/questions` removal is a comparison
+with that sample, not a retired ClickUp endpoint. The historical file remains
+unchanged, and subsequent audits use the real v2 destination. Public v3 is separately
+published and currently fails native validation; it is not combined with v2.
+Hosted repository health remains unassessed.
