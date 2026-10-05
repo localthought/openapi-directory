@@ -4488,3 +4488,38 @@ revision is null, not a fabricated commit. Import review/verifier/log:
 API branch `codex/add-zendesk-support` currently depends on updater #195; do not
 merge API delivery before exact-head infrastructure CI/merge. Recheck PR diff against
 fresh main after infrastructure lands, then create/attach the separate API PR.
+
+**Full 53-source local audit at the pending Support API commit:**
+`/tmp/zendesk-support-53-local-audit.json` / `.md` compare against exact
+`dd7b9568238c4bac55db55fbf3b2649ca26964d5`, not main. Results: **42 matches /
+11 previously recorded import blocks / zero fetch-preparation failures / zero new
+unblocked drift**, 26 distinct hashed repository-health snapshots and 14 hosted
+not_assessed sources. Support now matches the validated pending import; Atlas also
+matches its delivered billing-enum refresh. The 11 blocks remain Cohere, Square,
+Slack, Meraki, Twilio Messaging, Vercel, Mailchimp Marketing, Auth0, Cloudflare,
+Okta and Zendesk Conversations. Delivery guards remain separate from native defects;
+no validation waiver or owner choice inferred. All 53 raw snapshot hashes, all 26
+repository metadata hashes, per-row bases/profiles, match stats/endpoint deltas and
+Markdown/JSON parity independently checked. Expected audit exit 1 is caused by
+known blocks, not successful validation of them. This does **not** relabel the prior
+52-source CI snapshot or claim Support is already on main.
+
+Only source revision advance versus that prior audit is Stripe
+`2015f4f64b5eef3b6b74ada26d0ef6b574fc2e14` ->
+`3d9ffbb79e0ff25254c498b3b7623f710401a1fb`; independently fetched pinned public
+GA bytes retain hash `3eacd8bd5ea292724ef9c6aba034827e6a9c444ef3b483e25843ddb8909d862f`.
+No timestamp-only rewrite. Other source hashes/revisions unchanged, including all
+known blocked vendor artifacts. Scripts/reviews/logs:
+`/tmp/verify-zendesk-support-53-local-audit.py`,
+`/tmp/zendesk-support-53-local-audit-verification.log`,
+`/tmp/zendesk-support-53-local-audit-review.json`,
+`/tmp/zendesk-support-53-source-revisions.json`,
+`/tmp/verify-stripe-53-revision-only.py`. Ignored durable report/review copy:
+`cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/`.
+Current updater PR [#195](https://github.com/ontola/openapi-directory/pull/195)
+head `d4f05b3ec7a2fd47a763611a67353bdc500f9f17`; 106 local tests pass, Actions run
+[37362766037](https://github.com/ontola/openapi-directory/actions/runs/37362766037)
+was queued when this progress was recorded. API branch has pushed successfully;
+no Support push-protection rejection. Wait for exact-head infrastructure CI,
+verify files/CLEAN/MERGEABLE and merge before creating/merging the separate API PR.
+Do not retry either previously rejected Conversations or Messaging push.
