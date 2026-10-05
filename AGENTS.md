@@ -284,6 +284,62 @@ AGENTS-only #60 and #194 unlinked; GitHub history/API/updater attachments retain
 
 ---
 
+**CI infrastructure failure and bounded retry:** updater #195 run 37362766037
+attempt 1 ended failure because the hosted job was never assigned a runner: GitHub's
+annotation says "The job was not acquired by Runner of type hosted even after
+multiple attempts". Test steps/logs never existed; this is not a test assertion
+failure or an approval-review rejection. Same exact head was retried once with
+`gh run rerun --failed`; attempt 2 is pending. Keep #195 unmerged and API #196 draft
+until the actual job passes. Do not waive CI, change runner/power/host settings,
+or repeatedly retry during a hosted-runner outage. Recheck the existing run on the
+next heartbeat; if still unavailable, preserve ready work and continue independently.
+Failure annotation `/tmp/zendesk-support-guards-ci-runner-failure.json`;
+run/job state `/tmp/zendesk-support-guards-ci-status.json`.
+
+**New official Coinbase CDP candidate (discovery/diagnostics only):** maintained,
+public/unarchived/undisabled `coinbase/cdp-sdk` at
+`d40fb3975395033409643654faacfb3d4e4349ee` publishes root `openapi.yaml`; its pinned
+Makefile links the canonical CDN `https://drla6sbl8l00t.cloudfront.net/openapi.yaml`
+and adds a timestamp query to avoid stale caching. Root SDK snapshot is **native
+3.1.0 / 2.0.0 / 126 paths / 154 ops**, hash
+`229ed860a74b63b3c430c4fc2122e2870bcc0f7b398398d2ec31021be9e1ee4a`.
+Fresh official CDN, both plain URL and timestamp-busted URL, has identical typed
+content and hash `156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302`:
+**140 paths / 169 ops / 2,594 resolved local refs**, none external. It adds 14 paths /
+15 operations versus the SDK snapshot (delegation revoke and payment mandates),
+removes none. Do not choose the lagging SDK artifact merely to get a convenient
+Git revision or freeze the old source. Source choice/cache freshness must be reviewed.
+
+Current [public introduction](https://docs.cdp.coinbase.com/api-reference/v2/introduction)
+distinguishes non-custodial public APIs from custodial groups needing verified business
+accounts, Prime-only payment methods and Beta groups. Artifact retains private-beta
+fiat deposit destinations and complete native auth/tenant/permission/lifecycle content.
+No blanket GA claim, financial action or endpoint trimming. This is CDP v2, not
+Coinbase Exchange or all Coinbase APIs. Coinbase provider is absent from main's tree.
+
+Native CDN validation fails on four Parameter Reference Objects with unsupported
+`required:false` siblings pointing to `#/components/parameters/XDeveloperAuth`.
+The referenced header parameter itself declares exactly `required:false` already.
+Diagnostic removal of only those four redundant flags fully validates and passes
+typed YAML roundtrip; auth/requiredness and all referenced constraints remain.
+Diagnostic inlining also validated but is not adopted. A future exact recipe should
+remove only those four original false values after complete referenced-parameter
+assertions and exact reference contexts, prove positive/negative requiredness and
+reject vendor fixes/new requiredness. No recipe, registration, API PR or imported
+file yet; outside the configured 53-source audit. Do not fabricate missing schemas,
+relocate auth or infer optionality without the reviewed target.
+
+Complete original repo metadata/commit/tree/README/Makefile and native SDK/CDN bytes,
+retrieval headers/hashes and reviews cached under ignored
+`cache/maintenance/discovery/coinbase-cdp/`. Scripts/logs/reviews
+`/tmp/discover-coinbase-cdp.py`, `/tmp/review-coinbase-cdp-official-spec.py`,
+`/tmp/review-coinbase-cdp-cdn-and-ref-siblings.py`,
+`/tmp/review-coinbase-cdp-current-publication.py`,
+`/tmp/coinbase-cdp-current-publication-review.json`,
+`/tmp/coinbase-cdp-current-publication-review.log`.
+
+---
+
 ## 3. Triage progress
 
 Working dataset was `/tmp/all_issues.tsv` — **this is in `/tmp` and will not survive a reboot.** Regenerate with:
