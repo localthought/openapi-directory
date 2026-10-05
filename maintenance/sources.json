@@ -652,6 +652,17 @@
       "discovery": "Official separately published Box year-versioned public collection at openapi/openapi-v2026.0.json, selected through vendor README and current public https://developer.box.com/_llms/en/api-reference.md v2026.0 section, which links https://developer.box.com/box-openapi-v2026.0.json and all five references under /reference/v2026.0/ (checked 2026-10-05). Vendor versioning guide defines unmarked operations as latest stable and explicitly marks beta; this complete public collection contains three unmarked Notes/query operations and two beta Automate operations. Rendered references confirm both beta labels; embedded snippets omit lifecycle extensions, so preserve native GitHub source. Hosted download differs only by five added code-sample lists, 55 exact description line folds and root Mint MCP extension. Native 3.0.2 / 2026.0 / five paths / five ops validates with 53 resolved local refs; zero overlap with all three existing Box files. No source patches, conversion or bundling.",
       "coverage": "Additional Box 2026 public APIs: convert content to Box Note, query items, create query insights, list/start Automate workflows. Both Automate operations remain explicitly beta and excluded from Free Developer Plan; retain all native lifecycle/auth/server/account/admin restrictions. All five operations require box-version with sole enum 2026.0. This is a mixed-lifecycle public collection, not a preview-only or hand-built stable slice, not all Box APIs or a compatibility replacement. No cross-scope curation baseline; preserve all existing histories. Future yearly artifacts require separate release/scope review.",
       "priority": "high"
+    },
+    {
+      "id": "clickup-v2",
+      "provider": "clickup.com",
+      "target": "APIs/clickup.com/v2/2.0/openapi.yaml",
+      "initial_baseline": "APIs/clickup.com/1.0.0/openapi.yaml",
+      "url": "https://developer.clickup.com/openapi/clickup-api-v2-reference.json",
+      "version_policy": "vendor",
+      "discovery": "Current official https://developer.clickup.com/docs/open-api-spec explicitly links this public v2 collection separately from v3 (checked 2026-10-05). Native OpenAPI 3.1.0 / info.version 2.0 / 83 paths / 138 operations fully validates with all 234 local refs resolved and no patches, conversion or bundling. Hosted source repository health is not assessed. Follow content changes at the vendor-declared version; do not invent a release.",
+      "coverage": "Real public ClickUp v2 resources, including tasks, lists, folders, spaces, teams/workspaces, users, custom fields, goals, time tracking and webhooks. Preserve native Authorization_Token, token/OAuth guidance and plan/admin/permission restrictions. Existing clickup.com/1.0.0 is an unrelated API Blueprint Polls sample. Explicit initial_baseline retains only its existing x-logo/x-providerName curation; before first import the report compares against that sample, so its /questions delta is not a retired ClickUp endpoint. After import the actual v2 destination takes priority. Preserve historical sample bytes; separately review v3 rather than merging endpoint sets.",
+      "priority": "high"
     }
   ]
 }
