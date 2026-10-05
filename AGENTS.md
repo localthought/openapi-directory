@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `4be1fd571` (PR #160 merged):
-729 provider domains; 4,272 files under `APIs/`, including 2,098
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `14da5cc9a` (PR #163 merged):
+729 provider domains; 4,273 files under `APIs/`, including 2,099
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2710,3 +2710,64 @@ All six prior Zoom files remain byte-identical. Logs `/tmp/zoom-canvas-import.lo
 `/tmp/zoom-canvas-import-verification.log`; verifier `/tmp/verify-zoom-canvas-import.py`.
 Deliver the API separately, then verify a complete expanded network audit before claiming
 43-source coverage is current. All previous blockers, owner decisions and constraints remain.
+
+
+**Canvas addition delivered (2026-10-05):**
+[#163](https://github.com/ontola/openapi-directory/pull/163) merged and attached,
+head `1b80a5125e0cc78dea27d98a58c1c2d69a24fe6f`, merge
+`14da5cc9a74e4dd4467e14af8089632390d017a1`. Two expected files: new Canvas YAML
+7715 lines and progress; 7734 additions / zero deletions, CLEAN/MERGEABLE. No API-path
+CI checks configured; full strict source/import verification above passed. Canvas
+monitoring #162 and addition #163 are complete; do not duplicate. Preserve all prior
+Zoom files, native scopes/restrictions and vendor version 2. Tree inventory is now **729
+domains / 4273 API files / 2099 openapi.yaml / 2168 swagger.yaml**.
+
+**Next candidate — Zoom Hub, not yet registered/imported:** Current public
+[Hub API reference](https://developers.zoom.us/docs/api/hub/) names
+`https://developers.zoom.us/api-hub/hub/methods/endpoints.json`, and all non-security
+content equals its original download. Native **3.0.0 / version 2 / six paths / nine
+operations**, SHA-256 `8f41b4fc3e42fb98ea10a3641688614b4a7f677bed1adeabf8b3827463d5de66`,
+fetched 2026-10-05T07:43:44.021875Z, Last-Modified 2026-09-28 22:49:36 UTC. Strict
+validation passes with zero refs; no patches, conversion or bundling. No paths/operations
+overlap any of the seven existing Zoom files, including Canvas. It is a distinct shared
+content API, not a replacement for Canvas or other products. No source lifecycle keywords
+found; service/release/account coverage still needs review before selection/import.
+Do not infer universal GA from absent labels. Original bytes, fetch evidence and current
+HTML/page data saved in ignored `cache/maintenance/discovery/zoom-hub/<hash>/`; script/log
+`/tmp/verify-zoom-hub-source.py`, `/tmp/zoom-hub-source-review.json`. Refetch/review when
+resuming; this discovery snapshot is not part of the registered audit or its CI artifact.
+Rooms/Team Chat remain blocked discovery leads; no proposed patches adopted. Continue
+independent well-known-provider freshness/discovery or authorized separate updater work.
+All previous blockers, parked items, unanswered Messaging owner choice, local sleep policy
+and the original 2026-10-09 06:55:58 UTC deadline remain in force.
+
+**Expanded Canvas audit verified (2026-10-05 UTC):**
+[Audit 37279198156](https://github.com/ontola/openapi-directory/actions/runs/37279198156)
+ran against exact main `14da5cc9a74e4dd4467e14af8089632390d017a1`. All **93 tests pass**;
+all **43 artifacts / 42 services** fetch and prepare successfully, with **34 matches /
+nine recorded import blockers**. No unblocked content drift or fetch/prepare failures.
+Canvas matches its new baseline `APIs/zoom.us/canvas/2/openapi.yaml`, reviewed raw hash,
+native 3.0.0 / version 2 / 29 paths / 39 ops, no transformations, validation success
+date and zero added/removed paths or operations. Hosted health remains unassessed.
+GitHub's two artifacts, Plaid and Xero explicitly remain matches after the quoting repairs,
+with unchanged raw hashes and no endpoint changes.
+
+The same nine blockers remain Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0 and Cloudflare. Strict
+validation/import guards remain active; the overall workflow/audit failure reflects
+these blockers, while tests, readable summary and full artifact upload succeed.
+All 43 raw entry hashes, 23 distinct repository metadata snapshots, exact per-row bases,
+validation profiles/classifications, transformations, endpoint deltas and identical
+rendered Markdown were verified at `/tmp/openapi-ci-audit-37279198156`. Ten hosted
+sources remain health-unassessed; repository availability is not complete current coverage.
+Ignored local reports and source-health cache updated. Recover durable evidence from this
+run's `official-source-audit` artifact; verifier/logs `/tmp/verify-zoom-canvas-43-audit.py`,
+`/tmp/zoom-canvas-43-audit-verification.log`, `/tmp/zoom-canvas-full-audit-ci.log`,
+`/tmp/zoom-canvas-full-audit-status.json`. No timestamp-only API commits.
+
+**Resume next:** Canvas monitoring/addition #162/#163 are delivered and verified in this
+latest complete audit; do not duplicate. Review the independent Hub candidate's coverage
+before registration/import, or continue other well-known industry providers and separate
+authorized updater PR-generation/monthly-discovery work. Discovery-only Hub evidence is
+not registered or included in this CI artifact. Preserve every recorded blocker, parked
+item, Messaging owner choice and the original one-week local sleep/deadline policy.
