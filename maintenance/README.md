@@ -567,3 +567,12 @@ import and remains intact. Keep native stability, authentication and plan/admin
 annotations, original literal fragment paths and source provenance. No source patches,
 conversion or bundling are needed. Review all additions and removals independently;
 a source omission alone does not prove runtime retirement.
+
+Box Platform 2025 (`box-platform-2025`) follows the separate native year-versioned
+`openapi/openapi-v2025.0.json` artifact. Its 24 paths / 37 operations add distinct
+coverage to the compatibility collection; all require the `box-version: 2025.0`
+header. Current vendor versioning and Doc Gen documentation identify this released
+collection, including Enterprise Advanced requirements. Preserve original auth,
+servers and account/admin restrictions. There is no cross-scope historical curation
+baseline or hand-built union of year files. Review the 2026 subset independently,
+including its explicit beta operations; a higher filename is not a broad replacement.

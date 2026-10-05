@@ -3289,3 +3289,37 @@ script/log `/tmp/review-cloudflare-new-audit.py`, `/tmp/cloudflare-new-audit-rev
 `/tmp/cloudflare-new-audit-review.json`. YAML/fetch evidence is also durable in the CI
 artifact; retrieve JSON from the same pinned vendor commit after reboot. Resume Box 2025
 as directed above while preserving this updated Cloudflare blocker/source observation.
+
+
+### 2026-10-05 Box 2025 official-source registration
+
+Re-fetched reviewed vendor commit `5b055e333a802b10b8ca90fcc513643836dd92b4`,
+`openapi/openapi-v2025.0.json`, SHA-256
+`a28dd665970613050341911ed72900c3607d203b0805e71443ce12305aef4282`. Native
+**3.0.2 / 2025.0 / 24 paths / 37 operations** passes complete source/import validation
+and typed YAML roundtrip; all 383 local refs resolve. Every operation requires
+`box-version` with sole enum `2025.0`; no deprecated or stability/prerelease designation.
+Zero path/operation overlap with both stored Box descriptions. Current public Doc Gen
+and Hubs guides rechecked; Doc Gen explicitly calls 2025.0 released and requires
+Enterprise Advanced. Scope and original restrictions documented in the manifest.
+
+Register `box-platform-2025` separately, bringing monitoring to **48 artifacts**.
+Target its own `APIs/box.com/2025.0/openapi.yaml`; no cross-scope initial baseline,
+copied classic curation, invented metadata or broad compatibility replacement. Both
+existing Box histories remain intact. No patches, conversion or bundling. Full
+regression/selected-source checks precede delivery; API import follows separately.
+Fresh source/review cached in ignored Box discovery directory, script
+`/tmp/refresh-box-2025-review.py`, log `/tmp/box-2025-fresh-review.log`, review
+`/tmp/box-2025-fresh-review.json`. These local files are not durable after reboot;
+pinned URL/hash above recover exact input.
+
+Attachment housekeeping: verified #139 and #142 were merged, docs-only progress PRs
+superseded by newer recorded evidence, then unlinked only their chat attachments to
+make room. Their GitHub PRs/history are unchanged; API/updater attachments retained.
+All parked items, ten known blockers and unanswered Twilio Messaging owner choice
+remain in force. No rejected-push retry, owner unblock or example redaction.
+
+Registration validation: all **93 local regressions pass**. Selected-source audit
+finds the expected absent distinct target, healthy/unarchived vendor repository,
+exact pinned source hash/revision and successful complete validation; no transformations
+or import blocker. No API file is changed by this registration PR.
