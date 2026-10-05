@@ -2802,3 +2802,22 @@ Verified #108/#156/#161 were merged AGENTS-only progress superseded by later aud
 unlinked only those app attachments to free three slots; PRs/history unchanged, all API
 and infrastructure attachments preserved. Every recorded blocker, parked item, unanswered
 Messaging owner choice and original one-week local/sleep deadline remain in force.
+
+**Hub monitoring delivered / API import verified (2026-10-05):**
+[#165](https://github.com/ontola/openapi-directory/pull/165) merged and attached,
+head `c621a40fd287230bf9e1bb7c2a209c974470fcea`, merge
+`2bf2d41b61b75ae02d7ee55a763720095409d453`. Three expected infrastructure/instruction
+files, 54 additions / zero deletions, CLEAN/MERGEABLE; exact-head
+[CI 37280493449](https://github.com/ontola/openapi-directory/actions/runs/37280493449)
+passes all **93 tests**. Registry has 44 artifacts / 43 services; no API data in this PR.
+
+Importer re-fetched exact reviewed Hub bytes at 2026-10-05T07:56:35.323260Z,
+hash `8f41b4fc3e42fb98ea10a3641688614b4a7f677bed1adeabf8b3827463d5de66`, creating
+`APIs/zoom.us/hub/2/openapi.yaml`: **six paths / nine operations**, all previously absent.
+Full source/final strict validation, exact vendor-content equality after provenance,
+typed YAML round-trip, no invented curation, native authentication and zero refs verified.
+No patches, conversion, bundling, version invention, removals or historical-file edits.
+All seven prior Zoom files remain byte-identical. Logs `/tmp/zoom-hub-import.log`,
+`/tmp/zoom-hub-import-verification.log`; verifier `/tmp/verify-zoom-hub-import.py`.
+Deliver the API separately, then verify a complete expanded network audit before claiming
+44-source coverage is current. Existing blockers, owner decisions and constraints remain.
