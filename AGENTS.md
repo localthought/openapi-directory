@@ -2771,3 +2771,34 @@ before registration/import, or continue other well-known industry providers and 
 authorized updater PR-generation/monthly-discovery work. Discovery-only Hub evidence is
 not registered or included in this CI artifact. Preserve every recorded blocker, parked
 item, Messaging owner choice and the original one-week local sleep/deadline policy.
+
+**Zoom Hub coverage reviewed / monitoring prepared (2026-10-05 UTC):**
+Re-fetched the exact previously discovered native bytes at 2026-10-05T07:54:09.238605Z:
+SHA-256 `8f41b4fc3e42fb98ea10a3641688614b4a7f677bed1adeabf8b3827463d5de66`,
+OpenAPI 3.0.0 / vendor version 2 / **six paths / nine operations**. Current public
+[Hub reference](https://developers.zoom.us/docs/api/hub/) explicitly names this download;
+all non-security content equals its embedded viewer. Strict validation passes with zero
+refs, no patches/conversion/bundling. Preserve original OAuth scopes, relative/empty
+flow URL values and API-key scheme; do not infer replacement authentication endpoints.
+
+The current [Hub introduction](https://developers.zoom.us/docs/hub/) identifies the shared
+content layer for Canvas/AI Productivity Suite and lists public account prerequisites,
+including Basic and paid plans, without a prerelease designation. Neither current reference
+nor native artifact labels preview/beta. This is public service selection, not universal
+feature-GA evidence. The download covers content read/import, file duplication/task polling
+and shared-folder management. The broader guide mentions file moves/permissions and other
+AI Productivity Suite capabilities not all represented here: do not fabricate missing
+operations or claim complete product coverage. Retain file-type/format limits, admin/OAuth
+scopes and every Gov-cluster exclusion. Distinct from Canvas and Zoom Events hubs.
+Full fetched tree/alias check and all seven existing Zoom documents have no overlapping
+paths/operations; retain them all. Hosted source health remains unassessed.
+
+Register `zoom-hub`, target `APIs/zoom.us/hub/2/openapi.yaml`, in an infrastructure PR,
+separate from its API addition: **44 artifacts / 43 services**. Latest complete verified
+audit remains 43 until expansion is checked. Evidence in ignored discovery cache includes
+original bytes, current public reference/page data, introduction HTML and fetch metadata;
+source script/log `/tmp/verify-zoom-hub-source.py`, `/tmp/zoom-hub-source-review.json`.
+Verified #108/#156/#161 were merged AGENTS-only progress superseded by later audits and
+unlinked only those app attachments to free three slots; PRs/history unchanged, all API
+and infrastructure attachments preserved. Every recorded blocker, parked item, unanswered
+Messaging owner choice and original one-week local/sleep deadline remain in force.
