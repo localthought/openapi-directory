@@ -726,7 +726,8 @@ required:false Reference Object removals, nine assertions and two regression tes
 **102 local tests pass**. CI run 37371438690 is queued, not passed. Infrastructure
 must pass actual CI and merge before marking the separate API addition ready.
 
-API branch `codex/coinbase-cdp-api-only` adds only this progress and
+[API PR #198](https://github.com/ontola/openapi-directory/pull/198) is DRAFT; do not
+duplicate it. Branch `codex/coinbase-cdp-api-only` adds only this progress and
 `APIs/coinbase.com/cdp/2.0.0/openapi.yaml`. Native 3.1.0 / vendor 2.0.0, **140 paths /
 169 ops / 2594 resolved local refs**, none external. Main at cfb19aa445 has no
 Coinbase provider; no previous metadata/baseline is borrowed or fabricated.
@@ -757,7 +758,7 @@ do not run native CDP import here before that dependency is available.
 Zendesk #195/#196 remain pending two hosted runner-acquisition failures without
 executed tests; preserve their branches and avoid duplicate PRs. Push-protection
 choices for Twilio Messaging/Zendesk Conversations remain unanswered. Attachment
-cap is 100: attaching #197 failed, canonical removals of superseded merged #61/#66
+cap is 100: attaching #197 and #198 failed, canonical removals of superseded merged #61/#66
 returned app errors, legacy redirect URL removal reported success but a fresh
 inventory confirms no actual canonical attachment removal. Preserve current
 artifacts; do not claim linkage success. Retry exact new-PR attachment when possible
