@@ -3995,3 +3995,32 @@ than an invented subset. Verification `/tmp/verify-clickup-v3-import.py`, log
 `/tmp/clickup-v3-import-verification.log`; CLI log `/tmp/clickup-v3-import.log`.
 API-only PR does not trigger maintenance CI; complete independent checks above
 are its validation, followed by full 51-source CI audit after merge.
+
+
+**51-source audit found a new actionable Sentry refresh:** full CI
+[37325626675](https://github.com/ontola/openapi-directory/actions/runs/37325626675)
+at main `dd679cc363eff5baebee5fe877fd3b2f028de1e2` detected Sentry vendor commit
+`226d4470bf70f5617eb1b4f8f4852a98e2dba97b`, raw SHA-256
+`32495641a918ab3656d87dade918dd7b7daeb0c036928b6779c4be89a9424a64`. Native public
+**3.0.3 / fixed v0** grows from **151 paths / 245 ops** to **155 / 249**, +4 GET
+paths/operations and no removals. Full parsed vendor-content diff is exactly eight
+additions: four new SCIM discovery paths and four response schema components.
+All existing endpoint/schema/auth content stays identical. The added endpoints
+list ResourceTypes, query ResourceTypes/{resource_type_name}, query
+Schemas/{schema_uri}, and retrieve ServiceProviderConfig. Source is vendor-
+dereferenced, zero refs; no reconstruction, bundling, patches or conversion.
+
+Fresh repository identity/public/unarchived/undisabled health and pinned byte
+re-fetch/full validation confirmed. Current
+[SCIM guide](https://docs.sentry.io/api/scim/) requires SaaS Business Plan with
+SAML2 enabled and SCIM-generated bearer token; retain native member:admin/read/write
+auth scope alternatives and original restrictions. No preview/deprecated marking
+on these added operations; other Sentry products are outside this public artifact.
+Independent serialized validation, exact typed vendor-content equivalence, all old
+endpoint/auth/curation preservation, roundtrip and SHA/commit provenance pass.
+Script `/tmp/review-sentry-51-audit.py`, log/review `/tmp/sentry-51-audit-review.log`,
+`/tmp/sentry-51-audit-review.json`; independent import checker/log
+`/tmp/verify-sentry-scim-import.py`, `/tmp/sentry-scim-import-verification.log`.
+Original bytes/review cached in ignored `cache/maintenance/discovery/sentry/226d4470bf70f5617eb1b4f8f4852a98e2dba97b`.
+Deliver this in its own API refresh PR, then selected post-merge Sentry check;
+the complete audit and ClickUp results are recorded in the following docs PR.
