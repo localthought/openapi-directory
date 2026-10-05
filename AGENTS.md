@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `3401453e3` (PR #177 merged):
-729 provider domains; 4,277 files under `APIs/`, including 2,103
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `adbb1b6e7` (PR #181 merged):
+729 provider domains; 4,278 files under `APIs/`, including 2,104
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -577,8 +577,10 @@ replacement discovery still need review.
 
 ### Missing, official spec not yet located
 
-Shopify, Zendesk, Airtable, Heroku, HashiCorp, Coinbase, Dropbox, New Relic, Anthropic,
+Shopify, Airtable, Heroku, HashiCorp, Coinbase, Dropbox, New Relic, Anthropic,
 NVIDIA. Snowflake and Hugging Face Inference Endpoints now have verified sources above.
+Zendesk Support and Conversations official sources were located on 2026-10-05;
+both have confirmed native validation defects, recorded in the latest discovery queue below.
 
 **Probed and 404'd on 2026-09-22** — these exact URLs, not the vendors themselves:
 guessed paths in `snowflakedb/snowflake-rest-api-specs` (`main`, `releases/8.40/...`; resolved
@@ -3525,3 +3527,186 @@ API-only paths/AGENTS do not trigger maintenance CI; complete manual verificatio
 above plus expanded main audit after delivery. #179 remains a separate session's
 unrelated YAML fixes; no changes to its files or PR. All protections/parked items
 and ten known blockers remain. No Messaging retry/unblock/redaction.
+
+
+### 2026-10-05 Box 2026 delivery and Zendesk discovery
+
+Monitoring [#180](https://github.com/ontola/openapi-directory/pull/180) and API
+addition [#181](https://github.com/ontola/openapi-directory/pull/181) are merged and
+attached. #181 exact head `84d76796923210d5e972c22c22f834a061290fbd`, merge
+`adbb1b6e745c7a9ac9e695af2e3a2f6af5654647`; only new 1,245-line YAML and AGENTS,
+CLEAN/MERGEABLE before exact-head merge. Native **3.0.2 / 2026.0 / five paths / five
+operations**, all 53 local refs, five required version headers and two explicit beta
+labels verified. Complete typed source/final equivalence, full validation and YAML
+roundtrip pass; original restrictions/auth/metadata retained. All three historical
+Box files byte-identical, zero overlap/removals, no patches/conversion/bundling or
+invented curation. Monitoring's **93 tests pass locally and in CI 37309462499**.
+
+**New official Zendesk discovery — not yet registered/imported:** full fetched main
+at `adbb1b6e745c7a9ac9e695af2e3a2f6af5654647` has no Zendesk/Smooch/Sunshine file at
+any depth; sparse directory absence was not used. ClickUp does already exist at
+`APIs/clickup.com/1.0.0/openapi.yaml`, but subsequent content inspection proves it
+is an unrelated Polls sample, as recorded below. Do not equate provider-directory
+presence with actual API coverage. No third-party scraped spec selected. Zendesk's prior guessed GitHub-path 404 did not establish source absence.
+
+1. **Zendesk Support / Ticketing:** official
+   [Ticketing introduction](https://developer.zendesk.com/api-reference/ticketing/introduction/)
+   explicitly links Download OpenAPI file to
+   `https://developer.zendesk.com/zendesk/oas.yaml`. The live native publication is
+   **3.0.3 / 2.0.0 / 451 paths / 652 operations**, all **2,501 local refs** resolve,
+   no external refs, four deprecated operations retained. SHA-256
+   `3a477ea89b274f4d3731f1c7ff93dc93d4520de871ac759b06d3297798fd685d`. It is Support
+   (tickets/users/organizations/custom objects/workflows), not all Zendesk products.
+   Hosted repository health remains **not_assessed**, not implicitly healthy/current.
+   Web tool's octet-stream failure was a content-type limitation; updater download succeeds.
+   Native validation blocks at
+   `#/components/schemas/AccessRuleCondition/properties/value/oneOf/4/type`: vendor
+   declares `type: null` while top-level dialect is OpenAPI 3.0.3. The property explicitly
+   allows null for present/not_present terminal operators. Do not delete the null
+   alternative, invent operator/value semantics or blindly upgrade the dialect.
+   Preserve all native OAuth/authentication/API-token deprecations and account limits.
+2. **Zendesk Conversations / Messaging:** current official
+   [OpenAPI guide](https://developer.zendesk.com/documentation/conversations/references/openapi-specification/)
+   directly selects `zendesk/sunshine-conversations-api-spec`, `master`, `openapi.yaml`.
+   The guide says the spec feeds the hosted reference and is maintained; generated API
+   wrappers are deprecated, which is distinct from spec maintenance. The v1.1 artifact
+   at historical tag 5.29 stopped receiving updates in 2020; do not substitute it.
+   Live vendor repository identity/availability verified, public/unarchived/undisabled.
+   Source commit `07a4ade211c8420d6a3ee94e174127522cbaa033`, native **3.0.2 / 17.13.2 /
+   42 paths / 68 operations**, **742 local refs** resolve, no external refs. Retain
+   `info.version` 17.13.2, distinct from runtime public API v2. SHA-256
+   `d78f05f64282ecaf7dfe4fe19573dc6d49c213780061b64de39629d49d35ce01`.
+   Native validation blocks at `#/components/schemas/reference`: unsupported
+   `dependencies: {sourceType: [source]}` under OpenAPI 3.0.2. Vendor prose independently
+   says source is required when sourceType is present. Dropping this keyword would
+   discard a declared conditional requirement; do not waive it or invent alternatives.
+
+Independently re-fetched both exact entry URLs and confirmed identical original bytes,
+native defects and complete local-reference resolution. No patch, conversion, source
+registration, successful validation date, API import or vendor issue/comment sent.
+These are new discovery candidates, outside the configured 49-artifact audit, not
+additional configured blockers yet. The ten existing registered blockers remain ten.
+Investigate vendor corrections/compatible public variants or separately reviewed
+constraint-preserving recipes; a schema keyword removal is not an acceptable quick fix.
+No new user-declined item is inferred or blanket approval requested.
+
+Raw sources/fetch metadata, original official-guide HTML/hash, source stats, defect
+checks and exact repository metadata snapshot cached under ignored
+`cache/maintenance/discovery/zendesk`. Scripts `/tmp/discover-zendesk-official.py`,
+`/tmp/verify-zendesk-discovery-defects.py`; review
+`/tmp/zendesk-official-discovery-review.json`, `/tmp/zendesk-verified-native-defects.json`;
+logs `/tmp/zendesk-official-discovery.log`, `/tmp/zendesk-verified-native-defects.log`.
+Original URLs/hash/commit above recover source evidence after reboot.
+
+
+**Expanded 49-source audit verified:**
+[Run 37309889023](https://github.com/ontola/openapi-directory/actions/runs/37309889023)
+checked exact main `adbb1b6e745c7a9ac9e695af2e3a2f6af5654647` after #181. All
+**93 tests pass**; all **49 configured artifacts** fetch/prepare: **39 matches / ten
+known import blockers**, no unblocked drift or fetch/prepare failures. All three
+registered Box collections match their own actual baselines, reviewed source hashes/
+commit, native stats, successful full validation, zero transformations and endpoint
+deltas. Historical Polls/ClickUp and Zendesk discovery candidates are outside this
+configured audit; no additional registered blocker is silently counted.
+
+The same ten registered blockers remain Cohere, Square, archived unsupported Slack,
+Meraki, Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and
+Okta. Audit/workflow fails on these blockers while tests, readable summary and artifact
+upload succeed. Verified all **49 entry hashes / 25 distinct repository metadata
+snapshots**, strict profiles, per-row comparison bases, transformations, classifications
+and endpoint deltas; rendered Markdown exactly matches JSON. Eleven hosted sources
+remain health-unassessed. Reports/raw snapshots in `/tmp/openapi-ci-audit-37309889023`;
+ignored local reports/source-health cache updated. Durable recovery is run artifact
+`official-source-audit`; verifier `/tmp/verify-box-49-audit.py`, log
+`/tmp/box-49-audit-verification.log`; CI log/status
+`/tmp/box-2026-full-audit-ci.log`, `/tmp/box-2026-full-audit-status.json`.
+Full fetched main inventory: **729 domains / 4,278 API files / 2,104 openapi.yaml /
+2,168 swagger.yaml**; header updated as dated observation. This supersedes the prior
+48-source audit; docs-only progress delivery does not need another network audit.
+
+**Fresh Cloudflare observation — still blocked:** the 49-source audit fetched commit
+`1fb76fd3e67f2abf892b4702e13bb42948bc2421`, YAML SHA-256
+`286ada22a3ed34f4e27d6ec077f900f051d836d6a4135c335e628a8a37507774`, replacing the
+previous `af9a48bedc0b5668350b1eb05eefdaf2549b8ebe` source observation. Independent
+pinned YAML re-fetch and same-commit companion JSON comparison confirm exact typed
+equivalence; all **24,569 local refs** resolve. JSON SHA-256
+`d63dbdde0ee732fc20669ee9f9c21442a02ffbed24799e7c9082202942506ce9`. One parsed
+leaf changes: `components.responses.analytics-sql_UnprocessableQuery.description`
+now explicitly mentions invalid function arguments. No paths/operations, schemas,
+authentication or constraints change. Native **3.0.3 / 4.0.0 / 2,287 paths / 3,647
+operations** unchanged; all three native blockers (DNS-order default, undefined
+assets_jwt and pages_upload_token) remain after independent full validation. Stored
+file stays unchanged at 2,234 paths / 3,567 ops; source-vs-stored deltas still +79/-26
+paths and +129/-49 ops. No import, successful validation timestamp, auth fabrication,
+constraint waiver or patch. Verifier caught the changed source hash; only expected
+revision/hash advanced after this content/ref/validation review.
+Evidence in ignored `cache/maintenance/discovery/cloudflare-rest/1fb76fd3e67f2abf892b4702e13bb42948bc2421`,
+script `/tmp/review-cloudflare-49-audit.py`, log/review
+`/tmp/cloudflare-49-audit-review.log`, `/tmp/cloudflare-49-audit-review.json`.
+Grafana repository advanced to `7dbb7ee667842dffe198ff3a24900c3927c1a087` while its
+entry hash stayed `5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5`;
+independent pinned re-fetch equals both audit snapshots byte-for-byte. No timestamp-only
+API change; review `/tmp/box-49-grafana-revision-only.json`.
+
+**ClickUp coverage correction / ready next source:** the existing
+`APIs/clickup.com/1.0.0/openapi.yaml` is not actual ClickUp coverage: title `clickup20`,
+description of the API Blueprint Polls example, server `https://polls.apiblueprint.org`
+and `/questions` routes. Preserve this historical file; do not silently delete it or
+claim example paths were retired ClickUp endpoints. Directory/brand presence alone
+hid this gap. Its existing fork curation includes `x-logo` and `x-providerName`;
+explicitly preserve/review legitimate branding on a correction, without copying the
+Polls server, schema, title or description into a real ClickUp description. Do not
+invent new curation or silently adopt an unrelated content-comparison baseline.
+
+Current official [OpenAPI guide](https://developer.clickup.com/docs/open-api-spec)
+links both public collections directly:
+
+- **ClickUp v2:** `https://developer.clickup.com/openapi/clickup-api-v2-reference.json`,
+  native **3.1.0 / 2.0 / 83 paths / 138 operations**, all **234 local refs** resolve,
+  no external refs or deprecated operations. SHA-256
+  `a0a72ec97ddb4e4859b9ed89b997bb784ba5828412ff35119f41e87103069662`. Full native/
+  preflight-import validation and typed YAML roundtrip pass without patches/conversion/
+  bundling. Server `https://api.clickup.com/api`, native `Authorization_Token` scheme
+  and public token/OAuth guidance retained. Zero overlap with the stored Polls example.
+  Official guide/title identify actual public v2 resources. Review plan/auth/scope
+  restrictions and curation handling before registration/import; use vendor version
+  `2.0`, not the legacy sample's `1.0.0` or an invented release. A separate v2 service
+  directory is a reasonable layout alongside separately published v3; record the choice.
+- **ClickUp v3:** `https://developer.clickup.com/openapi/ClickUp_PUBLIC_API_V3.yaml`,
+  native **3.0.0 / literal info.version `version` / 23 paths / 35 operations**, all
+  **268 local refs** resolve, no external refs or deprecated operations. SHA-256
+  `167e0b99e0c2218312d1318fff613f180dccdfcb8decb724ce08559aa04329f2`. Preserve the
+  vendor's placeholder `version` instead of assigning runtime v3 or a made-up date.
+  Native `authHeader` scheme and original permissions/restrictions remain authoritative.
+  Validation blocks at
+  `#/components/schemas/PublicDocsCreateDocOptionsDto/properties/parent/default`: null
+  default for non-nullable referenced `PublicDocsParentDto` object. `parent` is optional
+  and its exact declaration is description + default null + one allOf ref. Diagnostic-
+  only copy removing this exact invalid default passes complete validation; no other
+  correction, changed nullability, invented runtime default or source mutation. A
+  future exactly checked recipe must assert original value/declaration and referenced
+  object constraints, preserve every schema alternative and fail when vendor changes.
+  No patch adopted, registered source or import yet. Public v2/v3 endpoint sets are
+  disjoint; no fabricated union or third-party scrape selected.
+
+Independently re-fetched both official hosted inputs unchanged. Hosted repository
+health remains unassessed. Original guide HTML/fetch metadata, source bytes, reviews,
+placeholder snapshot and diagnostic evidence in ignored
+`cache/maintenance/discovery/clickup`; scripts `/tmp/discover-clickup-official.py`,
+`/tmp/verify-clickup-discovery.py`, logs `/tmp/clickup-official-discovery.log`,
+`/tmp/clickup-verified-review.log`, reviews `/tmp/clickup-official-discovery-review.json`,
+`/tmp/clickup-verified-review.json`. Re-fetch these moving public sources before delivery.
+
+**Resume next:** all three real Box public collections are delivered/verified; do not
+repeat #173/#174, #176/#177 or #180/#181. Prioritize the valid official ClickUp v2
+coverage correction, preserving legitimate old curation and historical bytes with
+explicit scope; review the small exact v3 default recipe separately, one PR per API
+and infrastructure separate. Register Zendesk's confirmed official sources with their
+known native defects visible, and investigate vendor corrections/constraint-preserving
+compatibility rather than dropping null/conditional requirements. No Zendesk or ClickUp
+source has been added to the 49-source manifest this run. Continue independent major-
+vendor discovery and separately authorized PR-generation/monthly-discovery infrastructure.
+Existing open #179 remains an independent session's unrelated YAML fixes; do not
+overwrite, duplicate or merge it merely because it is open. All ten blockers, parked
+items, unanswered Twilio Messaging owner choice and original local deadline/sleep
+rules remain in force. No rejected-push retry, unblock or redaction.
