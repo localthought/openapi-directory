@@ -20,6 +20,57 @@ def document(version="1.0"):
 
 
 class UpdaterTests(unittest.TestCase):
+    def test_yaml_equals_keys_and_values_match_json_and_roundtrip(self):
+        raw = b"""openapi: 3.1.0
+info: {title: Equals, version: '1'}
+paths: {}
+components:
+  schemas:
+    Query:
+      type: object
+      properties:
+        =: {type: string, default: =}
+      required: [=]
+      example: {=: =}
+"""
+        expected = {"openapi": "3.1.0", "info": {"title": "Equals", "version": "1"},
+                    "paths": {}, "components": {"schemas": {"Query": {
+                        "type": "object", "properties": {"=": {"type": "string", "default": "="}},
+                        "required": ["="], "example": {"=": "="}}}}}
+        parsed = update.parse(raw)
+        self.assertEqual(parsed, update.parse(json.dumps(expected).encode()))
+        self.assertEqual(update.validate_document(parsed), [])
+        self.assertEqual(update.parse(update.serialize_document(parsed).encode()), expected)
+        invalid = copy.deepcopy(parsed)
+        invalid["components"]["schemas"]["Query"]["properties"]["="]["default"] = False
+        self.assertTrue(update.validate_document(invalid))
+        with self.assertRaisesRegex(ValueError, "Import blocked"):
+            update.import_document({"target": "APIs/example.com/1/openapi.yaml"}, invalid,
+                                   {"url": "https://example.com/spec.yaml"}, None)
+
+    def test_yaml12_integer_and_sexagesimal_resolution_preserves_vendor_strings(self):
+        raw = b"""openapi: 3.1.0
+info: {title: Scalars, version: '1'}
+paths: {}
+x-values: [1:10, 012, -012, +012, 0o12, 0x12, +0o12, 1:10.5, -.5, .5e2, 3.e2]
+"""
+        spec = update.parse(raw)
+        self.assertEqual(spec["x-values"], ["1:10", 12, -12, 12, 10, 18, "+0o12", "1:10.5", -.5, 50., 300.])
+        self.assertEqual([type(v) for v in spec["x-values"]],
+                         [str, int, int, int, int, int, str, str, float, float, float])
+        spec["x-strings"] = ["012", "0o12", "0x12", "+012", "1:10", "=", "-.5", ".5e2", "3.e2"]
+        self.assertEqual(update.parse(update.serialize_document(spec).encode()), spec)
+        # Parser configuration must not mutate PyYAML's global safe loader.
+        import yaml
+        self.assertEqual(yaml.safe_load("1:10"), 70)
+        self.assertEqual(yaml.safe_load("012"), 10)
+
+    def test_equals_implicit_resolution_does_not_accept_explicit_unknown_tags(self):
+        import yaml
+        raw = b"openapi: 3.1.0\ninfo: {title: Tagged, version: '1'}\npaths: {}\nx-value: !!value '='\n"
+        with self.assertRaises(yaml.constructor.ConstructorError):
+            update.parse(raw)
+
     def test_curated_import_is_reproducible_across_process_hash_seeds(self):
         script = '''import hashlib, update
 from test_update import document

@@ -499,6 +499,30 @@
       "priority": "high"
     },
     {
+      "id": "auth0-management",
+      "provider": "auth0.com",
+      "target": "APIs/auth0.com/management/2.0/openapi.yaml",
+      "url": "https://auth0.com/docs/oas/management/v2/management-api-oas.json",
+      "discovery": "The current public Management API reference at https://auth0.com/docs/api/management/v2 directly links this native OpenAPI 3.1 schema. The official auth0/auth0-cli internal/openapi/schema.go at a6239f907a81238e081a4abb1882c028558b2655 independently declares this exact SchemaURL. Follow fixed vendor version 2.0 and full content changes, not endpoint counts. The vendor labels OpenAPI 3.1 schema support Beta; preserve original per-operation lifecycle labels, including EA, and do not substitute legacy Swagger or other Auth0 APIs (checked 2026-10-05).",
+      "coverage": "Official public Auth0 Management API v2 administrative description, distinct from Authentication, My Account and My Organization APIs. OpenAPI 3.1 schema support is vendor-labeled Beta and the publication includes pre-release/EA operations; it is not a stable-only subset or a universal feature-GA guarantee. Hosted repository health remains unassessed. Native GetGuardianEnrollmentResponseContent.name has a phone-number pattern rejecting its own device-name default; strict validation blocks import. Do not remove that constraint or invent a replacement.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "cloudflare-rest",
+      "provider": "cloudflare.com",
+      "target": "APIs/cloudflare.com/4.0.0/openapi.yaml",
+      "github": {
+        "repository": "cloudflare/api-schemas",
+        "ref": "main",
+        "path": "openapi.yaml"
+      },
+      "discovery": "Follow the official maintained Cloudflare API schemas repository and its native openapi.yaml. The vendor OpenAPI transition article at https://blog.cloudflare.com/open-api-transition/ names that input. At 03a6de21e114bf8f998013d5b477d7c20fa70475 the sibling official openapi.json is exactly equal after YAML 1.2 scalar parsing, providing independent format verification. No source content patches, version conversion or third-party reconstruction (checked 2026-10-05). Review added/removed paths and operations separately at fixed vendor version 4.0.0; path parameter renames are not proof of endpoint retirement.",
+      "coverage": "Official Cloudflare client/v4 REST description spanning its published products, preserving preview/beta/deprecated annotations; not a universal GA or complete-product-coverage claim. Other protocols/products require separate review. Native dns-settings_order default is outside its enum; assets_jwt and pages_upload_token security requirements reference undefined schemes. Strict validation blocks import; do not fabricate authentication schemes, remove requirements or waive enum constraints.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",

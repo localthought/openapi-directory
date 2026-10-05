@@ -479,3 +479,21 @@ retain account/license restrictions, and do not infer all features are GA from p
 publication. Their 25/43 and 16/24 paths/operations are absent from historical combined
 Zoom coverage; preserve that file and every other separately published Zoom service.
 Hosted repository health remains unassessed. Other Zoom artifacts need separate review.
+
+Auth0 Management follows the native JSON schema directly linked from its
+[current reference](https://auth0.com/docs/api/management/v2), independently selected by
+its official CLI. Vendor version stays `2.0`; content and lifecycle annotations change
+without endpoint-count changes. The reference labels OpenAPI 3.1 schema support Beta,
+and the artifact includes EA features. Authentication, My Account and My Organization
+are distinct APIs. Its device-name schema has an incompatible phone-number pattern and
+default; strict validation blocks imports. Hosted repository health is unassessed.
+
+Cloudflare REST follows official `cloudflare/api-schemas/openapi.yaml` at a pinned commit,
+with no source patches/conversion. The sibling official JSON is exactly equal using YAML
+1.2 scalar parsing (verified 2026-10-05). Bare `=` keys/values and sexagesimal-looking
+`1:10` examples remain strings. Decimal leading zeros, `0o` octal, hexadecimal and float
+forms follow the YAML 1.2 core schema; strings that resemble those numbers are quoted on
+write. Unsupported explicit tags remain rejected. This repairs parser interpretation,
+without editing vendor files or relaxing schema/security validation. Cloudflare imports
+remain blocked by an invalid DNS-order default and undefined assets upload security
+schemes. Report additions/removals separately; URL-variable renames are not retirements.
