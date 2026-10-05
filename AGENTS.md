@@ -2652,3 +2652,42 @@ by later audits; unlinked only those two app attachments, leaving their PRs/hist
 recurs, inspect and unlink only superseded merged progress-only records before attaching
 the new PR. No pending attachment failure. Twilio Messaging's unanswered owner choice,
 explicitly parked items and the original one-week local/sleep deadline remain unchanged.
+
+**Zoom Canvas official selection / monitoring prepared (2026-10-05 UTC):**
+The current [Canvas API reference](https://developers.zoom.us/docs/api/canvas/) explicitly
+names `/api-hub/canvas/methods/endpoints.json`, embedding the same **OpenAPI 3.0.0 /
+vendor version 2 / 29 paths / 39 operations** as the original download. Native hash
+`82cc4556a1ba6ff8770aae93bfe4de89ca13c51d5db82a4dc35bc13c4b65743c`, fetched
+2026-10-05T07:36:12.376440Z, Last-Modified 2026-09-28 22:49:33 UTC. All non-security
+content equals the current viewer; preserve the original download's OAuth requirements
+and API-key scheme. Rendered markdown's 3.1.1 is not the native dialect. Full strict
+validation passes, with zero refs and no content patches, conversion or bundling.
+
+Pinned vendor `zoom/skills` at `2d75fba014118e5eafbc75c4143418fb2d934e29`,
+`skills/rest-api/references/zoom-docs.md`, names this exact Canvas input. Its older
+inventory has only **20 paths / 26 operations**: supporting selection evidence, not a
+current coverage source. Use the live publication intact, retaining collaborator,
+access/ownership, table, import/export, archive and report operations. Do not truncate to
+the introduction's older future-permissions prose or concatenate the separate Hub API.
+The current [Canvas introduction](https://developers.zoom.us/docs/canvas/) lists enabled
+Canvas on Basic and paid plans, without a prerelease designation. Source lifecycle scan
+finds only example beta-testing text and attachment-preview event names, not release labels.
+Public publication is not a universal feature-GA claim; retain account/license and
+Gov-cluster exclusions. Hosted health is explicitly unassessed.
+
+Full fetched main tree has no Canvas/Docs counterpart; all 29 paths / 39 operations are
+absent from **all six existing Zoom files**, including combined history and current
+Meetings, Users, Accounts, Whiteboard and Scheduler. No alias or new-version refresh
+disguised as an addition. Register `zoom-canvas`, target
+`APIs/zoom.us/canvas/2/openapi.yaml`, separately from the API addition: **43 artifacts /
+42 services**. Latest complete verified network audit remains 42 until expansion is
+verified. Evidence in ignored `cache/maintenance/discovery/zoom-canvas/<hash>/` includes
+original bytes, fetch metadata, current HTML/page data and pinned vendor reference.
+Script/log `/tmp/verify-zoom-canvas-source.py`, `/tmp/zoom-canvas-source-review.json`.
+
+To free three app attachment slots, verified #94/#98/#105 were merged AGENTS-only
+progress records superseded by current audits and unlinked only their app attachments.
+Their PRs/history remain intact; API/infrastructure attachments preserved. No protection
+or approval bypass. All previous blockers, parked items, Messaging owner choice and the
+original local one-week/sleep deadline remain unchanged. Next deliver monitoring, then
+the fully validated Canvas API in its own PR; Rooms/Team Chat remain discovery blockers.

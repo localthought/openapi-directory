@@ -561,6 +561,16 @@
         "expected_warnings": 0,
         "expected_patches": 218
       }
+    },
+    {
+      "id": "zoom-canvas",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/canvas/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/canvas/methods/endpoints.json",
+      "discovery": "The current public Canvas API reference at https://developers.zoom.us/docs/api/canvas/ explicitly names this downloadPath and embeds native OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the original OAuth requirements and API-key scheme. Official zoom/skills inventory skills/rest-api/references/zoom-docs.md at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently names this input but its older 20-path/26-operation inventory is not current coverage evidence. Follow the full current Canvas publication (29 paths/39 operations), not a hand-built inventory or the separate Hub API. Rendered markdown advertises 3.1.1 but the actual downloadable/embedded artifact declares 3.0.0: retain its native dialect without conversion (checked 2026-10-05). All routes/operations are absent from all six existing Zoom artifacts; preserve those files. No patches, conversion or bundling needed.",
+      "coverage": "Official public Zoom Canvas (also inventoried by the vendor as Zoom Docs) document management/content, collaboration and ownership/access, data tables, imports/exports, archiving and activity-report REST description. Preserve original OAuth scopes, Gov-cluster exclusions and account/license restrictions. It is distinct from the Zoom Hub content API and other Zoom products, not complete platform coverage. Current public introduction lists enabled Canvas on Basic and paid account plans without a prerelease designation; absent labels do not prove every feature GA. Example beta-testing text and attachment preview event names are not release labels. Hosted source health remains unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
