@@ -679,6 +679,7 @@
     },
     {
       "id": "zendesk-conversations",
+      "import_blocker": "Fully validated official 17.13.2 addition is retained locally on codex/add-zendesk-conversations at afb95b89fdc7a4f9566e22495abe97627e7a82ed. GitHub push protection rejected the unchanged vendor Twilio Account SID example; owner review or explicit checked-redaction authorization is required. Do not retry, unblock or replace the example automatically. See AGENTS.md for exact reviewed source, validation evidence and owner-review link.",
       "provider": "zendesk.com",
       "service": "conversations",
       "target": "APIs/zendesk.com/conversations/17.13.2/openapi.yaml",
