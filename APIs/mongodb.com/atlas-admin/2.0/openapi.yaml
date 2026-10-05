@@ -12024,6 +12024,7 @@ components:
               - AI Model APIs
               - Automated Embedding
               - Native Reranking
+              - Agent Engine
               - Flex Consulting
               - Support
               - Credits
@@ -44401,6 +44402,7 @@ components:
               - AI Model APIs
               - Automated Embedding
               - Native Reranking
+              - Agent Engine
               - Flex Consulting
               - Support
               - Credits
@@ -46012,14 +46014,14 @@ info:
   termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
   title: MongoDB Atlas Administration API
   version: '2.0'
-  x-xgen-sha: 8f9485d239f53f5b963c55e11f5f05a34bec9586
+  x-xgen-sha: ae2540ff49647f5938dea4d47caeba82b318fc3c
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/mongodb/openapi/ab07390d4ef9ba960d467a156ef99d5e0afb4e10/openapi/v2.json
+      url: https://raw.githubusercontent.com/mongodb/openapi/f84bc82a8a0f85c83cbca399da3228223d6a397d/openapi/v2.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/mongodb/openapi/ab07390d4ef9ba960d467a156ef99d5e0afb4e10/openapi/v2.json at commit ab07390d4ef9ba960d467a156ef99d5e0afb4e10; entry source SHA-256 db2c6f2500a5f05fc74f8dd818db4f9db38d0e67140a6b9ce82364e9738cca66.
-    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection; no schema constraints removed.
+    - Fetched from https://raw.githubusercontent.com/mongodb/openapi/f84bc82a8a0f85c83cbca399da3228223d6a397d/openapi/v2.json at commit f84bc82a8a0f85c83cbca399da3228223d6a397d; entry source SHA-256 8c15051acf24542238abb64a3e6fc5dda872337ce4fdceb9bf560c93580e2fd4.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/mongodb.com/atlas-admin/2.0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 openapi: 3.0.1
