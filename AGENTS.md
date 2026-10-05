@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `adbb1b6e7` (PR #181 merged):
-729 provider domains; 4,278 files under `APIs/`, including 2,104
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `55b4ea237` (PR #184 merged):
+729 provider domains; 4,279 files under `APIs/`, including 2,105
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -3774,3 +3774,140 @@ Script `/tmp/verify-clickup-v2-import.py`, log `/tmp/clickup-v2-import-verificat
 import log `/tmp/clickup-v2-import.log`. API-only PR has no maintenance-triggered CI;
 these complete checks provide its validation. Follow with the expanded 50-source
 audit after merge, against the actual v2 baseline; no repeated historical comparison.
+
+
+**ClickUp v2 API delivery confirmed:** [#184](https://github.com/ontola/openapi-directory/pull/184)
+merged from exact head `f3b0d16b015e11f98aaa78aebfb7d5c954436dbe` as
+`55b4ea237c5c9fbeb7cb872b6811b4a133a4f3a4` after complete manual validation, exact
+intended API+AGENTS file list, CLEAN/MERGEABLE state and no CI required for API-only
+changes. Monitoring [#183](https://github.com/ontola/openapi-directory/pull/183) is
+also merged/attached; no other-session work changed. The full main tree now has
+**729 provider domains / 4,279 API files / 2,105 openapi.yaml / 2,168 swagger.yaml**.
+This is a dated observation, not coverage of all these APIs' current sources.
+
+**ClickUp v3 recipe guard investigation:** re-fetched original native source unchanged
+at SHA-256 `167e0b99e0c2218312d1318fff613f180dccdfcb8decb724ce08559aa04329f2`.
+The referenced `PublicDocsParentDto` is `type: object`, requires `id` (string) and
+`type` (number), and excludes null. Parent is optional, complete declaration is the
+previously recorded description/default-null/one-allOf-ref. Diagnostic-only removal
+of this exact invalid default passes full validation. A simulated vendor fix adding
+`nullable: true` to the referenced object also passes full validation **without
+changing any siblings of the default**. The existing patch engine checks siblings
+only; a simple current-format removal recipe would mistakenly erase that now-valid
+default. Therefore before adopting any v3 recipe, add separately reviewed exact
+referenced-schema assertions (or an equivalent checked context) so this demonstrated
+vendor correction fails replay for review. Do not change runtime nullability or
+infer a replacement default. No recipe, source registration or import adopted.
+Evidence `/tmp/clickup-v3-recipe-preconditions.json` and ignored
+`cache/maintenance/discovery/clickup/v3-recipe-preconditions.json`.
+
+**Additional major-vendor discovery — Adobe Acrobat Sign:** no Sign/EchoSign artifact
+in the full fetched main tree; `adobe.com/aem/3.7.1-pre.0` is a different product and
+not Sign coverage. The current official
+[developer guide](https://developer.adobe.com/acrobat-sign/docs/overview/developer_guide/apiusage)
+links `https://www.adobe.com/go/acrobatsignapireference`, which redirects to
+`https://secure.adobesign.com/public/docs/restapi/v6`. Current reference HTML
+explicitly initializes Swagger UI with **`/restapijson/v6/restapi.json`**. Native
+public input `https://secure.adobesign.com/restapijson/v6/restapi.json` is
+**OpenAPI 3.1.0 / vendor version 6.0.0 / 135 paths / 184 operations**, SHA-256
+`d6e49ce58e14b63ba632e0b79eb462a68b726447eccd6f80e8260f6769dbffb5`.
+Independent repeated fetch is byte-identical and reproduces native validation failure.
+Hosted repository health is unassessed. This is official public v6 signing coverage,
+not all Adobe APIs; keep OAuth `sign_auth`, bearer `sign_bearer`, account/admin/scope
+permissions and required tenant-specific access-point guidance. The relative server
+`/api/rest/v6` must not be replaced with an invented universal tenant host.
+
+Native defects prevent an import: unsupported `info.authorizationUrl`; **75 unresolved
+example references across eight distinct targets** (`Full` occurs 68 times, plus
+FormFieldMergeInfo, SignerIdentityReportInfo, UserLocaleInfo, CopyAgreementInfo,
+DelegatedParticipantSetInfo, LibraryDocumentShareeList, SettingsQueryRequestInfo once
+each). All 712 reference occurrences are local; 637 resolve and 75 fail. Structural
+inspection also finds **1,122 responses lacking required descriptions**; diagnostic
+copy removing only the unsupported info field then fails on the first such response.
+No field removal adopted, missing examples invented, empty descriptions injected,
+constraints waived, metadata fabricated or API version changed. Do not register an
+importable recipe merely because JSON parsing or endpoint counting succeeded.
+
+The official [SDK guide](https://developer.adobe.com/acrobat-sign/docs/overview/sdks/openapi)
+links `adobe/acrobat-sign`'s `sdks/AcrobatSign_OpenAPI_SDK/json` directory, but all
+ten published SDK JSON files are **Swagger 1.2**, not modern OpenAPI/Swagger 2.0.
+Their directory's latest change was 2022-08-01 (`c280dab41440dc69d1a6236d29966be997072864`);
+repository at `a9135acd159192c26f5dd8d615d6b721d237866b` is public/unarchived/undisabled
+and pushed 2026-05-14, which does not establish spec freshness. The older
+`adobe-sign/AdobeSign-OpenAPI` repo is also unarchived but last pushed in August 2022.
+Do not import the old SDK files as current public coverage or feed Swagger 1.2 into
+the locked Swagger 2.0 converter. Public live reference above resolves discovery
+without a speculative conversion of the legacy SDK catalog. No Adobe source is
+registered or API imported; this is a newly verified candidate outside the 50-source
+audit and the ten configured blockers. Cache includes primary-guide/reference HTML
+and fetch metadata, original SDK catalog/repo metadata/all ten files, current live
+source/hashes and defects under ignored `cache/maintenance/discovery/adobe-sign`.
+Scripts `/tmp/discover-adobe-sign-official.py`, `/tmp/discover-adobe-sign-live.py`;
+reviews `/tmp/adobe-sign-live-discovery-review.json`, `/tmp/adobe-sign-native-defects.json`;
+logs `/tmp/adobe-sign-discovery.log`, `/tmp/adobe-sign-live-discovery.log`.
+
+
+**Expanded 50-source audit verified:**
+[Run 37317708286](https://github.com/ontola/openapi-directory/actions/runs/37317708286)
+checked exact main `55b4ea237c5c9fbeb7cb872b6811b4a133a4f3a4` after #184. All
+**93 tests pass**; all **50 configured artifacts** fetch/prepare: **40 matches / ten
+known import blockers**, no unblocked drift or fetch/prepare failure. ClickUp v2
+uses its own actual `APIs/clickup.com/v2/2.0/openapi.yaml` baseline and matches
+reviewed raw hash, native 3.1.0 / 2.0 / 83 paths / 138 operations, successful strict
+validation, no transformations or endpoint deltas. It no longer compares to the
+historical Polls sample. The newly discovered native-invalid ClickUp v3, Zendesk
+Support/Conversations and Adobe Sign candidates remain unregistered and outside
+these ten configured blockers; do not silently count them as configured failures.
+
+Same ten blockers: Cohere, Square, archived unsupported Slack, Meraki, Twilio
+Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and Okta. Workflow
+fails on blockers while regression tests, readable summary and artifact upload succeed;
+exact job/step outcomes verified. All **50 entry hashes / 25 distinct repository
+metadata snapshots**, strict profiles, per-row comparison bases, classifications,
+transformations and endpoint deltas checked; rendered Markdown equals JSON. **Twelve
+hosted sources** remain health-unassessed. Reports/raw snapshots recovered from CI
+in `/tmp/openapi-ci-audit-37317708286`; ignored local report/source-health cache
+updated only after complete verification. Durable recovery is run artifact
+`official-source-audit`; verifier `/tmp/verify-clickup-50-audit.py`, log
+`/tmp/clickup-50-audit-verification.log`; CI log/status
+`/tmp/clickup-50-audit-ci.log`, `/tmp/clickup-50-audit-status.json`. This supersedes
+the 49-source observation; no further network audit needed for this docs-only PR.
+
+**Cloudflare native source advance, still blocked:** latest audit selected commit
+`5f0956548c8984eb2262e642e8c528236585e4e6`, YAML SHA-256
+`830555e3f5ebb4ac7d10b6b6ba25747672c6499167dd018df2932d440cffc5ce`. Independent
+pinned YAML re-fetch and companion JSON confirm exact typed equivalence; JSON hash
+`a7036aeace920f4c58a99b29df01bc3164e56e4a280251a539bfa7d4269ba313`. All **24,575
+local references** resolve. Compared with previous `1fb76fd3` snapshot, six parsed
+changes: two new WebMCP MCP endpoint-setting components and one added reference in
+each of four existing setting unions. All previous alternatives survive; endpoint
+sets unchanged. Vendor labels this setting **beta**. Value is a root-relative path
+with optional query, string default empty, maxLength 2,048 and original pattern;
+requires WebMCP enabled and corresponding pack active. No scope/runtime behavior
+inferred or stable guarantee claimed. Native source remains **3.0.3 / 4.0.0 / 2,287
+paths / 3,647 operations**; independent full validation reproduces the same three
+DNS-order default/undefined-security blockers. Stored remains 2,234 paths / 3,567
+ops, +79/-26 paths and +129/-49 ops versus source, no import/patch/waiver.
+Verifier caught the hash change; expected revision/hash advanced only after this
+content/ref/validation review. Evidence in ignored
+`cache/maintenance/discovery/cloudflare-rest/5f0956548c8984eb2262e642e8c528236585e4e6`,
+script `/tmp/review-cloudflare-50-audit.py`, log/review
+`/tmp/cloudflare-50-audit-review.log`, `/tmp/cloudflare-50-audit-review.json`.
+Grafana revision advances to `0933c5bc7fc7f46b9da6971bbf5add63137aa01b` but artifact
+hash stays `5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5`;
+independent pinned re-fetch equals both audit snapshots byte-for-byte. No timestamp-
+only API update; `/tmp/clickup-50-grafana-revision-only.json` records evidence.
+
+**Resume next:** ClickUp v2 coverage and monitoring #183/#184 are delivered/verified;
+do not repeat the import or compare against Polls. Implement separately reviewed
+exact referenced-schema preconditions for the small v3 invalid-default recipe, with
+the demonstrated nullable vendor fix failing replay; then public v3 scope/auth/release
+review and one API PR if full validation succeeds. Register Zendesk's confirmed
+official sources with native defects visible; investigate constraint-preserving
+compatibility/vendor corrections. Adobe Sign's current public 3.1 source is now a
+verified discovery lead with unresolved examples/missing descriptions, not a ready
+import or old SDK conversion. Continue major-vendor discovery and separately
+authorized PR-generation/monthly-discovery infrastructure. Independent open #179,
+Twilio Messaging branch/owner choice, all parked items and local deadline/sleep
+rules remain unchanged. No rejected push retried, example redacted, unblock action,
+new automation, power setting change, cloud-host migration or vendor message.
