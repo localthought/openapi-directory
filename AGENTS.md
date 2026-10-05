@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `e195e7d86` (PR #174 merged):
-729 provider domains; 4,276 files under `APIs/`, including 2,102
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `3401453e3` (PR #177 merged):
+729 provider domains; 4,277 files under `APIs/`, including 2,103
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -3350,3 +3350,109 @@ import log `/tmp/box-2025-import.log`. The verifier resolves vendor shared param
 references before checking headers; no source changes to inline them. API-only paths
 and AGENTS do not trigger maintenance CI; full manual checks above are required, with
 expanded main audit after delivery. No 2026 collection import or blocker waiver.
+
+
+### 2026-10-05 Box 2025 delivery and follow-up scope review
+
+Monitoring [#176](https://github.com/ontola/openapi-directory/pull/176) and API
+addition [#177](https://github.com/ontola/openapi-directory/pull/177) are merged and
+attached; no duplicate delivery is needed. #177 exact head
+`e185548ca7b2dda450ecc96f51ed7447cf703ab4`, merge
+`3401453e38982262ddd3568d0d1a3b5b8983463a`: only new 5,342-line YAML and progress
+record, CLEAN/MERGEABLE before exact-head merge. Native 2025.0 / 3.0.2 / 24 paths /
+37 operations, all source/final validation and independent typed-content/reference/
+header/history checks pass as recorded above. No source patches, invented metadata,
+conversion, bundling or removals; historical 2.0.0 and 2024.0 byte-identical. All 93
+regressions pass in monitoring CI 37303172727.
+
+**Box 2026 public scope now verified, discovery only:** current vendor docs index
+`https://developer.box.com/llms.txt` links `_llms/en/api-reference.md`, whose v2026.0
+section points to five current references under `/reference/v2026.0/` rather than the
+older guessed `...-v2026.0` paths. Earlier tool failures on guessed URLs are not
+evidence that the endpoints or description are missing. The index links the complete
+public download `https://developer.box.com/box-openapi-v2026.0.json`. Native GitHub
+artifact remains commit `5b055e333a802b10b8ca90fcc513643836dd92b4`, hash
+`f46e2c894930ec58dedd1794d7b368f46f0844ab592b5b630f33ca2ca771d370`,
+**3.0.2 / 2026.0 / five paths / five operations**, 53 resolved local refs and complete
+validation pass. No overlap with any of the three current Box histories.
+
+Public [list Automate workflows](https://developer.box.com/reference/v2026.0/get-automate-workflows)
+and [start workflow](https://developer.box.com/reference/v2026.0/post-automate-workflows-id-start)
+references explicitly label both endpoints Beta in navigation and exclude Free Developer
+Plan. The [Notes conversion](https://developer.box.com/reference/v2026.0/post-notes-convert),
+[query](https://developer.box.com/reference/v2026.0/post-query) and
+[query insights](https://developer.box.com/reference/v2026.0/post-query-insights)
+references are unmarked, matching vendor versioning guidance and native source labels.
+All five operations require `box-version: 2026.0`; identifiers and header declarations
+match each embedded endpoint snippet. Preserve restrictions and beta annotations if
+this complete mixed collection is selected; do not fabricate a stable-only slice or
+claim every operation GA. No 2026 registration/import/PR created this run.
+
+**Do not infer lifecycle from filtered viewer snippets:** embedded Markdown omits
+`x-stability-level` and other Box extensions while the rendered navigation and raw
+hosted JSON retain both explicit beta labels. Hosted download SHA-256
+`b0233b1bf9dd06a26a3c9dc4e2d849656bf64ef2f61274c942f6e6f572253d73`. Exact
+comparison with pinned native GitHub source finds only five added operation code-sample
+lists, 55 description line folds (paragraph breaks retained; one existing trailing
+space folded), and root `x-mint: {mcp: {enabled: true}}`. All other typed values/keys,
+constraints, auth and lifecycle labels are identical. This is discovery comparison
+only: raw inputs kept, no prose normalization, code execution or patch adopted. Native
+GitHub source remains the preferred future import input. Cached original indices,
+five references, hashes/fetch metadata, raw hosted JSON and verified scope evidence
+under ignored Box discovery directory. Scripts `/tmp/fetch-box-2026-reference.py`,
+`/tmp/verify-box-2026-public-scope.py`; logs `/tmp/box-2026-public-reference.log`,
+`/tmp/box-2026-public-scope-verification.log`. Re-fetch public references after reboot.
+
+
+**Expanded 48-source audit verified:**
+[Run 37303528267](https://github.com/ontola/openapi-directory/actions/runs/37303528267)
+checked exact main `3401453e38982262ddd3568d0d1a3b5b8983463a` after #177. All
+**93 tests pass**; all **48 artifacts** fetch/prepare: **38 matches / ten known
+import blockers**, no unblocked drift or fetch/prepare failures. Both Box collections
+match their own actual baselines, exact reviewed hashes/commit, native stats and full
+validation, no transformations, successful validation dates and zero endpoint deltas.
+The same ten blockers remain Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and Okta;
+no validation waiver, API deletion, fabricated auth/schema or push-protection bypass.
+Audit/workflow fails for these recorded blockers while tests, summary and upload succeed.
+
+All 48 entry hashes, **25 distinct repository metadata snapshots**, strict validation
+profiles, per-row comparison bases, endpoint deltas, transformation evidence and
+classifications verified; rendered Markdown exactly matches JSON. Eleven hosted
+sources remain health-unassessed. Source/raw evidence and reports downloaded to
+`/tmp/openapi-ci-audit-37303528267`; ignored local reports/source-health cache updated.
+Durable recovery: run artifact `official-source-audit`. Verifier
+`/tmp/verify-box-48-audit.py`, log `/tmp/box-48-audit-verification.log`; CI log/status
+`/tmp/box-2025-full-audit-ci.log`, `/tmp/box-2025-full-audit-status.json`. This
+supersedes the prior 47-source complete audit. Full main inventory: **729 domains /
+4,277 API files / 2,103 openapi.yaml / 2,168 swagger.yaml**; header updated as dated
+observation rather than a live count.
+
+**Commit-only source observations:** the audit caught newer Datadog repository commit
+`1b4d8386c29829141a3f888824aaccb5edd6ab72` and Grafana commit
+`c7a7b797c1980a886efdd01b433a8d92b7ae7166`. Independently re-fetched all three
+entry URLs pinned to these commits; exact original bytes equal both the previous and
+new audit snapshots. Datadog v1 SHA-256
+`83353a2cbaec662aa74d12d1721daf40d81a574fe2a043f900fc595eea6dfd8f`, v2
+`2b3da388fca085e5c9dfef7fdf4617af85fc8126695e3065f7ad46badaa0118b`; Grafana
+`5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5`.
+All three remain fully valid content matches, no endpoint deltas or API edits. Only
+the audit verifier's expected Datadog v1 revision advanced after this byte-level review;
+no weakened hash/validation checks or timestamp-only imports. Review script/log/JSON
+`/tmp/verify-box-48-revision-only.py`, `/tmp/box-48-revision-only-review.log`,
+`/tmp/box-48-revision-only-review.json`. Cloudflare's latest previously reviewed
+`af9a48bedc0b5668350b1eb05eefdaf2549b8ebe` / `a29cff...` source and all three native
+blockers remain unchanged in this audit.
+
+**Resume next:** Box compatibility #173/#174 and distinct 2025 #176/#177 are delivered
+and verified; do not repeat. The separate 2026 native/public collection and current
+references are now reviewed above; consider registration/import as a complete public
+collection with both explicit beta labels and all native restrictions retained, consistent
+with other public mixed-lifecycle collections. Do not choose it as broad compatibility
+replacement, fabricate a stable-only slice or infer missing Doc Split routes. Continue
+independent well-known-vendor discovery and the separately authorized updater PR-generation/
+monthly-discovery work. Source scope and release status still require manual review.
+All ten blockers, explicitly parked items and unanswered Messaging owner choice persist;
+local branch remains `8bf3ab52f17aabcdbb42c0dd059f4d0880f05522`, no rejected-push
+retry/unblock/redaction. Original local one-week deadline/sleep rules remain in force.
+Docs-only progress delivery requires no repeat full network audit.
