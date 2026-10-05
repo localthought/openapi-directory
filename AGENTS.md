@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `55b4ea237` (PR #184 merged):
-729 provider domains; 4,279 files under `APIs/`, including 2,105
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `dd679cc36` (PR #187 merged):
+729 provider domains; 4,280 files under `APIs/`, including 2,106
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -4024,3 +4024,124 @@ Script `/tmp/review-sentry-51-audit.py`, log/review `/tmp/sentry-51-audit-review
 Original bytes/review cached in ignored `cache/maintenance/discovery/sentry/226d4470bf70f5617eb1b4f8f4852a98e2dba97b`.
 Deliver this in its own API refresh PR, then selected post-merge Sentry check;
 the complete audit and ClickUp results are recorded in the following docs PR.
+
+
+**ClickUp v3 delivery confirmed:** updater infrastructure #186 merged from head
+`85c01572683de5dc655cef590f7aa1eed7a50d82` as
+`4402db468bba7bf4ef0fd8c8d539c24abe4503c7`. Separate API
+[#187](https://github.com/ontola/openapi-directory/pull/187) merged from exact
+head `88ea4994e816563201c2069526252475d77e853f` as
+`dd679cc363eff5baebee5fe877fd3b2f028de1e2` after complete independent source/import/
+serialization checks, intended API+AGENTS file list and CLEAN/MERGEABLE state. Both
+PRs attached. No maintenance CI for API-only PR; infrastructure passed 97 tests
+locally/CI. Full fetched-main dated inventory now **729 domains / 4,280 API files /
+2,106 openapi.yaml / 2,168 swagger.yaml**. Public v3 includes experimental Chat;
+keep original scope/version/restrictions and exact assertions on future refreshes.
+
+**Zendesk Conversations diagnostic compatibility investigation:** primary official
+[guide](https://developer.zendesk.com/documentation/conversations/references/openapi-specification/)
+still identifies the maintained public spec as the direct reference source; generated
+wrappers are deprecated, not the native specification. Fresh repository-health check
+confirms same public/unarchived/undisabled repository; re-fetched entry still commit
+`07a4ade211c8420d6a3ee94e174127522cbaa033`, SHA-256
+`d78f05f64282ecaf7dfe4fe19573dc6d49c213780061b64de39629d49d35ce01`,
+native **3.0.2 / 17.13.2 / 42 paths / 68 operations**. No source registered/imported.
+
+Original `reference` object has unsupported `dependencies: {sourceType: [source]}`.
+Vendor prose explicitly requires source when sourceType is present. Diagnostic
+copy replaces only that keyword with supported
+`anyOf: [{not: {required: [sourceType]}}, {required: [source]}]`, expressing the
+same implication: sourceType absent OR source present. All other type/property/
+length/prose/required-uri constraints remain exact; no dependency simply deleted.
+Whole-schema Draft4Validator truth checks match for all 16 combinations of absence,
+valid strings, null and invalid numeric sourceType/source values, with otherwise-
+valid required `uri` supplied: three valid / thirteen invalid cases. SourceType
+alone fails while both absent, source-only and valid paired values pass. These diagnostics
+do not adopt a patch or make a server-behavior claim.
+
+Full-document validation then exposes a **second native defect**:
+`#/components/parameters/userFilterQuery/schema/properties/identities.email/required`
+is boolean true, while a Schema Object requires an array. Complete query parameter
+has `required: true`, object schema with only `identities.email`, no parent required
+array, and a string child carrying this malformed true flag. Diagnostic copy moves
+the child true-presence declaration to enclosing `required: [identities.email]`,
+retaining query `required: true` and every other field. The full document validates
+after these two diagnostic changes. This is a candidate interpretation of the
+vendor's malformed declaration, not an established equivalence of invalid syntax
+or new observed server behavior; check the public user-list contract before adoption.
+Do not blindly drop the child requirement or claim fixing dependencies alone is
+sufficient. A future exact recipe needs full-node preconditions, constraint/opt-in
+semantics tests and vendor-fix refusal, plus release/auth/scope review before any
+import. New exact assertion support can protect complete containing objects.
+
+Original bytes, health snapshot and diagnostic objects/tests cached in ignored
+`cache/maintenance/discovery/zendesk/conversations-dependency-review.json`;
+script `/tmp/review-zendesk-conversations-dependency.py`, review/log
+`/tmp/zendesk-conversations-dependency-review.json`,
+`/tmp/zendesk-conversations-dependency-review.log`. The follow-up diagnostic records
+the second defect and complete parameter there. Zendesk Support and Adobe Sign
+remain separate native-invalid discoveries, outside configured audit counts.
+
+
+**Expanded 51-source audit verified, with detected drift delivered:**
+[Run 37325626675](https://github.com/ontola/openapi-directory/actions/runs/37325626675)
+checked exact main `dd679cc363eff5baebee5fe877fd3b2f028de1e2` after ClickUp v3 #187.
+All **97 tests pass**; all **51 artifacts** fetch/prepare: **40 matches / one
+unblocked Sentry content change / ten known import blockers**. This original CI
+snapshot is retained as observed, not relabelled after the later Sentry refresh.
+Both ClickUp v2 and v3 match their own actual baselines, source hashes, typed native
+versions/stats, full validation and zero endpoint deltas. v3's one checked recipe
+transformation includes hash `36c6e20fd869abb31c544750fd0ba9fe63052181219594050267ed770578e810`.
+Thirteen hosted sources have health unassessed. All **51 raw entry hashes / 25
+repository metadata snapshots**, profiles, per-row baselines/classifications/
+transformations/deltas and exact Markdown/JSON rendering verified. No fetch/prepare
+failures. Same ten blockers: Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and Okta.
+Audit job/workflow fails on known blockers; tests, readable summary and artifact
+upload succeed, exact head/job/step outcomes checked.
+
+Reports/raw artifacts `/tmp/openapi-ci-audit-37325626675`; durable recovery is
+`official-source-audit` on that run. Ignored local report/source-health cache updated
+only after verification. Script/log `/tmp/verify-clickup-51-audit.py`,
+`/tmp/clickup-51-audit-verification.log`; CI log/status
+`/tmp/clickup-51-audit-ci.log`, `/tmp/clickup-51-audit-status.json`. Verifier caught
+the new Sentry drift; expected classification/hash/revision were reviewed deliberately,
+not forced to a stale match. Cloudflare source hash/commit/stats and its three native
+blockers remain identical to the prior 50-source observation; no redundant import/
+patch. Grafana moves to `c2d399ec8baabc3de4a0ac08d6b890a8c222c4f2` with unchanged
+raw hash `5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5`;
+independent pinned re-fetch is byte-identical to both audits. Evidence
+`/tmp/clickup-51-grafana-revision-only.json`; no timestamp-only API refresh.
+
+**Sentry drift closure confirmed:** separate API
+[#188](https://github.com/ontola/openapi-directory/pull/188) merged exact head
+`005b265fb8d34d7ca6157b98456cc928ef0ec8cb` as
+`dff639b2ae4dc2d672039340e490c11467ea3ee3`, after intended API+AGENTS file list,
+CLEAN/MERGEABLE and complete independent validation/content/curation checks.
+Post-merge selected check against that exact main reports **matches_source**, fixed
+v0 / native 3.0.3 / **155 paths / 249 operations**, no deltas/validation errors/
+transformations, repository available and reviewed source hash/revision unchanged.
+Report `/tmp/sentry-scim-post-merge.json`. Only Sentry changed between the full
+audit tree and this source check; preserve original CI classifications above and
+this independently verified closure. No repeat broad network audit needed for
+the following docs-only change. API/file inventory remains 729 / 4,280 / 2,106 /
+2,168 because this fixed-version refresh changed an existing file. To attach this
+additional delivered API and progress PR at the app limit, verified merged docs-only
+#64 was unlinked; GitHub PRs and all API/updater attachments unchanged.
+
+**Resume next:** ClickUp v2/v3 and new Sentry SCIM discovery refresh are delivered;
+do not repeat imports. First verify Zendesk Conversations' public user-list/filter
+contract for the malformed boolean child required flag. The diagnostic equivalent
+dependency plus candidate required-array placement fully validate, but need
+separately reviewed exact source recipes/regressions, including vendor-fix refusal,
+and public release/auth/scope check before registration/import. Preserve all
+constraints; do not merely drop dependencies or true required declarations.
+Register official Zendesk Support with its native null-type defect visible and
+continue compatible-source/correction investigation. Adobe Sign remains a separate
+verified native-invalid discovery; old Swagger 1.2 SDK inputs are not current
+OpenAPI coverage. These three unregistered candidates are outside the configured
+ten blockers. Continue well-known vendor discovery and separately authorized
+PR-generation/monthly-discovery infrastructure. Independent open #179, Twilio
+Messaging branch/owner choice, all parked items and local deadline/sleep rules
+remain unchanged; no approval rejection bypass, push retry/redaction/unblock,
+new automation, power setting change, cloud-host migration or vendor message.
