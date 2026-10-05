@@ -3964,3 +3964,34 @@ At app attachment limit, verified merged docs-only #147/#182/#185 were unlinked 
 attach these new deliveries; GitHub and API/infrastructure attachments unchanged.
 No Twilio rejected-push retry/redaction/unblock, new automation, power changes,
 cloud-host migration, vendor message or parked-item work.
+
+
+**ClickUp v3 infrastructure merged:** [#186](https://github.com/ontola/openapi-directory/pull/186)
+from exact head `85c01572683de5dc655cef590f7aa1eed7a50d82`, CLEAN/MERGEABLE with
+intended six infrastructure/doc files and **97 local/CI tests** passing. CI
+[37325195836](https://github.com/ontola/openapi-directory/actions/runs/37325195836),
+log/status `/tmp/clickup-v3-guard-ci.log`, `/tmp/clickup-v3-guard-ci-status.json`.
+Recipe SHA-256 `36c6e20fd869abb31c544750fd0ba9fe63052181219594050267ed770578e810`.
+
+**Separate API import prepared:** `APIs/clickup.com/v3/version/openapi.yaml`,
+native **3.0.0 / literal vendor version `version` / 23 paths / 35 operations**.
+Independent original live re-fetch confirms reviewed hash, original invalid null
+default, patched source validates, and serialized typed values match the entire
+vendor document except exactly that one default and required provenance. All 268
+local refs resolve; zero external refs or conversion. Complete containing and
+referenced schema assertions protect original optionality/constraints; valid
+nullable vendor correction blocks replay. No fabricated schema/auth/version, old
+curation removed or fresh curation invented. Both existing ClickUp files remain
+byte-identical to fetched main, v2/v3 endpoint sets disjoint. Native authHeader,
+server, tags, schemas (including unused vendor definitions) and examples retained.
+
+Public scope includes **experimental Chat**; no whole-platform or universal-GA
+claim. Native Workspace audit-log operation is owner-only/Enterprise; per-user
+time estimates are Business or above, at most ten estimates and assigned users;
+privacy/access edits may incur charges. Docs access follows user permissions and
+formatting limitations. Original restrictions/prose retained without inferred
+server behavior. Public mixed-lifecycle artifact was imported completely rather
+than an invented subset. Verification `/tmp/verify-clickup-v3-import.py`, log
+`/tmp/clickup-v3-import-verification.log`; CLI log `/tmp/clickup-v3-import.log`.
+API-only PR does not trigger maintenance CI; complete independent checks above
+are its validation, followed by full 51-source CI audit after merge.
