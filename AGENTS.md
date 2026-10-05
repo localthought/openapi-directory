@@ -4416,3 +4416,55 @@ sleep rules and week deadline unchanged; no vendor messages, new automation, clo
 host migration or power changes. To attach this superseding progress PR at the app
 limit, verified merged AGENTS-only #189 was unlinked; GitHub history and API/updater
 attachments preserved.
+
+### 2026-10-05 19:25 UTC heartbeat — Support compatibility and unused-reference guards
+
+Resumed clean main `cfb19aa445a5b9001f682af27a57c12dab03aaba` (#194), fetched
+unchanged main, sparse coverage and independent open #179 verified. Conversations
+and Twilio Messaging owner choices remain unanswered; neither rejected push retried.
+Current hosted Support re-fetch retains hash
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`, native
+3.0.3 / fixed 2.0.0 / 455 paths / 657 operations / 2,534 resolved local refs.
+A complete key/string scan finds `UserLogin` only at its component definition;
+no pointer, prose, extension or implicit-name occurrences elsewhere. Diagnostic
+null-only correction plus removal of that exact unused component makes the full
+native document valid; no further defects are waived. Cached original unchanged.
+
+**Separate updater implementation:** optional recipe `unreferenced` preconditions
+verify existing pointer targets and conservatively scan every string/key, including
+examples, extensions and mappings, for direct, descendant or enclosing JSON Pointer
+uses. Percent-encoded fragments, escaped tokens, arrays, URI-prefixed fragments and
+root pointers are covered. Missing, malformed or duplicate targets fail closed;
+new uses block before any operation in that recipe. Named anchors/prose are not
+pointer references, so independent vendor name-resolution review remains required.
+No caller object or original cache is changed on failure; no success stamp fabricated.
+
+`maintenance/patches/zendesk-support.json` asserts the complete original
+AccessRuleCondition and UserLogin nodes. It preserves the documented null-only
+alternative with explicit string type, nullable:true and enum:[null]; all four other
+alternatives and original oneOf exclusivity remain, including integer/number overlap.
+It removes only the asserted unused invalid in:path/style:deepObject component after
+the absence guard. No query relocation, auth scheme, runtime values or alternate
+operator enum is invented. Source monitoring now replays this exact recipe;
+API import will be a separate PR after infrastructure CI and merge.
+Recipe SHA-256 `38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5`.
+**106 local regression tests pass** (six new tests covering semantic positive/negative
+witnesses, new uses/vendor fixes, escaped/encoded pointer equivalence, conservative
+extension/example/enclosing references, malformed guards and cached failure).
+Fresh source full validation and typed YAML roundtrip pass after the two corrections.
+
+Official Ticketing introduction links this exact hosted download; it covers Support
+and included custom data, not Conversations/all Zendesk. Native tenant variable
+server is retained. Current [authentication reference](https://developer.zendesk.com/api-reference/introduction/security-and-auth/)
+recommends OAuth and deprecates API tokens; the artifact itself models only basicAuth.
+Preserve that publication limitation, all native auth/deprecation/role/plan prose,
+and end-user password restrictions rather than fabricate a complete auth model.
+The [OAS 3.0.3 parameter rules](https://spec.openapis.org/oas/v3.0.3.html#parameter-object)
+restrict deepObject style to query; [nullable rules](https://spec.openapis.org/oas/v3.0.3.html#schema-object)
+allow this null-only representation while retaining enum constraints.
+Review/script `/tmp/review-support-unused-parameter.py`,
+`/tmp/zendesk-support-unused-parameter-review.json`; new regression log
+`/tmp/zendesk-support-guards-tests.log`. Earlier diagnostic-only records remain
+historical; this entry supersedes them once the infrastructure is merged.
+At the attachment cap, verified merged AGENTS-only #60 unlinked to make
+room; GitHub history and all API/updater attachments retained.

@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "description": "Represented the documented null-only value alternative with explicit string type, nullable:true and enum:[null], preserving every other alternative and original oneOf exclusivity (including integer/number overlap). Removed only the exact unused invalid UserLogin parameter component (in:path with query-only deepObject style); no endpoint uses or authentication declarations are removed or relocated. Complete original condition/parameter assertions and conservative JSON Pointer absence preconditions stop replay on changed semantics, vendor corrections or new parameter uses. No OpenAPI version conversion or runtime behavior is invented.",
+  "assertions": [
+    {
+      "pointer": "#/components/schemas/AccessRuleCondition",
+      "value": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The field to evaluate in the condition",
+            "example": "created_by_user"
+          },
+          "operator": {
+            "type": "string",
+            "description": "The comparison operator to use. Not all field types support all operators.",
+            "enum": [
+              "is",
+              "is_not",
+              "greater_than",
+              "less_than",
+              "greater_than_equal",
+              "less_than_equal",
+              "includes",
+              "not_includes",
+              "matches",
+              "present"
+            ],
+            "example": "matches"
+          },
+          "value": {
+            "description": "The value to compare against. Can be null for terminal operators like 'present' and 'not_present'",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "example": "current_user"
+          }
+        }
+      }
+    },
+    {
+      "pointer": "#/components/parameters/UserLogin",
+      "value": {
+        "name": "user",
+        "in": "path",
+        "description": "Provides user email and password for password login\n",
+        "style": "deepObject",
+        "explode": true,
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "email": "test@zd-dev.com",
+          "password": "123456"
+        }
+      }
+    }
+  ],
+  "unreferenced": [
+    "#/components/parameters/UserLogin"
+  ],
+  "operations": [
+    {
+      "pointer": "#/components/schemas/AccessRuleCondition/properties/value",
+      "from": {
+        "description": "The value to compare against. Can be null for terminal operators like 'present' and 'not_present'",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "example": "current_user"
+      },
+      "value": {
+        "description": "The value to compare against. Can be null for terminal operators like 'present' and 'not_present'",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              null
+            ]
+          }
+        ],
+        "example": "current_user"
+      },
+      "context": {
+        "field": {
+          "type": "string",
+          "description": "The field to evaluate in the condition",
+          "example": "created_by_user"
+        },
+        "operator": {
+          "type": "string",
+          "description": "The comparison operator to use. Not all field types support all operators.",
+          "enum": [
+            "is",
+            "is_not",
+            "greater_than",
+            "less_than",
+            "greater_than_equal",
+            "less_than_equal",
+            "includes",
+            "not_includes",
+            "matches",
+            "present"
+          ],
+          "example": "matches"
+        }
+      }
+    },
+    {
+      "pointer": "#/components/parameters/UserLogin",
+      "from": {
+        "name": "user",
+        "in": "path",
+        "description": "Provides user email and password for password login\n",
+        "style": "deepObject",
+        "explode": true,
+        "required": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "email": "test@zd-dev.com",
+          "password": "123456"
+        }
+      },
+      "remove": true,
+      "context": {
+        "TicketId": {
+          "name": "ticket_id",
+          "in": "path",
+          "description": "The ID of the ticket",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "example": 123456
+        }
+      }
+    }
+  ]
+}
