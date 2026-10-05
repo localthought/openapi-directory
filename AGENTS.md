@@ -3911,3 +3911,56 @@ authorized PR-generation/monthly-discovery infrastructure. Independent open #179
 Twilio Messaging branch/owner choice, all parked items and local deadline/sleep
 rules remain unchanged. No rejected push retried, example redacted, unblock action,
 new automation, power setting change, cloud-host migration or vendor message.
+
+
+### 2026-10-05 14:23 UTC heartbeat — checked reference assertions / ClickUp v3
+
+Started from clean detached main `745ff2f70`, fetched main unchanged, read
+instructions/parked queue and existing PRs. Independent open #179 remains untouched.
+New updater recipe `assertions` compares complete JSON nodes at explicit local
+pointers **before any operation in that recipe**. Nonempty exact pointer/value
+lists, JSON-type-sensitive equality and missing/duplicate/malformed-pointer guards
+fail closed; unknown recipe fields are now rejected to catch misspelled preconditions.
+No asserted content is modified; existing recipes are backward compatible and
+recipe hashes/provenance include all preconditions. No general coercion or validation
+waiver. Four regressions cover actual ClickUp recipe/one-default-only output, valid
+nullable vendor fix and changed required/default fields, escaped array pointers and
+false-vs-zero/string/null types, invalid/missing/duplicate/misspelled assertions,
+and failed live-style audit retaining source bytes without validation success.
+All **97 tests pass** locally; complete existing recipe suite remains green.
+
+Fresh official v3 hash unchanged:
+`167e0b99e0c2218312d1318fff613f180dccdfcb8decb724ce08559aa04329f2`, native
+**3.0.0 / literal version `version` / 23 paths / 35 operations / 268 local refs**.
+Register `clickup-v3` target `APIs/clickup.com/v3/version/openapi.yaml`; no old v3
+curation or comparison baseline. Preserve v2 and historical Polls files unchanged.
+The reviewed recipe asserts complete `PublicDocsCreateDocOptionsDto` (including
+optional parent and its exact original declaration) and `PublicDocsParentDto`
+(object, required string id/number type, no nullable). Remove only parent's invalid
+null default after sibling/value checks. All schemas, required fields, nullability,
+prose and alternatives remain identical; no replacement or runtime default inferred.
+Fresh native source fails exactly at that default; patched source/preflight import/
+serialized YAML fully validate, exact typed content comparison matches a copy with
+only that field removed, all 268 refs resolve. Simulated vendor `nullable: true`
+fix validates natively but now stops replay. Selected audit reports missing v3
+baseline, no validation errors, one hash-recorded transformation and hosted health
+`not_assessed`. Source cached under ignored `cache/maintenance/clickup-v3`.
+
+Public scope/release review: current official OpenAPI guide links v3 separately;
+[Chat guide](https://developer.clickup.com/docs/chat) explicitly calls Chat
+experimental. This public collection includes 19 Chat operations, one comment-type
+operation tagged Chat (Experimental), eight Docs/page operations, two attachments,
+privacy/access, audit logs and three task operations. It is mixed-lifecycle public
+coverage, not a preview-only or claimed GA/stable-only slice. Preserve all vendor
+tags, authHeader/server definitions and permissions/restrictions; do not inject
+speculative lifecycle extensions. Current
+[Docs limitations](https://developer.clickup.com/docs/docsimportexportlimitations)
+and [plan availability](https://developer.clickup.com/docs/apis-available-by-plan)
+reviewed; public availability does not waive formatting/plan/user permissions.
+Deliver updater guards/recipe/monitoring separately from API import. No v3 API file
+changed in this infrastructure PR.
+
+At app attachment limit, verified merged docs-only #147/#182/#185 were unlinked to
+attach these new deliveries; GitHub and API/infrastructure attachments unchanged.
+No Twilio rejected-push retry/redaction/unblock, new automation, power changes,
+cloud-host migration, vendor message or parked-item work.

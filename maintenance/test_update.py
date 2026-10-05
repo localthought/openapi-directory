@@ -534,6 +534,105 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
             self.assertNotIn("last_successful_validation", result)
             self.assertEqual((cache / "test" / metadata["sha256"] / "source").read_bytes(), raw)
 
+    def test_clickup_reference_assertions_preserve_constraints_and_reject_vendor_fix(self):
+        source = {"patches": ["maintenance/patches/clickup-v3.json"]}
+        recipe = json.loads((update.ROOT / source["patches"][0]).read_text())
+        schemas = {entry["pointer"].rsplit("/", 1)[1]: copy.deepcopy(entry["value"])
+                   for entry in recipe["assertions"]}
+        spec = {"openapi": "3.0.0", "info": {"title": "Reference guard", "version": "1"},
+                "paths": {}, "components": {"schemas": schemas}}
+        raw = json.dumps(spec).encode()
+        self.assertTrue(update.validate_document(spec))
+        result, steps = update.prepare_document(source, raw)
+        expected = copy.deepcopy(spec)
+        del expected["components"]["schemas"]["PublicDocsCreateDocOptionsDto"]["properties"]["parent"]["default"]
+        self.assertEqual(result, expected)
+        self.assertEqual(update.validate_document(result), [])
+        self.assertEqual(json.loads(raw), spec)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+        # The default's immediate siblings are unchanged by this valid vendor fix.
+        fixed = copy.deepcopy(spec)
+        fixed["components"]["schemas"]["PublicDocsParentDto"]["nullable"] = True
+        self.assertEqual(update.validate_document(fixed), [])
+        self.assertEqual(fixed["components"]["schemas"]["PublicDocsCreateDocOptionsDto"],
+                         spec["components"]["schemas"]["PublicDocsCreateDocOptionsDto"])
+        changed_required = copy.deepcopy(spec)
+        changed_required["components"]["schemas"]["PublicDocsCreateDocOptionsDto"]["required"] = ["parent"]
+        corrected_default = copy.deepcopy(spec)
+        del corrected_default["components"]["schemas"]["PublicDocsCreateDocOptionsDto"]["properties"]["parent"]["default"]
+        for changed in (fixed, changed_required, corrected_default):
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, "assertion changed; review recipe"):
+                update.prepare_document(source, json.dumps(changed).encode())
+
+    def test_patch_assertions_handle_escaped_array_pointers_and_json_types(self):
+        spec = document()
+        spec["x-context"] = {"a/b~c": [False]}
+        recipe = {"schema_version": 1, "description": "Reviewed fixture",
+                  "assertions": [{"pointer": "#/x-context/a~1b~0c/0", "value": False}],
+                  "operations": [{"pointer": "#/info/title", "from": "Test API", "value": "Reviewed",
+                                  "context": {"version": "1.0"}}]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/fixture.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps(recipe))
+            with patch.object(update, "ROOT", root):
+                result, _ = update.prepare_document({"patches": ["maintenance/patches/fixture.json"]}, json.dumps(spec).encode())
+                self.assertEqual(result["info"]["title"], "Reviewed")
+                for changed in (0, "false", None):
+                    with self.subTest(value=changed):
+                        spec["x-context"]["a/b~c"][0] = changed
+                        with self.assertRaisesRegex(ValueError, "assertion changed; review recipe"):
+                            update.prepare_document({"patches": ["maintenance/patches/fixture.json"]}, json.dumps(spec).encode())
+
+    def test_patch_assertions_reject_malformed_missing_and_unknown_fields(self):
+        spec = document()
+        operation = {"pointer": "#/info/title", "from": "Test API", "value": "Reviewed",
+                     "context": {"version": "1.0"}}
+        assertion = {"pointer": "#/info/version", "value": "1.0"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/fixture.json"
+            path.parent.mkdir(parents=True)
+            with patch.object(update, "ROOT", root):
+                for assertions in (None, {}, [], [None], [{"pointer": "#/info/version"}],
+                                   [{**assertion, "extra": True}], [assertion, assertion],
+                                   [{"pointer": "https://example.com/spec", "value": 1}],
+                                   [{"pointer": "#/missing", "value": None}],
+                                   [{"pointer": "#/components/schemas/Choice/oneOf/99", "value": {}}]):
+                    recipe = {"schema_version": 1, "description": "Test", "operations": [operation],
+                              "assertions": assertions}
+                    path.write_text(json.dumps(recipe))
+                    with self.subTest(assertions=assertions), self.assertRaises(ValueError):
+                        update.prepare_document({"patches": ["maintenance/patches/fixture.json"]}, json.dumps(spec).encode())
+                recipe = {"schema_version": 1, "description": "Test", "operations": [operation],
+                          "assertoin": [assertion]}
+                path.write_text(json.dumps(recipe))
+                with self.assertRaisesRegex(ValueError, "Invalid patch recipe"):
+                    update.prepare_document({"patches": ["maintenance/patches/fixture.json"]}, json.dumps(spec).encode())
+
+    def test_reference_assertion_failure_retains_valid_vendor_source_in_audit(self):
+        recipe_path = "maintenance/patches/clickup-v3.json"
+        recipe = json.loads((update.ROOT / recipe_path).read_text())
+        schemas = {entry["pointer"].rsplit("/", 1)[1]: copy.deepcopy(entry["value"])
+                   for entry in recipe["assertions"]}
+        schemas["PublicDocsParentDto"]["nullable"] = True
+        spec = {"openapi": "3.0.0", "info": {"title": "Vendor corrected", "version": "1"},
+                "paths": {}, "components": {"schemas": schemas}}
+        self.assertEqual(update.validate_document(spec), [])
+        raw = json.dumps(spec).encode()
+        metadata = {"sha256": update.sha256(raw), "fetched_at": "today"}
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            with patch.object(update, "fetch", return_value=(raw, metadata)):
+                result = update.audit({"id": "test", "target": "APIs/example.com/1/openapi.yaml",
+                                       "patches": [recipe_path]}, "origin/main", cache)
+            self.assertEqual(result["status"], "failed")
+            self.assertIn("assertion changed; review recipe", result["error"])
+            self.assertNotIn("last_successful_validation", result)
+            self.assertNotIn("last_successful_comparison", result)
+            self.assertEqual((cache / "test" / metadata["sha256"] / "source").read_bytes(), raw)
+
     def test_checked_removal_of_an_invalid_default_and_transformation_order(self):
         spec = document()
         spec["components"]["schemas"]["InvalidDefault"] = {

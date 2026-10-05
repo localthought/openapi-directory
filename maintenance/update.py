@@ -540,10 +540,30 @@ def prepare_document(source, raw, metadata=None, cache=None):
             raise ValueError("Patch recipes must be JSON files under maintenance/patches")
         recipe_raw = path.read_bytes()
         recipe = json.loads(recipe_raw)
-        operations = recipe.get("operations")
-        if (recipe.get("schema_version") != 1 or not recipe.get("description")
+        operations = recipe.get("operations") if isinstance(recipe, dict) else None
+        if (not isinstance(recipe, dict)
+                or set(recipe) - {"schema_version", "description", "assertions", "operations"}
+                or recipe.get("schema_version") != 1 or not recipe.get("description")
                 or not isinstance(operations, list) or not operations):
             raise ValueError("Invalid patch recipe: " + filename)
+        if "assertions" in recipe:
+            assertions = recipe["assertions"]
+            if not isinstance(assertions, list) or not assertions:
+                raise ValueError("Patch assertions require a nonempty list: " + filename)
+            asserted = set()
+            for assertion in assertions:
+                if not isinstance(assertion, dict) or set(assertion) != {"pointer", "value"}:
+                    raise ValueError("Exact patch assertions require pointer and value")
+                ref = assertion["pointer"]
+                if not isinstance(ref, str) or not ref.startswith("#/") or ref in asserted:
+                    raise ValueError("Invalid or duplicate patch assertion pointer: " + str(ref))
+                asserted.add(ref)
+                try:
+                    actual = pointer(spec, ref)
+                except (KeyError, IndexError, TypeError, ValueError) as error:
+                    raise ValueError("Patch assertion target missing; review recipe: " + ref) from error
+                if canonical(actual) != canonical(assertion["value"]):
+                    raise ValueError("Patch assertion changed; review recipe: " + ref)
         # Work on a separate parsed document. No caller's object or original
         # cached bytes are modified, even if a later precondition fails.
         for operation in operations:
