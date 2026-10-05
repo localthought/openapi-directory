@@ -21,7 +21,8 @@ info:
       version: '3.0'
   x-conversion:
     - Fetched from https://raw.githubusercontent.com/plaid/plaid-openapi/325e2e192bcb422df708029bafe9d950c94df2fd/2020-09-14.yml at commit 325e2e192bcb422df708029bafe9d950c94df2fd; entry source SHA-256 e07a869352e83670e2ef077376db268358ce7a0dc4a8e97b8e1e980b91616a8c.
-    - Preserved existing APIs.guru curation metadata from APIs/plaid.com/2020-09-14_1.740.1/openapi.yaml.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Preserved existing APIs.guru curation metadata from APIs/plaid.com/2020-09-14_1.762.0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 tags:
   - description: The Plaid API
@@ -6362,12 +6363,12 @@ paths:
                           - identity
                           - liabilities
                         routing_numbers:
-                          - 011000138
+                          - '011000138'
                           - '011200365'
-                          - 011400495
+                          - '011400495'
                         dtc_numbers:
                           - '2236'
-                          - 0955
+                          - '0955'
                           - '1367'
                         oauth: false
                         connection_availability: SUPPORTED
@@ -6481,12 +6482,12 @@ paths:
                         - identity
                         - transactions
                       routing_numbers:
-                        - 011000138
+                        - '011000138'
                         - '011200365'
-                        - 011400495
+                        - '011400495'
                       dtc_numbers:
                         - '2236'
-                        - 0955
+                        - '0955'
                         - '1367'
                       oauth: false
                       connection_availability: SUPPORTED
@@ -19943,7 +19944,7 @@ paths:
                               - name: CHASE CHECKING
                                 bank_name: CHASE
                                 account_type: CHECKING
-                                account_number: 000009752
+                                account_number: '000009752'
                                 account_id: c6778d3f-e44c-4348-874e-71507c1ac12d
                                 owner:
                                   name: JANE DOE

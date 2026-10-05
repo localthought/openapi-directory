@@ -2569,3 +2569,24 @@ vendor string values. No provenance-only timestamp changes. Logs
 `/tmp/{github-rest,github-rest-2022-11-28,plaid,xero-accounting}-parser-drift.json` and
 `/tmp/parser-drift-review.log`. Plaid/Xero repairs follow separately; afterward verify
 33 matches / nine blockers with a new complete audit before claiming queue completion.
+
+**GitHub quoting repair delivered / Plaid prepared (2026-10-05):**
+[#158](https://github.com/ontola/openapi-directory/pull/158) merged and attached,
+head `1624ceddd76988dc5beaec389f7ea435b87c0e4c`, merge
+`7782419eb8c981c9dd28379e41a43ca3186f4758`. Three expected files: 19 quote changes
+per GitHub artifact and progress. CLEAN/MERGEABLE; no API-path CI configured, strict
+source/import verification above passed. Identifiers are public-key IDs; no App-installation
+identifier changes. No vendor hash/version/endpoint changes or new example values.
+
+Plaid's validated re-import at unchanged vendor commit
+`325e2e192bcb422df708029bafe9d950c94df2fd`, raw hash
+`e07a869352e83670e2ef077376db268358ce7a0dc4a8e97b8e1e980b91616a8c`, quotes exactly
+seven digit-string examples: routing numbers, DTC numbers and one bank account number.
+Version 2020-09-14_1.762.0 / 360 paths / 351 operations remains unchanged; source string
+values and leading zeros preserved. Provenance also records the current strict validation
+profile and actual current curation baseline 1.762.0 instead of prior import fallback1.740.1.
+Full exact prepared-source equality after provenance/curation, strict validation, typed
+YAML round-trip, tags/externalDocs/all curation, hashes and endpoint sets verified.
+Historical versions unchanged. Logs `/tmp/plaid-yaml12-import.log`,
+`/tmp/plaid-yaml12-import-verification.log`; same command-level verifier. Deliver Plaid
+separately, then Xero's remaining 19 quote repairs; expanded complete audit remains interim.
