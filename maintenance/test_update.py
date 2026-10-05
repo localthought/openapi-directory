@@ -10,6 +10,24 @@ from unittest.mock import patch
 import update
 
 
+def zendesk_conversations_fixture():
+    recipe_path = "maintenance/patches/zendesk-conversations.json"
+    recipe = json.loads((update.ROOT / recipe_path).read_text())
+    asserted = {entry["pointer"]: copy.deepcopy(entry["value"])
+                for entry in recipe["assertions"]}
+    return {"openapi": "3.0.2", "info": {"title": "Conversations guard", "version": "17.13.2"},
+            "paths": {"/v2/apps/{appId}/users": {"get": {
+                "description": asserted["#/paths/~1v2~1apps~1{appId}~1users/get/description"],
+                "parameters": [{"name": "appId", "in": "path", "required": True,
+                                "schema": {"type": "string"}},
+                               {"$ref": "#/components/parameters/userFilterQuery"}],
+                "responses": {"200": {"description": "OK"}}}}},
+            "components": {"schemas": {
+                "reference": asserted["#/components/schemas/reference"],
+                "displayName": copy.deepcopy(recipe["operations"][0]["context"]["displayName"])},
+                "parameters": {"userFilterQuery": asserted["#/components/parameters/userFilterQuery"]}}}
+
+
 def document(version="1.0"):
     return {"openapi": "3.1.0", "info": {"title": "Test API", "version": version},
             "paths": {"/items/{id}": {"parameters": [{"$ref": "#/components/parameters/Id"}],
@@ -20,6 +38,86 @@ def document(version="1.0"):
 
 
 class UpdaterTests(unittest.TestCase):
+    def test_zendesk_reference_dependency_retains_positive_and_negative_constraints(self):
+        import itertools
+        from jsonschema import Draft4Validator
+        source = {"patches": ["maintenance/patches/zendesk-conversations.json"]}
+        spec = zendesk_conversations_fixture()
+        raw = json.dumps(spec).encode()
+        self.assertTrue(update.validate_document(spec))
+        result, steps = update.prepare_document(source, raw)
+        self.assertEqual(update.validate_document(result), [])
+        original = spec["components"]["schemas"]["reference"]
+        compatible = result["components"]["schemas"]["reference"]
+        expected = copy.deepcopy(original)
+        del expected["dependencies"]
+        expected["anyOf"] = [{"not": {"required": ["sourceType"]}}, {"required": ["source"]}]
+        self.assertEqual(compatible, expected)
+        outcomes = []
+        absent = object()
+        for source_type, source_value in itertools.product([absent, "Page", None, 42],
+                                                          [absent, "1234", None, 42]):
+            instance = {"uri": "https://example.com/article"}
+            if source_type is not absent:
+                instance["sourceType"] = source_type
+            if source_value is not absent:
+                instance["source"] = source_value
+            a = Draft4Validator(original).is_valid(instance)
+            b = Draft4Validator(compatible).is_valid(instance)
+            self.assertEqual(a, b, instance)
+            outcomes.append(a)
+        self.assertEqual(sum(outcomes), 3)
+        self.assertEqual(len(outcomes) - sum(outcomes), 13)
+        validator = Draft4Validator(compatible)
+        self.assertFalse(validator.is_valid({"uri": "https://example.com", "sourceType": "Page"}))
+        self.assertFalse(validator.is_valid({"sourceType": "Page", "source": "1234"}))
+        self.assertFalse(validator.is_valid({"uri": "https://example.com", "title": "x" * 129}))
+        self.assertEqual(json.loads(raw), spec)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+
+    def test_zendesk_filter_requirement_matches_documented_email_lookup(self):
+        from jsonschema import Draft4Validator
+        spec = zendesk_conversations_fixture()
+        result, _ = update.prepare_document({"patches": ["maintenance/patches/zendesk-conversations.json"]},
+                                             json.dumps(spec).encode())
+        old = spec["components"]["parameters"]["userFilterQuery"]
+        new = result["components"]["parameters"]["userFilterQuery"]
+        expected = copy.deepcopy(old)
+        del expected["schema"]["properties"]["identities.email"]["required"]
+        expected["schema"]["required"] = ["identities.email"]
+        self.assertEqual(new, expected)
+        self.assertIs(new["required"], True)
+        self.assertEqual((new["style"], new["explode"]), ("deepObject", True))
+        validator = Draft4Validator(new["schema"])
+        for instance in ({}, {"profile.email": "sue@example.org"}, {"identities.email": None},
+                         {"identities.email": 42}):
+            self.assertFalse(validator.is_valid(instance), instance)
+        self.assertTrue(validator.is_valid({"identities.email": "sue@example.org"}))
+        # The vendor declares string, not an email format, pattern or minimum length.
+        self.assertTrue(validator.is_valid({"identities.email": ""}))
+
+    def test_zendesk_recipe_refuses_vendor_fixes_and_changed_contracts(self):
+        source = {"patches": ["maintenance/patches/zendesk-conversations.json"]}
+        original = zendesk_conversations_fixture()
+        complete_fix, _ = update.prepare_document(source, json.dumps(original).encode())
+        changed_dependency = copy.deepcopy(original)
+        changed_dependency["components"]["schemas"]["reference"]["dependencies"] = {"source": ["sourceType"]}
+        changed_uri = copy.deepcopy(original)
+        changed_uri["components"]["schemas"]["reference"]["required"] = []
+        fixed_filter = copy.deepcopy(original)
+        fixed_filter["components"]["parameters"]["userFilterQuery"] = copy.deepcopy(
+            complete_fix["components"]["parameters"]["userFilterQuery"])
+        optional_filter = copy.deepcopy(original)
+        optional_filter["components"]["parameters"]["userFilterQuery"]["required"] = False
+        changed_contract = copy.deepcopy(original)
+        changed_contract["paths"]["/v2/apps/{appId}/users"]["get"]["description"] = "Lists all users."
+        for changed in (complete_fix, changed_dependency, changed_uri, fixed_filter,
+                        optional_filter, changed_contract):
+            before = copy.deepcopy(changed)
+            with self.subTest(changed=changed), self.assertRaisesRegex(ValueError, "assertion changed; review recipe"):
+                update.prepare_document(source, json.dumps(changed).encode())
+            self.assertEqual(changed, before)
+
     def test_yaml_equals_keys_and_values_match_json_and_roundtrip(self):
         raw = b"""openapi: 3.1.0
 info: {title: Equals, version: '1'}

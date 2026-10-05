@@ -606,6 +606,22 @@ unchanged, and subsequent audits use the real v2 destination. Public v3 is separ
 published and currently fails native validation; it is not combined with v2.
 Hosted repository health remains unassessed.
 
+Zendesk Conversations (`zendesk-conversations`) follows the maintained official
+`zendesk/sunshine-conversations-api-spec` public v2 source, separate from Support
+and the deprecated generated SDK wrappers. Preserve vendor document version
+`17.13.2`, tenant `/sc` and explicitly labelled legacy Smooch servers, basic/JWT
+authentication, account/app/integration scope and account-type restrictions.
+The checked recipe expresses `sourceType -> source` as supported `anyOf`/`not`
+presence constraints, retaining every other reference constraint. It also moves
+invalid boolean `required:true` from the `identities.email` child schema to the
+containing filter's required array. The public List Users description explicitly
+requires that email filter; the query parameter remains required. This repairs
+malformed syntax using documented intent, rather than inferring server behavior.
+Complete reference/filter nodes and operation prose are asserted before replay.
+Changed constraints, requirements, documentation or vendor corrections stop the
+recipe for review. Regression cases include positive and negative dependency
+inputs, original required URI/length limits, filter presence/type, and vendor fixes.
+
 ClickUp v3 (`clickup-v3`) follows the separately published public collection at
 `ClickUp_PUBLIC_API_V3.yaml`. Its actual version is the literal `version`; preserve
 that placeholder and native 3.0.0. Chat is [experimental](https://developer.clickup.com/docs/chat);

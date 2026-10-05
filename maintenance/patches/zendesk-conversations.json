@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "description": "Expressed the original sourceType -> source dependency using OpenAPI 3.0-compatible anyOf/not presence constraints; every other reference constraint is retained. Moved invalid boolean required:true from identities.email to the containing filter schema required array, retaining required:true on the query parameter. The vendor ListUsers prose and public reference explicitly require this email filter. Full reference/filter definitions and operation prose are asserted before replay; changed definitions or vendor fixes require deliberate review. No types, nullability, enums, authentication, default values or runtime behavior are invented.",
+  "assertions": [
+    {
+      "pointer": "#/components/schemas/reference",
+      "value": {
+        "type": "object",
+        "x-resourceId": "MessageReferences",
+        "description": "List of references that can be used to link to the sources of a bot answer.",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "The URI of the referenced content.",
+            "example": "https://example.com/article/123"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Optional title for the reference.",
+            "example": "How to integrate messaging APIs"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Optional description of the referenced content. When sourceType is Message, this field contains the message snippet displayed on the card.",
+            "example": "A comprehensive guide to messaging API integration"
+          },
+          "iconUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Optional icon URL for the reference source. Must point to a `.png` image; the URL path has to end in `.png`, and any other format is rejected. If provided explicitly, this value takes precedence. When not provided, auto-populated for recognized sources (Box, Google Drive, Notion, Confluence, Slack, Teams, SharePoint, Seismic, Guru, Coda).",
+            "example": "https://example.com/favicon.png"
+          },
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Character offsets in the input text field where this reference's citation marker should be inserted. Positions must be relative to the text field provided in the request (text, markdownText, or htmlText). When positions are present, only one text field may be provided. Positions must not exceed the length of the input text. The system recomputes positions relative to the final htmlText for internal processing.",
+            "example": [
+              42,
+              128
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Provider or brand name (e.g., \"Confluence\", \"Slack\", \"Google Drive\"). Displayed as-is without translation. Required when sourceType is present.",
+            "example": "Confluence"
+          },
+          "sourceType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Type of the source resource. Must be one of the recognized values - File, Page, Blog, Collection, Card, Document, Row, Article, Message. Determines the card layout for rendering. Requires source to be present. The extended metadata fields below are only accepted alongside a compatible sourceType, and are all rejected when sourceType is absent.",
+            "example": "Page"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Location of the content within the source system, such as a breadcrumb trail or folder path. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent.",
+            "example": "Engineering / Runbooks / Deploying"
+          },
+          "lastUpdatedBy": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Display name of the person who last updated the referenced content. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message.",
+            "example": "Ada Lovelace"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced content was last updated. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Name of the channel the referenced message was posted in, without a leading \"#\". Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent.",
+            "example": "support-general"
+          },
+          "channelType": {
+            "type": "string",
+            "enum": [
+              "Public",
+              "Private"
+            ],
+            "description": "Visibility of the channel the referenced message was posted in. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Defaults to being treated as Public when omitted.",
+            "example": "Public"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced message was sent. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "dependencies": {
+          "sourceType": [
+            "source"
+          ]
+        }
+      }
+    },
+    {
+      "pointer": "#/components/parameters/userFilterQuery",
+      "value": {
+        "name": "filter",
+        "in": "query",
+        "description": "Contains parameters for filtering the results.",
+        "schema": {
+          "type": "object",
+          "title": "userListFilter",
+          "properties": {
+            "identities.email": {
+              "type": "string",
+              "description": "The user's email. Will match users based on emails found in the `identities` array. This parameter will not match against emails stored in `profile.email`. Only owned email identities are eligible for lookup. Users whose matching email identity is shared are not returned, even if the email matches.",
+              "required": true
+            }
+          }
+        },
+        "style": "deepObject",
+        "explode": true,
+        "required": true
+      }
+    },
+    {
+      "pointer": "#/paths/~1v2~1apps~1{appId}~1users/get/description",
+      "value": "Lists users by their email identity. The `identities.email` filter parameter is required, and it will match users based on emails found in the `identities` array. This endpoint will not match against emails stored in `profile.email`.\n\nOnly owned email identities are eligible for lookup. Users whose matching email identity is shared are not returned, even if the email matches.\n```shell\n/v2/apps/:appId/users?filter[identities.email]=sue@example.org\n```\n"
+    }
+  ],
+  "operations": [
+    {
+      "pointer": "#/components/schemas/reference",
+      "from": {
+        "type": "object",
+        "x-resourceId": "MessageReferences",
+        "description": "List of references that can be used to link to the sources of a bot answer.",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "The URI of the referenced content.",
+            "example": "https://example.com/article/123"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Optional title for the reference.",
+            "example": "How to integrate messaging APIs"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Optional description of the referenced content. When sourceType is Message, this field contains the message snippet displayed on the card.",
+            "example": "A comprehensive guide to messaging API integration"
+          },
+          "iconUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Optional icon URL for the reference source. Must point to a `.png` image; the URL path has to end in `.png`, and any other format is rejected. If provided explicitly, this value takes precedence. When not provided, auto-populated for recognized sources (Box, Google Drive, Notion, Confluence, Slack, Teams, SharePoint, Seismic, Guru, Coda).",
+            "example": "https://example.com/favicon.png"
+          },
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Character offsets in the input text field where this reference's citation marker should be inserted. Positions must be relative to the text field provided in the request (text, markdownText, or htmlText). When positions are present, only one text field may be provided. Positions must not exceed the length of the input text. The system recomputes positions relative to the final htmlText for internal processing.",
+            "example": [
+              42,
+              128
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Provider or brand name (e.g., \"Confluence\", \"Slack\", \"Google Drive\"). Displayed as-is without translation. Required when sourceType is present.",
+            "example": "Confluence"
+          },
+          "sourceType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Type of the source resource. Must be one of the recognized values - File, Page, Blog, Collection, Card, Document, Row, Article, Message. Determines the card layout for rendering. Requires source to be present. The extended metadata fields below are only accepted alongside a compatible sourceType, and are all rejected when sourceType is absent.",
+            "example": "Page"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Location of the content within the source system, such as a breadcrumb trail or folder path. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent.",
+            "example": "Engineering / Runbooks / Deploying"
+          },
+          "lastUpdatedBy": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Display name of the person who last updated the referenced content. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message.",
+            "example": "Ada Lovelace"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced content was last updated. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Name of the channel the referenced message was posted in, without a leading \"#\". Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent.",
+            "example": "support-general"
+          },
+          "channelType": {
+            "type": "string",
+            "enum": [
+              "Public",
+              "Private"
+            ],
+            "description": "Visibility of the channel the referenced message was posted in. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Defaults to being treated as Public when omitted.",
+            "example": "Public"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced message was sent. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "dependencies": {
+          "sourceType": [
+            "source"
+          ]
+        }
+      },
+      "value": {
+        "type": "object",
+        "x-resourceId": "MessageReferences",
+        "description": "List of references that can be used to link to the sources of a bot answer.",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "description": "The URI of the referenced content.",
+            "example": "https://example.com/article/123"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Optional title for the reference.",
+            "example": "How to integrate messaging APIs"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Optional description of the referenced content. When sourceType is Message, this field contains the message snippet displayed on the card.",
+            "example": "A comprehensive guide to messaging API integration"
+          },
+          "iconUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://",
+            "maxLength": 2048,
+            "description": "Optional icon URL for the reference source. Must point to a `.png` image; the URL path has to end in `.png`, and any other format is rejected. If provided explicitly, this value takes precedence. When not provided, auto-populated for recognized sources (Box, Google Drive, Notion, Confluence, Slack, Teams, SharePoint, Seismic, Guru, Coda).",
+            "example": "https://example.com/favicon.png"
+          },
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "Character offsets in the input text field where this reference's citation marker should be inserted. Positions must be relative to the text field provided in the request (text, markdownText, or htmlText). When positions are present, only one text field may be provided. Positions must not exceed the length of the input text. The system recomputes positions relative to the final htmlText for internal processing.",
+            "example": [
+              42,
+              128
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Provider or brand name (e.g., \"Confluence\", \"Slack\", \"Google Drive\"). Displayed as-is without translation. Required when sourceType is present.",
+            "example": "Confluence"
+          },
+          "sourceType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Type of the source resource. Must be one of the recognized values - File, Page, Blog, Collection, Card, Document, Row, Article, Message. Determines the card layout for rendering. Requires source to be present. The extended metadata fields below are only accepted alongside a compatible sourceType, and are all rejected when sourceType is absent.",
+            "example": "Page"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Location of the content within the source system, such as a breadcrumb trail or folder path. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent.",
+            "example": "Engineering / Runbooks / Deploying"
+          },
+          "lastUpdatedBy": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Display name of the person who last updated the referenced content. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message.",
+            "example": "Ada Lovelace"
+          },
+          "lastUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced content was last updated. Only valid when sourceType is a document type (File, Page, Blog, Collection, Card, Document, Row, Article). Rejected when sourceType is Message or absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Name of the channel the referenced message was posted in, without a leading \"#\". Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent.",
+            "example": "support-general"
+          },
+          "channelType": {
+            "type": "string",
+            "enum": [
+              "Public",
+              "Private"
+            ],
+            "description": "Visibility of the channel the referenced message was posted in. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Defaults to being treated as Public when omitted.",
+            "example": "Public"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "When the referenced message was sent. Only valid when sourceType is Message. Rejected for every other sourceType and when sourceType is absent. Stored and returned on the message; whether it is displayed depends on the channel.",
+            "example": "2026-01-15T10:00:00.000Z"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "sourceType"
+              ]
+            }
+          },
+          {
+            "required": [
+              "source"
+            ]
+          }
+        ]
+      },
+      "context": {
+        "displayName": {
+          "type": "string",
+          "nullable": true,
+          "minLength": 1,
+          "maxLength": 100
+        }
+      }
+    },
+    {
+      "pointer": "#/components/parameters/userFilterQuery/schema",
+      "from": {
+        "type": "object",
+        "title": "userListFilter",
+        "properties": {
+          "identities.email": {
+            "type": "string",
+            "description": "The user's email. Will match users based on emails found in the `identities` array. This parameter will not match against emails stored in `profile.email`. Only owned email identities are eligible for lookup. Users whose matching email identity is shared are not returned, even if the email matches.",
+            "required": true
+          }
+        }
+      },
+      "value": {
+        "type": "object",
+        "title": "userListFilter",
+        "properties": {
+          "identities.email": {
+            "type": "string",
+            "description": "The user's email. Will match users based on emails found in the `identities` array. This parameter will not match against emails stored in `profile.email`. Only owned email identities are eligible for lookup. Users whose matching email identity is shared are not returned, even if the email matches."
+          }
+        },
+        "required": [
+          "identities.email"
+        ]
+      },
+      "context": {
+        "name": "filter",
+        "in": "query",
+        "description": "Contains parameters for filtering the results.",
+        "style": "deepObject",
+        "explode": true,
+        "required": true
+      }
+    }
+  ]
+}
