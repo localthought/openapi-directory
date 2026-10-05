@@ -3152,3 +3152,35 @@ Verified #131/#134/#137 are merged AGENTS-only progress superseded by later audi
 unlinked only those app attachments to free three slots. PRs/history and all API/updater
 attachments remain intact. Every existing blocker, parked item, unanswered Messaging
 owner choice and original one-week local sleep/deadline remains in force.
+
+
+**Box monitoring delivered / compatibility import verified (2026-10-05 UTC):**
+[#173](https://github.com/ontola/openapi-directory/pull/173) merged and attached,
+head `a13dd050702c77099ee6c9dfa26e118ea9bbdd8e`, merge
+`ee4e1e14c82e3b3debbca36f4b4f29ca00722981`. Three expected infrastructure/instruction
+files, 58 additions / zero deletions, CLEAN/MERGEABLE; exact-head
+[CI 37296249041](https://github.com/ontola/openapi-directory/actions/runs/37296249041)
+passes all 93 tests. Registry 47 artifacts / 46 services; no API data in this PR.
+
+Importer re-fetched exact reviewed bytes at 2026-10-05T10:24:46.915366Z, official commit
+`5b055e333a802b10b8ca90fcc513643836dd92b4`, raw hash
+`13cc601e01a7b82133975aaf7aeffb1850159a10ac6365fae00d5af94406d9d4`.
+New `APIs/box.com/2024.0/openapi.yaml`: **187 paths / 297 operations**, compared
+with historical 2.0.0 at 161 / 260: **+28 paths / 40 ops, -2 paths / 3 ops**.
+The three official omissions are GET `/metadata_query_indices`, DELETE the literal
+`/metadata_templates/enterprise/securityClassification-6VMVochwUWo/schema`, and PUT
+its `schema#delete` path. These source omissions are not asserted runtime retirements.
+All additions/removals are included in the API PR body. Native fragment paths remain
+exact; do not guess normalized replacements or remove historical coverage.
+
+Full source/final strict validation, exact vendor-content equivalence after curation/
+provenance, typed YAML roundtrip and all 1451 local refs pass. All original curation,
+curated tags/externalDocs, Twitter, authentication, servers and seven stable annotations
+are preserved; historical 2.0.0 is byte-identical. No source patches, conversion or
+bundling. Manifest target advances to the new actual vendor version with the API file.
+Verifier/logs `/tmp/verify-box-import.py`, `/tmp/box-import-verification.log`,
+`/tmp/box-final-content-review.json`, `/tmp/box-import.log`. Deliver in its own API PR,
+then verify the expanded 47-source audit; latest complete verified network audit remains
+46 until expansion is checked. Separate 2025/2026 subsets remain discovery-only; all
+prior blockers, parked decisions, unanswered Messaging owner choice and original local
+one-week sleep/deadline policy remain in force.

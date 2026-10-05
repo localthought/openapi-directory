@@ -614,7 +614,7 @@
     {
       "id": "box-platform",
       "provider": "box.com",
-      "target": "APIs/box.com/2.0.0/openapi.yaml",
+      "target": "APIs/box.com/2024.0/openapi.yaml",
       "github": {
         "repository": "box/box-openapi",
         "ref": "main",
