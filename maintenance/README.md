@@ -480,6 +480,20 @@ publication. Their 25/43 and 16/24 paths/operations are absent from historical c
 Zoom coverage; preserve that file and every other separately published Zoom service.
 Hosted repository health remains unassessed. Other Zoom artifacts need separate review.
 
+Zoom Canvas follows the native download named by its current
+[Canvas reference](https://developers.zoom.us/docs/api/canvas/) and independently by
+the vendor's older Zoom Docs inventory. That inventory's 20 paths / 26 operations are
+not current coverage evidence: the live reference/download has 29 paths / 39 operations.
+All non-security content matches the embedded reference; preserve original downloadable
+OAuth requirements and API-key scheme. Retain native OpenAPI 3.0.0 / version `2`, without
+patches, conversion or bundling. Canvas document/content, collaboration/access, tables,
+imports/exports, archives and reports are distinct from the separate Hub API. These
+routes are absent from all six previously stored Zoom artifacts; keep those files intact.
+The public introduction lists enabled Canvas on Basic and paid plans without a release
+designation. Example beta-testing prose and attachment-preview event names are not
+prerelease labels; publication is not a universal feature-GA guarantee. Preserve scopes,
+Gov-cluster and account/license restrictions. Hosted source health remains unassessed.
+
 Auth0 Management follows the native JSON schema directly linked from its
 [current reference](https://auth0.com/docs/api/management/v2), independently selected by
 its official CLI. Vendor version stays `2.0`; content and lifecycle annotations change
