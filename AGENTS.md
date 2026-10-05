@@ -231,7 +231,7 @@ every filename, preview-only resource or compatibility description.
 
 ---
 
-**Support delivery prepared on 2026-10-05:** separate updater
+**Support delivery prepared on 2026-10-05:** [API PR #196](https://github.com/ontola/openapi-directory/pull/196) is a draft with only the new API and these progress notes; mark ready after updater #195 CI/merge, then recheck exact head/files/CLEAN/MERGEABLE before merge. Do not duplicate this PR. Separate updater
 [#195](https://github.com/ontola/openapi-directory/pull/195) adds conservative unused
 pointer guards and a checked compatibility recipe; 106 local tests pass, exact-head
 CI run 37362766037 is queued. The API-only branch `codex/zendesk-support-api-only`
