@@ -507,6 +507,18 @@ prerequisites are public with no prerelease designation; publication is not a un
 feature-GA claim. Keep all seven prior Zoom descriptions intact. Hosted health remains
 unassessed; monitor content changes at fixed vendor version `2`.
 
+Datadog v1 follows the vendor's public `.generator/schemas/v1/openapi.yaml` in
+[`DataDog/datadog-api-client-python`](https://github.com/DataDog/datadog-api-client-python).
+The pinned README identifies public OpenAPI generation and demonstrates v1 Monitors;
+current public Monitors docs still show v1 routes (reviewed 2026-10-05). Native OpenAPI
+3.0.0 / declared version `1.0` has 150 paths / 235 operations and no endpoint overlap
+with stored v2. Follow content at fixed vendor version, without borrowing the SDK package
+version. No patches, conversion or bundling. Preserve authentication/permissions, regional
+servers, 65 deprecated operations and four AWS Logs `x-sunset: 2027-02-20` annotations.
+The SDK warns of opt-in unstable endpoints; the reviewed v1 operations have no unstable,
+beta or private extensions, but publication is not a universal feature-GA guarantee.
+Keep v2 intact; this v1 collection does not cover every Datadog or private product.
+
 Auth0 Management follows the native JSON schema directly linked from its
 [current reference](https://auth0.com/docs/api/management/v2), independently selected by
 its official CLI. Vendor version stays `2.0`; content and lifecycle annotations change
