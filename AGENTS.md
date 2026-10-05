@@ -2334,3 +2334,52 @@ provider discovery or authorized separate updater PR-generation/monthly-discover
 All previously recorded vendor blockers, explicitly parked items, Messaging's local
 verified branch and unanswered owner choice remain in force. Keep the original one-week
 deadline and local sleep policy; no extra recurring chat automation.
+
+**Zoom Whiteboard / Scheduler official discovery (2026-10-05 UTC):** Current public
+[Whiteboard](https://developers.zoom.us/docs/api/whiteboard/) and
+[Scheduler](https://developers.zoom.us/docs/api/scheduler/) pages explicitly name their
+`/api-hub/<product>/methods/endpoints.json` downloadPath and embed native **OpenAPI
+3.0.0 / version 2**. The rendered markdown's 3.1.1 label is not the downloaded dialect.
+All non-security content is equal; retain original downloadable OAuth scope requirements
+and API-key scheme instead of the simplified viewer. Pinned vendor inventory
+`zoom/skills` at `2d75fba014118e5eafbc75c4143418fb2d934e29`,
+`skills/rest-api/references/{whiteboard,scheduler}.md`, independently names the inputs.
+Inventory is supporting ownership/selection evidence, not proof of complete current
+coverage. Whiteboard: **25 paths / 43 operations**, source hash
+`3f35458bba020eda9f509a9d3f4908d4dbec7145493d10a95e3f287ef4a2eb87`.
+Scheduler: **16 paths / 24 operations**, source hash
+`b0231b26205920d8c331376cba65bf25e2d13ba4f438283b164a02a7186c6daf`.
+Both validate strictly without patches, conversion or bundling; zero refs. All routes/
+operations absent from historical combined Zoom, with no operation overlap with current
+Meetings, Accounts or Users. Full fetched main tree has no other Zoom Whiteboard/Scheduler
+service, brand or alias. Import each separately, retain all old files and native lifecycle,
+license/account annotations. Whiteboard's only preview mentions describe image preview
+links, not a release label; Scheduler has none. Public documentation/absent labels alone
+are not a universal feature-GA claim. Hosted source health remains unassessed.
+Register both sources in a separate infrastructure PR: **40 artifacts / 39 services**.
+No blanket merging or protection bypass. Original bytes, ownership/page snapshots and
+fetch evidence are in ignored discovery caches; scripts/logs
+`/tmp/inspect-zoom-more.py`, `/tmp/verify-zoom-next-source.py`,
+`/tmp/zoom-{whiteboard,scheduler}-source-review.json`.
+
+**Additional Zoom candidates, do not import invalid data:** Rooms live hash
+`58c50ddcc751451e599bd000a0d042343cb4e133c2b72e6c698848b94296bdbb`,
+3.0.0 / 2 / **76 paths / 128 ops**, exact official input
+`https://developers.zoom.us/api-hub/rooms/methods/endpoints.json`. Public Rooms page names
+that download and matches all non-security content. GET/POST
+`/workspaces/users/{userId}/calendar/settings` mark their in:path userId optional, despite
+both explicit Missing User ID error responses. Correcting only required flags reveals
+DELETE `/rooms/content/digital_signage/playlists/{playlistId}` requestBody has description
+but no required content definition. Do not invent a payload or discard the useful prose;
+no recipe, registration or API import delivered. Scratch proposed flag recipe was never
+adopted. Team Chat's pinned vendor reference names `/api-hub/chat/methods/endpoints.json`,
+not `/api-hub/team-chat/`; its 3.0.0 / 2 / **81 paths / 120 ops** source hash
+`e3098b33ea735c09602370a04c84b703e93e25776e8fe752f3a1943c4ac0007f` has duplicate
+channel_id in one required array. Semantically deduplicating it reveals PATCH
+`/chat/channels/{channelId}/owner/{identifier}` requestBody missing content. No payload
+invented, registration or import. Zoom Docs canonical canvas source also parses/validates
+(29/39), hash `82cc4556a1ba6ff8770aae93bfe4de89ca13c51d5db82a4dc35bc13c4b65743c`;
+ownership/public-page/lifecycle scope still needs separate review before registration.
+All candidate raw bytes, pinned vendor references and initial validation saved in ignored
+`cache/maintenance/discovery/zoom-*`. Previous blockers, parked items, unanswered Messaging
+owner choice, week deadline and local sleep policy remain unchanged.

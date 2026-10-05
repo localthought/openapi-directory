@@ -479,6 +479,26 @@
       "priority": "high"
     },
     {
+      "id": "zoom-whiteboard",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/whiteboard/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/whiteboard/methods/endpoints.json",
+      "discovery": "The current public product reference at https://developers.zoom.us/docs/api/whiteboard/ explicitly names this downloadPath and embeds native OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the original OAuth requirements and API-key scheme. The official zoom/skills inventory at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently names this product input. Rendered markdown advertises 3.1.1 but the actual downloadable/embedded artifact declares 3.0.0: retain its native dialect without conversion (checked 2026-10-05). Follow fixed vendor version 2 and content changes. No content patches, conversion or bundling needed. All routes/operations are absent from the historical combined zoom.us/2.0.0; that file and other current services remain intact.",
+      "coverage": "Official public Zoom Whiteboard administration, account/user board lists, content, sharing, collaboration, projects, sessions and activity exports REST description. Preserve original OAuth scopes, deprecated fields and account/license restrictions. This is a distinct product artifact, not complete platform coverage. Public-reference publication and absent prerelease labels do not prove every feature GA. Hosted source health is unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "zoom-scheduler",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/scheduler/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/scheduler/methods/endpoints.json",
+      "discovery": "The current public product reference at https://developers.zoom.us/docs/api/scheduler/ explicitly names this downloadPath and embeds native OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the original OAuth requirements and API-key scheme. The official zoom/skills inventory at 2d75fba014118e5eafbc75c4143418fb2d934e29 independently names this product input. Rendered markdown advertises 3.1.1 but the actual downloadable/embedded artifact declares 3.0.0: retain its native dialect without conversion (checked 2026-10-05). Follow fixed vendor version 2 and content changes. No content patches, conversion or bundling needed. All routes/operations are absent from the historical combined zoom.us/2.0.0; that file and other current services remain intact.",
+      "coverage": "Official public Zoom Scheduler booking schedules, availability, scheduled events, routing forms, public links and reporting REST description. Preserve original OAuth scopes, deprecated fields and account/license restrictions. This is a distinct product artifact, not complete platform coverage. Public-reference publication and absent prerelease labels do not prove every feature GA. Hosted source health is unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
       "id": "slack-web",
       "provider": "slack.com",
       "target": "APIs/slack.com/1.7.0/openapi.yaml",
