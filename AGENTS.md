@@ -2383,3 +2383,21 @@ ownership/public-page/lifecycle scope still needs separate review before registr
 All candidate raw bytes, pinned vendor references and initial validation saved in ignored
 `cache/maintenance/discovery/zoom-*`. Previous blockers, parked items, unanswered Messaging
 owner choice, week deadline and local sleep policy remain unchanged.
+
+**Zoom monitoring delivered / Whiteboard import prepared (2026-10-05):** Infrastructure
+[#153](https://github.com/ontola/openapi-directory/pull/153) merged and attached,
+head `d452663e9dd00ad9f074702962d883421cbb7abd`, merge
+`bbbff76d98c84623185ac94ac62c30c226a051f9`; three expected instruction/source files,
+81 additions / zero deletions, CLEAN/MERGEABLE. CI
+[37254924610](https://github.com/ontola/openapi-directory/actions/runs/37254924610)
+passes all 90 tests. Registry has 40 artifacts / 39 services; latest complete verified
+network audit still covers 38 until the new registrations/imports are audited.
+Whiteboard importer re-fetched exact reviewed bytes at 2026-10-05T02:37:16.770456Z,
+hash `3f35458bba020eda9f509a9d3f4908d4dbec7145493d10a95e3f287ef4a2eb87`,
+creating `APIs/zoom.us/whiteboard/2/openapi.yaml` with 25 paths / 43 ops. Strict full
+validation, exact vendor-content equality after provenance, typed YAML round-trip,
+no invented curation, original authentication and zero refs all verified. No patches,
+conversion, bundling, removed routes or historical-file edits. Import/source logs
+`/tmp/zoom-whiteboard-import.log`, `/tmp/zoom-whiteboard-import-verification.log`;
+verifier `/tmp/verify-zoom-next-import.py`. Deliver this API in its own PR; Scheduler
+follows separately. Rooms/Team Chat remain discovery blockers; no proposed patches adopted.
