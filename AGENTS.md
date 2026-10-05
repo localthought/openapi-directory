@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `749ac81ee` (PR #169 merged):
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `337082cde` (PR #171 merged):
 729 provider domains; 4,275 files under `APIs/`, including 2,101
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -3034,3 +3034,92 @@ Verified #120/#125/#128 were merged AGENTS-only progress superseded by later aud
 unlinked only those app attachments to free three slots. PRs/history and all API/updater
 attachments remain intact. Preserve all nine previous blockers, parked items, unanswered
 Messaging owner choice and original one-week local sleep/deadline instructions.
+
+
+**Okta monitoring delivered / complete expanded audit (2026-10-05 UTC):**
+[#171](https://github.com/ontola/openapi-directory/pull/171) merged and attached,
+head `c68f8a4bd14302253e75e3f38a9866eb254947e8`, merge
+`337082cde96d861c5d3c69b8a494128408999ad5`. Three expected instruction/source files,
+73 additions / zero deletions, CLEAN/MERGEABLE; exact-head
+[CI 37290040939](https://github.com/ontola/openapi-directory/actions/runs/37290040939)
+passes all 93 tests. No API import or source patch was adopted.
+
+[Audit 37290126584](https://github.com/ontola/openapi-directory/actions/runs/37290126584)
+ran against exact main `337082cde96d861c5d3c69b8a494128408999ad5`. All **93 tests pass**;
+all **46 artifacts / 45 services** fetch and prepare: **36 matches / ten recorded
+import blockers**, no unblocked drift or fetch/prepare failures. Okta is missing from
+the official vendor namespace, fetched at the reviewed exact commit/hash, with native
+3.0.3 / 2026.09.1 / 485 paths / 731 operations and the expected hook-key validation
+failure. No transformations or successful-validation date is asserted for it.
+Previously matched Datadog v1, Hub/Canvas and repaired GitHub/Plaid/Xero remain matches.
+
+Blockers are the previous nine (Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0 and Cloudflare) plus Okta.
+Strict guards remain in force; overall audit/workflow failure reflects these native or
+delivery blockers, while tests, summary and artifact upload succeed. All 46 entry hashes,
+24 unique repository metadata snapshots, per-row bases, strict validation profiles,
+classifications, transformation evidence, endpoint deltas and identical rendered Markdown
+verified at `/tmp/openapi-ci-audit-37290126584`. Eleven hosted sources remain
+health-unassessed. Ignored local reports/source-health cache updated. Durable recovery:
+run artifact `official-source-audit`; verifier `/tmp/verify-okta-46-audit.py`, logs
+`/tmp/okta-46-audit-verification.log`, `/tmp/okta-full-audit-ci.log`,
+`/tmp/okta-full-audit-status.json`. This supersedes the prior 45-source complete audit.
+
+**Box discovery / concrete next import queue:** official maintained, unarchived
+`box/box-openapi`, commit `5b055e333a802b10b8ca90fcc513643836dd92b4`, publishes three
+separate year-version artifacts in `openapi/`. Full main tree already has
+`APIs/box.com/2.0.0/openapi.yaml`: 161 paths / 260 ops, not a missing vendor. Pinned README
+identifies root `openapi.json` as the latest compatibility description, byte-identical
+to `openapi/openapi.json`. Both declare **3.0.2 / 2024.0 / 187 paths / 297 ops**,
+raw hash `13cc601e01a7b82133975aaf7aeffb1850159a10ac6365fae00d5af94406d9d4`.
+Strict native validation and a curation-preserving serialized import preflight pass,
+with no conversion, patches or bundling. Current public versioning guide confirms
+`2024.0` labels the pre-year-versioning endpoints and is the default without a header;
+version labels do not mean this maintained compatibility artifact is frozen.
+
+Against stored 2.0.0: **28 paths / 40 operations added, two paths / three operations
+removed**. Removed GET `/metadata_query_indices`, PUT the vendor's literal
+`/metadata_templates/enterprise/securityClassification-6VMVochwUWo/schema#delete`,
+and DELETE `/metadata_templates/enterprise/securityClassification-6VMVochwUWo/schema`.
+These are official-source omissions, not yet proven runtime retirements; do not invent
+replacement operations or silently normalize vendor fragment paths. New AI agents/
+extraction, integration mappings, metadata taxonomies, signing-template and other API
+content remains exact. All 1451 classic local refs resolve; preserve seven native stable
+annotations, admin/free-developer restrictions and original authentication/servers.
+New vendor version requires **new `APIs/box.com/2024.0/openapi.yaml`**, retaining the
+2.0.0 history and its curation; follow future fixed-version content in place.
+
+Separate `openapi/openapi-v2025.0.json` declares **2025.0 / 24 paths / 37 operations**,
+raw hash `a28dd665970613050341911ed72900c3607d203b0805e71443ce12305aef4282`.
+It is a versioned subset, not a wholesale replacement: comparing it alone with historical
+classic coverage would falsely imply mass removals. Native strict validation passes.
+`openapi/openapi-v2026.0.json` declares **2026.0 / five paths / five operations**,
+raw hash `f46e2c894930ec58dedd1794d7b368f46f0844ab592b5b630f33ca2ca771d370`;
+strict validation passes, all 53 local refs resolve, but two operations are explicitly
+beta. Review release/feature scope and retain beta annotations; do not blindly select
+only the numerically highest file or claim universal GA. Current versioning guide
+explains per-endpoint headers and native stability/deprecation indications.
+
+Box is discovery-only and not in this 46-source audit/manifest. Register the compatibility
+source separately, then refresh as one Box API PR with exact content/provenance/curation
+and removal evidence; independently review versioned slices. Do not fabricate a merged
+superset or discard historical coverage. Raw sources/catalog/repository metadata/README,
+current versioning HTML/fetch hash and reviews are cached under ignored
+`cache/maintenance/discovery/box-platform/5b055e333a802b10b8ca90fcc513643836dd92b4`.
+Scripts/logs `/tmp/inspect-box.py`, `/tmp/inspect-box-versions.py`,
+`/tmp/box-discovery-review.log`, `/tmp/box-versions-review.log`. Re-fetch from the pinned
+vendor commit after reboot; local discovery caches are not in the CI artifact.
+
+**Resume next:** Okta monitoring is delivered; keep its native import blocker and seek
+a vendor fix or separately reviewed exact recipe. Prioritize the validated Box
+compatibility refresh described above, then review its year-version slices; no Box API
+PR has been created. Other major-provider discovery and separate authorized updater
+PR-generation/monthly discovery remain in scope. Every parked item, unanswered Messaging
+owner choice, push/approval protection and original one-week local sleep/deadline remains.
+Docs-only progress changes do not require another network audit.
+
+Manual raw-node duplicate-key checks additionally find zero duplicate scalar mapping
+keys in either current Okta variant. Vendor issue #241 concerns an older duplicate-key
+artifact; it is not evidence that the current hook-key/default defects have been fixed.
+No third-party fork patches or vendor messages were used. Future parser duplicate-key
+rejection is a separate possible infrastructure improvement, not implemented here.
