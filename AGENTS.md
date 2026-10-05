@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `d36a84975` (PR #166 merged):
-729 provider domains; 4,274 files under `APIs/`, including 2,100
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `749ac81ee` (PR #169 merged):
+729 provider domains; 4,275 files under `APIs/`, including 2,101
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2944,3 +2944,51 @@ v2 is byte-identical. Logs `/tmp/datadog-v1-import.log`,
 `/tmp/datadog-v1-import-verification.log`; verifier `/tmp/verify-datadog-v1-import.py`.
 Deliver the API in its own PR, then verify the complete expanded audit. Latest complete
 verified network audit remains 44 until expansion is checked; all prior constraints remain.
+
+
+**Datadog v1 delivered / expanded audit verified (2026-10-05 UTC):**
+[#169](https://github.com/ontola/openapi-directory/pull/169) merged and attached,
+final head `9f5cd770b498ea6819e90094562c3726613d9e76`, merge
+`749ac81ee2434614ac659340a03abb916af6597e`. Two expected files: new native v1 YAML
+(45,825 lines) and 23 instruction lines; 45,848 additions / zero deletions. CLEAN/MERGEABLE
+and exact-head verification precede merge. The final documentation-only commit places
+its delivery record at the end of this cumulative log; API bytes remain as validated.
+No API-path CI is configured for that PR; full strict source/import/content/round-trip,
+reference, lifecycle and v2-preservation checks are recorded immediately above.
+
+[Expanded audit 37283764443](https://github.com/ontola/openapi-directory/actions/runs/37283764443)
+ran against exact main `749ac81ee2434614ac659340a03abb916af6597e`. All **93 tests pass**;
+all **45 artifacts / 44 services** fetch and prepare: **36 matches / nine recorded
+import blockers**, with no unblocked drift or fetch/prepare failures. Datadog v1 matches
+`APIs/datadoghq.com/v1/1.0/openapi.yaml`, the reviewed commit/raw hash, native
+3.0.0 / version 1.0 / 150 paths / 235 operations, no transformations and a successful
+validation date, with zero endpoint deltas. Hub, Canvas and repaired GitHub/Plaid/Xero
+artifacts remain explicit matches with unchanged source hashes and endpoint sets.
+
+The same nine blockers remain Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0 and Cloudflare. Strict
+validation/import guards remain active. Overall workflow/audit failure reflects these
+recorded blockers; tests, readable summary and artifact upload succeed. All 45 entry
+hashes, 23 distinct repository-metadata snapshots, exact per-row bases, strict profiles,
+classifications, transformation evidence, endpoint deltas and identical rendered Markdown
+verified at `/tmp/openapi-ci-audit-37283764443`. Eleven hosted sources remain
+health-unassessed; repository availability does not establish complete vendor coverage.
+Ignored local reports/source-health cache updated. Durable recovery: run artifact
+`official-source-audit`; temporary verifier/logs `/tmp/verify-datadog-v1-45-audit.py`,
+`/tmp/datadog-v1-45-audit-verification.log`, `/tmp/datadog-v1-full-audit-ci.log`,
+`/tmp/datadog-v1-full-audit-status.json`. No timestamp-only API commits.
+
+Full fetched main tree at the above merge: **729 domains / 4,275 API files**, including
+**2,101 openapi.yaml / 2,168 swagger.yaml**; header updated with this dated observation.
+
+**Resume next:** Datadog v1 monitoring/addition #168/#169 are complete and verified;
+do not duplicate. Continue independent official-source audits/discovery of well-known
+industry APIs or the separately scoped, authorized updater PR-generation and monthly
+discovery infrastructure in section 9. PR generation is not implemented yet and must
+retain one API per PR, validation/provenance/curation guards, duplicate detection and
+human-visible review evidence; do not introduce blanket automatic merging. Other
+Datadog products are not covered by v1/v2 imports. Preserve all recorded native defects,
+explicitly parked items, unanswered Messaging owner choice, no approval/push-protection
+bypasses, and original one-week local sleep/deadline policy. This 45-source audit
+supersedes the earlier 44-source network audit; docs-only progress commits need no
+repeat network audit.
