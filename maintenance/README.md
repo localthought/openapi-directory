@@ -606,6 +606,16 @@ unchanged, and subsequent audits use the real v2 destination. Public v3 is separ
 published and currently fails native validation; it is not combined with v2.
 Hosted repository health remains unassessed.
 
+Zendesk Support (`zendesk-support`) follows the hosted OAS download linked from
+the official Ticketing introduction, separate from Sunshine Conversations. Fixed
+document version `2.0.0` continues to receive content updates. Source monitoring
+reports the native unsupported `type:null` branch in OpenAPI 3.0.3 as an import
+block; matching hashes or valid references do not establish successful validation.
+A diagnostic null-only compatibility representation exposes another invalid,
+unused `UserLogin` path parameter with `deepObject` style. Neither correction nor
+component removal is adopted. Preserve original bytes, tenant/auth/permission and
+lifecycle restrictions; review complete validation and semantics before import.
+
 Zendesk Conversations (`zendesk-conversations`) follows the maintained official
 `zendesk/sunshine-conversations-api-spec` public v2 source, separate from Support
 and the deprecated generated SDK wrappers. Preserve vendor document version

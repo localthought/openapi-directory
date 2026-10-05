@@ -4222,3 +4222,55 @@ source/import evidence in AGENTS; consult both it and this main progress record.
 Proceed with expanded 52-source audit, expecting delivery blockers separately from
 native defects, then Zendesk Support null-type compatibility investigation and
 other well-known official discovery. Adobe Sign remains native-invalid/unregistered.
+
+**Zendesk Support moving hosted source — diagnostic only (2026-10-05):**
+Fresh hosted publication has advanced since the prior discovery, despite fixed
+2.0.0: original hash `3a477ea89b274f4d3731f1c7ff93dc93d4520de871ac759b06d3297798fd685d`
+451 paths / 652 ops now becomes hash
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`,
+**native 3.0.3 / 2.0.0 / 455 paths / 657 ops**, 2,534 resolved local refs, none
+external. Full parsed comparison finds 49 leaf additions/removals/changes: parallel
+approval requests/response alternatives, approval-workflow IDs, custom-role change-
+management permissions, autocomplete wording and four ticket-task/subticket/link
+paths (five ops). No endpoint removals. New bytes cached before review; not forced
+to the older snapshot/hash. Hosted health remains unassessed, no git revision claimed.
+
+Same first native invalid `AccessRuleCondition.value.oneOf[4]: {type: 'null'}` remains.
+Diagnostic copy represents that null-only alternative as `{type: string, nullable: true,
+enum: [null]}`: OAS 3.0.3 nullable adds null only when type is explicit, and enum
+excludes every string. Whole value semantics match original Draft4 type:null intent
+under OAS30Validator for 13 representative string/null/bool/integer/fraction/object/
+array values; both positive and negative witnesses. All original four non-null
+alternatives and oneOf exclusivity are retained. In particular, existing integer/
+number overlap still rejects integer values; do not silently replace oneOf with anyOf
+or claim new runtime behavior. This is **not adopted/registered/imported**.
+
+Full diagnostic document then reveals a second native defect: unused component
+`#/components/parameters/UserLogin` declares `in: path` with `style: deepObject`,
+required:true, object email/password schema. It has zero `$ref` occurrences in this
+artifact; do not guess a query relocation or remove it without an exact, separately
+reviewed recipe and complete follow-up validation. Public [custom-object permission reference](https://developer.zendesk.com/api-reference/custom-data/custom-objects/custom_object_permissions/)
+corroborates terminal Present/Not present concepts/admin restrictions; schema prose
+itself explicitly allows null. [OpenAPI 3.0.3 schema rules](https://spec.openapis.org/oas/v3.0.3.html#schema-object)
+explain the diagnostic nullable/enum representation. Preserve all other constraints.
+
+Scripts/reviews/log `/tmp/review-zendesk-support-null-compatibility.py`,
+`/tmp/zendesk-support-latest-review.json`,
+`/tmp/zendesk-support-null-compatibility-review.json`,
+`/tmp/zendesk-support-null-compatibility-review.log`; original/latest bytes and evidence
+in ignored `cache/maintenance/discovery/zendesk`. Support and Adobe Sign remain
+unregistered native-invalid candidates outside the configured audit blockers.
+
+**Zendesk Support monitoring registration:** `zendesk-support` now registers the
+current official hosted publication separately, bringing the manifest to **53
+artifacts**. It adopts no diagnostic patch/conversion or API file. Actual selected
+native source check `/tmp/zendesk-support-monitor-check.json` verifies reviewed
+new hash/stats, successful fetch/comparison, health not_assessed, native null-type
+failure, no transformations and **no successful-validation stamp**. The nonzero
+CLI exit is the expected verified native validation block. Preserve the discovered
+unused UserLogin defect too; do not assume the null-only diagnostic permits import.
+The in-flight full CI audit still covers the exact **52-source** main before this
+registration; record that snapshot separately and run a complete 53-source check
+on a later run after this registration is merged. Do not relabel its total.
+Merged AGENTS-only progress #101 was unlinked to make room at the attachment limit;
+all API/updater attachment records remain. Independent #179 remains untouched.
