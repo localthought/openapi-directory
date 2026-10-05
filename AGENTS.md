@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `337082cde` (PR #171 merged):
-729 provider domains; 4,275 files under `APIs/`, including 2,101
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `e195e7d86` (PR #174 merged):
+729 provider domains; 4,276 files under `APIs/`, including 2,102
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -3184,3 +3184,108 @@ then verify the expanded 47-source audit; latest complete verified network audit
 46 until expansion is checked. Separate 2025/2026 subsets remain discovery-only; all
 prior blockers, parked decisions, unanswered Messaging owner choice and original local
 one-week sleep/deadline policy remain in force.
+
+
+**Box compatibility delivered / expanded audit verified (2026-10-05 UTC):**
+[#174](https://github.com/ontola/openapi-directory/pull/174) merged and attached,
+head `988d2fb8973aef49691677e22b084d5d42250b38`, merge
+`e195e7d86bd63f108e3ff4da9d564a509bc04e3c`. Three expected files: new 42,253-line
+2024.0 YAML, manifest baseline advance and 32 instruction lines; 42,286 additions /
+one deletion (old manifest target only). CLEAN/MERGEABLE; exact-head
+[CI 37296535892](https://github.com/ontola/openapi-directory/actions/runs/37296535892)
+passes all 93 tests. Full strict content/curation/provenance/roundtrip/reference checks
+are recorded immediately above. ExternalDocs retains its URL and vendor-updated
+punctuation; all 67 historical tag names remain, with native vendor field updates and
+new tags bringing the final list to 75. Stored 2.0.0 remains byte-identical.
+
+[Audit 37296651820](https://github.com/ontola/openapi-directory/actions/runs/37296651820)
+ran against exact main `e195e7d86bd63f108e3ff4da9d564a509bc04e3c`. All **93 tests pass**;
+all **47 artifacts / 46 services** fetch and prepare: **37 matches / ten recorded
+import blockers**, no unblocked drift or fetch/prepare failures. Box matches its new
+actual baseline `APIs/box.com/2024.0/openapi.yaml`, exact reviewed commit/raw hash,
+native 3.0.2 / 2024.0 / 187 paths / 297 operations, no transformations, successful
+validation date and zero endpoint deltas. Datadog v1, Hub/Canvas and repaired
+GitHub/Plaid/Xero remain explicit matches with unchanged source hashes/endpoint sets.
+
+The same ten blockers remain Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and Okta.
+Strict guards remain active; overall audit/workflow failure reflects these recorded
+blockers while tests, readable summary and artifact upload succeed. All 47 entry hashes,
+25 distinct repository metadata snapshots, per-row bases, strict validation profiles,
+classifications, transformation evidence, endpoint deltas and identical rendered Markdown
+verified at `/tmp/openapi-ci-audit-37296651820`. Eleven hosted sources remain
+health-unassessed. Ignored local reports/source-health cache updated. Durable recovery:
+run artifact `official-source-audit`; verifier `/tmp/verify-box-47-audit.py`, logs
+`/tmp/box-47-audit-verification.log`, `/tmp/box-full-audit-ci.log`,
+`/tmp/box-full-audit-status.json`. This supersedes the prior 46-source complete audit.
+Full fetched main tree at this merge: **729 domains / 4,276 API files**, including
+**2,102 openapi.yaml / 2,168 swagger.yaml**; header updated with dated observation.
+
+**Box 2025 scope review / next distinct coverage:** re-fetched the pinned official
+`openapi/openapi-v2025.0.json` unchanged, raw hash
+`a28dd665970613050341911ed72900c3607d203b0805e71443ce12305aef4282`, native
+**3.0.2 / 2025.0 / 24 paths / 37 operations**. All 383 local refs resolve; full validation
+passes without patches/conversion/bundling. Zero path/operation overlap with classic
+2024.0; every one of its 37 operations explicitly requires a `box-version` header with
+sole enum `2025.0`. This is additional current public coverage, not a broad compatibility
+replacement or evidence that 187 classic paths retired. Scope includes Doc Gen templates/
+jobs, Hubs/collaborations/items/documents, Shield lists, Archives and external-user jobs.
+
+All 37 operations are unmarked by `x-stability-level`, and the vendor's current versioning
+guide defines unmarked or stable as latest stable. Current English
+[Doc Gen guide](https://developer.box.com/guides/docgen) explicitly calls 2025.0 a released
+API and requires Enterprise Advanced; [Hubs update guide](https://developer.box.com/guides/hubs-api/hubs/update-hub)
+requires the same version header. Preserve original account/free-developer/admin limits,
+authentication and server declarations; do not claim every Box product is covered.
+Original source URLs, docs HTML/fetch hashes and scope JSON are cached in the same Box
+discovery directory; script/log `/tmp/review-box-2025-scope.py`,
+`/tmp/box-2025-scope.log`. No 2025 registration/import/PR created in this run, and it is
+not in the 47-source audit. Retain both existing Box histories; do not fabricate a merged
+superset or use cross-scope comparison to report mass removals. The 2026 file remains
+separate discovery with two explicit beta operations and needs its own scope review.
+
+Additional read-only 2026 operation review: the two explicit beta operations are GET
+`/automate_workflows` and POST `/automate_workflows/{workflow_id}/start`. The remaining
+unmarked operations are POST `/notes/convert`, `/query` and `/query_insights`. Do not
+infer Doc Split coverage from the broader Doc Gen guide or fabricate a stable-only slice;
+this small collection needs independent current public-reference/release review.
+Evidence `2026-operation-scope.json` in the same discovery cache; no new 2026 registration,
+import or PR, and no operations removed from any published artifact.
+
+**Resume next:** Box compatibility monitoring/refresh #173/#174 are delivered and
+verified; do not duplicate. Register and import the reviewed 2025 public subset as distinct
+coverage, using its own actual baseline for future audits. Review curation intentionally
+for this previously absent scope rather than silently cloning broad classic operations/
+tags or inventing metadata. Continue independent well-known-provider discovery and
+separate authorized updater PR-generation/monthly-discovery work. All recorded blockers,
+parked items, unanswered Messaging owner choice, push/approval protections and original
+one-week local sleep/deadline remain in force. Docs-only progress commits need no
+repeat network audit.
+
+
+**Cloudflare changed during this expanded audit — still blocked:**
+The 47-source audit fetched new official commit
+`af9a48bedc0b5668350b1eb05eefdaf2549b8ebe`, YAML entry hash
+`a29cff4572ef1dfe74262e56548de00129d10a25270513f7ed86bbf1a35bcd54`, replacing the
+previous `03a6de21e114bf8f998013d5b477d7c20fa70475` source observation. Actual stored
+file remains unchanged. Native 3.0.3 / 4.0.0 / 2287 paths / 3647 ops unchanged between
+vendor revisions; exact source path/operation sets are identical. Parsed changes:
+**56 SDK annotation updates / seven schema-field changes**: five ruleset response
+error-item refs added and the ruleset version `readOnly` annotation moved from its
+allOf child to the property. Do not mistake stable version/counts for unchanged content.
+
+Pinned companion vendor JSON independently equals the new YAML exactly after typed
+parsing; all **24569 local refs** resolve. JSON SHA-256 `b0dd848ccfd7676886ab08a995de9de048036e5efb1ea9bb5717b7d43e3b89a9`.
+The DNS-order invalid default and undefined `assets_jwt` / `pages_upload_token` security
+requirements remain; no successful validation date, API import, invented auth/schema,
+constraint waiver or source patch. Stored-vs-source deltas still +79/-26 paths and
++129/-49 operations. The initial audit verifier caught the changed raw hash; independent
+source delta/ref/YAML-JSON review justified updating only its expected source revision/hash,
+not bypassing validation or editing source bytes. All 47-source verification then passes.
+
+New Cloudflare raw sources/review cached under ignored
+`cache/maintenance/discovery/cloudflare-rest/af9a48bedc0b5668350b1eb05eefdaf2549b8ebe`;
+script/log `/tmp/review-cloudflare-new-audit.py`, `/tmp/cloudflare-new-audit-review.log`,
+`/tmp/cloudflare-new-audit-review.json`. YAML/fetch evidence is also durable in the CI
+artifact; retrieve JSON from the same pinned vendor commit after reboot. Resume Box 2025
+as directed above while preserving this updated Cloudflare blocker/source observation.
