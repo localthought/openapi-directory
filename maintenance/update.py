@@ -46,17 +46,37 @@ class Loader(getattr(yaml, "CSafeLoader", yaml.SafeLoader)):
     pass
 
 
+# A bare equals sign is a string in YAML 1.2. PyYAML's legacy value
+# resolver gives it a tag with no safe constructor, including in mapping keys.
+# Remove only implicit resolution; explicit unsupported tags still fail.
 Loader.yaml_implicit_resolvers = {
-    k: [(t, r) for t, r in v if t not in {"tag:yaml.org,2002:timestamp", "tag:yaml.org,2002:bool"}]
+    k: [(t, r) for t, r in v if t not in {"tag:yaml.org,2002:timestamp", "tag:yaml.org,2002:bool",
+                                        "tag:yaml.org,2002:value", "tag:yaml.org,2002:int",
+                                        "tag:yaml.org,2002:float"}]
     for k, v in Loader.yaml_implicit_resolvers.items()
 }
 Loader.add_implicit_resolver("tag:yaml.org,2002:bool",
                              re.compile(r"^(?:true|True|TRUE|false|False|FALSE)$"), list("tTfF"))
-# YAML 1.2 numbers such as 1e-08 are valid without a decimal point. PyYAML's
-# YAML 1.1 resolver leaves them as strings, corrupting numeric schema bounds.
-SCIENTIFIC_NUMBER = re.compile(r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[eE][-+]?[0-9]+$")
-Loader.add_implicit_resolver("tag:yaml.org,2002:float",
-                             SCIENTIFIC_NUMBER,
+# YAML 1.1 sexagesimal values such as 1:10 are strings in YAML 1.2.
+# Decimal leading zeros are decimal, and octal uses the explicit 0o prefix.
+YAML12_INTEGER = re.compile(r"^(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)$")
+Loader.add_implicit_resolver("tag:yaml.org,2002:int", YAML12_INTEGER,
+                             list("-+0123456789"))
+
+
+def construct_yaml12_integer(loader, node):
+    value = loader.construct_scalar(node)
+    radix = 8 if value.startswith("0o") else 16 if value.startswith("0x") else 10
+    return int(value[2:] if radix != 10 else value, radix)
+
+
+Loader.add_constructor("tag:yaml.org,2002:int", construct_yaml12_integer)
+# YAML 1.2 supports scientific notation without a decimal point, and excludes
+# YAML 1.1 sexagesimal floats. Keep the core schema's decimal/infinity/NaN forms.
+YAML12_FLOAT = re.compile(
+    r"^(?:[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)(?:[eE][-+]?[0-9]+)?"
+    r"|[-+]?\.(?:inf|Inf|INF)|\.(?:nan|NaN|NAN))$")
+Loader.add_implicit_resolver("tag:yaml.org,2002:float", YAML12_FLOAT,
                              list("-+0123456789."))
 
 
@@ -67,7 +87,9 @@ class Dumper(yaml.SafeDumper):
 
 # Quote vendor strings that YAML 1.2 readers would otherwise turn into numbers.
 # Keep SafeDumper's other conservative quoting rules (dates, yes/on, etc.).
-Dumper.add_implicit_resolver("tag:yaml.org,2002:float", SCIENTIFIC_NUMBER,
+Dumper.add_implicit_resolver("tag:yaml.org,2002:int", YAML12_INTEGER,
+                             list("-+0123456789"))
+Dumper.add_implicit_resolver("tag:yaml.org,2002:float", YAML12_FLOAT,
                              list("-+0123456789."))
 
 

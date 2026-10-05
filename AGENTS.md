@@ -2464,3 +2464,61 @@ sources) or authorized separate updater PR-generation/monthly-discovery work. Al
 vendor blockers, parked items and Messaging's unanswered owner choice remain in force.
 Preserve the original one-week deadline and local sleep policy; no additional chat
 automation or cloud execution.
+
+**Auth0 / Cloudflare official-source audit and parser repair (2026-10-05 UTC):**
+Auth0 Management's current [reference](https://auth0.com/docs/api/management/v2) directly
+links `https://auth0.com/docs/oas/management/v2/management-api-oas.json`; pinned official
+CLI `auth0/auth0-cli` at `a6239f907a81238e081a4abb1882c028558b2655`,
+`internal/openapi/schema.go`, independently declares the exact SchemaURL. Native **3.1.0 /
+2.0 / 258 paths / 478 ops**, source hash
+`893adeada5156cf2f72ac8e4707892357fcf87a07783958cbcdf5881fa8e04b2`, fetched
+2026-10-05T03:48:14.634489Z, Last-Modified 2026-10-02 19:19:11 UTC. Stored counts agree,
+but parsed vendor content differs at **83 positions**, including experimentation lifecycle
+beta -> EA, user-block enforcement descriptions and operation error metadata. Zero added/
+removed endpoints; counts are not freshness evidence. Native/stored both fail at
+`#/components/schemas/GetGuardianEnrollmentResponseContent/properties/name/default`:
+device-name default `iPhone 7` cannot match its phone-number pattern. No constraint removed
+or replacement invented. The current reference explicitly labels OpenAPI 3.1 schema
+support Beta; this established Management API publication includes EA operations, not a
+stable-only subset. Do not silently substitute old Swagger, Authentication or other Auth0
+services. Hosted health remains unassessed. No API refresh delivered; old file remains
+unchanged (it also lacks in-spec provenance, to fix only on a validated future import).
+
+Cloudflare official `cloudflare/api-schemas` public/unarchived repository contains both
+native formats. The [vendor transition article](https://blog.cloudflare.com/open-api-transition/)
+explicitly names `openapi.yaml`; follow that original format. Pinned source revision
+`03a6de21e114bf8f998013d5b477d7c20fa70475`, native **3.0.3 / 4.0.0 / 2287 paths / 3647 ops**.
+YAML hash `be71f538efd5f166ca3d43c7bcac4c8516c5d435f7df0ddfbd35ae89bc3b0463`, JSON hash
+`6d665f1f96baa87c5ba7bfc5ded9401d743a14af74250f594bd302ef4f1c71e8`. Stored **2234 / 3567**:
+**79 paths / 129 ops added; 26 paths / 49 ops removed**, not merely net 53/80 growth.
+Some raw differences are URL variable renames (Images/custom-pages/etc.); do not claim
+all removals are runtime retirements. Full per-endpoint lifecycle/removal review remains
+before any API refresh. Current validation blocks DNS-order default `type` outside its
+name/created_on/modified_on enum; missing `assets_jwt` scheme in one requirement and
+`pages_upload_token` in three. No authentication guessed, requirements dropped or enum
+constraint waived. Broad official artifact retains vendor preview/beta/deprecated scope.
+
+The updater could not read the stored Cloudflare YAML: bare equals mapping key triggered
+PyYAML's obsolete implicit value tag with no safe constructor. Removing only that legacy
+resolver revealed two JSON/YAML differences: realtimekit_participants example `1:10`
+incorrectly became integer 70 under YAML 1.1 sexagesimal rules. Implement YAML 1.2 core
+integer/float resolution (no sexagesimal, decimal leading zeros, explicit 0o octal/0x hex,
+scientific forms) and string fallback for `=`. Update the writer's conservative quoting
+for every new numeric form. No raw vendor bytes changed. **Whole published JSON/YAML
+parsed canonical content is now exactly equal** at the same pinned revision, confirming
+both fixes; old Cloudflare comparison can proceed. Explicit unsupported tags still fail;
+PyYAML's global safe loader is untouched. Three regression tests cover cross-format equals
+keys/values, numeric/sexagesimal string types and serialization, global isolation,
+explicit unknown-tag rejection and strict invalid-default/import rejection. **93 tests
+pass**. Full validation/import guards remain active; no native source content correction.
+Register Auth0 and Cloudflare separately from API data changes in an infrastructure PR:
+registry **42 artifacts / 41 services**. Latest complete audit remains 40 until verified.
+
+Discovery raw bytes, exact pinned ownership files, current Auth0 reference, complete typed
+diffs and validation evidence are in ignored `cache/maintenance/discovery/` under
+`auth0-management`, `cloudflare-json`, `cloudflare-yaml`. Scripts/logs
+`/tmp/inspect-auth0.py`, `/tmp/auth0-discovery.log`, `/tmp/inspect-cloudflare.py`,
+`/tmp/cloudflare-discovery.log`, `/tmp/cloudflare-pair-diff.py`,
+`/tmp/cloudflare-pair-diff.json`, `/tmp/review-cloudflare.py`, `/tmp/cloudflare-review.json`,
+`/tmp/cloudflare-review.log`, `/tmp/auth0-cloudflare-tests.log`. No API files changed;
+all prior blockers, parked items, Messaging owner choice and local week/sleep policy remain.
