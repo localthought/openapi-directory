@@ -2401,3 +2401,20 @@ conversion, bundling, removed routes or historical-file edits. Import/source log
 `/tmp/zoom-whiteboard-import.log`, `/tmp/zoom-whiteboard-import-verification.log`;
 verifier `/tmp/verify-zoom-next-import.py`. Deliver this API in its own PR; Scheduler
 follows separately. Rooms/Team Chat remain discovery blockers; no proposed patches adopted.
+
+**Whiteboard delivered / Scheduler import prepared (2026-10-05):**
+[#154](https://github.com/ontola/openapi-directory/pull/154) merged and attached,
+head `55d85f9cb7ab0164c0ff7fae7b195d10249a2370`, merge
+`fdd2f7ef772459e636c70d0139924f12ef1a95dc`. Only the new Whiteboard YAML (4476 lines)
+and progress record, 4494 additions / zero deletions, CLEAN/MERGEABLE. No API-path CI
+checks are configured; strict source/import verification above passed before delivery.
+Scheduler re-fetched exact reviewed bytes at 2026-10-05T02:38:18.269974Z, hash
+`b0231b26205920d8c331376cba65bf25e2d13ba4f438283b164a02a7186c6daf`, creating
+`APIs/zoom.us/scheduler/2/openapi.yaml`: **16 paths / 24 operations**, all absent from
+historical combined coverage. Same full strict validation, exact vendor equality after
+provenance, typed YAML round-trip, no invented curation and zero refs pass. Preserve
+native OAuth requirements, no conversion/patches/bundling/deletions. Prior Zoom files
+remain unchanged. Source/import logs `/tmp/zoom-scheduler-source-review.json`,
+`/tmp/zoom-scheduler-import.log`, `/tmp/zoom-scheduler-import-verification.log`.
+Deliver Scheduler separately, then verify an expanded complete audit. Latest complete
+verified network audit remains 38 until that new run is downloaded and checked.
