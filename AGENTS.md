@@ -2887,3 +2887,37 @@ source. Datadog v1 discovery is not registered or included in this audit/CI arti
 Other independent well-known-provider discovery and separate authorized updater
 PR-generation/monthly-discovery work remain in scope. Preserve every recorded blocker,
 parked item, unanswered Messaging owner choice and original one-week local sleep/deadline.
+
+**Datadog v1 selection / monitoring prepared (2026-10-05 UTC):**
+Re-fetched source at 2026-10-05T08:19:54.510680Z, unchanged official commit
+`2240a46b47e2d135962176dfc9dc665f506628af`, hash
+`83353a2cbaec662aa74d12d1721daf40d81a574fe2a043f900fc595eea6dfd8f`.
+Native **OpenAPI 3.0.0 / info.version 1.0 / 150 paths / 235 operations** validates
+strictly without patches, conversion or bundling; all 2794 local refs independently
+resolve with none external. Full fetched main tree/aliases still have no v1 counterpart,
+and no paths/operations overlap stored v2. Same-commit SDK README explicitly identifies
+public OpenAPI generation and v1 usage; current public Monitors reference still includes
+`/api/v1/monitor`. Source selection is the official publication, not a third-party scrape
+or a claim that every SDK package version is an API release.
+
+Preserve all **65 deprecated operations**, including four AWS Logs operations with vendor
+`x-sunset: 2027-02-20`: DELETE/POST `/api/v1/integration/aws/logs`, POST its
+`/check_async` and `/services_async` routes. Do not remove sunset annotations or infer
+runtime retirements from deprecated labels. Reviewed operation extensions are permissions,
+code-generation request names, pagination and sunset; no unstable/beta/private flags.
+The SDK README nevertheless warns about opt-in unstable endpoints across its public
+client; retain any future native lifecycle annotations rather than claiming universal GA.
+Regional/server variables, all original authentication/permission requirements and
+metrics/monitors/dashboard/log/integration/SLO/synthetics coverage remain as published.
+This is distinct v1 coverage, not a replacement for v2 or every Datadog/private product.
+
+Register `datadog-v1`, target `APIs/datadoghq.com/v1/1.0/openapi.yaml`, separately from
+the API addition: **45 artifacts / 44 services**. Latest complete verified audit remains
+44 until expansion is checked. Discovery cache stores raw source, exact pinned README,
+reference/validation/lifecycle/overlap evidence and current Monitors page original bytes
+plus decoded HTML. No source bytes changed when decoding HTML transport. Script/log
+`/tmp/inspect-datadog-v1.py`, `/tmp/datadog-v1-discovery-review.json`.
+Verified #112/#115/#118 were merged AGENTS-only progress superseded by later audits and
+unlinked only their app attachments to free three slots; PRs/history unchanged and all
+API/infrastructure attachments preserved. Existing blockers, parked items, unanswered
+Messaging owner choice and original one-week local/sleep deadline remain in force.

@@ -581,6 +581,20 @@
       "coverage": "Official public Zoom Hub shared-content REST publication: get/import file content, duplicate files and poll duplication tasks, list/create/get/update/delete shared folders. Preserve supported file-type/format limits, native OAuth/admin scopes and Gov-cluster exclusions. This is distinct from Canvas document management and Zoom Events hubs; it does not cover every file-management or permission operation described in the broader Hub introduction, every AI Productivity Suite feature or all Zoom products. No prerelease designation is present in the current introduction/reference/native source; publication alone is not a universal feature-GA guarantee. Hosted source health remains unassessed.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "datadog-v1",
+      "provider": "datadoghq.com",
+      "target": "APIs/datadoghq.com/v1/1.0/openapi.yaml",
+      "github": {
+        "repository": "DataDog/datadog-api-client-python",
+        "ref": "master",
+        "path": ".generator/schemas/v1/openapi.yaml"
+      },
+      "discovery": "Follow the maintained official Datadog public v1 SDK-generation description, separate from the already monitored v2 artifact. Same-commit README at 2240a46b47e2d135962176dfc9dc665f506628af identifies generation from public OpenAPI descriptions and demonstrates v1 Monitors usage; current public https://docs.datadoghq.com/api/latest/monitors/ still documents /api/v1/monitor (checked 2026-10-05). Full fetched main tree and brand/service aliases have no v1 counterpart, and its 150 paths/235 operations have zero route/operation overlap with stored v2. Native OpenAPI 3.0.0/info.version 1.0 validates without patches, conversion or bundling. Preserve the vendor version and follow content changes, not the Python SDK package version.",
+      "coverage": "Official Datadog public v1 collection for monitors, metrics, dashboards, logs, hosts, integrations, synthetics, SLOs and other published v1 families. Preserve all authentication/permission annotations, regional/server templates and lifecycle labels, including 65 deprecated operations and four AWS Logs operations with x-sunset 2027-02-20 at the reviewed revision. The SDK README warns that clients may include opt-in unstable endpoints; the reviewed v1 operations have no unstable/beta/private extensions, but this broad vendor publication is not a universal feature-GA or complete-platform-coverage guarantee. v2 and private products remain separate; keep existing v2 intact.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
