@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `ad461f223` (PR #155 merged):
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `4be1fd571` (PR #160 merged):
 729 provider domains; 4,272 files under `APIs/`, including 2,098
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -2612,3 +2612,43 @@ with preserved curation/provenance, strict validation, typed YAML round-trip, un
 raw hash and endpoint sets verified. Other files/history unchanged. Logs
 `/tmp/xero-yaml12-import.log`, `/tmp/xero-yaml12-import-verification.log`.
 Deliver this separately, then validate the complete 42-source audit after all four repairs.
+
+**Xero delivered / final 42-source audit verified (2026-10-05 UTC):**
+[#160](https://github.com/ontola/openapi-directory/pull/160) merged and attached,
+head `3b2d6eda553df86c9db2446eb12ef3730a96e914`, merge
+`4be1fd571afd08dcb6db3c1c9d2135a71baad839`. Two expected files: current Xero YAML
+and progress. CLEAN/MERGEABLE; no API-path CI configured, full strict source/import
+verification above passed. Existing boolean patch and all vendor values/curation retained.
+The four representation repairs are complete in three API PRs (#158–#160): **64 string
+positions** now preserve leading zeros/types across both GitHub artifacts, Plaid and Xero.
+No vendor version, endpoint set or raw source hash changed; historical files untouched.
+
+Final [audit 37275451577](https://github.com/ontola/openapi-directory/actions/runs/37275451577)
+ran against exact main `4be1fd571afd08dcb6db3c1c9d2135a71baad839`. All **93 tests pass**;
+all **42 artifacts / 41 services** fetch and prepare successfully. Verified **33 matches /
+nine import blockers**, with no remaining valid content drift or fetch/prepare failures.
+Both GitHub counterparts, Plaid and Xero explicitly match their current baselines, with
+the same source hashes/versions and zero added/removed paths or operations. Blockers remain
+Cohere, Square, archived Slack, Meraki, Twilio Messaging delivery, Vercel, Mailchimp
+Marketing, Auth0 Management and Cloudflare. Auth0/Cloudflare monitoring is delivered in
+#157; their API data has not been refreshed. Do not waive native validation or delivery
+guards to make the audit green. Overall workflow/audit conclusion is intentionally failure
+for these blockers; tests, readable summary and artifact upload all succeeded.
+
+Verified all 42 raw entry hashes, 23 distinct repository metadata snapshots, exact report
+bases, strict validation profiles/classifications, transformations, endpoint deltas and
+rendered Markdown. Nine hosted sources remain health-unassessed; repository availability
+alone is not current coverage evidence. Recover durable evidence from the run's
+`official-source-audit` artifact; local copy `/tmp/openapi-ci-audit-37275451577`, verifier
+`/tmp/verify-auth0-cloudflare-42-audit.py`, logs
+`/tmp/yaml12-repairs-42-audit-verification.log`, `/tmp/yaml12-repairs-full-audit-ci.log`.
+Ignored reports/health caches updated. Recomputed tree inventory is unchanged: **729
+domains / 4272 API files / 2098 openapi.yaml / 2168 swagger.yaml**.
+
+App attachment capacity briefly blocked attaching #160: the thread already had 100 PR
+identities. Verified #150 and #152 were merged, AGENTS-only progress records superseded
+by later audits; unlinked only those two app attachments, leaving their PRs/history intact.
+#160 was then attached successfully. Preserve API/infrastructure attachments; if the cap
+recurs, inspect and unlink only superseded merged progress-only records before attaching
+the new PR. No pending attachment failure. Twilio Messaging's unanswered owner choice,
+explicitly parked items and the original one-week local/sleep deadline remain unchanged.
