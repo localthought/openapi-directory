@@ -2992,3 +2992,45 @@ explicitly parked items, unanswered Messaging owner choice, no approval/push-pro
 bypasses, and original one-week local sleep/deadline policy. This 45-source audit
 supersedes the earlier 44-source network audit; docs-only progress commits need no
 repeat network audit.
+
+
+**Okta official source recovered / monitoring prepared (2026-10-05 UTC):**
+The earlier guessed-path 404 does not establish a missing repository. Official
+`okta/okta-management-openapi-spec` is maintained, unarchived/undisabled, default branch
+`master`, pushed 2026-10-01. Pinned README says `dist/current` is generated directly
+from the Management API and used by its SDKs, with historical vendor releases retained.
+Reviewed commit `df5fc58bdf64d1a7594b324bb39d24a8c3b31eeb` publishes native
+**3.0.3 / 2026.09.1 / 485 paths / 731 operations**. Register full enum/example-bearing
+`dist/current/management-oneOfInheritance.yaml`, raw SHA-256
+`a51eb501567a643aaeacf77576752aee62869b34f444b2d1b96fece62ab2a7b9`, not its
+noEnums/noExamples/development alternatives. `management-minimal.yaml` has identical
+endpoint sets and the same first defect, raw hash
+`efb8f839ba5d3cfd27ec37539cb5f57e0c7ceeed80e947c039619935e77bf6a7`;
+this comparison is not a claim that all variant schemas are interchangeable.
+
+All 7580 full-variant local refs resolve independently with none external. Preserve four
+deprecated operations, 718 `x-okta-lifecycle` operation annotations, documented Early
+Access/Beta features, tenant servers and authentication. Vendor publication is not a
+universal feature-GA guarantee. Current public API overview describes scoped OAuth/API
+tokens and explicitly excludes undocumented endpoints; separate Okta products need their
+own review. Full fetched main tree has only community `APIs/okta.local/1.0.0`, not an
+official Management import. Target `APIs/okta.com/management/2026.09.1/openapi.yaml`
+is distinct; do not delete or silently replace that community submission.
+
+**No API import:** native validation fails at GET `/api/v1/hook-keys/{id}` inline path
+parameter missing `required: true`; its shared `pathHookKeyId` already declares the
+required string. A diagnostic-only copied repair exposes
+`components.schemas.Brand.properties.customPrivacyPolicyUrl.default: null` on a
+nonnullable string. Neither hypothetical repair is adopted, no null semantics/default
+invented, constraints relaxed or validation waived. Look for a vendor correction or a
+separately reviewed exact recipe. Register monitoring so raw changes/fixes remain visible.
+Registry **46 artifacts / 45 services**; latest verified complete audit remains 45 until
+expansion is checked. Evidence under ignored
+`cache/maintenance/discovery/okta-management/df5fc58bdf64d1a7594b324bb39d24a8c3b31eeb`:
+exact source variants/repository metadata/README, validation JSON, hypothetical diagnostics
+and public User-reference HTML/fetch hash. Script/log `/tmp/inspect-okta.py`,
+`/tmp/okta-discovery/validation.log`. No production parser/source edits.
+Verified #120/#125/#128 were merged AGENTS-only progress superseded by later audits;
+unlinked only those app attachments to free three slots. PRs/history and all API/updater
+attachments remain intact. Preserve all nine previous blockers, parked items, unanswered
+Messaging owner choice and original one-week local sleep/deadline instructions.

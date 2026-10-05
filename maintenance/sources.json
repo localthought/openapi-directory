@@ -595,6 +595,21 @@
       "coverage": "Official Datadog public v1 collection for monitors, metrics, dashboards, logs, hosts, integrations, synthetics, SLOs and other published v1 families. Preserve all authentication/permission annotations, regional/server templates and lifecycle labels, including 65 deprecated operations and four AWS Logs operations with x-sunset 2027-02-20 at the reviewed revision. The SDK README warns that clients may include opt-in unstable endpoints; the reviewed v1 operations have no unstable/beta/private extensions, but this broad vendor publication is not a universal feature-GA or complete-platform-coverage guarantee. v2 and private products remain separate; keep existing v2 intact.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "okta-management",
+      "provider": "okta.com",
+      "service": "management",
+      "target": "APIs/okta.com/management/2026.09.1/openapi.yaml",
+      "github": {
+        "repository": "okta/okta-management-openapi-spec",
+        "ref": "master",
+        "path": "dist/current/management-oneOfInheritance.yaml"
+      },
+      "discovery": "Official current Management SDK-generation publication with enums, examples and explicit oneOf inheritance retained. Other noEnums, noExamples and dev variants are not substitutes; review other Okta services separately.",
+      "coverage": "Okta Admin Management only; preserves native x-okta-lifecycle annotations, Early Access/Beta features, deprecated operations, tenant servers and OAuth/API-token requirements. Public vendor publication is not universal GA evidence. The older community okta.local description remains separate.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
