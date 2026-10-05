@@ -3498,3 +3498,30 @@ Registration checks: all **93 local regressions pass**; selected-source audit fi
 expected missing distinct target, exact reviewed source/revision, healthy/unarchived
 vendor repository and successful full validation; no transformations/import blocker.
 Only AGENTS, maintenance README and source manifest changed; no API file yet.
+
+
+### 2026-10-05 Box 2026 validated API addition
+
+Monitoring [#180](https://github.com/ontola/openapi-directory/pull/180) merged at
+`646239339e6f121c6bb3b2c7e959136c37fc56e1`, exact head
+`bf875dca88d8c722eda88aef0c4b6024d12dbe44`; all **93 local/CI regressions pass**
+(CI 37309462499). Three expected files, CLEAN/MERGEABLE before exact-head merge.
+Importer rechecked vendor repository health and fetched the reviewed native artifact.
+
+New `APIs/box.com/2026.0/openapi.yaml`: **3.0.2 / 2026.0 / five paths / five ops**.
+Full source/final validation, exact typed vendor-content equivalence apart from
+provenance, YAML roundtrip, all **53 local refs** and all **five required version
+headers** pass. Both explicit Automate beta labels survive; Notes conversion/query/
+query-insights remain unmarked, as in vendor source/current reference. Original
+auth, servers, plan/admin restrictions, externalDocs/tags and vendor metadata retained.
+No invented curation, cross-scope baseline, patches, conversion or bundling. All
+three historical Box files are byte-identical with zero path/operation overlap.
+Separate full public collection, no stable-only slice, universal GA claim or removal.
+
+Independent verifier `/tmp/verify-box-2026-import.py`, log
+`/tmp/box-2026-import-verification.log`, content review
+`/tmp/box-2026-final-content-review.json`, import log `/tmp/box-2026-import.log`.
+API-only paths/AGENTS do not trigger maintenance CI; complete manual verification
+above plus expanded main audit after delivery. #179 remains a separate session's
+unrelated YAML fixes; no changes to its files or PR. All protections/parked items
+and ten known blockers remain. No Messaging retry/unblock/redaction.
