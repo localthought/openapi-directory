@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `dd679cc36` (PR #187 merged):
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `54b6b7a3c` (PR #193 merged):
 729 provider domains; 4,280 files under `APIs/`, including 2,106
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -4301,3 +4301,118 @@ Fresh review `/tmp/review-atlas-52-audit.py`, log/review `/tmp/atlas-52-audit-re
 `/tmp/atlas-agent-engine-import.log`. Original bytes/full diff/health cached in ignored
 `cache/maintenance/discovery/mongodb-atlas-admin/f84bc82a8a0f85c83cbca399da3228223d6a397d`.
 API PR delivery and audit-wide verification/closure will be recorded separately.
+
+**Zendesk monitoring/delivery-guard and Atlas delivery confirmed:**
+#190 is merged/attached as recorded above. Delivery guard
+[#191](https://github.com/ontola/openapi-directory/pull/191) merged exact head
+`28a743f39a72a24b3feb2d59e7d87483e72ddb02` as
+`9a4d00029f41fd78b4a76bb4953403663ba69005`; intended AGENTS+manifest files,
+CLEAN/MERGEABLE and [CI 37354570263](https://github.com/ontola/openapi-directory/actions/runs/37354570263)
+passed 100 tests. GitHub connection reset on merge response; read-only REST confirms
+merged state/exact head/merge SHA, no duplicate merge or workaround.
+Separate Support monitoring
+[#192](https://github.com/ontola/openapi-directory/pull/192) merged exact head
+`0810b4213edd55e1b502c6415cadd3d30cae6bc3` as
+`f751abbb8e1d256a3c69a3b6e5923b38b8c1fe84`, intended AGENTS/README/manifest files,
+CLEAN/MERGEABLE and [CI 37359670026](https://github.com/ontola/openapi-directory/actions/runs/37359670026)
+passed 100 tests. Both attached immediately after confirmed PR creation.
+CI logs `/tmp/zendesk-conversations-delivery-guard-ci.log`,
+`/tmp/zendesk-support-monitor-ci.log`; manifest now **53 artifacts**, Support is a
+separately verified native-invalid source and not part of the 52-source CI snapshot.
+
+Separate Atlas refresh
+[#193](https://github.com/ontola/openapi-directory/pull/193) merged exact head
+`da22b4d1d35c9a41d252155f11f57a635ce1974b` as
+`54b6b7a3c8268230225d029ad612780822f80676`, after intended API+AGENTS files,
+CLEAN/MERGEABLE and full independent native/import/curation/reference/roundtrip
+checks above. Attached. API-only PR has no maintenance CI; complete local checks
+pass. Post-merge selected check `/tmp/atlas-agent-engine-post-merge.json` against
+that exact main reports **matches_source**, fixed 2.0/native 3.0.1/339 paths/549 ops,
+reviewed hash/revision, no validation errors/transformations or endpoint deltas.
+Inventory recomputed from fetched tree remains **729 domains / 4,280 API files /
+2,106 openapi.yaml / 2,168 swagger.yaml**; Zendesk addition is held, not counted.
+
+**Expanded 52-source CI audit verified as observed:**
+[Run 37358848624](https://github.com/ontola/openapi-directory/actions/runs/37358848624)
+checked exact main `9a4d00029f41fd78b4a76bb4953403663ba69005`, prior to Support
+registration and Atlas closure. **100 tests pass**, all **52 artifacts** fetch/
+prepare; **40 matches / one valid Atlas content change / 11 import blockers**.
+Preserve this original snapshot, not relabelled as 53 sources or 41 matches after
+later changes. New Zendesk Conversations is missing but fully validates after its
+checked recipe and is explicitly delivery-blocked on vendor-example push protection.
+Its hash/revision/stats and recipe hash match the independent held import evidence.
+Sentry's actual current 155/249 baseline matches, including its prior SCIM closure.
+
+Other ten blockers unchanged: Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0, Cloudflare and Okta.
+Thirteen hosted sources have health unassessed; **26 unique repository metadata
+snapshots**. All 52 raw-entry hashes, 26 repository-response hashes, validation
+profiles, per-row actual baselines/classifications/transformations/deltas and exact
+Markdown/JSON report rendering verified. No fetch/prepare failures. Audit job/
+workflow fails on known blockers; tests, summary and artifact upload succeed.
+Exact head/job/step conclusions verified independently. Downloaded artifacts
+`/tmp/openapi-ci-audit-37358848624`; durable recovery `official-source-audit` on
+that run. Ignored local report/health copies updated only after all assertions pass.
+Verifier/log `/tmp/verify-zendesk-52-audit.py`,
+`/tmp/zendesk-52-audit-verification.log`; CI log/status
+`/tmp/zendesk-52-audit-ci.log`, `/tmp/zendesk-52-audit-status.json`.
+
+Verifier caught and deliberately reviewed Atlas drift and additional moving-source
+revisions/hashes. Independently pinned byte re-fetches confirm source-identical
+revision-only advances for Sentry `0a3f51ed3397530cdbb2de8d03f15625d0748bde`, both
+Datadog artifacts at `b851cbca2c9a3eeed913567f5e0d04eca05a0ce6`, and Grafana
+`0833fa8880960f3d49a034718c89fddcce83c0e0`. No timestamp-only API changes created;
+evidence `/tmp/zendesk-52-revision-only.json`.
+
+**Blocked moving sources reviewed without waivers:**
+Vercel native hash now
+`93294b378d48fd4bd36a3e57e2cf363f72249f1dc6b4733f8b533b07d9c89a27`,
+still 3.0.3/fixed 0.0.1/321 paths/443 ops, **2,542 resolved local refs**. Nineteen
+parsed leaf changes since the prior audit: dark-mode project avatars, new
+v0-migration-payment-confirmed event enum/payload, Connect 500 response and sandbox
+4096-byte size guidance. No endpoint additions/removals. Native unsupported const/
+other invalid schema declarations and previously recorded missing body remain;
+no dialect upgrade, patch or import adopted. Bounded diagnostics under local Python
+3.12 and CI 3.11 can select different first five leaves; each reported pointer resolves
+in the same unchanged native artifact, both full validations fail. Preserve both
+lists, not force exact text equality or waive constraints.
+
+Cloudflare official commit `d1171ef1b5f19c5602d99642603a0adafa07742a`, YAML hash
+`c78911d6b9f56246ceccdc0d73d1851227cdb1334e0db74fbcfa3867ec547c34`,
+still 3.0.3/fixed 4.0.0/2287 paths/3647 ops, **24,577 resolved local refs**.
+Full parsed difference is 101 leaves (33 additions/52 changes/16 removals):
+resource-library application/category schema/filter/lookup and SDK wording, tagging
+access_service_token alternative, AI Gateway usage-cost wording, and Page Shield
+native authentication alternatives/hidden-extension/schema-type changes. No endpoint
+additions/removals versus prior source. Independently pinned YAML re-fetch and full
+typed companion JSON equivalence pass. Same three native blockers persist: invalid
+DNS order default and undefined assets_jwt/pages_upload_token security schemes.
+Source lifecycle/authorization changes are vendor content; no universal GA claim,
+auth fabrication, patch or blocked import. Stored endpoint deltas remain +79/-26
+paths and +129/-49 ops versus the older stored spec, not this source-to-source delta.
+
+Fresh full source-change review script/log/records
+`/tmp/review-52-audit-source-changes.py`,
+`/tmp/zendesk-52-source-changes-review.log`,
+`/tmp/zendesk-52-blocked-source-changes.json`. Raw reviewed sources/full parsed
+changes/diagnostics retained under ignored `cache/maintenance/discovery/vercel-rest`
+and `cache/maintenance/discovery/cloudflare-rest` at their respective hash/revision.
+
+**Resume next:** 53 registered sources, Atlas billing-enum drift delivered, new
+Zendesk Conversations recipe/monitoring and delivery guard delivered, Support
+monitoring delivered. First inspect fresh state/PRs and recorded work; do not
+repeat those imports. Zendesk Conversations validated local commit/owner-review
+link and one pending user question remain above; no owner response yet. Do not
+retry push/unblock/redact or treat a preselected option as authorization. Existing
+separate Twilio Messaging choice remains pending too. Full 53-source check is still
+needed on a later run (Support selected check already verified), preserving this
+52-source snapshot and independent Atlas closure. Investigate a separately reviewed
+Support exact null-only compatibility recipe and unused UserLogin defect with
+complete constraints/reference/serialization guards and vendor-fix refusal; neither
+diagnostic is adopted yet. Adobe Sign remains another unregistered invalid source.
+Continue independent well-known official-source discovery and updater PR-generation/
+monthly-discovery infrastructure. All parked items, independent open #179, local
+sleep rules and week deadline unchanged; no vendor messages, new automation, cloud
+host migration or power changes. To attach this superseding progress PR at the app
+limit, verified merged AGENTS-only #189 was unlinked; GitHub history and API/updater
+attachments preserved.
