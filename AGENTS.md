@@ -2562,7 +2562,7 @@ rewriting. Deliver repairs one PR per API (both GitHub counterparts together).
 `28b908e1fd554f785e31368e334a897fb01a0439b6988e669c0011c64c77efd9`.
 Both remain 1.1.4 / 816 paths / 1232 ops. Only 19 quote additions per file; full strict
 validation, typed YAML, exact prepared vendor content, all curation/externalDocs/tag
-order and endpoint sets verified. Public-key IDs and App installation IDs retain their
+order and endpoint sets verified. Public-key IDs retain their
 vendor string values. No provenance-only timestamp changes. Logs
 `/tmp/github-yaml12-import.log`, `/tmp/github-yaml12-import-verification.log`, verifier
 `/tmp/verify-yaml12-current-import.py`; full reviewed diffs in
