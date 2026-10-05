@@ -43979,7 +43979,6 @@ components:
               type: number
             totalTaxAmount:
               description: |-
-                	
                 Total amount of tax included in the purchase order.
               type: number
           type: object
@@ -44481,7 +44480,6 @@ components:
               type: number
             totalDiscount:
               description: |-
-                	
                 Total value of any discounts applied to the sales order.
               type: number
             totalTaxAmount:
