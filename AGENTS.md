@@ -4145,3 +4145,49 @@ PR-generation/monthly-discovery infrastructure. Independent open #179, Twilio
 Messaging branch/owner choice, all parked items and local deadline/sleep rules
 remain unchanged; no approval rejection bypass, push retry/redaction/unblock,
 new automation, power setting change, cloud-host migration or vendor message.
+
+
+**Zendesk Conversations official monitoring and compatibility recipe (2026-10-05):**
+The rendered current [List Users reference](https://developer.zendesk.com/api-reference/conversations/#operation/ListUsers)
+explicitly states the identities.email filter is required and demonstrates the
+`filter[identities.email]` query. The same requirement appears verbatim in the
+maintained source operation prose. This resolves the diagnostic's outstanding
+required-filter intent question; it is documentation evidence, not a live API test.
+The [OpenAPI guide](https://developer.zendesk.com/documentation/conversations/references/openapi-specification/)
+identifies the maintained native spec as the direct reference input; only generated
+wrappers/old v1.1 are deprecated. The current [authentication guide](https://developer.zendesk.com/documentation/conversations/getting-started/api-authentication/)
+and quickstart confirm public runtime v2 and tenant `https://{subdomain}.zendesk.com/sc`,
+basic/JWT access, account/app/integration restrictions and direct-account-only
+provisioning. User-scoped SDK JWTs are not accepted by the public API. Preserve
+labelled legacy Smooch servers and vendor scope prose; do not infer universal access.
+
+Fresh health and source check remain public/unarchived/undisabled, commit
+`07a4ade211c8420d6a3ee94e174127522cbaa033`, entry SHA-256
+`d78f05f64282ecaf7dfe4fe19573dc6d49c213780061b64de39629d49d35ce01`.
+Native **3.0.2 / document 17.13.2 / 42 paths / 68 operations**, 742 resolved local
+references, none external, no operation deprecation or preview/beta/experimental
+prose found in this snapshot. Do not equate document release 17.13.2 with runtime v2.
+Full source still has the two reviewed invalid schema declarations. Registered
+`zendesk-conversations` now selects that maintained moving source, bringing the
+manifest to **52 artifacts**; API import remains a separate PR.
+
+`maintenance/patches/zendesk-conversations.json` hash
+`494e2da6b256cfb3a16ba09d7f0e7b949257ded241bc885243db7dc7e083deed`
+uses exactly checked whole-node replacements: original sourceType dependency becomes
+supported anyOf/not presence logic with all other reference constraints retained;
+malformed child boolean required becomes the parent identities.email required array,
+retaining query required:true and deepObject serialization. Full original reference,
+full filter parameter and operation prose assertions run before either correction.
+Vendor fixes/changed constraints/optional filter/changed documentation stop replay.
+No enums/types/nullability/defaults/auth or runtime semantics invented. Full prepared
+native validation and all 742 references pass. Three new regressions check 16 whole-
+schema truth cases with required URI supplied (3 valid/13 invalid), original URI and
+length constraints, filter presence/string type without invented email/length rules,
+vendor-fix refusal and caller input preservation. **100 tests pass locally**; log
+`/tmp/zendesk-conversations-tests.log`, full source/diagnostic/cache evidence remains
+under ignored `cache/maintenance/discovery/zendesk`, prepared review
+`/tmp/zendesk-conversations-prepared-review.json`. CI/import delivery still pending.
+
+To make attachment slots at the app limit, unlinked verified merged AGENTS-only
+progress PRs #68/#73/#85; GitHub records and all API/updater attachments stay intact.
+Independent #179 and all parked/delivery/deadline/local sleep rules remain unchanged.

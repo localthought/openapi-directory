@@ -676,6 +676,24 @@
       "discovery": "Current official https://developer.clickup.com/docs/open-api-spec explicitly publishes this complete public v3 collection separately from v2 (checked 2026-10-05). Preserve native OpenAPI 3.0.0 and literal info.version version. https://developer.clickup.com/docs/chat calls Chat experimental; Docs has a current public limitations guide and the artifact is a mixed-lifecycle collection, not a preview-only or stable-only slice. Hosted repository health is unassessed. Native 23 paths / 35 operations / 268 local refs; exactly checked invalid-null-default removal with full referenced-schema assertions permits complete validation and fails replay on nullable vendor correction.",
       "coverage": "Distinct public ClickUp v3 Chat, Docs/pages, attachments, privacy/access, audit logs, comment types and task movement/per-user estimates. Retain experimental Chat tags/guidance, native authHeader/server and plan/permission restrictions; public availability is not a GA guarantee. Keep all 23 paths / 35 operations and do not concatenate v2. This new v3 service has no previous baseline or curation; existing v2 and historical Polls file remain byte-identical. Vendor placeholder version is not runtime v3 or a generated date.",
       "priority": "high"
+    },
+    {
+      "id": "zendesk-conversations",
+      "provider": "zendesk.com",
+      "service": "conversations",
+      "target": "APIs/zendesk.com/conversations/17.13.2/openapi.yaml",
+      "github": {
+        "repository": "zendesk/sunshine-conversations-api-spec",
+        "ref": "master",
+        "path": "openapi.yaml"
+      },
+      "version_policy": "vendor",
+      "patches": [
+        "maintenance/patches/zendesk-conversations.json"
+      ],
+      "discovery": "Current official https://developer.zendesk.com/documentation/conversations/references/openapi-specification/ identifies maintained master/openapi.yaml as the source used directly for the public reference; generated SDK wrappers and old v1.1 are deprecated, not this v2 specification. Checked 2026-10-05: public/unarchived/undisabled repository; native OpenAPI 3.0.2, vendor document version 17.13.2, 42 paths / 68 operations / 742 resolved local refs. Checked compatibility recipe retains the sourceType dependency and corrects malformed email-filter required syntax; https://developer.zendesk.com/api-reference/conversations/#operation/ListUsers explicitly requires identities.email. Original cached bytes and complete schema/parameter/prose assertions stop replay on changed semantics or vendor correction.",
+      "coverage": "Sunshine Conversations public v2 messaging management, users, conversations/messages, integrations/webhooks, switchboards, attachments, clients/devices and partner OAuth. Vendor document release 17.13.2 is not runtime v2. Preserve native tenant Zendesk /sc server plus labelled legacy Smooch servers, basic/JWT authentication and account/app/integration scope limitations. Account provisioning is direct-account only; user-scoped SDK JWTs are not accepted by public v2. Retain native deprecations, preview/restriction prose and all operations; this is distinct from Zendesk Support/Ticketing. No cross-product curation baseline or invented metadata.",
+      "priority": "high"
     }
   ]
 }
