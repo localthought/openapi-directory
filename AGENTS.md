@@ -3123,3 +3123,32 @@ keys in either current Okta variant. Vendor issue #241 concerns an older duplica
 artifact; it is not evidence that the current hook-key/default defects have been fixed.
 No third-party fork patches or vendor messages were used. Future parser duplicate-key
 rejection is a separate possible infrastructure improvement, not implemented here.
+
+
+**Box compatibility monitoring prepared (2026-10-05 UTC):**
+Re-fetched unchanged official source at 2026-10-05T10:21:28.552915Z, commit
+`5b055e333a802b10b8ca90fcc513643836dd92b4`, raw hash
+`13cc601e01a7b82133975aaf7aeffb1850159a10ac6365fae00d5af94406d9d4`.
+Native **3.0.2 / 2024.0 / 187 paths / 297 operations** passes full validation,
+all 1451 local refs and curation-preserving import serialization preflight, with no
+patches, conversion or bundling. Exact public compatibility source is selected by the
+pinned vendor README; `openapi/openapi.json` is identical. Current vendor versioning
+reference confirms the 2024.0 compatibility/default semantics; do not infer that its
+fixed year freezes content, or select the highest subset filename instead.
+
+Register `box-platform`, initially target existing `APIs/box.com/2.0.0/openapi.yaml`
+so curation and historical content are the real comparison baseline. Import advances
+target to vendor `2024.0` with its new YAML directory in a separate API PR. Registry
+**47 artifacts / 46 services**, latest complete verified audit still 46 pending expansion.
+Preserve native seven stable annotations, admin/free-developer restrictions, authentication,
+servers and original fragment paths. Source omissions (two paths / three operations)
+are not asserted runtime retirements; full delta from stored history is +28 paths / 40 ops.
+Separate 2025/2026 year-versioned subsets remain discovery-only and require scope review.
+
+Fresh discovery evidence/cache and strict preflight at
+`cache/maintenance/discovery/box-platform/5b055e333a802b10b8ca90fcc513643836dd92b4`;
+script/log `/tmp/refresh-box-review.py`, `/tmp/box-fresh-review.log`.
+Verified #131/#134/#137 are merged AGENTS-only progress superseded by later audits;
+unlinked only those app attachments to free three slots. PRs/history and all API/updater
+attachments remain intact. Every existing blocker, parked item, unanswered Messaging
+owner choice and original one-week local sleep/deadline remains in force.
