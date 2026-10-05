@@ -571,6 +571,16 @@
       "coverage": "Official public Zoom Canvas (also inventoried by the vendor as Zoom Docs) document management/content, collaboration and ownership/access, data tables, imports/exports, archiving and activity-report REST description. Preserve original OAuth scopes, Gov-cluster exclusions and account/license restrictions. It is distinct from the Zoom Hub content API and other Zoom products, not complete platform coverage. Current public introduction lists enabled Canvas on Basic and paid account plans without a prerelease designation; absent labels do not prove every feature GA. Example beta-testing text and attachment preview event names are not release labels. Hosted source health remains unassessed.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "zoom-hub",
+      "provider": "zoom.us",
+      "target": "APIs/zoom.us/hub/2/openapi.yaml",
+      "url": "https://developers.zoom.us/api-hub/hub/methods/endpoints.json",
+      "discovery": "The current public product reference at https://developers.zoom.us/docs/api/hub/ explicitly names this native downloadPath and embeds OpenAPI 3.0.0/version 2; all non-security content matches the original download. The viewer simplifies authentication; preserve the native OAuth requirements, relative/empty flow URL fields and API-key scheme without inventing authentication endpoints. The current introduction at https://developers.zoom.us/docs/hub/ selects the shared content layer for Canvas and AI Productivity Suite and lists account prerequisites without a prerelease designation (checked 2026-10-05). Rendered markdown advertises 3.1.1 but the actual downloaded/embedded artifact declares 3.0.0: retain the native dialect. No content patches, conversion or bundling. All six paths/nine operations are absent from all seven prior Zoom artifacts; preserve those files. Follow content at fixed vendor version 2.",
+      "coverage": "Official public Zoom Hub shared-content REST publication: get/import file content, duplicate files and poll duplication tasks, list/create/get/update/delete shared folders. Preserve supported file-type/format limits, native OAuth/admin scopes and Gov-cluster exclusions. This is distinct from Canvas document management and Zoom Events hubs; it does not cover every file-management or permission operation described in the broader Hub introduction, every AI Productivity Suite feature or all Zoom products. No prerelease designation is present in the current introduction/reference/native source; publication alone is not a universal feature-GA guarantee. Hosted source health remains unassessed.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }

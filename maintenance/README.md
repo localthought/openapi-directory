@@ -494,6 +494,19 @@ designation. Example beta-testing prose and attachment-preview event names are n
 prerelease labels; publication is not a universal feature-GA guarantee. Preserve scopes,
 Gov-cluster and account/license restrictions. Hosted source health remains unassessed.
 
+Zoom Hub follows the native download selected by its current
+[Hub API reference](https://developers.zoom.us/docs/api/hub/) and
+[introduction](https://developers.zoom.us/docs/hub/) (reviewed 2026-10-05). It declares
+OpenAPI 3.0.0 / vendor version `2`: six paths / nine operations for file content import/
+export, duplication/task polling and shared-folder management. All non-security content
+matches the viewer; preserve original authentication, OAuth scopes, file-type/format
+limits and Gov-cluster exclusions. No patches, conversion or bundling. It is separate
+from Canvas and Zoom Events hubs, and does not implement every file/permission operation
+or AI Productivity Suite feature described by the broader introduction. Account
+prerequisites are public with no prerelease designation; publication is not a universal
+feature-GA claim. Keep all seven prior Zoom descriptions intact. Hosted health remains
+unassessed; monitor content changes at fixed vendor version `2`.
+
 Auth0 Management follows the native JSON schema directly linked from its
 [current reference](https://auth0.com/docs/api/management/v2), independently selected by
 its official CLI. Vendor version stays `2.0`; content and lifecycle annotations change
