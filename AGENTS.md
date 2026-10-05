@@ -5,8 +5,8 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `14da5cc9a` (PR #163 merged):
-729 provider domains; 4,273 files under `APIs/`, including 2,099
+**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `d36a84975` (PR #166 merged):
+729 provider domains; 4,274 files under `APIs/`, including 2,100
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
@@ -2821,3 +2821,69 @@ All seven prior Zoom files remain byte-identical. Logs `/tmp/zoom-hub-import.log
 `/tmp/zoom-hub-import-verification.log`; verifier `/tmp/verify-zoom-hub-import.py`.
 Deliver the API separately, then verify a complete expanded network audit before claiming
 44-source coverage is current. Existing blockers, owner decisions and constraints remain.
+
+
+**Hub addition delivered (2026-10-05):**
+[#166](https://github.com/ontola/openapi-directory/pull/166) merged and attached,
+head `7465c06ab113d5db3f29430423cd461a954d9911`, merge
+`d36a849755cfc3457d3b7d6bd7694cb2e25f7222`. Two expected files: new Hub YAML 937 lines
+and progress; 956 additions / zero deletions, CLEAN/MERGEABLE. No API-path CI configured;
+full strict source/import verification above passed. Hub monitoring #165 and API #166 are
+complete; do not duplicate. Preserve all seven prior Zoom files, source limits/scopes,
+Gov exclusions and vendor version 2. Inventory now **729 domains / 4274 API files /
+2100 openapi.yaml / 2168 swagger.yaml**.
+
+**Next candidate — missing Datadog v1, not registered/imported:** Full fetched tree and
+brand/service alias search has only `APIs/datadoghq.com/v2/1.0/openapi.yaml`. Vendor
+`DataDog/datadog-api-client-python` also publishes `.generator/schemas/v1/openapi.yaml`:
+commit `2240a46b47e2d135962176dfc9dc665f506628af`, raw SHA-256
+`83353a2cbaec662aa74d12d1721daf40d81a574fe2a043f900fc595eea6dfd8f`, fetched
+2026-10-05T07:58:29.274675Z. Native **3.0.0 / version 1.0 / 150 paths / 235 operations**,
+strict validation passes, all **2794 local refs** independently resolve with no external
+refs. Zero path/operation overlap with stored v2. This is separate v1 API coverage, not
+an older version of that v2 file; retain v2 and use the vendor's actual declared version.
+Pinned same-commit README identifies generation from public Datadog OpenAPI descriptions,
+shows v1 usage and explicitly warns that the client can include opt-in unstable endpoints.
+Source contains **65 deprecated operations**; preserve all lifecycle annotations and
+review current public scope before registration/import, without pretending all v1 features
+are GA/current or removing deprecated vendor routes. The v2 source remains separately
+monitored. Original bytes, fetch metadata, pinned README and full validation/reference/
+overlap/lifecycle review saved in ignored `cache/maintenance/discovery/datadog-v1/<hash>/`.
+Script/log `/tmp/inspect-datadog-v1.py`, `/tmp/datadog-v1-discovery-review.json`.
+Refetch/review when resuming; this candidate is not in the registered audit or CI artifact.
+All existing source/delivery blockers, parked items, Messaging owner choice and original
+one-week local sleep/deadline policy remain in force.
+
+**Expanded Hub audit verified (2026-10-05 UTC):**
+[Audit 37280667077](https://github.com/ontola/openapi-directory/actions/runs/37280667077)
+ran against exact main `d36a849755cfc3457d3b7d6bd7694cb2e25f7222`. All **93 tests pass**;
+all **44 artifacts / 43 services** fetch and prepare successfully: **35 matches / nine
+recorded import blockers**, no unblocked content drift or fetch/prepare failures.
+Hub matches its new baseline `APIs/zoom.us/hub/2/openapi.yaml`, exact reviewed raw hash,
+native 3.0.0 / version 2 / six paths / nine ops, no transformations, validation success
+date and zero endpoint additions/removals. Canvas and all prior repaired GitHub/Plaid/Xero
+artifacts explicitly remain matches, with unchanged source hashes and endpoint sets.
+
+The same nine blockers remain Cohere, Square, archived unsupported Slack, Meraki,
+Twilio Messaging delivery, Vercel, Mailchimp Marketing, Auth0 and Cloudflare. Strict
+validation/import guards remain active; overall workflow/audit failure reflects these
+blockers, while tests, readable summary and full artifact upload succeed. All 44 raw entry
+hashes, 23 distinct repository metadata snapshots, exact per-row bases, strict validation
+profiles/classifications, transformation evidence, endpoint deltas and identical rendered
+Markdown were verified at `/tmp/openapi-ci-audit-37280667077`. Eleven hosted sources
+remain health-unassessed; repository availability is not complete-current-coverage evidence.
+Ignored local reports and source-health cache updated. Recover durable evidence from the
+run's `official-source-audit` artifact; verifier/logs `/tmp/verify-zoom-hub-44-audit.py`,
+`/tmp/zoom-hub-44-audit-verification.log`, `/tmp/zoom-hub-full-audit-ci.log`,
+`/tmp/zoom-hub-full-audit-status.json`. No timestamp-only API commits.
+
+**Resume next:** Hub monitoring/addition #165/#166 are delivered and verified in this
+latest complete audit; do not duplicate. Datadog v1 is the next substantial missing
+official service candidate (150 paths / 235 ops): review public/lifecycle scope, register
+separately and import with full validation and provenance, preserving v2 and deprecated
+annotations. The vendor's public API introduction was also cached in its discovery
+directory: original gzip transport bytes plus decoded HTML, without altering any API
+source. Datadog v1 discovery is not registered or included in this audit/CI artifact.
+Other independent well-known-provider discovery and separate authorized updater
+PR-generation/monthly-discovery work remain in scope. Preserve every recorded blocker,
+parked item, unanswered Messaging owner choice and original one-week local sleep/deadline.
