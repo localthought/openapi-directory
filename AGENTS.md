@@ -289,12 +289,17 @@ attempt 1 ended failure because the hosted job was never assigned a runner: GitH
 annotation says "The job was not acquired by Runner of type hosted even after
 multiple attempts". Test steps/logs never existed; this is not a test assertion
 failure or an approval-review rejection. Same exact head was retried once with
-`gh run rerun --failed`; attempt 2 is pending. Keep #195 unmerged and API #196 draft
-until the actual job passes. Do not waive CI, change runner/power/host settings,
+`gh run rerun --failed`; attempt 2 also failed on 2026-10-05 19:53 UTC with the
+same hosted-runner acquisition annotation and zero test steps. Both attempts ended
+before executing tests. Keep #195 unmerged and API #196 draft until the actual job
+passes; 106 local tests and full independent API validation remain successful. Do not waive CI, change runner/power/host settings,
 or repeatedly retry during a hosted-runner outage. Recheck the existing run on the
 next heartbeat; if still unavailable, preserve ready work and continue independently.
 Failure annotation `/tmp/zendesk-support-guards-ci-runner-failure.json`;
-run/job state `/tmp/zendesk-support-guards-ci-status.json`.
+run/job state `/tmp/zendesk-support-guards-ci-status.json`; retry annotation/final state
+`/tmp/zendesk-support-guards-ci-retry-runner-failure.json`,
+`/tmp/zendesk-support-guards-ci-final-run.json`. Durable ignored failure evidence
+`cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/ci/`.
 
 **New official Coinbase CDP candidate (discovery/diagnostics only):** maintained,
 public/unarchived/undisabled `coinbase/cdp-sdk` at
