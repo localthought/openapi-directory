@@ -795,10 +795,10 @@ plain response is CloudFront RefreshHit with current Date and no stale Age value
 Cache metadata, raw responses and official public introduction are retained under
 `cache/maintenance/discovery/coinbase-cdp/`. Do not freeze a timestamp query into
 source configuration; revisit caching if future publication evidence diverges.
-The chat reached its 100-attachment limit. Verified merged historical updater PRs
-#61 and #66 were unlinked from this chat to make room for the current deliveries;
-GitHub history, their in-repo code and AGENTS links remain intact. Current API PRs,
-updater delivery/dependencies and parked protection evidence remain attached.
+The chat reached its 100-attachment limit. Attempts to unlink verified merged historical updater PRs #61 and #66 returned
+Codex app errors; a fresh inventory confirms both remain attached (100 total).
+GitHub history and code remain intact. Attempt attachment on each new PR creation
+and record failures accurately; current dependencies/protection evidence remain.
 
 Selected-source audit against actual main reports valid missing CDP, no fetch or
 validation errors, hosted health unassessed. Cached original bytes and review under
