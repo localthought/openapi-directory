@@ -4468,3 +4468,23 @@ Review/script `/tmp/review-support-unused-parameter.py`,
 historical; this entry supersedes them once the infrastructure is merged.
 At the attachment cap, verified merged AGENTS-only #60 unlinked to make
 room; GitHub history and all API/updater attachments retained.
+
+**Support API prepared independently while #195 CI is queued:** new
+`APIs/zendesk.com/support/2.0.0/openapi.yaml` retains vendor document version 2.0.0,
+native 3.0.3, **455 paths / 657 operations**, all 2,534 resolved local references,
+all tenant/auth/tag/role/plan/lifecycle declarations, and four explicitly deprecated
+operations. Exact typed comparison with independently re-fetched native bytes proves
+only the two reviewed compatibility corrections plus provenance. No external refs,
+version conversion, borrowed curation or fabricated metadata. The current native
+basic-only security model remains a documented limitation relative to public OAuth
+recommendations; no change to declared runtime/auth behavior is inferred.
+Complete prepared/final OpenAPI validation and typed YAML serialization checks pass.
+Recipe/source hashes remain those recorded above; hosted health is not_assessed and
+revision is null, not a fabricated commit. Import review/verifier/log:
+`/tmp/zendesk-support-import-review.json`,
+`/tmp/verify-zendesk-support-import.py`,
+`/tmp/zendesk-support-import-verification.log`,
+`/tmp/zendesk-support-import.log`. Native/cached vendor bytes remain unchanged.
+API branch `codex/add-zendesk-support` currently depends on updater #195; do not
+merge API delivery before exact-head infrastructure CI/merge. Recheck PR diff against
+fresh main after infrastructure lands, then create/attach the separate API PR.
