@@ -1,0 +1,937 @@
+openapi: 3.0.0
+info:
+  title: Hub
+  description: ''
+  termsOfService: https://zoom.us/docs/en-us/zoom_api_license_and_tou.html
+  contact:
+    name: Zoom Developers
+    url: https://developer.zoom.us/
+  version: '2'
+  x-origin:
+    - format: openapi
+      url: https://developers.zoom.us/api-hub/hub/methods/endpoints.json
+      version: '3.0'
+  x-conversion:
+    - Fetched from https://developers.zoom.us/api-hub/hub/methods/endpoints.json on 2026-10-05T07:56:35.323260+00:00; entry source SHA-256 8f41b4fc3e42fb98ea10a3641688614b4a7f677bed1adeabf8b3827463d5de66.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+servers:
+  - url: https://api.zoom.us/v2
+paths:
+  /hub/files/{fileId}/content:
+    get:
+      tags:
+        - Export
+      summary: Get file content
+      description: 'Retrieve the file name and full file content in the requested `format`. Supported formats per file type: doc - `markdown` or `xml`; spreadsheet - `csv`; presentation - `markdown`; paper_doc - `markdown`.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_content:read`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:read:content`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `CANVAS-EXPORT`
+
+
+        **Not supported in Gov cluster** '
+      operationId: Gethubcontent
+      parameters:
+        - name: fileId
+          in: path
+          description: The unique identifier of the file.
+          required: true
+          schema:
+            type: string
+            example: ADuV705lSXW4c6fBgQFarQ
+        - name: format
+          in: query
+          description: 'The format of the exported content. Supported formats per file type: doc - `markdown` or `xml`; spreadsheet - `csv`; presentation - `markdown`; paper_doc - `markdown`.'
+          required: true
+          schema:
+            type: string
+            example: markdown
+            enum:
+              - markdown
+              - xml
+              - csv
+      responses:
+        '200':
+          description: The file name, format, and full file content.
+          content:
+            application/json:
+              schema:
+                required:
+                  - file_content
+                  - file_name
+                type: object
+                properties:
+                  file_name:
+                    type: string
+                    description: The name of the file.
+                    example: Q3 Plan
+                  file_content:
+                    type: string
+                    description: The file content in the format indicated by `format`.
+                    example: 'name,age
+
+                      Alice,30
+
+                      Bob,25'
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  \n\n **Error Code:** `5150` <br>\n Export file size limit exceeded.  <br>\n**Error Code:** `5151` <br>\n Type and file type mismatch. <br>\n**Error Code:** `5152` <br>\n Unsupported type. <br>\n"
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  Missing or invalid token. \n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  Permission Denied.  \n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  File Not Found/Deleted.  \n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/).  \n\n "
+      security:
+        - openapi_oauth:
+            - hub_content:read
+            - hub:read:content
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_content:read
+        x-granular-scopes:
+          - hub:read:content
+  /hub/file_duplicate_tasks/{taskId}:
+    get:
+      tags:
+        - File Management
+      summary: Get file duplicate task status
+      description: 'Get the current status and result of a file duplicate task.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_file_duplicate_task:read`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:read:file_duplicate_task`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `LIGHT`
+
+
+        **Not supported in Gov cluster** '
+      operationId: GetDuplicateFileTaskStatus
+      parameters:
+        - name: taskId
+          in: path
+          description: The unique ID of the file duplicate task returned by the [Duplicate a file](https://developers.zoom.us/docs/api/hub/#tag/file-management/post/hub/files/%7BfileId%7D/duplicate) endpoint.
+          required: true
+          schema:
+            type: string
+            example: copy-5nXkADVAQkqbfX-hNZv00x-a1b2c3
+      responses:
+        '200':
+          description: Returns the current status and result of a file duplicate task. The response includes the duplicated file ID when the task succeeds and error details when the task fails.
+          content:
+            application/json:
+              schema:
+                required:
+                  - status
+                  - task_id
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    description: The unique ID of the file duplicate task.
+                    example: copy-5nXkADVAQkqbfX-hNZv00x-a1b2c3
+                  status:
+                    type: string
+                    description: The current status of the file duplicate task.
+                    example: succeeded
+                    enum:
+                      - processing
+                      - succeeded
+                      - failed
+                  duplicated_file_id:
+                    type: string
+                    description: The duplicated file's unique ID. This field is returned only when the task status is `succeeded`.
+                    example: 9fQkADVAQkqbfX-hNZv00x
+                  error:
+                    required:
+                      - message
+                      - reason
+                    type: object
+                    properties:
+                      reason:
+                        type: string
+                        description: The machine-readable reason for the error.
+                        example: REASON_PERMISSION_DENIED
+                        enum:
+                          - REASON_UNSPECIFIED
+                          - REASON_PARAMS_INVALID
+                          - REASON_PERMISSION_DENIED
+                          - REASON_FILE_NOT_FOUND
+                      message:
+                        type: string
+                        description: A user-facing description of the error.
+                        example: You do not have permission to duplicate this file.
+                    description: Error details when the task status is `failed`.
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  The task ID is invalid.\n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  The caller does not have permission to view this file duplicate task.\n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  The file duplicate task was not found or has expired.\n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_file_duplicate_task:read
+            - hub:read:file_duplicate_task
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_file_duplicate_task:read
+        x-granular-scopes:
+          - hub:read:file_duplicate_task
+  /hub/files/{fileId}/duplicate:
+    post:
+      tags:
+        - File Management
+      summary: Duplicate a file
+      description: 'Duplicate an existing Zoom Hub file to the target location. Supported file types include `doc`, `data_table`, `paper_doc`, `spreadsheet`, `presentation`, `whiteboard`, and `clip`. Other file types are not supported.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_content:write`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:write:content`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `HEAVY`
+
+
+        **Not supported in Gov cluster** '
+      operationId: Duplicatefile
+      parameters:
+        - name: fileId
+          in: path
+          description: The unique ID of the source file to duplicate.
+          required: true
+          schema:
+            type: string
+            example: 8wo23G28T6m6Yrj8VAI00x
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parent_id:
+                  type: string
+                  description: The ID of the destination folder, including a folder in My Files or a shared folder. If omitted or set to `root`, the file is duplicated to the effective user's My Files folder. The destination must exist and allow the effective user to create the duplicated file.
+                  example: 8wo23G28T6m6Yrj8VAI00x
+                file_name:
+                  type: string
+                  description: The name for the duplicated file. If omitted, the source file name or the product-specific duplicate naming rule is used.
+                  example: Q3 Planning Duplicate
+      responses:
+        '202':
+          description: The request has been accepted and an asynchronous file duplicate task has been created. Use the returned `task_id` to poll `GET /hub/file_duplicate_tasks/{taskId}` for the task result.
+          content:
+            application/json:
+              schema:
+                required:
+                  - task_id
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                    description: The unique ID of the file duplicate task. Use it to retrieve the task status by calling `GET /hub/file_duplicate_tasks/{taskId}`.
+                    example: copy-5nXkADVAQkqbfX-hNZv00x-a1b2c3
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  The request is invalid. For example, the source file ID is invalid, the file type is unsupported, or the parent ID is invalid. \n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  The caller does not have permission to duplicate the source file or create a file in the target location. \n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  The source file or target location was not found. \n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_content:write
+            - hub:write:content
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_content:write
+        x-granular-scopes:
+          - hub:write:content
+  /hub/files:
+    post:
+      tags:
+        - Import
+      summary: Create a new file from content
+      description: 'Creates a new file from plain-text content. The expected content format per file type: doc - Markdown; paper_doc - Markdown; spreadsheet - CSV.
+
+
+        The content is limited to 100 KB in size.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_content:write`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:write:content`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `CANVAS-IMPORT`
+
+
+        **Not supported in Gov cluster** '
+      operationId: createNewFileWithContent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - file_type
+              type: object
+              properties:
+                file_type:
+                  type: string
+                  description: The type of file to create.
+                  example: doc
+                  enum:
+                    - doc
+                    - paper_doc
+                    - spreadsheet
+                file_name:
+                  type: string
+                  description: The name of the file.
+                  example: Q3 Plan
+                parent_id:
+                  type: string
+                  description: The ID of the parent file. The newly created file will become a child of this parent. If this parameter is omitted, the file will be placed under **My Files**. Use `root` to represent the top-level folder of the current user. Folders can only be created under **My Files**, a shared folder, or another folder.
+                  example: fIdgryoPSZ-Jm34Ag-OX7A
+                content:
+                  type: string
+                  description: The plain-text content in the format expected for the selected `file_type`. If omitted or empty, an empty file is created.
+                  example: '# Project Overview
+
+
+                    This document provides a concise outline for a sample project.'
+      responses:
+        '201':
+          description: The content is being converted into a file.
+          content:
+            application/json:
+              schema:
+                required:
+                  - file_id
+                  - file_link
+                type: object
+                properties:
+                  file_id:
+                    type: string
+                    description: The newly created file's ID.
+                    example: ch4L4KKgQVesEJcqdt1qIw
+                  file_link:
+                    type: string
+                    description: The URL of the file.
+                    example: https://docs.zoom.us/doc/ch4L4KKgQVesEJcqdt1qIw
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  \n\n **Error Code:** `5005` <br>\n Incorrect file format. <br>\n**Error Code:** `5109` <br>\n The size of content exceeds the limit. <br>\n**Error Code:** `5110` <br>\n The number of images exceeds the limit. <br>\n**Error Code:** `5153` <br>\n Unsupported type (e.g. `presentation` for import). <br>\n"
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  Missing or invalid token. \n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  Permission Denied. \n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/).  \n\n "
+        '504':
+          description: "**HTTP Status Code:** `504` <br>\n Gateway Timeout  The conversion task did not complete within the gateway budget. \n\n "
+      security:
+        - openapi_oauth:
+            - hub_content:write
+            - hub:write:content
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_content:write
+        x-granular-scopes:
+          - hub:write:content
+  /hub/shared_folders:
+    get:
+      tags:
+        - Shared folder
+      summary: List shared folders
+      description: 'List shared folders.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_shared_folder:read`,`hub_shared_folder:read:admin`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:read:shared_folder`,`hub:read:shared_folder:admin`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `MEDIUM`
+
+
+        **Not supported in Gov cluster** '
+      operationId: listSharedFolders
+      parameters:
+        - name: next_page_token
+          in: query
+          description: The page token used to paginate through a large set of results. This parameter is not required when requesting the first page.
+          required: false
+          schema:
+            type: string
+            example: eyJ0aW1lQ3Vyc29yIjoiMjAyNS0wNC0yMVQwOTo0NTo1OC45NTJaIiwiaWRDdXJzb3IiOiJzemFsMkpmTlFteTExY1JwdkYxRWhBIn0=
+        - name: page_size
+          in: query
+          description: The number of shared folders to query.
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            example: 10
+            default: 10
+        - name: user_id
+          in: query
+          description: The Zoom user ID. When invoked with the admin scope, this operation runs on behalf of the specified user. Permissions are validated against that user. This parameter is required with the admin scope and has no effect otherwise.
+          required: false
+          schema:
+            type: string
+            example: 9aSWJV2rTyWwkIDWmPYsfg
+        - name: view
+          in: query
+          description: Shared folder list view. Omit this field or use `all` to return all shared folders. Use `pinned` to return only shared folders pinned by the requested user, or `joined` to return only shared folders the requested user has joined.
+          required: false
+          schema:
+            type: string
+            example: joined
+            default: all
+            enum:
+              - all
+              - joined
+              - pinned
+      responses:
+        '200':
+          description: Returns the shared folders.
+          content:
+            application/json:
+              schema:
+                required:
+                  - shared_folders
+                type: object
+                properties:
+                  shared_folders:
+                    maxItems: 50
+                    type: array
+                    description: The list of shared folders.
+                    items:
+                      required:
+                        - created_time
+                        - joined
+                        - modified_time
+                        - pinned
+                        - shared_folder_id
+                        - shared_folder_link
+                        - shared_folder_name
+                      type: object
+                      properties:
+                        shared_folder_id:
+                          type: string
+                          description: The ID of the shared folder.
+                          example: 61kkJE-rR52UsywN25E0hQ
+                        shared_folder_name:
+                          maxLength: 255
+                          minLength: 1
+                          type: string
+                          description: The shared folder name.
+                          example: Weekly Reports
+                        shared_folder_link:
+                          type: string
+                          description: The access link of the shared folder.
+                          format: uri
+                          example: https://docs.zoom.us/space/61kkJE-rZCx8qCcR1Wed37SAqlCZg
+                        created_time:
+                          type: string
+                          description: The time when the shared folder was created.
+                          format: date-time
+                          example: '2025-06-30T09:47:40.249Z'
+                        modified_time:
+                          type: string
+                          description: The time when the shared folder was last modified.
+                          format: date-time
+                          example: '2025-06-30T09:47:40.249Z'
+                        pinned:
+                          type: boolean
+                          description: Whether the shared folder is pinned by the requested user.
+                          example: true
+                        joined:
+                          type: boolean
+                          description: Whether the shared folder is joined by the requested user.
+                          example: true
+                      description: The shared folder item.
+                  next_page_token:
+                    type: string
+                    description: The next page token used to paginate through a large set of results. A next page token is returned whenever the set of available results exceeds the current page size. The expiration period for this token is 15 minutes.
+                    example: eyJ0aW1lQ3Vyc29yIjoiMjAyNS0wNC0yMVQwOTo0NTo1OC45NTJaIiwiaWRDdXJzb3IiOiJzemFsMkpmTlFteTExY1JwdkYxRWhBIn0=
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  Invalid parameters.\n\n "
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  The request could not be authenticated.\n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  No permission to query shared folders.\n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  User not found.\n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_shared_folder:read
+            - hub_shared_folder:read:admin
+            - hub:read:shared_folder
+            - hub:read:shared_folder:admin
+          openapi_authorization: []
+      x-extensions:
+        x-permissions:
+          - HubMgt:Read
+        x-macro-scopes:
+          - hub_shared_folder:read
+          - hub_shared_folder:read:admin
+        x-granular-scopes:
+          - hub:read:shared_folder
+          - hub:read:shared_folder:admin
+    post:
+      tags:
+        - Shared folder
+      summary: Create a shared folder
+      description: 'Create a shared folder.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_shared_folder:write`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:write:shared_folder`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `LIGHT`
+
+
+        **Not supported in Gov cluster** '
+      operationId: createASharedFolder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - shared_folder_name
+              type: object
+              properties:
+                shared_folder_name:
+                  maxLength: 255
+                  minLength: 1
+                  type: string
+                  description: The shared folder name.
+                  example: Weekly Reports
+      responses:
+        '201':
+          description: "**HTTP Status Code**: `201`   \n \nShared folder created successfully."
+          content:
+            application/json:
+              schema:
+                required:
+                  - description
+                  - external_user_access_enabled
+                  - member_default_file_role
+                  - shared_folder_id
+                  - shared_folder_name
+                  - visibility
+                type: object
+                properties:
+                  shared_folder_id:
+                    type: string
+                    description: The shared folder ID.
+                    example: g-VlWaWgQP-z-qJr3dAbEA
+                  description:
+                    maxLength: 255
+                    minLength: 0
+                    type: string
+                    description: The description of the shared folder.
+                    example: This shared folder is used to collect weekly reports
+                  visibility:
+                    type: string
+                    description: Controls the shared folder's visibility, discoverability, and self-service join behavior.
+                    example: open
+                    enum:
+                      - open
+                      - private
+                  external_user_access_enabled:
+                    type: boolean
+                    description: Once set to `false`, external users cannot be added to or access any files in this shared folder. Existing external members will also lose access.
+                    example: true
+                  member_default_file_role:
+                    type: string
+                    description: The default file role inherited by members of the shared folder.
+                    example: viewer
+                    enum:
+                      - viewer
+                      - commenter
+                      - editor
+                  shared_folder_name:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                    description: The shared folder name.
+                    example: Weekly Reports
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  Invalid parameters.\n\n "
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  The request could not be authenticated.\n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  No permission to create a shared folder.\n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_shared_folder:write
+            - hub:write:shared_folder
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_shared_folder:write
+        x-granular-scopes:
+          - hub:write:shared_folder
+  /hub/shared_folders/{sharedFolderId}:
+    get:
+      tags:
+        - Shared folder
+      summary: Get metadata of a shared folder
+      description: 'Get the metadata of a shared folder.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_shared_folder:read`,`hub_shared_folder:read:admin`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:read:shared_folder`,`hub:read:shared_folder:admin`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `MEDIUM`
+
+
+        **Not supported in Gov cluster** '
+      operationId: getSharedFolderMetadata
+      parameters:
+        - name: sharedFolderId
+          in: path
+          description: The shared folder ID.
+          required: true
+          schema:
+            type: string
+            example: OuqYuPieTcsNltQoeTN0aQ
+      responses:
+        '200':
+          description: Returns the metadata of the shared folder.
+          content:
+            application/json:
+              schema:
+                required:
+                  - description
+                  - external_user_access_enabled
+                  - member_default_file_role
+                  - shared_folder_id
+                  - shared_folder_name
+                  - visibility
+                type: object
+                properties:
+                  shared_folder_name:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                    description: The shared folder name.
+                    example: Weekly Reports
+                  description:
+                    maxLength: 255
+                    minLength: 0
+                    type: string
+                    description: The description of the shared folder.
+                    example: This shared folder is used to collect weekly reports
+                  visibility:
+                    type: string
+                    description: Controls the shared folder's visibility, discoverability, and self-service join behavior.
+                    example: open
+                    enum:
+                      - open
+                      - private
+                  external_user_access_enabled:
+                    type: boolean
+                    description: Once set to `false`, external users cannot be added to or access any files in this shared folder. Existing external members will also lose access.
+                    example: true
+                  member_default_file_role:
+                    type: string
+                    description: The default file role inherited by members of the shared folder.
+                    example: viewer
+                    enum:
+                      - viewer
+                      - commenter
+                      - editor
+                  shared_folder_id:
+                    type: string
+                    description: The shared folder ID.
+                    example: g-VlWaWgQP-z-qJr3dAbEA
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  The shared folder ID is invalid.\n\n "
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  The request requires a valid access token.\n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  The user does not have permission to read the shared folder metadata.\n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  The shared folder does not exist or is not accessible.\n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_shared_folder:read
+            - hub_shared_folder:read:admin
+            - hub:read:shared_folder
+            - hub:read:shared_folder:admin
+          openapi_authorization: []
+      x-extensions:
+        x-permissions:
+          - HubMgt:Read
+        x-macro-scopes:
+          - hub_shared_folder:read
+          - hub_shared_folder:read:admin
+        x-granular-scopes:
+          - hub:read:shared_folder
+          - hub:read:shared_folder:admin
+    delete:
+      tags:
+        - Shared folder
+      summary: Delete a shared folder
+      description: 'Delete a shared folder.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_shared_folder:delete`,`hub_shared_folder:delete:admin`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:delete:shared_folder`,`hub:delete:shared_folder:admin`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `LIGHT`
+
+
+        **Not supported in Gov cluster** '
+      operationId: deleteASharedFolder
+      parameters:
+        - name: sharedFolderId
+          in: path
+          description: The shared folder's ID.
+          required: true
+          schema:
+            type: string
+            example: OuqYuPieTcsNltQoeTN0aQ
+      responses:
+        '204':
+          description: "**HTTP Status Code**: `204`   \n \nThe shared folder has been successfully deleted."
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  The shared folder ID is invalid.\n\n"
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  The request could not be authenticated.\n\n"
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  The current user is not allowed to delete the shared folder.\n\n"
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  The shared folder was not found.\n\n"
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_shared_folder:delete
+            - hub_shared_folder:delete:admin
+            - hub:delete:shared_folder
+            - hub:delete:shared_folder:admin
+          openapi_authorization: []
+      x-extensions:
+        x-permissions:
+          - HubMgt:Edit
+        x-macro-scopes:
+          - hub_shared_folder:delete
+          - hub_shared_folder:delete:admin
+        x-granular-scopes:
+          - hub:delete:shared_folder
+          - hub:delete:shared_folder:admin
+    patch:
+      tags:
+        - Shared folder
+      summary: Modify metadata of a shared folder
+      description: 'Modify the metadata of a shared folder.
+
+
+        **[Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub_shared_folder:write`
+
+
+        **[Granular Scopes](https://developers.zoom.us/docs/integrations/oauth-scopes-overview/):** `hub:update:shared_folder`
+
+
+        **[Rate Limit Label](https://marketplace.zoom.us/docs/api-reference/rate-limits#rate-limits):** `MEDIUM`
+
+
+        **Not supported in Gov cluster** '
+      operationId: ModifySharedFolderMetadata
+      parameters:
+        - name: sharedFolderId
+          in: path
+          description: The shared folder's ID.
+          required: true
+          schema:
+            type: string
+            example: OuqYuPieTcsNltQoeTN0aQ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shared_folder_name:
+                  maxLength: 255
+                  minLength: 1
+                  type: string
+                  description: The shared folder name.
+                  example: Weekly Reports
+                description:
+                  maxLength: 255
+                  minLength: 0
+                  type: string
+                  description: The description of the shared folder.
+                  example: This shared folder is used to collect weekly reports
+                visibility:
+                  type: string
+                  description: Controls the shared folder's visibility, discoverability, and self-service join behavior.
+                  example: open
+                  enum:
+                    - open
+                    - private
+                external_user_access_enabled:
+                  type: boolean
+                  description: Once set to `false`, external users cannot be added to or access any files in this shared folder. Existing external members will also lose access.
+                  example: true
+                member_default_file_role:
+                  type: string
+                  description: The default file role inherited by members of the shared folder.
+                  example: viewer
+                  enum:
+                    - viewer
+                    - commenter
+                    - editor
+              additionalProperties: false
+      responses:
+        '200':
+          description: '**HTTP Status Code:** `200` <br>
+
+            Updates the shared folder metadata successfully and returns the latest shared folder info.'
+          content:
+            application/json:
+              schema:
+                required:
+                  - description
+                  - external_user_access_enabled
+                  - member_default_file_role
+                  - shared_folder_id
+                  - shared_folder_name
+                  - visibility
+                type: object
+                properties:
+                  shared_folder_name:
+                    maxLength: 255
+                    minLength: 1
+                    type: string
+                    description: The shared folder name.
+                    example: Weekly Reports
+                  description:
+                    maxLength: 255
+                    minLength: 0
+                    type: string
+                    description: The description of the shared folder.
+                    example: This shared folder is used to collect weekly reports
+                  visibility:
+                    type: string
+                    description: Controls the shared folder's visibility, discoverability, and self-service join behavior.
+                    example: open
+                    enum:
+                      - open
+                      - private
+                  external_user_access_enabled:
+                    type: boolean
+                    description: Once set to `false`, external users cannot be added to or access any files in this shared folder. Existing external members will also lose access.
+                    example: true
+                  member_default_file_role:
+                    type: string
+                    description: The default file role inherited by members of the shared folder.
+                    example: viewer
+                    enum:
+                      - viewer
+                      - commenter
+                      - editor
+                  shared_folder_id:
+                    type: string
+                    description: The shared folder ID.
+                    example: g-VlWaWgQP-z-qJr3dAbEA
+        '400':
+          description: "**HTTP Status Code:** `400` <br>\n Bad Request  The shared folder ID is invalid.\n\n "
+        '401':
+          description: "**HTTP Status Code:** `401` <br>\n Unauthorized  The request requires a valid access token.\n\n "
+        '403':
+          description: "**HTTP Status Code:** `403` <br>\n Forbidden  The user does not have permission to modify shared folder settings.\n\n "
+        '404':
+          description: "**HTTP Status Code:** `404` <br>\n Not Found  The shared folder does not exist or is not accessible.\n\n "
+        '429':
+          description: "**HTTP Status Code:** `429` <br>\n Too Many Requests. For more information, see [rate limits](https://developers.zoom.us/docs/api/rate-limits/). \n\n "
+      security:
+        - openapi_oauth:
+            - hub_shared_folder:write
+            - hub:update:shared_folder
+          openapi_authorization: []
+      x-extensions:
+        x-permissions: []
+        x-macro-scopes:
+          - hub_shared_folder:write
+        x-granular-scopes:
+          - hub:update:shared_folder
+components:
+  securitySchemes:
+    openapi_authorization:
+      type: apiKey
+      name: Authorization
+      in: header
+    openapi_oauth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /
+          tokenUrl: ''
+          refreshUrl: ''
+          scopes:
+            hub_content:read: hub_content:read
+            hub:read:content: hub:read:content
+            hub_file_duplicate_task:read: hub_file_duplicate_task:read
+            hub:read:file_duplicate_task: hub:read:file_duplicate_task
+            hub_content:write: hub_content:write
+            hub:write:content: hub:write:content
+            hub_shared_folder:write: hub_shared_folder:write
+            hub:write:shared_folder: hub:write:shared_folder
+            hub_shared_folder:read: hub_shared_folder:read
+            hub_shared_folder:read:admin: hub_shared_folder:read:admin
+            hub:read:shared_folder: hub:read:shared_folder
+            hub:read:shared_folder:admin: hub:read:shared_folder:admin
+            hub:update:shared_folder: hub:update:shared_folder
+            hub_shared_folder:delete: hub_shared_folder:delete
+            hub_shared_folder:delete:admin: hub_shared_folder:delete:admin
+            hub:delete:shared_folder: hub:delete:shared_folder
+            hub:delete:shared_folder:admin: hub:delete:shared_folder:admin
