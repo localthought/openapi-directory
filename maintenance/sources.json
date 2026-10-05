@@ -610,6 +610,20 @@
       "coverage": "Okta Admin Management only; preserves native x-okta-lifecycle annotations, Early Access/Beta features, deprecated operations, tenant servers and OAuth/API-token requirements. Public vendor publication is not universal GA evidence. The older community okta.local description remains separate.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "box-platform",
+      "provider": "box.com",
+      "target": "APIs/box.com/2.0.0/openapi.yaml",
+      "github": {
+        "repository": "box/box-openapi",
+        "ref": "main",
+        "path": "openapi.json"
+      },
+      "discovery": "Vendor README identifies root openapi.json as the maintained public compatibility description; it is identical to openapi/openapi.json. Review year-versioned subsets separately instead of choosing the numerically highest filename.",
+      "coverage": "Box Platform compatibility APIs assigned year version 2024.0 by the vendor; content continues to change. Preserve native stability annotations, authentication, tenant/server and plan/admin restrictions. This artifact is not a combined description of every newer year-versioned API.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }

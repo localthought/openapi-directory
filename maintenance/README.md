@@ -552,3 +552,18 @@ A diagnostic-only repair exposes a null default on the nonnullable string
 `Brand.customPrivacyPolicyUrl`. Neither repair is adopted; no schema constraints are
 weakened and no API import is made. Audits retain the exact official source and report
 validation failures. A vendor correction or separately reviewed exact recipe is needed.
+
+
+Box Platform compatibility (`box-platform`) follows the vendor's root `openapi.json`
+in [`box/box-openapi`](https://github.com/box/box-openapi), byte-identical to
+`openapi/openapi.json` at registration. The current public versioning guide assigns
+`2024.0` to endpoints preceding year-based versioning; this maintained artifact changes
+at a fixed declared year version. Its 187 paths / 297 operations do not include every
+API from separate 2025/2026 subsets. Do not select the highest filename as a replacement
+for broad compatibility coverage or fabricate a combined description.
+
+The historical `box.com/2.0.0` file supplies existing curation for the first `2024.0`
+import and remains intact. Keep native stability, authentication and plan/admin
+annotations, original literal fragment paths and source provenance. No source patches,
+conversion or bundling are needed. Review all additions and removals independently;
+a source omission alone does not prove runtime retirement.
