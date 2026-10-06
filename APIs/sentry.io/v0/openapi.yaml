@@ -11,10 +11,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/226d4470bf70f5617eb1b4f8f4852a98e2dba97b/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/658c82e501665b9a1977a0136ece4040d73efcd9/openapi-derefed.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/226d4470bf70f5617eb1b4f8f4852a98e2dba97b/openapi-derefed.json at commit 226d4470bf70f5617eb1b4f8f4852a98e2dba97b; entry source SHA-256 32495641a918ab3656d87dade918dd7b7daeb0c036928b6779c4be89a9424a64.
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/658c82e501665b9a1977a0136ece4040d73efcd9/openapi-derefed.json at commit 658c82e501665b9a1977a0136ece4040d73efcd9; entry source SHA-256 cee2e95a48cdffb37efc7d2f4abe80fa2214b5e5626d0f46abb1496d92bad397.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -15510,10 +15510,10 @@ paths:
                           description: How long (in minutes) after the expected checkin time will we wait until we consider the checkin to have been missed.
                         max_runtime:
                           type: integer
-                          maximum: 40320
+                          maximum: 10080
                           minimum: 1
                           nullable: true
-                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed.
+                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed. Maximum 10080 (7 days).
                         timezone:
                           enum:
                             - Africa/Abidjan
@@ -18116,10 +18116,10 @@ paths:
                           description: How long (in minutes) after the expected checkin time will we wait until we consider the checkin to have been missed.
                         max_runtime:
                           type: integer
-                          maximum: 40320
+                          maximum: 10080
                           minimum: 1
                           nullable: true
-                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed.
+                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed. Maximum 10080 (7 days).
                         timezone:
                           enum:
                             - Africa/Abidjan
@@ -45558,10 +45558,10 @@ paths:
                           description: How long (in minutes) after the expected checkin time will we wait until we consider the checkin to have been missed.
                         max_runtime:
                           type: integer
-                          maximum: 40320
+                          maximum: 10080
                           minimum: 1
                           nullable: true
-                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed.
+                          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed. Maximum 10080 (7 days).
                         timezone:
                           enum:
                             - Africa/Abidjan
@@ -64207,10 +64207,10 @@ components:
           description: How long (in minutes) after the expected checkin time will we wait until we consider the checkin to have been missed.
         max_runtime:
           type: integer
-          maximum: 40320
+          maximum: 10080
           minimum: 1
           nullable: true
-          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed.
+          description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed. Maximum 10080 (7 days).
         timezone:
           enum:
             - Africa/Abidjan
@@ -78765,10 +78765,10 @@ components:
                   description: How long (in minutes) after the expected checkin time will we wait until we consider the checkin to have been missed.
                 max_runtime:
                   type: integer
-                  maximum: 40320
+                  maximum: 10080
                   minimum: 1
                   nullable: true
-                  description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed.
+                  description: How long (in minutes) is the checkin allowed to run for in CheckInStatus.IN_PROGRESS before it is considered failed. Maximum 10080 (7 days).
                 timezone:
                   enum:
                     - Africa/Abidjan
