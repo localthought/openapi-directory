@@ -12,6 +12,65 @@ not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
+**Monthly discovery implementation — 2026-10-06:** Separate infrastructure delivery
+[#208](https://github.com/ontola/openapi-directory/pull/208) implements
+`maintenance/discovery.py`, reviewed `maintenance/discovery.json`, and the read-only
+`.github/workflows/discovery.yml` (first day 07:23 UTC/manual; contents:read only).
+Consult the PR for actual CI/merge state before continuing; do not duplicate this
+implementation. It runs the pinned suite before discovery and is covered by normal
+PR tests. It creates no APIs or PRs, applies no patches and authorizes no merges.
+Per-service PR generation remains separate unfinished infrastructure work.
+
+**122 local tests pass**, including ten new discovery regressions: complete Git-backed
+sparse inventory, exact-content versus endpoint-shape grouping, native/external-ref
+obstacles, public identity/archive/disable/private blocks, tree identity/truncation/
+limits, Git blob size/hash/symlink/parse failures, submodules, unsafe configs and real
+successful-date retention on failed scans. Explicit blob/context limits, unchanged
+HTTP timeout/retry/auth policy and 15/20-minute CI job limits bound the scan. Context
+files are evidence, never executed or followed to guessed URLs. Commit metadata's exact
+root tree SHA is requested and verified, rather than assuming commit and tree IDs are
+interchangeable; mismatches fail before artifact inspection.
+
+Initial live run against actual main `fdb039f769ac0b65bf02b25f16493765e0cdea04`
+completed all three configured repository scans: **41 Snowflake candidate groups**, each
+requiring external-reference bundling and individual lifecycle/purpose/compatibility
+review; **8 already registered sources** skipped without a freshness claim; **6 shared
+Snowflake helpers** excluded after parsing proves no OAD root. HCP scan inspected its
+7 JSON/YAML configuration files, none OADs. Anthropic's bounded OpenAPI/Swagger/
+specification filename scope found no candidates. These are bounded publication leads,
+not proof no vendor OAD exists elsewhere. Identical vendor content groups retain all
+source URLs; matching endpoint sets against stored files and other candidates are
+annotated, not assumed equivalent products or stable releases.
+
+HCP public Makefile contains test/lint tasks, not a spec-generation input. Its pinned
+public sync workflow references `hashicorp/hcp-sdk-go-internal`, retained internal docs/
+scripts and `cmd/transform-swagger` tooling. This does not establish a downloadable
+public OAD; no internal repository or SDK-type reconstruction was used. Public HCP
+product docs/embedded publication remain the next discovery lead. Current Anthropic
+.stats.yml still lacks the older Stainless pointer; preserve the prior warning.
+
+Independent verification checked **60 original blob hashes, including six context
+inputs**, all three repository-health/commit/tree snapshots, source registrations,
+complete full-depth inventory and JSON/Markdown parity. Source bytes are unchanged,
+API files and the **56-artifact/55-service** maintenance registry are unchanged.
+This is discovery, not a new full freshness audit. Reports, source snapshots, context
+inputs and verification/log copies are retained in ignored
+`cache/maintenance/discovery/monthly/` and
+`cache/maintenance/discovery/monthly-initial/` (`report.json/.md`, `verification.json`,
+`verify.py`, local-tests.log). Attachment #208 failed at the existing 100 cap; preserve
+its GitHub link. No vendor messages, protection bypasses, constraint waivers, power
+changes or extra recurring chat automations.
+
+Next: deliberately review promising distinct Snowflake candidates from this queue
+against individual official public product guides, then bundle/validate/register and
+import one API per PR if stable scope is confirmed. Compatibility descriptions and
+preview-only resources need separate judgment, not automatic import. Current main's
+Confluence v1/v2 and earlier recorded refreshes are complete. All eleven native/source/
+publication blocks, unanswered Messaging/Conversations choices, unrelated #179 and
+explicitly parked §5 items remain unchanged. Keep the original local one-week deadline.
+
+---
+
 **Latest follow-up — 2026-10-06 07:52 UTC:** Confluence Cloud **v1 is now delivered**,
 separate from v2. Do not repeat its prepared/import queue below. Updater
 [#205](https://github.com/ontola/openapi-directory/pull/205) merged at
