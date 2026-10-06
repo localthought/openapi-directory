@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `54b6b7a3c` (PR #193 merged):
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Audit of `origin/main` at `cfb19aa445` (PR #194 merged):
 729 provider domains; 4,280 files under `APIs/`, including 2,106
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -765,6 +765,67 @@ Worked examples: BMObot filed 15 issues in 47 seconds. The "SplunkES8.1" issue (
 ---
 
 ## 9. Build and maintain a reproducible update process
+
+**Confluence Cloud v2 prepared (2026-10-06 Europe/Amsterdam):** source registration
+`confluence-v2` follows current official
+https://developer.atlassian.com/cloud/confluence/rest/v2/intro/ download at
+`https://dac-static.atlassian.com/cloud/confluence/openapi-v2.v3.json`.
+The linked documentation-build query and plain moving URL have identical bytes.
+Native **3.0.3 / vendor 2.0.0 / 151 paths / 218 ops / 682 resolved local refs**,
+none external, raw hash
+`edb639bbc700ee451a996acd2568e51db4ceab954449427537df30f0ce20ca08`.
+Hosted repository health is not_assessed; preserve source hash/time/HTTP metadata,
+no fabricated Git revision. Complete fetched main has Jira but no Confluence
+service; target `APIs/atlassian.com/confluence-v2/2.0.0/openapi.yaml`. Existing Jira
+is not a curation baseline and is not modified.
+
+`maintenance/patches/confluence-v2.json` removes only two invalid scalar string
+prefix defaults, literal `my, team`, outside the exact enum [`my`, `team`], on GET
+`/spaces/{id}/labels` and `/spaces/{id}/content/labels`. Four assertions retain
+complete original parameters/operation identities. No enum expansion, replacement
+default, query relocation or inferred runtime omission behavior. Two regressions
+prove positive/negative filter values unchanged and reject vendor fixes/removals,
+array redesign, requiredness/identity changes. **102 local tests pass** on this
+independent infrastructure branch (main's 100 plus these two); source/preflight
+YAML fully validate and typed-roundtrip, complete vendor equivalence passes except
+the two checked removals/provenance. All auth/server/scopes/permission/app-access
+rules, 13 x-experimental flags and one deprecated operation retained. This is a
+mixed-lifecycle public collection, not a fabricated all-GA slice. No conversion,
+bundling, inlining or invented curation.
+
+The official v1 download was separately fetched from its own reference:
+`https://dac-static.atlassian.com/cloud/confluence/swagger.v3.json`, native 3.0.1 /
+1.0.0 / 89 paths / 130 ops / 511 resolved local refs, raw hash
+`6c66a606fa7535268512f07f599fe1e3f9de2ba0b1da7eb6ead405509875577e`.
+It fails native validation first at GET /wiki/rest/api/label prefix's string
+schema/default:null. No v1 recipe, registration or import adopted; do not conflate
+v1 with v2 or assume v1 fully valid after one diagnostic.
+
+Current source scope on this branch is **54 artifacts** (main's 53 plus Confluence
+v2); Coinbase #197 separately adds one, so eventual combined scope is 55, not yet
+main. Selected Confluence audit against main reports valid missing coverage.
+Original intro/label-guide/spec/HTTP metadata and reviews cached under ignored
+`cache/maintenance/discovery/confluence/` and `cache/maintenance/confluence-v2/`.
+Scripts/logs/reviews: `/tmp/review-confluence-official-specs.py`,
+`/tmp/confluence-official-spec-review.json`, `/tmp/confluence-v2-default-review.json`,
+`/tmp/verify-confluence-v2-import.py`, `/tmp/confluence-v2-import-review.json`,
+`/tmp/confluence-v2-tests.log`, `/tmp/confluence-v2-selected-audit.json/.md`.
+Infrastructure and API additions must remain separate; full preflight is not yet
+merged coverage. Recheck moving source hashes before final import/merge.
+
+**Existing delivery holds verified this run:** Zendesk updater #195 at d4f05b3ec
+and Support draft #196 at 8478b9bbf remain open. Coinbase updater #197 at 58bbea99b
+and CDP draft #198 at 243f98f8a remain open. Coinbase run 37371438690 attempt 1
+failed to acquire a hosted runner; tests job 111969289318 has zero steps, audit
+skipped. Same exact failure annotation as both Zendesk CI attempts: no tests were
+executed, not a code assertion failure. Do not waive actual CI, change runner
+labels to evade it or repeatedly retry during outage. Ready API drafts after their
+infrastructure passes/merges, then exact-head/file/source/CLEAN checks and merge.
+Push-protection owner choices for Twilio Messaging and Zendesk Conversations stay
+unanswered; preserve guarded deliveries. #179 remains independent and untouched.
+Chat attachment cap/removal failures are recorded on #198; attempt each newly
+created PR's attachment, report actual failure and retain durable links here.
+
 
 The 2026-10-02 audit found no GitHub Actions workflows or general updater in this fork.
 The generator under `APIs/moneybird.com/v2-readonly/` is specific to a derived subset.
