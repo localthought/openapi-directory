@@ -157,6 +157,74 @@ class UpdaterTests(unittest.TestCase):
                 update.prepare_document(source, json.dumps(changed).encode())
         self.assertEqual(json.loads(raw), spec)
 
+    def confluence_label_fixture(self):
+        recipe = json.loads((update.ROOT / "maintenance/patches/confluence-v2.json").read_text())
+        spec = {"openapi": "3.0.3", "info": {"title": "Confluence label guard", "version": "2.0.0"},
+                "paths": {}}
+        for assertion in recipe["assertions"]:
+            path = assertion["pointer"].split("/")[2].replace("~1", "/").replace("~0", "~")
+            operation = spec["paths"].setdefault(path, {}).setdefault("get", {
+                "parameters": [{"name": "id", "in": "path", "required": True,
+                                "schema": {"type": "integer"}}, None],
+                "responses": {"200": {"description": "OK"}}})
+            if assertion["pointer"].endswith("/operationId"):
+                operation["operationId"] = assertion["value"]
+            else:
+                operation["parameters"][1] = copy.deepcopy(assertion["value"])
+        return spec
+
+    def test_confluence_default_removals_preserve_label_filter_values(self):
+        from openapi_schema_validator import OAS30Validator
+        source = {"patches": ["maintenance/patches/confluence-v2.json"]}
+        original = self.confluence_label_fixture()
+        raw = json.dumps(original).encode()
+        self.assertTrue(update.validate_document(original))
+        result, steps = update.prepare_document(source, raw)
+        expected = copy.deepcopy(original)
+        for path in expected["paths"].values():
+            del path["get"]["parameters"][1]["schema"]["default"]
+        self.assertEqual(result, expected)
+        self.assertEqual(update.validate_document(result), [])
+        for path, item in result["paths"].items():
+            old_parameter = original["paths"][path]["get"]["parameters"][1]
+            parameter = item["get"]["parameters"][1]
+            self.assertIs(parameter["required"], False)
+            self.assertEqual((parameter["name"], parameter["in"]), ("prefix", "query"))
+            a, b = OAS30Validator(old_parameter["schema"]), OAS30Validator(parameter["schema"])
+            for instance, valid in (("my", True), ("team", True), ("my, team", False),
+                                    ("", False), ("global", False), (None, False),
+                                    (["my", "team"], False), (0, False)):
+                self.assertEqual(a.is_valid(instance), valid)
+                self.assertEqual(b.is_valid(instance), valid)
+        self.assertEqual(json.loads(raw), original)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+
+    def test_confluence_recipe_rejects_vendor_default_and_contract_corrections(self):
+        source = {"patches": ["maintenance/patches/confluence-v2.json"]}
+        original = self.confluence_label_fixture()
+        for path in original["paths"]:
+            for change in ("removed", "valid-default", "expanded-enum", "array", "required", "identity"):
+                spec = copy.deepcopy(original)
+                operation = spec["paths"][path]["get"]
+                parameter = operation["parameters"][1]
+                if change == "removed":
+                    del parameter["schema"]["default"]
+                elif change == "valid-default":
+                    parameter["schema"]["default"] = "my"
+                elif change == "expanded-enum":
+                    parameter["schema"]["enum"].append("my, team")
+                elif change == "array":
+                    parameter["schema"] = {"type": "array", "items": {"type": "string"},
+                                           "default": ["my", "team"]}
+                elif change == "required":
+                    parameter["required"] = True
+                else:
+                    operation["operationId"] = "changed-contract"
+                raw = json.dumps(spec).encode()
+                with self.subTest(path=path, change=change), self.assertRaisesRegex(ValueError, "review recipe"):
+                    update.prepare_document(source, raw)
+                self.assertEqual(json.loads(raw), spec)
+
     def test_zendesk_reference_dependency_retains_positive_and_negative_constraints(self):
         import itertools
         from jsonschema import Draft4Validator

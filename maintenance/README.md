@@ -655,3 +655,19 @@ and referenced non-nullable object. Adding `nullable: true` upstream makes the
 default valid and blocks replay for review. No nullability or replacement default
 is inferred. This new v3 service has no old curation/comparison baseline; keep v2
 and historical Polls bytes intact. Hosted health is unassessed.
+
+### Confluence Cloud REST v2
+
+`confluence-v2` follows the moving Atlassian download directly linked by the official
+v2 reference. The plain URL currently matches the documentation-build query; do not
+freeze that query into a release. Hosted health remains `not_assessed`, with source
+hash/time/ETag/Last-Modified recorded. This is the complete v2 collection, retaining
+experimental and deprecated operations; v1 and Data Center are distinct artifacts.
+
+Two optional space-label prefix filters declare string enum `my` or `team`, but
+assign the invalid default `my, team`. The exact recipe asserts each complete
+parameter and operation identity before removing only the defaults. Allowed values,
+optionality, auth/scopes and all other content remain unchanged. It chooses no
+replacement default and makes no claim about server behavior when omitted. A vendor
+correction or contract change stops replay. The separately published v1 artifact also
+has native defects and is not imported by this v2 registration.
