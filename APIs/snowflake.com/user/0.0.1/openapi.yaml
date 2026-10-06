@@ -1,0 +1,1069 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Snowflake User API
+  description: The Snowflake User API is a REST API that you can use to access, update, and perform certain action on Users in a Snowflake database.
+  contact:
+    name: Snowflake, Inc.
+    url: https://snowflake.com
+    email: support@snowflake.com
+  x-origin:
+    - format: openapi
+      url: https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/user.yaml
+      version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/user.yaml at commit 990e25d97236a11826c9eed40e587c2b859e5680; entry source SHA-256 c18785aebdbfc298e589ea971760c405f3b233597615efc5fbb0b10c07c35379.
+    - Bundled 2 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 0 warnings. Source-file snapshot SHA-256 07cef2f86c93fe1f87cb63ce0fd9f3b7095504a83869159a3b799899d7b6ac29.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
+servers:
+  - description: Snowflake REST Server
+    url: https://org-account.snowflakecomputing.com
+security:
+  - KeyPair: []
+  - ExternalOAuth: []
+  - SnowflakeOAuth: []
+  - ProgrammaticAccessToken: []
+paths:
+  /api/v2/users:
+    post:
+      summary: Create a user
+      tags:
+        - user
+      description: Create a user according to the parameters given
+      operationId: createUser
+      parameters:
+        - $ref: '#/components/parameters/createMode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    get:
+      summary: List users in the system.
+      tags:
+        - user
+      description: Lists the users in the system.
+      operationId: listUsers
+      parameters:
+        - $ref: '#/components/parameters/like'
+        - $ref: '#/components/parameters/startsWith'
+        - $ref: '#/components/parameters/showLimit'
+        - $ref: '#/components/parameters/fromName'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/users/{name}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/name'
+      summary: Fetch information about a user
+      tags:
+        - user
+      description: Fetch user information using the result of the DESCRIBE command
+      operationId: fetchUser
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    delete:
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      summary: Delete a user
+      tags:
+        - user
+      description: Delete a user with the given name.
+      operationId: deleteUser
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    put:
+      summary: Create a (or alter an existing) user.
+      description: Create a (or alter an existing) user. Even if the operation is just an alter, the full property set must be provided. Note that password is not currently altered by this operation but is supported for a newly-created object.
+      operationId: createOrAlterUser
+      tags:
+        - user
+      parameters:
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/users/{name}/grants:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/showLimit'
+      summary: List all grants to the user
+      tags:
+        - user
+      description: List all grants to the user
+      operationId: listGrants
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Grant'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    post:
+      summary: Grant a role to the user
+      tags:
+        - user
+      description: Grant a role to the user
+      operationId: grant
+      parameters:
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/users/{name}/grants:revoke:
+    post:
+      summary: Revoke grants from the user
+      tags:
+        - user
+      description: Revoke grants from the user
+      operationId: revokeGrants
+      parameters:
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/users/{name}:set-tags:
+    post:
+      summary: Set tags on a user.
+      tags:
+        - user
+      description: Set tags on a user.
+      operationId: setTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagAssignment'
+  /api/v2/users/{name}:unset-tags:
+    post:
+      summary: Unset tags from a user.
+      tags:
+        - user
+      description: Unset tags from a user.
+      operationId: unsetTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagReference'
+  /api/v2/users/{name}:get-tags:
+    get:
+      summary: Get the tag assignments for a user.
+      tags:
+        - user
+      description: Returns all tags assigned to a user. This operation requires an active warehouse.
+      operationId: getTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/withLineage'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagAssignment'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+components:
+  schemas:
+    Grant:
+      type: object
+      properties:
+        securable:
+          $ref: '#/components/schemas/Securable'
+          description: Securable of the grant
+        containing_scope:
+          $ref: '#/components/schemas/ContainingScope'
+          description: Containing scope of the grant
+        securable_type:
+          type: string
+          description: Type of the securable to be granted. Only ROLE is supported
+        privileges:
+          type: array
+          items:
+            type: string
+          description: List of privileges to be granted.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date and time when the grant was created
+        granted_by:
+          type: string
+          readOnly: true
+          description: The role that granted this privilege to this grantee
+      required:
+        - securable_type
+    Securable:
+      type: object
+      properties:
+        database:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Database name of the securable if applicable.
+        schema:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Schema name of the securable if applicable.
+        name:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Name of the securable if applicable.
+      required:
+        - name
+    ContainingScope:
+      type: object
+      properties:
+        database:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Database name of the securable scope if applicable.
+        schema:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Schema name of the securable scope if applicable.
+      required:
+        - database
+    User:
+      description: Properties of user.
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: User name
+          example: jackpatel
+        password:
+          type: string
+          format: password
+          description: Password
+        login_name:
+          type: string
+          description: Login name
+        display_name:
+          type: string
+          description: Display name
+        first_name:
+          type: string
+          description: First name
+        middle_name:
+          type: string
+          description: Middle name
+        last_name:
+          type: string
+          description: Last name
+        email:
+          type: string
+          description: Email address
+        must_change_password:
+          type: boolean
+          description: Does this user need to change their password (e.g., after assigning a temp password)
+        disabled:
+          type: boolean
+          description: Has this user been disabled from the system
+        days_to_expiry:
+          type: integer
+          description: How many days until this user expires
+        mins_to_unlock:
+          type: integer
+          description: How many minutes until the account is unlocked after multiple failed logins
+        default_warehouse:
+          type: string
+          description: The default warehouse to use when this user starts a session
+        default_namespace:
+          type: string
+          description: The default namespace to use when this user starts a session
+        default_role:
+          type: string
+          description: The default role to use when this user starts a session
+        default_secondary_roles:
+          type: string
+          description: The default secondary roles of this user to use when starting a session. Only valid set values are ALL or NONE. Default is ALL after 2024-07 BCR.
+          enum:
+            - ALL
+            - NONE
+          default: ALL
+        mins_to_bypass_mfa:
+          type: integer
+          description: How many minutes until MFA is required again
+        rsa_public_key:
+          type: string
+          description: RSA public key of the user
+        rsa_public_key_2:
+          type: string
+          description: Second RSA public key of the user
+        comment:
+          type: string
+          description: Comment about the user.
+          example: A distinguished user
+        type:
+          type: string
+          description: Indicates the type of user (PERSON | SERVICE | LEGACY_SERVICE)
+        enable_unredacted_query_syntax_error:
+          type: boolean
+          description: Whether to show unredacted query syntax errors in the query history.
+        network_policy:
+          type: string
+          description: Specifies an existing network policy is active for the user. Otherwise, use account default.
+        created_on:
+          type: string
+          readOnly: true
+          format: date-time
+        last_successful_login:
+          type: string
+          readOnly: true
+          format: date-time
+        expires_at:
+          type: string
+          readOnly: true
+          format: date-time
+        locked_until:
+          type: string
+          readOnly: true
+          format: date-time
+        has_password:
+          type: boolean
+          readOnly: true
+        has_rsa_public_key:
+          type: boolean
+          readOnly: true
+        rsa_public_key_fp:
+          type: string
+          readOnly: true
+          description: Fingerprint of the user's RSA public key
+        rsa_public_key_2_fp:
+          type: string
+          readOnly: true
+          description: Fingerprint of the user's second RSA public key
+        ext_authn_duo:
+          type: boolean
+          readOnly: true
+        ext_authn_uid:
+          type: string
+          readOnly: true
+        owner:
+          type: string
+          readOnly: true
+        snowflake_lock:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Whether the user, account, or organization is locked by Snowflake.
+        snowflake_support:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Whether Snowflake Support is allowed to use the user or account
+        mins_to_bypass_network_policy:
+          type: integer
+          readOnly: true
+          description: Temporary bypass network policy on the user for a specified number of minutes
+        password_last_set:
+          type: string
+          readOnly: true
+          format: date-time
+        custom_landing_page_url:
+          type: string
+          readOnly: true
+        custom_landing_page_url_flush_next_ui_load:
+          type: boolean
+          readOnly: true
+          default: false
+          description: Whether or not to flush the custom landing page of the user on next UI load
+    SuccessAcceptedResponse:
+      type: object
+      description: Schema for a request in progress response returned by the server.
+      properties:
+        code:
+          type: string
+          description: Message code returned by the server.
+        message:
+          type: string
+          description: Message returned by the server
+        resultHandler:
+          type: string
+          description: Opaque result ID used for checking for request completion through one or more subsequent completion check operations.
+        job_id:
+          type: string
+          description: ID of the job/query backing the in-progress request. This is the result handler without the trailing result-type indicator appended to it.
+      example:
+        code: '392604'
+        message: Request execution in progress. Use the provided location header or result handler ID to perform query monitoring and management.
+        job_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message returned by the server
+        code:
+          type: string
+          description: Error code.
+        error_code:
+          type: string
+          description: Error code, same as `code` above. This property has been deprecated and will be removed in a future release, but is temporarily supported for for short-term backward compatibility.
+        request_id:
+          type: string
+          description: Unique request ID.
+      example:
+        message: Compilation error!
+        error_code: '390189'
+        request_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    SuccessResponse:
+      type: object
+      description: Schema for all the success responses returned by the server.
+      properties:
+        status:
+          type: string
+          description: Message returned by the server.
+      example:
+        status: Request successfully completed
+    Identifier:
+      type: string
+      description: A Snowflake object identifier. If the identifier contains spaces or special characters, the entire string must be enclosed in double quotes. Identifiers enclosed in double quotes are also case-sensitive.
+      pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$|^[$][0-9]+$
+      example: TEST_NAME
+    TagReference:
+      type: object
+      description: Identifier for a tag, including optional database and schema names.
+      properties:
+        tag_database:
+          description: The database in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_schema:
+          description: The schema in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_name:
+          description: The name of the tag.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+      required:
+        - tag_name
+    TagAssignment:
+      description: Defines an association between a tag and value.
+      allOf:
+        - $ref: '#/components/schemas/TagReference'
+      properties:
+        tag_value:
+          type: string
+          description: The value of the tag.
+        level:
+          type: string
+          readOnly: true
+          description: The object domain on which the tag is set.
+      required:
+        - tag_value
+  securitySchemes:
+    KeyPair:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `KEYPAIR_JWT` if the token is a key-pair authentication JWT.
+    ExternalOAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Configure External Oauth with Snowflake (see <a href=https://docs.snowflake.com/en/user-guide/oauth-ext-overview>External OAuth overview</a>.) Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` and set the Token to the auth token received from the external Auth server.
+    SnowflakeOAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /oauth/authorize
+          scopes: {}
+      description: Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` if the token is snowflakeOAuth
+    ProgrammaticAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `PROGRAMMATIC_ACCESS_TOKEN` if the token is a programmatic access token.
+  parameters:
+    like:
+      name: like
+      description: Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+      in: query
+      schema:
+        type: string
+        example: test_%
+    startsWith:
+      name: startsWith
+      description: Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+      in: query
+      schema:
+        type: string
+        example: test
+    showLimit:
+      name: showLimit
+      description: Parameter to limit the maximum number of rows returned by a command.
+      in: query
+      schema:
+        type: integer
+        example: 10
+        minimum: 1
+        maximum: 10000
+    fromName:
+      name: fromName
+      description: Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+      in: query
+      schema:
+        type: string
+        example: from_test
+    createMode:
+      name: createMode
+      description: 'Parameter allowing support for different modes of resource creation. Possible values include:
+
+        - `errorIfExists`: Throws an error if you try to create a resource that already exists.
+
+        - `orReplace`: Automatically replaces the existing resource with the current one.
+
+        - `ifNotExists`: Creates a new resource when an alter is requested for a non-existent resource.'
+      in: query
+      schema:
+        type: string
+        enum:
+          - errorIfExists
+          - orReplace
+          - ifNotExists
+        example: ifNotExists
+        default: errorIfExists
+    name:
+      name: name
+      description: Identifier (i.e. name) for the resource.
+      required: true
+      in: path
+      schema:
+        example: TEST_NAME
+        $ref: '#/components/schemas/Identifier'
+    ifExists:
+      name: ifExists
+      description: 'Parameter that specifies how to handle the request for a resource that does not exist:
+
+        - `true`: The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource.
+
+        - `false`: The endpoint throws an error if the resource doesn''t exist.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+    withLineage:
+      name: withLineage
+      description: 'Parameter that specifies whether tag assignments inherited by the object from its ancestors in securable object hierarchy should be returned as well:
+
+        - `true`: All tags assigned to this object should be returned, inheritance included.
+
+        - `false`: Only tags explicitly assigned to this object should be returned.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+  headers:
+    X-Snowflake-Request-ID:
+      description: Unique ID of the API request.
+      schema:
+        type: string
+        format: uuid
+    Link:
+      description: Links to the page of results (e.g. the first page, the last page, etc.). The header can include multiple 'url' entries with different 'rel' attribute values that specify the page to return ('first', 'next', 'prev', and 'last').
+      schema:
+        type: string
+        example: </api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=0>; rel="first",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=1>; rel="next",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=9>; rel="last"
+  responses:
+    202SuccessAcceptedResponse:
+      headers:
+        Location:
+          schema:
+            type: string
+            description: Relative path for checking request status or getting the result, if available.
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      description: Successfully accepted the request, but it is not completed yet.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessAcceptedResponse'
+    400BadRequest:
+      description: Bad Request. The request payload is invalid or malformed. This happens if the application didn't send the correct request payload. The response body may include the error code and message indicating the actual cause. The application must reconstruct the request body for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    401Unauthorized:
+      description: Unauthorized. The request is not authorized. This happens if the attached access token is invalid or missing. The response body may include the error code and message indicating the actual cause, e.g., expired, invalid token. The application must obtain a new access token for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    403Forbidden:
+      description: Forbidden. The request is forbidden. This can also happen if the request is made even if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    404NotFound:
+      description: Not Found. The request endpoint is not valid. This happens if the API endpoint does not exist, or if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    405MethodNotAllowed:
+      description: Method Not Allowed. The request method doesn't match the supported API. This happens, for example, if the application calls the API with GET method but the endpoint accepts only POST.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    408RequestTimeout:
+      description: Request Timeout. This indicates that the request from the client timed out and was not completed by the server.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    409Conflict:
+      description: Conflict. The requested operation could not be performed due to a conflicting state that could not be resolved. This usually happens when a CREATE request was performed when there is a pre-existing resource with the same name, and also without one of the options orReplace/ifNotExists.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    410Gone:
+      description: Gone. This error is primarily intended to assist the task of web maintenance by notifying the recipient that the resource is intentionally unavailable.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    429LimitExceeded:
+      description: Limit Exceeded. The number of requests hit the rate limit. The application must slow down the frequency of hitting the API endpoints.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    500InternalServerError:
+      description: Internal Server Error. The server hit an unrecoverable system error. The response body may include the error code and message for further guidance. The application owner may need to reach out the customer support.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    503ServiceUnavailable:
+      description: Service Unavailable. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    504GatewayTimeout:
+      description: Gateway Timeout. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    200SuccessResponse:
+      description: Successful request.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
