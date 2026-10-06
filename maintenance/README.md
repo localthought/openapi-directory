@@ -835,6 +835,35 @@ this mode retain full native validation. Generated-draft guards now include the 
 `.cjs` entrypoint and extraction module as delivered comparison-tree inputs.
 
 
+Four other references linked from the official HCP overview are registered separately,
+using the same original-string extractor and locked converter. Each has exact page
+identity/base path and current/latest stable release assertions (reviewed 2026-10-06):
+
+| Source | Vendor version | Paths / operations | Schemas / converted local refs |
+| --- | --- | --- | --- |
+| [HVN](https://developer.hashicorp.com/hcp/api-docs/hvn) | 2020-09-07 | 24 / 31 | 82 / 173 |
+| [Operations](https://developer.hashicorp.com/hcp/api-docs/operations) | 2020-05-05 | 3 / 3 | 12 / 18 |
+| [Resource Manager](https://developer.hashicorp.com/hcp/api-docs/rbac) | 1.0 | 27 / 35 | 89 / 153 |
+| [Webhook](https://developer.hashicorp.com/hcp/api-docs/webhook) | 2023-05-31 | 4 / 7 | 26 / 40 |
+
+These operation sets are disjoint from each other and Identity. Preserve each complete
+original description, including HVN DNS/PrivateLink/routes/peering/transit/Route53
+operations, Resource Manager organization/project/resource/IAM controls, and Webhook
+subscription/HMAC/delivery schemas. The first three convert with zero warnings/patches.
+Webhook has one exact nullable `CreateWebhookRequestBody.enabled` translation, traced
+to converter nullable handling. The full guarded control conversion verifies zero
+unrelated repairs and identical output except that nullable flag: true requires
+successful verification; false skips it and disables; unset enables only on success.
+All four retain schema-reference annotations with `ref_siblings: allOf`, native bearer
+apiKey security, protocol-relative server and literal vendor version. No OAuth/scheme,
+curation, Git revision or universal GA claim is invented. Native Swagger, full converted
+validation, every schema/operation/body/response/parameter, typed YAML and all local
+refs were independently checked. These are hosted publications with repository health
+`not_assessed`; original HTML/native/conversion/control bytes and dates remain cached.
+API delivery is separate from source registration. Monitoring is 65 artifacts / 64
+services with these rows; registration is not a full expanded freshness audit.
+
+
 `draft_pr.py` fetches and validates one registered API, using the same pinned source
 health, bundle/conversion/patch, metadata-preserving import and typed YAML machinery.
 It defaults to a dry run and records complete candidate content, original snapshots,
