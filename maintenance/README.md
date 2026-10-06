@@ -2,8 +2,10 @@
 
 This updater checks only the service artifacts configured in `sources.json`,
 including both public GitHub REST descriptions. It does not claim coverage of the
-entire directory, discover every vendor release, generate PRs, or merge them. Those remain explicit follow-up work
-in AGENTS.md §9. Blocked services are included in the report rather than silently skipped.
+entire directory or discover every vendor release. Bounded monthly discovery and an
+explicit per-API draft generator are implemented separately below. Scheduled PR
+publication and deliberate updates to existing pending PRs remain follow-up work in
+AGENTS.md §9. There is no merge command. Blocked services remain visible in reports.
 
 Use Python 3.10+, Node.js 22.12+ (CI uses Node 24), and the pinned dependencies:
 
@@ -778,4 +780,80 @@ import obstacles. No-candidate results are bounded leads, not proof the vendor p
 no spec elsewhere or that the historical directory is current. Expanding patterns or
 limits requires review, rather than silently sampling a prefix of a large catalog.
 
-Automatic per-service PR generation remains separate follow-up work.
+Scheduled PR publication remains separate follow-up work; the opt-in generator below
+does not change this read-only discovery workflow.
+
+## Explicit per-API draft generation
+
+`draft_pr.py` fetches and validates one registered API, using the same pinned source
+health, bundle/conversion/patch, metadata-preserving import and typed YAML machinery.
+It defaults to a dry run and records complete candidate content, original snapshots,
+review body and results under ignored `cache/maintenance/drafts/`. Fetch main first;
+local maintenance code, configuration, recipes and locks must match the selected Git
+tree. An older tree without the delivered generator is rejected. Existing source
+publication blockers stop before fetching, including unanswered push-protection choices.
+
+```sh
+git fetch origin main
+python maintenance/draft_pr.py --source plaid
+# After deliberate candidate review, explicitly create one new draft:
+python maintenance/draft_pr.py --source plaid --publish
+```
+
+Publication re-fetches and revalidates; it never loads or trusts an edited cached plan.
+Only this fork's canonical/legacy origin is permitted, and remote main must still equal
+the comparison commit. Both public GitHub REST artifacts declare the explicit
+`github-public-rest` publication group: selecting either processes both as one API PR. Companion artifacts sharing a vendor
+repository/ref use the same pinned source commit even if the branch advances mid-run.
+Distinct Snowflake resources remain separate. Register new groups only after scope
+review, not merely because artifacts share a provider.
+
+The builder creates an exact API/target-only commit through a private temporary index
+and the full Git tree. It retains historical versions and preserves sparse paths,
+local files, the current branch and staged work. It checks configuration/recipe equality,
+regular file/directory modes, the entire curated vendor view, complete native validation
+and YAML types. It does not create timestamp-only spec commits. A lagging reviewed
+baseline can produce a manifest-target-only correction, identified in the candidate.
+Per-attempt candidate directories are keyed by their integrity digest; that digest is
+an accidental-change guard, not an authorization token or proof of current freshness.
+
+`--publish` needs Git push and authenticated `gh api` access with repository contents
+and pull-request write permissions. It reads all open PRs and complete bounded file
+pagination before creating anything. A PR touching any historical/current version of
+the API, or the same generated branch, yields `existing_pending`. An orphan branch
+yields `existing_branch`. Both outcomes preserve existing work; automatic branch/PR
+updates remain unfinished. Do not remove a pending PR to force a duplicate delivery.
+An atomic empty-ref lease permits only creating an absent branch, including under races.
+The PR is always a **draft**, with official URL/hash/revision, scope, versions/counts,
+additions/removals, transformations and validation results. Its returned repository,
+head/base, draft/open state and complete file list must match the candidate.
+
+A rejected push, advanced main after pushing, failed PR POST or unexpected PR response
+creates `publication/GROUP/blocked.json`. A local exclusive `publishing.lock` prevents
+overlapping attempts; a crash leaves that lock for review. Retain this cache across runs.
+Never delete these guards as an automatic retry, redact a vendor example, or bypass
+protection. Inspect GitHub read-only to recover an uncertain outcome, record it in
+AGENTS.md, and continue independent work. A verified created URL is returned even if
+subsequent verification fails. Codex callers must attempt `attach_artifact` for **every**
+created PR, retain the GitHub link if the app attachment cap rejects it, and report the
+real result. The standalone CLI does not perform desktop attachment or send messages.
+Terminal failure results omit raw vendor examples and subprocess output; detailed
+native planning diagnostics and original sources remain in the local cache.
+
+Generated `codex/official-update-*` API PRs trigger the separate read-only
+`api-draft-validation.yml` job, which checks out trusted base tools, reads full Git
+objects outside sparse checkout and validates the exact head. It requires one commit
+parented by the exact comparison base, complete native/typed YAML validation, regular
+Git modes and precisely reconstructed manifest target edits for that API. Main advancing
+requires deliberate re-planning/review; it never silently rebases or changes a pending
+branch. Offline CI does **not** claim a fresh vendor comparison. Publication still needs
+deliberate scope/lifecycle/removal review and actual checks before marking ready/merging;
+the generator does not invoke a merge command or request blanket automatic merging.
+
+Weekly audit and monthly discovery workflows retain `contents: read`. No scheduled
+writer is enabled by this command. A future publisher must retain guards/outcome evidence
+across runners and ensure PR validation actually runs: events created by Actions'
+`GITHUB_TOKEN` generally do not start other workflows, per GitHub's
+[token documentation](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token).
+Implement pending-PR updates and scheduled publication separately, with deliberate
+per-API review; don't weaken permissions or waive checks just to trigger delivery.

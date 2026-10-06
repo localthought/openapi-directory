@@ -9,6 +9,7 @@ on:
       - 'maintenance/**'
       - '.github/workflows/maintenance.yml'
       - '.github/workflows/discovery.yml'
+      - '.github/workflows/api-draft-validation.yml'
 
 permissions:
   contents: read

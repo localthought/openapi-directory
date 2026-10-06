@@ -56,12 +56,37 @@ Only unrelated #179 remains open. All eleven prior blocks, unanswered protection
 owner choices and §5 parked items remain unchanged. No vendor messages, constraint
 waivers, blanket auto-merging, protection bypass, power change or extra chat automation.
 
-**Next work:** the monthly discovery and reproducible fetch/import/audit paths are
-implemented; deliberate **per-API PR generation remains unfinished infrastructure**.
-Implement it separately with per-source validation, existing-PR deduplication, exact
-file/content guards and no blanket merge or protection bypass. Continue bounded public
-HCP publication discovery rather than internal SDK/type reconstruction, and individual
-major-provider source reviews. Preserve original local one-week deadline/sleep behavior.
+**Draft generation infrastructure prepared — 2026-10-06:** Separate infrastructure
+branch `codex/guarded-api-draft-generation` implements `maintenance/draft_pr.py`.
+Default is a fresh official-source dry run; explicit `--publish` can create only a new
+draft for one reviewed API. Both public GitHub REST artifacts now share explicit
+`github-public-rest` grouping; companion repository/ref artifacts share one pinned
+source commit. **150 local regression tests passed** after implementation, including
+28 new real-Git/REST/outcome/CI cases; hosted CI is still pending. Source-health/native/bundle/recipe/import/YAML/vendor
+comparisons are reused, local tools/configuration must equal the comparison tree, and
+full Git objects plus a temporary private index preserve sparse paths and staged work.
+Only API files and exactly reconstructed baseline-target edits are allowed. Full open
+PR/file pagination holds overlapping historical/current API PRs and existing branches
+without duplicating or overwriting them. Atomic empty-ref lease prevents race overwrites.
+Returned PR repository/head/base/draft state/files are verified. An exclusive local lock
+and durable failed/uncertain-publication guard forbid automatic retry/protection bypass.
+Keep publication cache across runs; never delete guards to force another push/POST.
+
+Generated API-only drafts have separate read-only CI using delivered base tools, exact
+head/parent, native validation, typed YAML and allowed tree/manifest checks. This is
+offline validation, not fresh vendor comparison. There is no merge operation, scheduled
+writer, automatic pending-PR update, extra chat automation or vendor message. Required
+desktop attachment is the caller's responsibility, including returned created URLs after
+verification failures; preserve actual attachment outcomes. Infrastructure remains
+separate from API deliveries. Actual tests/live checks/PR/CI state must be recorded after
+completion; do not treat this prepared note as proof of merge or hosted test success.
+
+**Next work:** finish verification and delivery of this infrastructure; then deliberate
+pending-PR updates and scheduled publication remain authorized separate infrastructure.
+Existing read-only weekly/monthly jobs keep their permissions. Continue bounded public
+HCP publication discovery and individual major-provider reviews. All eleven prior blocks,
+unanswered owner choices, §5 parked items and Grant lifecycle exclusion remain unchanged.
+Preserve original local one-week deadline/sleep behavior and avoid duplicate PRs.
 
 ---
 

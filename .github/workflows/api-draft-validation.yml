@@ -1,0 +1,35 @@
+name: Generated API draft validation
+
+on:
+  pull_request:
+    paths:
+      - 'APIs/**'
+      - 'maintenance/sources.json'
+      - '.github/workflows/api-draft-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: startsWith(github.head_ref, 'codex/official-update-')
+    runs-on: ubuntu-latest
+    steps:
+      # Use the already delivered base tools, never infrastructure from the draft.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+          sparse-checkout: maintenance
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: maintenance/requirements.txt
+      - run: python -m pip install -r maintenance/requirements.txt
+      - name: Validate exact draft head and API scope
+        env:
+          DRAFT_BASE: ${{ github.event.pull_request.base.sha }}
+          DRAFT_HEAD: ${{ github.event.pull_request.head.sha }}
+          DRAFT_BRANCH: ${{ github.head_ref }}
+        run: python maintenance/draft_pr.py --base "$DRAFT_BASE" --validate-head "$DRAFT_HEAD" --branch "$DRAFT_BRANCH"
