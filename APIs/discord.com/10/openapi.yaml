@@ -9,11 +9,11 @@ info:
   version: '10'
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/discord/discord-api-spec/9426d3c1d4b103484283d7feb568f2ef142712de/specs/openapi.json
+      url: https://raw.githubusercontent.com/discord/discord-api-spec/a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069/specs/openapi.json
       version: '3.1'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/discord/discord-api-spec/9426d3c1d4b103484283d7feb568f2ef142712de/specs/openapi.json at commit 9426d3c1d4b103484283d7feb568f2ef142712de; entry source SHA-256 c946facea80a4d356a9e930062c4d05cb6e96ec2638e532493e557805bb6c408.
-    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection; no schema constraints removed.
+    - Fetched from https://raw.githubusercontent.com/discord/discord-api-spec/a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069/specs/openapi.json at commit a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069; entry source SHA-256 b2d342221dadb4c185c474954e92c053c3ce6a26a7503750887ab33f5036c4e5.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/discord.com/10/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 externalDocs:
@@ -5049,6 +5049,7 @@ paths:
           $ref: '#/components/responses/ClientErrorResponse'
       security:
         - BotToken: []
+        - OAuth2: []
   /guilds/{guild_id}/new-member-welcome:
     parameters:
       - name: guild_id
