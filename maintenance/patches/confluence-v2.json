@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "description": "Remove two invalid optional label-prefix defaults, literal string my, team, from GET /spaces/{id}/labels and GET /spaces/{id}/content/labels. Both parameters declare a scalar string with enum my or team, so the comma-separated default is not a permitted value. Retain both alternatives, type, optionality, description and all other parameters/security/content. Assert each complete original parameter and operation identity, then remove only the exact default; do not choose a replacement, widen the enum or infer runtime behavior when the filter is omitted. Stop replay on any vendor fix or changed parameter contract.",
+  "assertions": [
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1labels/get/parameters/1",
+      "value": {
+        "name": "prefix",
+        "in": "query",
+        "required": false,
+        "description": "Filter the results to labels based on their prefix.",
+        "schema": {
+          "default": "my, team",
+          "type": "string",
+          "enum": [
+            "my",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1labels/get/operationId",
+      "value": "getSpaceLabels"
+    },
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1content~1labels/get/parameters/1",
+      "value": {
+        "name": "prefix",
+        "in": "query",
+        "required": false,
+        "description": "Filter the results to labels based on their prefix.",
+        "schema": {
+          "default": "my, team",
+          "type": "string",
+          "enum": [
+            "my",
+            "team"
+          ]
+        }
+      }
+    },
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1content~1labels/get/operationId",
+      "value": "getSpaceContentLabels"
+    }
+  ],
+  "operations": [
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1labels/get/parameters/1/schema/default",
+      "from": "my, team",
+      "remove": true,
+      "context": {
+        "type": "string",
+        "enum": [
+          "my",
+          "team"
+        ]
+      }
+    },
+    {
+      "pointer": "#/paths/~1spaces~1{id}~1content~1labels/get/parameters/1/schema/default",
+      "from": "my, team",
+      "remove": true,
+      "context": {
+        "type": "string",
+        "enum": [
+          "my",
+          "team"
+        ]
+      }
+    }
+  ]
+}

@@ -704,7 +704,24 @@
       "url": "https://developer.zendesk.com/zendesk/oas.yaml",
       "version_policy": "vendor",
       "discovery": "Current official https://developer.zendesk.com/api-reference/ticketing/introduction/ directly publishes this hosted OAS download (checked 2026-10-05). Native OpenAPI 3.0.3/document 2.0.0 now has 455 paths / 657 operations / 2534 resolved local references, no external references. Hosted repository health is not assessed. Fixed declared version does not prove unchanged content: since initial discovery four ticket-task/subticket/link paths/five operations and parallel approval-request/schema content were added, no endpoint removals.",
-      "coverage": "Zendesk public Support v2/Ticketing and included custom-data/custom-object resources, not Sunshine Conversations or every Zendesk product. Preserve native tenant servers, authentication, role/plan permissions, lifecycle guidance and deprecated operations. Source monitoring is read-only: native unsupported AccessRuleCondition.value.oneOf[4].type:null blocks validation/import. A diagnostic null-only representation preserves declared values but exposes unused UserLogin in:path/style:deepObject; no correction, schema/parameter removal or dialect conversion is adopted. Review exact semantics and complete source validation before any future API import.",
+      "coverage": "Zendesk public Support v2/Ticketing and included custom-data/custom-object resources, not Sunshine Conversations or every Zendesk product. Preserve native tenant server, basic-auth scheme and complete role/plan/lifecycle/deprecation prose. Current public authentication docs recommend OAuth and mark API tokens deprecated, but this vendor artifact models only basic auth; do not fabricate OAuth schemes or assert complete authentication coverage. Exact compatibility recipe preserves the documented null-only condition alternative and removes only the invalid unused UserLogin component after whole-node assertions and conservative JSON Pointer absence guards. Every endpoint and remaining schema/parameter constraint is retained; no dialect conversion or invented runtime behavior.",
+      "priority": "high",
+      "patches": [
+        "maintenance/patches/zendesk-support.json"
+      ]
+    },
+    {
+      "id": "confluence-v2",
+      "provider": "atlassian.com",
+      "service": "confluence-v2",
+      "target": "APIs/atlassian.com/confluence-v2/2.0.0/openapi.yaml",
+      "url": "https://dac-static.atlassian.com/cloud/confluence/openapi-v2.v3.json",
+      "version_policy": "vendor",
+      "patches": [
+        "maintenance/patches/confluence-v2.json"
+      ],
+      "discovery": "Current official https://developer.atlassian.com/cloud/confluence/rest/v2/intro/ directly links this vendor OpenAPI download with a documentation-build cache query (checked 2026-10-06 Europe/Amsterdam). Plain moving URL and currently linked query return identical original bytes. Native OpenAPI 3.0.3 / vendor 2.0.0 / 151 paths / 218 ops / 682 resolved local references, none external. Hosted repository health is not assessed. Two optional label-prefix scalar parameters declare enum my or team but default literal my, team; exact complete-parameter/operation assertions permit removal only of those invalid defaults, retaining every constraint and stopping for vendor correction. No conversion, bundling or invented replacement default.",
+      "coverage": "Complete Confluence Cloud REST v2 collection for pages, spaces, blog posts, attachments, labels, comments, content properties, custom content, databases, whiteboards, folders, Smart Links, roles/permissions and tasks. Preserve native Basic/OAuth authentication/scopes, tenant server, app-access rules and permission restrictions. Thirteen experimental operation flags and one deprecated operation remain; this is a mixed-lifecycle public collection, not an all-GA slice. Distinct from Jira and legacy Confluence v1/Data Center; no Jira curation baseline or fabricated metadata. v1 official download has separate native validation defects and is not imported by this registration.",
       "priority": "high"
     },
     {

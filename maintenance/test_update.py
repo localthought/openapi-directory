@@ -121,6 +121,194 @@ class UpdaterTests(unittest.TestCase):
                 update.prepare_document(source, raw)
             self.assertEqual(json.loads(raw), spec)
 
+
+    def test_unreferenced_guard_rejects_direct_descendant_and_enclosing_uses(self):
+        spec = document()
+        target = "#/components/parameters/Id"
+        # The fixture genuinely uses Id; removal must not be licensed.
+        with self.assertRaisesRegex(ValueError, "target is used"):
+            update.assert_unreferenced(spec, [target])
+        spec["paths"] = {}
+        update.assert_unreferenced(spec, [target])
+        for ref in (target, "#/components/parameters/Id/schema", "#/components/parameters",
+                    "#", "https://example.com/spec#/components/parameters/Id",
+                    "#%2Fcomponents%2Fparameters%2FId"):
+            for location in ("example", "x-vendor", "discriminator"):
+                changed = copy.deepcopy(spec)
+                changed[location] = {"nested": [{"$ref": ref}]}
+                with self.subTest(ref=ref, location=location), self.assertRaisesRegex(ValueError, "target is used"):
+                    update.assert_unreferenced(changed, [target])
+        spec["x-other"] = {"$ref": "#/components/parameters/IdOther"}
+        update.assert_unreferenced(spec, [target])
+
+    def test_unreferenced_guard_handles_pointer_escapes_arrays_and_aliases(self):
+        spec = document()
+        spec["x-data"] = {"a/b~c": [{"value": 42}]}
+        target = "#/x-data/a~1b~0c/0"
+        update.assert_unreferenced(spec, [target])
+        for ref in (target, "#/x-data/a~1b~0c/%30", "#/x-data/a~1b~0c/0/value",
+                    "#/x-data/a~1b~0c"):
+            spec["x-use"] = [ref]
+            with self.subTest(ref=ref), self.assertRaisesRegex(ValueError, "target is used"):
+                update.assert_unreferenced(spec, [target])
+        del spec["x-use"]
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            update.assert_unreferenced(spec, [target, "#/x-data/a~1b~0c/%30"])
+
+    def test_unreferenced_preconditions_fail_before_patch_and_retain_cache(self):
+        spec = document()
+        raw = json.dumps(spec).encode()
+        recipe = {"schema_version": 1, "description": "Reviewed unused removal",
+                  "unreferenced": ["#/components/parameters/Id"],
+                  "operations": [{"pointer": "#/components/parameters/Id", "from": spec["components"]["parameters"]["Id"],
+                                  "remove": True, "context": {"Id": spec["components"]["parameters"]["Id"]}}]}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "maintenance/patches/fixture.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps(recipe))
+            cache = root / "cache"
+            metadata = {"sha256": update.sha256(raw), "fetched_at": "today"}
+            with patch.object(update, "ROOT", root), patch.object(update, "fetch", return_value=(raw, metadata)):
+                result = update.audit({"id": "guard", "target": "APIs/example.com/1/openapi.yaml",
+                                       "patches": ["maintenance/patches/fixture.json"]}, "origin/main", cache)
+            self.assertEqual(result["status"], "failed")
+            self.assertIn("target is used", result["error"])
+            self.assertNotIn("last_successful_validation", result)
+            self.assertEqual((cache / "guard" / metadata["sha256"] / "source").read_bytes(), raw)
+            self.assertEqual(json.loads(raw), spec)
+
+    def test_unreferenced_guard_rejects_malformed_missing_and_duplicate_targets(self):
+        spec = document()
+        spec["paths"] = {}
+        for targets in (None, {}, [], [None], ["https://example.com"], ["#/missing"],
+                        ["#/components/parameters/Id", "#/components/parameters/Id"],
+                        ["#/components/parameters/Id~2"], ["#/components/parameters/%ZZ"],
+                        ["#/components/schemas/Choice/oneOf/01"]):
+            with self.subTest(targets=targets), self.assertRaises(ValueError):
+                update.assert_unreferenced(spec, targets)
+
+    def test_zendesk_support_null_only_alternative_preserves_original_semantics(self):
+        from jsonschema import Draft4Validator
+        from openapi_schema_validator import OAS30Validator
+        recipe = json.loads((update.ROOT / "maintenance/patches/zendesk-support.json").read_text())
+        original = recipe["assertions"][0]["value"]["properties"]["value"]
+        compatible = recipe["operations"][0]["value"]
+        expected = copy.deepcopy(original)
+        expected["oneOf"][4] = {"type": "string", "nullable": True, "enum": [None]}
+        self.assertEqual(compatible, expected)
+        outcomes = []
+        for value in (None, "", "current_user", "null", True, False, 0, 1, -2, 1.5, {}, [], ["current_user"]):
+            a = Draft4Validator(original).is_valid(value)
+            b = OAS30Validator(compatible).is_valid(value)
+            self.assertEqual(a, b, value)
+            self.assertEqual(OAS30Validator(compatible["oneOf"][4]).is_valid(value), value is None)
+            outcomes.append(a)
+        self.assertIn(True, outcomes)
+        self.assertIn(False, outcomes)
+        # Preserve the vendor's overlapping integer/number oneOf alternatives.
+        self.assertFalse(OAS30Validator(compatible).is_valid(1))
+
+    def test_zendesk_support_removes_only_unused_parameter_and_refuses_vendor_fixes(self):
+        recipe_path = "maintenance/patches/zendesk-support.json"
+        recipe = json.loads((update.ROOT / recipe_path).read_text())
+        condition, parameter = [copy.deepcopy(entry["value"]) for entry in recipe["assertions"]]
+        spec = {"openapi": "3.0.3", "info": {"title": "Support guard", "version": "2.0.0"}, "paths": {},
+                "components": {"schemas": {"AccessRuleCondition": condition}, "parameters": {
+                    "UserLogin": parameter, **copy.deepcopy(recipe["operations"][1]["context"])}}}
+        source = {"patches": [recipe_path]}
+        raw = json.dumps(spec).encode()
+        result, steps = update.prepare_document(source, raw)
+        self.assertEqual(update.validate_document(result), [])
+        expected = copy.deepcopy(spec)
+        expected["components"]["schemas"]["AccessRuleCondition"]["properties"]["value"] = recipe["operations"][0]["value"]
+        del expected["components"]["parameters"]["UserLogin"]
+        self.assertEqual(result, expected)
+        self.assertIn(update.sha256((update.ROOT / recipe_path).read_bytes()), steps[0])
+        for change in ("new use", "style fixed", "removed", "null fixed", "operator changed"):
+            changed = copy.deepcopy(spec)
+            if change == "new use":
+                changed["x-use"] = {"$ref": "#/components/parameters/UserLogin"}
+            elif change == "style fixed":
+                changed["components"]["parameters"]["UserLogin"]["style"] = "simple"
+            elif change == "removed":
+                del changed["components"]["parameters"]["UserLogin"]
+            elif change == "null fixed":
+                changed["components"]["schemas"]["AccessRuleCondition"]["properties"]["value"] = recipe["operations"][0]["value"]
+            else:
+                changed["components"]["schemas"]["AccessRuleCondition"]["properties"]["operator"]["enum"].append("not_present")
+            with self.subTest(change=change), self.assertRaisesRegex(ValueError, "review recipe"):
+                update.prepare_document(source, json.dumps(changed).encode())
+        self.assertEqual(json.loads(raw), spec)
+
+    def confluence_label_fixture(self):
+        recipe = json.loads((update.ROOT / "maintenance/patches/confluence-v2.json").read_text())
+        spec = {"openapi": "3.0.3", "info": {"title": "Confluence label guard", "version": "2.0.0"},
+                "paths": {}}
+        for assertion in recipe["assertions"]:
+            path = assertion["pointer"].split("/")[2].replace("~1", "/").replace("~0", "~")
+            operation = spec["paths"].setdefault(path, {}).setdefault("get", {
+                "parameters": [{"name": "id", "in": "path", "required": True,
+                                "schema": {"type": "integer"}}, None],
+                "responses": {"200": {"description": "OK"}}})
+            if assertion["pointer"].endswith("/operationId"):
+                operation["operationId"] = assertion["value"]
+            else:
+                operation["parameters"][1] = copy.deepcopy(assertion["value"])
+        return spec
+
+    def test_confluence_default_removals_preserve_label_filter_values(self):
+        from openapi_schema_validator import OAS30Validator
+        source = {"patches": ["maintenance/patches/confluence-v2.json"]}
+        original = self.confluence_label_fixture()
+        raw = json.dumps(original).encode()
+        self.assertTrue(update.validate_document(original))
+        result, steps = update.prepare_document(source, raw)
+        expected = copy.deepcopy(original)
+        for path in expected["paths"].values():
+            del path["get"]["parameters"][1]["schema"]["default"]
+        self.assertEqual(result, expected)
+        self.assertEqual(update.validate_document(result), [])
+        for path, item in result["paths"].items():
+            old_parameter = original["paths"][path]["get"]["parameters"][1]
+            parameter = item["get"]["parameters"][1]
+            self.assertIs(parameter["required"], False)
+            self.assertEqual((parameter["name"], parameter["in"]), ("prefix", "query"))
+            a, b = OAS30Validator(old_parameter["schema"]), OAS30Validator(parameter["schema"])
+            for instance, valid in (("my", True), ("team", True), ("my, team", False),
+                                    ("", False), ("global", False), (None, False),
+                                    (["my", "team"], False), (0, False)):
+                self.assertEqual(a.is_valid(instance), valid)
+                self.assertEqual(b.is_valid(instance), valid)
+        self.assertEqual(json.loads(raw), original)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+
+    def test_confluence_recipe_rejects_vendor_default_and_contract_corrections(self):
+        source = {"patches": ["maintenance/patches/confluence-v2.json"]}
+        original = self.confluence_label_fixture()
+        for path in original["paths"]:
+            for change in ("removed", "valid-default", "expanded-enum", "array", "required", "identity"):
+                spec = copy.deepcopy(original)
+                operation = spec["paths"][path]["get"]
+                parameter = operation["parameters"][1]
+                if change == "removed":
+                    del parameter["schema"]["default"]
+                elif change == "valid-default":
+                    parameter["schema"]["default"] = "my"
+                elif change == "expanded-enum":
+                    parameter["schema"]["enum"].append("my, team")
+                elif change == "array":
+                    parameter["schema"] = {"type": "array", "items": {"type": "string"},
+                                           "default": ["my", "team"]}
+                elif change == "required":
+                    parameter["required"] = True
+                else:
+                    operation["operationId"] = "changed-contract"
+                raw = json.dumps(spec).encode()
+                with self.subTest(path=path, change=change), self.assertRaisesRegex(ValueError, "review recipe"):
+                    update.prepare_document(source, raw)
+                self.assertEqual(json.loads(raw), spec)
+
     def test_zendesk_reference_dependency_retains_positive_and_negative_constraints(self):
         import itertools
         from jsonschema import Draft4Validator

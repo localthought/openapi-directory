@@ -5,7 +5,7 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-05 (Europe/Amsterdam). Audit of `origin/main` at `54b6b7a3c` (PR #193 merged):
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Audit of `origin/main` at `cfb19aa445` (PR #194 merged):
 729 provider domains; 4,280 files under `APIs/`, including 2,106
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
@@ -228,6 +228,120 @@ Stage entry/snapshot hashes: `85634e14fda822de7354f90fe9829f1b8a46d12efcecd2f459
 
 Remaining catalog products need their own release/scope review; do not blindly import
 every filename, preview-only resource or compatibility description.
+
+---
+
+**Support delivery prepared on 2026-10-05:** [API PR #196](https://github.com/ontola/openapi-directory/pull/196) is a draft with only the new API and these progress notes; mark ready after updater #195 CI/merge, then recheck exact head/files/CLEAN/MERGEABLE before merge. Do not duplicate this PR. Separate updater
+[#195](https://github.com/ontola/openapi-directory/pull/195) adds conservative unused
+pointer guards and a checked compatibility recipe; 106 local tests pass, exact-head
+CI run 37362766037 is queued. The API-only branch `codex/zendesk-support-api-only`
+adds official Support/Ticketing 2.0.0, native 3.0.3, **455 paths / 657 operations**,
+2,534 resolved local refs, zero external refs. All endpoint/auth/server/role/plan/tag/
+deprecation content remains. Only the documented null-only alternative and the exact
+unused invalid UserLogin parameter are corrected, plus provenance. Do not merge this
+API before #195 CI/merge; no infrastructure changes are duplicated in its PR diff.
+
+Original source SHA-256
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`, recipe SHA-256
+`38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5`.
+Independent full native/prepared/import comparisons, complete validation and typed
+YAML roundtrip pass; no version conversion or invented curation. Native basic-only
+security remains a documented limitation relative to current public OAuth guidance.
+All four deprecated operations and API-token lifecycle prose retained. Original raw
+bytes cached unchanged; hosted source health unassessed and no Git revision claimed.
+Detailed implementation/import/audit progress is also retained on pushed branch
+`codex/add-zendesk-support` at `2a61ee7eb`, based on updater head `d4f05b3ec`.
+The separate API-only branch avoids including pending infrastructure in its diff.
+
+Full **53-source local audit** at the prepared API commit `dd7b9568238c` (not main)
+finds **42 matches / 11 known blocks / no new unblocked drift or fetch/prepare failure**.
+All source/26 repository metadata hashes, per-row bases/profiles, endpoint deltas and
+Markdown/JSON parity checked; 14 hosted sources unassessed. Support matches its
+pending import, Atlas its delivered refresh. Only Stripe repository revision advanced
+(`3d9ffbb79e0ff25254c498b3b7623f710401a1fb`), independently re-fetched pinned bytes
+unchanged. Preserve the earlier 52-source CI snapshot as historical. Durable ignored
+report/review `cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/`;
+verifier/log `/tmp/verify-zendesk-support-53-local-audit.py`,
+`/tmp/zendesk-support-53-local-audit-verification.log`; import review/verifier/log
+`/tmp/zendesk-support-import-review.json`, `/tmp/verify-zendesk-support-import.py`,
+`/tmp/zendesk-support-import-verification.log`. Existing Conversations/Messaging
+owner choices remain unanswered; neither rejected push retried or redacted.
+
+**Anthropic discovery lead checked, no import:** search snippets still show an old
+Stainless GCS spec URL in official SDK `.stats.yml`. Fresh pinned TypeScript
+`d49bdab458000bcdffe77bd84b03293f31824fb3`, Python
+`18f25547f20cf5f01da69ac611e700e3bc9ebf21` and CLI
+`f8457f464b72d3ac54a13f45a90e1e686d724dcb` all publish only configured-endpoint counts
+in that file; the pointer has been removed. All three repos are public/unarchived/
+undisabled; complete untruncated filename trees contain no OpenAPI/Swagger artifact
+names. Do not register the older search-snippet URL as a maintained current source
+or reconstruct a spec from generated SDK types. This is a bounded search result,
+not proof the vendor publishes no spec anywhere. Original metadata/stats/tree bytes
+and hashes retained under ignored `cache/maintenance/discovery/anthropic/`; review
+`/tmp/anthropic-live-sdk-publication-review.json`. Continue current official-source
+publication discovery separately. Attachment cap: verified merged superseded
+AGENTS-only #60 and #194 unlinked; GitHub history/API/updater attachments retained.
+
+---
+
+**CI infrastructure failure and bounded retry:** updater #195 run 37362766037
+attempt 1 ended failure because the hosted job was never assigned a runner: GitHub's
+annotation says "The job was not acquired by Runner of type hosted even after
+multiple attempts". Test steps/logs never existed; this is not a test assertion
+failure or an approval-review rejection. Same exact head was retried once with
+`gh run rerun --failed`; attempt 2 also failed on 2026-10-05 19:53 UTC with the
+same hosted-runner acquisition annotation and zero test steps. Both attempts ended
+before executing tests. Keep #195 unmerged and API #196 draft until the actual job
+passes; 106 local tests and full independent API validation remain successful. Do not waive CI, change runner/power/host settings,
+or repeatedly retry during a hosted-runner outage. Recheck the existing run on the
+next heartbeat; if still unavailable, preserve ready work and continue independently.
+Failure annotation `/tmp/zendesk-support-guards-ci-runner-failure.json`;
+run/job state `/tmp/zendesk-support-guards-ci-status.json`; retry annotation/final state
+`/tmp/zendesk-support-guards-ci-retry-runner-failure.json`,
+`/tmp/zendesk-support-guards-ci-final-run.json`. Durable ignored failure evidence
+`cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/ci/`.
+
+**New official Coinbase CDP candidate (discovery/diagnostics only):** maintained,
+public/unarchived/undisabled `coinbase/cdp-sdk` at
+`d40fb3975395033409643654faacfb3d4e4349ee` publishes root `openapi.yaml`; its pinned
+Makefile links the canonical CDN `https://drla6sbl8l00t.cloudfront.net/openapi.yaml`
+and adds a timestamp query to avoid stale caching. Root SDK snapshot is **native
+3.1.0 / 2.0.0 / 126 paths / 154 ops**, hash
+`229ed860a74b63b3c430c4fc2122e2870bcc0f7b398398d2ec31021be9e1ee4a`.
+Fresh official CDN, both plain URL and timestamp-busted URL, has identical typed
+content and hash `156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302`:
+**140 paths / 169 ops / 2,594 resolved local refs**, none external. It adds 14 paths /
+15 operations versus the SDK snapshot (delegation revoke and payment mandates),
+removes none. Do not choose the lagging SDK artifact merely to get a convenient
+Git revision or freeze the old source. Source choice/cache freshness must be reviewed.
+
+Current [public introduction](https://docs.cdp.coinbase.com/api-reference/v2/introduction)
+distinguishes non-custodial public APIs from custodial groups needing verified business
+accounts, Prime-only payment methods and Beta groups. Artifact retains private-beta
+fiat deposit destinations and complete native auth/tenant/permission/lifecycle content.
+No blanket GA claim, financial action or endpoint trimming. This is CDP v2, not
+Coinbase Exchange or all Coinbase APIs. Coinbase provider is absent from main's tree.
+
+Native CDN validation fails on four Parameter Reference Objects with unsupported
+`required:false` siblings pointing to `#/components/parameters/XDeveloperAuth`.
+The referenced header parameter itself declares exactly `required:false` already.
+Diagnostic removal of only those four redundant flags fully validates and passes
+typed YAML roundtrip; auth/requiredness and all referenced constraints remain.
+Diagnostic inlining also validated but is not adopted. A future exact recipe should
+remove only those four original false values after complete referenced-parameter
+assertions and exact reference contexts, prove positive/negative requiredness and
+reject vendor fixes/new requiredness. No recipe, registration, API PR or imported
+file yet; outside the configured 53-source audit. Do not fabricate missing schemas,
+relocate auth or infer optionality without the reviewed target.
+
+Complete original repo metadata/commit/tree/README/Makefile and native SDK/CDN bytes,
+retrieval headers/hashes and reviews cached under ignored
+`cache/maintenance/discovery/coinbase-cdp/`. Scripts/logs/reviews
+`/tmp/discover-coinbase-cdp.py`, `/tmp/review-coinbase-cdp-official-spec.py`,
+`/tmp/review-coinbase-cdp-cdn-and-ref-siblings.py`,
+`/tmp/review-coinbase-cdp-current-publication.py`,
+`/tmp/coinbase-cdp-current-publication-review.json`,
+`/tmp/coinbase-cdp-current-publication-review.log`.
 
 ---
 
@@ -816,6 +930,66 @@ and recheck/merge #196. Both API/infra PRs already exist; no duplicates. Twilio
 Messaging and Zendesk Conversations push-protection owner choices remain unanswered.
 Full 53-source audit is recorded on pending Support branch in #196 (42 matches /
 11 known blocks, not a main-baseline claim); avoid redundant network audits.
+
+**Confluence Cloud v2 prepared (2026-10-06 Europe/Amsterdam):** source registration
+`confluence-v2` follows current official
+https://developer.atlassian.com/cloud/confluence/rest/v2/intro/ download at
+`https://dac-static.atlassian.com/cloud/confluence/openapi-v2.v3.json`.
+The linked documentation-build query and plain moving URL have identical bytes.
+Native **3.0.3 / vendor 2.0.0 / 151 paths / 218 ops / 682 resolved local refs**,
+none external, raw hash
+`edb639bbc700ee451a996acd2568e51db4ceab954449427537df30f0ce20ca08`.
+Hosted repository health is not_assessed; preserve source hash/time/HTTP metadata,
+no fabricated Git revision. Complete fetched main has Jira but no Confluence
+service; target `APIs/atlassian.com/confluence-v2/2.0.0/openapi.yaml`. Existing Jira
+is not a curation baseline and is not modified.
+
+`maintenance/patches/confluence-v2.json` removes only two invalid scalar string
+prefix defaults, literal `my, team`, outside the exact enum [`my`, `team`], on GET
+`/spaces/{id}/labels` and `/spaces/{id}/content/labels`. Four assertions retain
+complete original parameters/operation identities. No enum expansion, replacement
+default, query relocation or inferred runtime omission behavior. Two regressions
+prove positive/negative filter values unchanged and reject vendor fixes/removals,
+array redesign, requiredness/identity changes. **102 local tests pass** on this
+independent infrastructure branch (main's 100 plus these two); source/preflight
+YAML fully validate and typed-roundtrip, complete vendor equivalence passes except
+the two checked removals/provenance. All auth/server/scopes/permission/app-access
+rules, 13 x-experimental flags and one deprecated operation retained. This is a
+mixed-lifecycle public collection, not a fabricated all-GA slice. No conversion,
+bundling, inlining or invented curation.
+
+The official v1 download was separately fetched from its own reference:
+`https://dac-static.atlassian.com/cloud/confluence/swagger.v3.json`, native 3.0.1 /
+1.0.0 / 89 paths / 130 ops / 511 resolved local refs, raw hash
+`6c66a606fa7535268512f07f599fe1e3f9de2ba0b1da7eb6ead405509875577e`.
+It fails native validation first at GET /wiki/rest/api/label prefix's string
+schema/default:null. No v1 recipe, registration or import adopted; do not conflate
+v1 with v2 or assume v1 fully valid after one diagnostic.
+
+Current source scope on this branch is **54 artifacts** (main's 53 plus Confluence
+v2); Coinbase #197 separately adds one, so eventual combined scope is 55, not yet
+main. Selected Confluence audit against main reports valid missing coverage.
+Original intro/label-guide/spec/HTTP metadata and reviews cached under ignored
+`cache/maintenance/discovery/confluence/` and `cache/maintenance/confluence-v2/`.
+Scripts/logs/reviews: `/tmp/review-confluence-official-specs.py`,
+`/tmp/confluence-official-spec-review.json`, `/tmp/confluence-v2-default-review.json`,
+`/tmp/verify-confluence-v2-import.py`, `/tmp/confluence-v2-import-review.json`,
+`/tmp/confluence-v2-tests.log`, `/tmp/confluence-v2-selected-audit.json/.md`.
+Infrastructure and API additions must remain separate; full preflight is not yet
+merged coverage. Recheck moving source hashes before final import/merge.
+
+**Existing delivery holds verified this run:** Zendesk updater #195 at d4f05b3ec
+and Support draft #196 at 8478b9bbf remain open. Coinbase updater #197 at 58bbea99b
+and CDP draft #198 at 243f98f8a remain open. Coinbase run 37371438690 attempt 1
+failed to acquire a hosted runner; tests job 111969289318 has zero steps, audit
+skipped. Same exact failure annotation as both Zendesk CI attempts: no tests were
+executed, not a code assertion failure. Do not waive actual CI, change runner
+labels to evade it or repeatedly retry during outage. Ready API drafts after their
+infrastructure passes/merges, then exact-head/file/source/CLEAN checks and merge.
+Push-protection owner choices for Twilio Messaging and Zendesk Conversations stay
+unanswered; preserve guarded deliveries. #179 remains independent and untouched.
+Chat attachment cap/removal failures are recorded on #198; attempt each newly
+created PR's attachment, report actual failure and retain durable links here.
 
 
 The 2026-10-02 audit found no GitHub Actions workflows or general updater in this fork.
@@ -4468,3 +4642,55 @@ sleep rules and week deadline unchanged; no vendor messages, new automation, clo
 host migration or power changes. To attach this superseding progress PR at the app
 limit, verified merged AGENTS-only #189 was unlinked; GitHub history and API/updater
 attachments preserved.
+
+### 2026-10-05 19:25 UTC heartbeat — Support compatibility and unused-reference guards
+
+Resumed clean main `cfb19aa445a5b9001f682af27a57c12dab03aaba` (#194), fetched
+unchanged main, sparse coverage and independent open #179 verified. Conversations
+and Twilio Messaging owner choices remain unanswered; neither rejected push retried.
+Current hosted Support re-fetch retains hash
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`, native
+3.0.3 / fixed 2.0.0 / 455 paths / 657 operations / 2,534 resolved local refs.
+A complete key/string scan finds `UserLogin` only at its component definition;
+no pointer, prose, extension or implicit-name occurrences elsewhere. Diagnostic
+null-only correction plus removal of that exact unused component makes the full
+native document valid; no further defects are waived. Cached original unchanged.
+
+**Separate updater implementation:** optional recipe `unreferenced` preconditions
+verify existing pointer targets and conservatively scan every string/key, including
+examples, extensions and mappings, for direct, descendant or enclosing JSON Pointer
+uses. Percent-encoded fragments, escaped tokens, arrays, URI-prefixed fragments and
+root pointers are covered. Missing, malformed or duplicate targets fail closed;
+new uses block before any operation in that recipe. Named anchors/prose are not
+pointer references, so independent vendor name-resolution review remains required.
+No caller object or original cache is changed on failure; no success stamp fabricated.
+
+`maintenance/patches/zendesk-support.json` asserts the complete original
+AccessRuleCondition and UserLogin nodes. It preserves the documented null-only
+alternative with explicit string type, nullable:true and enum:[null]; all four other
+alternatives and original oneOf exclusivity remain, including integer/number overlap.
+It removes only the asserted unused invalid in:path/style:deepObject component after
+the absence guard. No query relocation, auth scheme, runtime values or alternate
+operator enum is invented. Source monitoring now replays this exact recipe;
+API import will be a separate PR after infrastructure CI and merge.
+Recipe SHA-256 `38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5`.
+**106 local regression tests pass** (six new tests covering semantic positive/negative
+witnesses, new uses/vendor fixes, escaped/encoded pointer equivalence, conservative
+extension/example/enclosing references, malformed guards and cached failure).
+Fresh source full validation and typed YAML roundtrip pass after the two corrections.
+
+Official Ticketing introduction links this exact hosted download; it covers Support
+and included custom data, not Conversations/all Zendesk. Native tenant variable
+server is retained. Current [authentication reference](https://developer.zendesk.com/api-reference/introduction/security-and-auth/)
+recommends OAuth and deprecates API tokens; the artifact itself models only basicAuth.
+Preserve that publication limitation, all native auth/deprecation/role/plan prose,
+and end-user password restrictions rather than fabricate a complete auth model.
+The [OAS 3.0.3 parameter rules](https://spec.openapis.org/oas/v3.0.3.html#parameter-object)
+restrict deepObject style to query; [nullable rules](https://spec.openapis.org/oas/v3.0.3.html#schema-object)
+allow this null-only representation while retaining enum constraints.
+Review/script `/tmp/review-support-unused-parameter.py`,
+`/tmp/zendesk-support-unused-parameter-review.json`; new regression log
+`/tmp/zendesk-support-guards-tests.log`. Earlier diagnostic-only records remain
+historical; this entry supersedes them once the infrastructure is merged.
+At the attachment cap, verified merged AGENTS-only #60 unlinked to make
+room; GitHub history and all API/updater attachments retained.
