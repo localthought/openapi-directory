@@ -46014,13 +46014,13 @@ info:
   termsOfService: https://www.mongodb.com/mongodb-management-service-terms-and-conditions
   title: MongoDB Atlas Administration API
   version: '2.0'
-  x-xgen-sha: ae2540ff49647f5938dea4d47caeba82b318fc3c
+  x-xgen-sha: 352203deeba6947194e364d78d615d65a91b8f5f
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/mongodb/openapi/f84bc82a8a0f85c83cbca399da3228223d6a397d/openapi/v2.json
+      url: https://raw.githubusercontent.com/mongodb/openapi/1862551e73b03d6a5c3c9834bab01f6110b69eb9/openapi/v2.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/mongodb/openapi/f84bc82a8a0f85c83cbca399da3228223d6a397d/openapi/v2.json at commit f84bc82a8a0f85c83cbca399da3228223d6a397d; entry source SHA-256 8c15051acf24542238abb64a3e6fc5dda872337ce4fdceb9bf560c93580e2fd4.
+    - Fetched from https://raw.githubusercontent.com/mongodb/openapi/1862551e73b03d6a5c3c9834bab01f6110b69eb9/openapi/v2.json at commit 1862551e73b03d6a5c3c9834bab01f6110b69eb9; entry source SHA-256 7179843f9b058065ad4818acacb1066657008decc70b01ac825f68f2635e7279.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/mongodb.com/atlas-admin/2.0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
