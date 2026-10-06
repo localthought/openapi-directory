@@ -706,3 +706,51 @@ only those defaults. Requiredness, types, enums and every other constraint remai
 Positive and negative instance checks prove the accepted values are unchanged; vendor
 nullable/default/contract corrections stop replay. No nullable widening, replacement
 default, conversion, bundling, invented curation or runtime omission behavior is added.
+
+## Monthly official-repository discovery
+
+The separate read-only `discovery.py` command produces a review queue from
+`discovery.json`, initially the Snowflake resource catalog and bounded HCP/Anthropic
+SDK publication leads. Configure only reviewed major-vendor repositories with ownership
+links, filename scope, context inputs and explicit file/size limits. It does not perform
+an unrestricted web search, import APIs, apply patches, generate PRs or authorize merges.
+
+```sh
+git fetch origin main
+python maintenance/discovery.py --base origin/main
+```
+
+The monthly workflow runs at 07:23 UTC on the first day, or manually. It runs the same
+pinned regression suite first, has only `contents: read`, and publishes JSON, Markdown,
+original source/metadata snapshots and the job summary. PR checks cover its code/config
+and workflow changes. This is repository automation, independent of the local one-week
+Codex task or laptop power state.
+
+Each repository metadata observation guards public identity, archive/disable status and
+redirects. The commit and complete untruncated tree are pinned together. Original file
+bytes must match both the tree's Git blob identity and size; oversized files, symlinks,
+truncated trees and candidate-limit overflows fail visibly. README/generation inputs are
+cached as leads without executing them or following arbitrary embedded URLs. A renamed
+repository or missing file is a review finding, never evidence to remove stored APIs.
+
+Presence checks read fetched Git objects at full depth, including provider files outside
+sparse checkout. Existing registered repository/path pairs are skipped without fetching
+or claiming freshness; use `update.py check` for those. Shared helpers/config files are
+excluded only after parsing proves they are not OpenAPI documents. Complete parsed
+content identical to stored specs is excluded; identical candidate descriptions are
+grouped with all provenance URLs. Same endpoint shapes are annotated for scope review,
+not silently collapsed across versions, products or vendors. Native validation obstacles
+and external-reference bundling requirements remain visible; they are not corrected here.
+Every new candidate still needs release/lifecycle/scope/compatibility review and deliberate
+per-API delivery. In particular, Snowflake's catalog includes compatibility descriptions
+and resources with differing lifecycle; SDK files are not a basis for fabricated schemas.
+
+Success means only the configured bounded scan completed. Failed scans keep the actual
+previous successful scan date when the configuration is unchanged, and reports/cache
+snapshots retain the new failure. A report with failures or inventory parse errors exits
+nonzero; native-invalid discovered candidates remain a successful discovery with listed
+import obstacles. No-candidate results are bounded leads, not proof the vendor publishes
+no spec elsewhere or that the historical directory is current. Expanding patterns or
+limits requires review, rather than silently sampling a prefix of a large catalog.
+
+Automatic per-service PR generation remains separate follow-up work.
