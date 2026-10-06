@@ -5,17 +5,68 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `960c763ba` (PR #219 merged):
-731 provider domains; 4,288 files under `APIs/`, including 2,114
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `f3d66a9ef` (PR #222 merged):
+732 provider domains; 4,289 files under `APIs/`, including 2,115
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
-**HCP Identity source/recipe reviewed — 2026-10-06:** Infrastructure is prepared on
-`codex/hcp-identity-source-extraction`; actual CI and merge must precede a separate
-API-only generator draft. **165 local tests pass**; actual CI remains required.
-No HCP API is imported/published yet. The official reference
+**HCP Identity delivered — 2026-10-06:** Separate extraction/conversion registration
+[#221](https://github.com/ontola/openapi-directory/pull/221) merged as
+`3f273fbdce5896da25132942c65e770507be5bac` from actual head
+`a51812b1cf969edd98c1153c20378819b0d8cd45`. **165 tests passed locally and in actual hosted CI**
+(run `37470826309`, tests job `112293536667`, all test steps executed).
+The generator then created separate API-only
+[#222](https://github.com/ontola/openapi-directory/pull/222), actual head
+`ab93ee0ec00ec650de2feb2dcefa9aa1bf2b0583`, based on the delivered infrastructure merge.
+Actual generated-draft validation run `37471227660`, job `112294949493`, passed that
+exact commit. Independent original HTML/native/conversion/control hashes, full reviewed
+native schema/operation projection, complete vendor-plus-provenance equality, typed YAML,
+all 253 local refs and full validation pass. Six nullable translations and all 53 vendor
+reference annotations remain; no vendor prose, constraints or auth field is removed.
+Draft was marked ready only after actual CI success; exact head/base/files/CLEAN/MERGEABLE
+were checked before matching-head merge. REST confirmed API merge
+`f3d66a9eff358441ef3dd86954daaf0a9c96ac92`. Generator left local checkout/index unchanged.
+Do not duplicate either completed PR. The source-review notes below remain evidence.
+
+Fresh selected post-delivery network audit against that actual merged main reports
+**one matches_source / zero errors**. Original source dates remain real; source HTML/native/
+conversion/control hashes, stored equality, full validation, typed YAML and JSON/Markdown
+parity pass again. This is **not a full 61-artifact audit or a whole-directory freshness
+claim**. Only the new HCP API file changed since main `8f68c71c2e8d`; full Git-tree inventory
+above was recomputed. Monitoring is **61 artifacts / 60 services**. Configuration contains
+18 hosted artifacts that need separate health assessment; only HCP's hosted observation
+was refreshed here, and it remains not_assessed by repository checks. No Git revision is
+claimed for this embedded public publication. All eleven blocks and owner choices remain.
+
+An initial local merge-receipt assertion expected the wrong CI log formatting, delaying
+infrastructure merge. Before publication, the generator rejected the old main's missing
+new module at its input guard. This was **planning refusal before any push/PR mutation**,
+not push protection, unknown publication or approval rejection. Corrected the receipt
+check, verified actual 165-test CI, merged infrastructure and built the real new-base
+draft successfully. Original planning-failure evidence is retained as
+`prior-unmerged-base-plan-rejection.json`; latest candidate/result and merged receipts
+supersede it. No publication rejection/guard was bypassed or automatically retried.
+Required #221/#222 attachment attempts failed with the existing 100-cap error; retain
+GitHub links, without claiming app linkage or removing history to make room.
+
+Original publication/decoded document, conversion/control inputs/results/logs, preflight
+and actual generated/import checks, source reports, actual CI logs/states and merged
+receipts/verifiers remain under ignored
+`cache/maintenance/discovery/hashicorp-hcp/identity-delivery/`. Next: review other services
+linked by the official HCP overview (HVN, Operations, RBAC Resource Manager, Webhook) for
+public original artifacts, lifecycle/scope and native validity individually; do not assume
+this IAM artifact covers them, import private hcp-specs, reconstruct SDK types or register
+guessed URLs. Safe pending-PR updates and scheduled publication remain separate authorized
+infrastructure work. Preserve parked items, Grant exclusion and the original local
+one-week deadline/laptop-sleep behavior. Only unrelated #179 remains open.
+
+---
+
+**HCP Identity source/recipe reviewed — 2026-10-06:** The source/recipe
+review is retained from `codex/hcp-identity-source-extraction`; infrastructure/API
+#221/#222 and actual CI are now complete as recorded above. **165 local tests pass**. The official reference
 publishes its original Swagger string at the previously recorded pointer. Fresh original
 HTML hash `d8d60b5046b3e2ba762c08d0868f55a8d54b250f445e1ff998d4f42b0f3f9148`; exact decoded native hash remains
 `b64b033f744447aab8bbcb26964e23a4c4ec35e03fd52ee2cfd3b5ccdf53dc35`. Native **2.0 / vendor 1.0 /
@@ -52,7 +103,7 @@ make a private source public. Use the actual hosted original publication, preser
 fetch dates and `not_assessed` repository health; do not claim a Git revision or all-HCP
 GA coverage. Native IAM/principal/SCIM/permission/workload identity content is complete;
 other HashiCorp products need separate reviews. Target is
-`APIs/hashicorp.com/hcp-identity/1.0/openapi.yaml`; proposed registry **61 artifacts /
+`APIs/hashicorp.com/hcp-identity/1.0/openapi.yaml`; delivered registry **61 artifacts /
 60 services**, not a whole-directory freshness claim. Evidence and independent verifier
 remain under ignored `cache/maintenance/discovery/hashicorp-hcp/identity-delivery/`;
 prior original discovery/trace remains in `hashicorp-hcp/public-docs/`. All eleven blocks,
