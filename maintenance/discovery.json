@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {
+      "id": "snowflake-catalog",
+      "provider": "snowflake.com",
+      "repository": "snowflakedb/snowflake-rest-api-specs",
+      "ref": "main",
+      "patterns": ["specifications/*.yaml", "specifications/*.json"],
+      "context_paths": ["Readme.md"],
+      "max_candidates": 64,
+      "max_blob_bytes": 2000000,
+      "ownership_evidence": "Snowflake's official REST overview directly links this vendor repository: https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/snowflake-rest-api (reviewed 2026-10-06).",
+      "review_scope": "Remaining Snowflake resource descriptions. Shared helpers are not APIs. Each new resource needs individual lifecycle, scope, reference bundling and compatibility/deduplication review; do not import every catalog filename or protocol compatibility description."
+    },
+    {
+      "id": "hashicorp-hcp-sdk",
+      "provider": "hashicorp.com",
+      "repository": "hashicorp/hcp-sdk-go",
+      "ref": "main",
+      "patterns": ["*.json", "*.yaml", "*.yml", "*.jsonc"],
+      "context_paths": ["README.md", "Makefile", ".github/workflows/sync-internal-and-public.yml"],
+      "max_candidates": 32,
+      "max_blob_bytes": 2000000,
+      "ownership_evidence": "HashiCorp's public HCP Go SDK in its hashicorp organization; README identifies the HCP API client. Official product reference: https://developer.hashicorp.com/hcp/docs/hcp/api (reviewed 2026-10-06). SDK ownership is a discovery lead, not proof of published OpenAPI inputs.",
+      "review_scope": "Look for original generation inputs and downloadable OADs in this SDK repository. Dated stable/preview SDK models are not specs or proof of a current public product; do not reconstruct schemas from Go types or register guessed URLs. This scan cannot establish absence elsewhere."
+    },
+    {
+      "id": "anthropic-typescript-sdk",
+      "provider": "anthropic.com",
+      "repository": "anthropics/anthropic-sdk-typescript",
+      "ref": "main",
+      "patterns": ["*openapi*", "*swagger*", "*specification*"],
+      "context_paths": ["README.md", ".stats.yml"],
+      "max_candidates": 32,
+      "max_blob_bytes": 2000000,
+      "ownership_evidence": "Anthropic's official public TypeScript SDK; repository README identifies the Anthropic API client and links vendor documentation (reviewed 2026-10-05).",
+      "review_scope": "Bounded filename/publication-input discovery. Current .stats.yml has no old Stainless download pointer. Do not reuse stale search-snippet URLs or reconstruct schemas from generated SDK types. Other SDKs and hosted documentation are outside this scan; no absence or whole-vendor freshness claim."
+    }
+  ]
+}
