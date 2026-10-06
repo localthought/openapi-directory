@@ -12,6 +12,57 @@ not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
+**Snowflake User / Role reviewed registrations — 2026-10-06:** Separate updater
+infrastructure registers two distinct official resource-management services from the
+monthly discovery queue. API files are not in this infrastructure PR; deliver each
+in its own API PR after actual infrastructure CI/merge. Native **3.0.0 / 0.0.1**:
+User **7 paths / 11 operations / 222 local refs**; Role **11 / 14 / 277**. No
+external refs remain. **122 local tests pass**; selected pre-import network checks
+against actual main report two valid missing services and no validation errors. Fresh public/unarchived/undisabled vendor repository check and
+entry/archive comparison pin both to `990e25d97236a11826c9eed40e587c2b859e5680`.
+Each bundle has exactly two files (entry + `common.yaml`), zero Redocly 2.57.0
+warnings, no patches, no conversion, no prior service baseline or invented curation.
+Full native bundle validation, all ref targets, typed YAML roundtrip and independent
+whole-entry dereferenced comparison plus every original named component pass.
+
+[User guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/users/users-introduction)
+and [Role guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/roles/roles-introduction)
+and full references carry no preview designation in the generally available catalog.
+Introductory endpoint tables omit three tag actions each; full references and native
+specs include them, so do not truncate the vendor artifact. Preserve KeyPair,
+ExternalOAuth, SnowflakeOAuth and ProgrammaticAccessToken alternatives, tenant
+server, privilege/revocation rules, deprecated error_code compatibility prose and
+get-tags active-warehouse requirement. These are distinct from Database Role and
+other resource services, not full SQL or whole-platform coverage.
+
+User entry SHA-256 `c18785aebdbfc298e589ea971760c405f3b233597615efc5fbb0b10c07c35379`,
+snapshot `07cef2f86c93fe1f87cb63ce0fd9f3b7095504a83869159a3b799899d7b6ac29`.
+Role entry `3449df2f72bd72e7160adf4f5200933a58f69604b535d8dfd263f58c2b463e00`,
+snapshot `1e059cb3e71beb9301e3b599d460bdbc35e729622e13e173fe340d5f6274f87c`.
+Common helper hash `df3b8b533f189f6ae4229d4657d1251535e74a25318d5d73de24d0788dcb0b21`.
+Ignored original docs/health/entry/archive/bundle/review evidence lives in
+`cache/maintenance/discovery/snowflake-user-role/`; verifier
+`/tmp/verify-snowflake-user-role.py`, preflight `/tmp/review-snowflake-user-role.py`.
+The docs-advertised User reference Markdown URL returned 404; actual HTML references
+were fetched and retained, not reconstructed. Monitoring will be **58 artifacts /
+57 services** with these registrations; no full new freshness audit claimed.
+
+**Monthly discovery delivery receipt:** #208 is merged as
+`de4b8225ebbc74fcbc1d024148697e5b604558fb` from actual head
+`8f7ff107c08be91f0a3be4fd00b7785345b5d6cd`, **122 local/CI tests** passed
+(run `37436119089`). First actual merged-main monthly workflow `37436278655`
+also passed 122 tests and all three scans; its 41 review candidates / 8 skips /
+6 Snowflake helpers agree with the earlier local snapshot. Original 60 blob/context
+hashes, three repository health/commit/tree snapshots and Markdown/JSON parity
+independently checked. Report base is actual main `de4b8225ebbc`; durable ignored
+copy `cache/maintenance/discovery/monthly-hosted-37436278655/` includes verifier,
+verification/logs and unmodified downloaded report. This is discovery, not a fresh
+56-service-content audit; do not repeat #208 or claim full directory coverage.
+All eleven blocks, unanswered protection owner choices, #179 and §5 parked items
+remain unchanged. Original local deadline/sleep behavior remains unchanged.
+
+---
+
 **Monthly discovery implementation — 2026-10-06:** Separate infrastructure delivery
 [#208](https://github.com/ontola/openapi-directory/pull/208) implements
 `maintenance/discovery.py`, reviewed `maintenance/discovery.json`, and the read-only
