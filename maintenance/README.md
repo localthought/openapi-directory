@@ -208,6 +208,18 @@ revision. The declared `0.0.1` is kept unchanged; full-content comparisons are r
 This artifact describes Task REST management, not every SQL task command or other
 Snowflake services. Shared helper files are not APIs.
 
+Snowflake User and Role are separate resource APIs from the official catalog. Their
+[User guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/users/users-introduction)
+and [Role guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/roles/roles-introduction),
+and complete references, carry no preview designation (checked 2026-10-06).
+The introductory tables omit tag actions that are included in both full references
+and source artifacts; keep all 7 paths / 11 operations for User and 11 / 14 for Role.
+Each bundles only its entry plus `common.yaml` from one pinned revision with Redocly
+2.57.0, zero warnings and no patches or version conversion. Preserve all native
+authentication alternatives, privilege/revocation restrictions and the active-warehouse
+requirement for retrieving tag assignments. Neither is complete SQL coverage or the
+separate Database Role API. Keep vendor `0.0.1` and compare full content on future checks.
+
 Discord follows `discord/discord-api-spec/specs/openapi.json`, the vendor's standard
 stable public v10 HTTP artifact. The [vendor README](https://github.com/discord/discord-api-spec/blob/main/README.md)
 distinguishes it from `openapi_preview.json`, which includes experimental features.

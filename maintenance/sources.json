@@ -751,6 +751,44 @@
       "discovery": "Current official https://developer.atlassian.com/cloud/confluence/rest/v1/intro/ directly links this hosted OpenAPI publication (checked 2026-10-06). Plain moving URL and linked documentation-build query have identical original bytes. Native OpenAPI 3.0.1 / document version 1.0.0 / 89 paths / 130 operations / 511 resolved local refs, none external. Full native error enumeration identifies only three invalid null defaults on non-nullable string query parameters. Exact complete-parameter/operation assertions remove these defaults while retaining every constraint; no conversion, bundling or replacement defaults. Hosted repository health is not assessed; no fabricated Git revision.",
       "coverage": "Complete currently published Confluence Cloud REST v1 collection including search/CQL, attachments, audit, groups/users, content labels/restrictions/states/versions, spaces/settings/permissions, templates and app modules. Distinct from Jira, Data Center and the separately imported v2 collection; no cross-product curation baseline. Retain native Basic/OAuth authentication/scopes, protocol-relative tenant server, permissions/app-access rules, seven experimental flags and two deprecated descendant operations. Official current descendants reference still labels these operations deprecated; historical retirement announcements mean publication is not proof every endpoint remains operational. Do not restore previously removed v1 endpoints, concatenate v2, or label this all-GA/current-runtime coverage. Vendor document version 1.0.0 is distinct from runtime v1.",
       "priority": "high"
+    },
+    {
+      "id": "snowflake-user",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/user/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/user.yaml"
+      },
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      },
+      "discovery": "Official distinct Snowflake User resource-management API linked by the generally available REST overview. Individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/users/users-introduction and complete reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/user have no preview designation (checked 2026-10-06). Native OpenAPI 3.0.0 / vendor 0.0.1, 7 paths / 11 operations; bundle only entry and common.yaml from one pinned public/unarchived/undisabled vendor revision using Redocly 2.57.0, zero warnings and no patches. Introductory tables omit three tag actions that the full reference and native artifact include; retain the complete artifact.",
+      "coverage": "Snowflake User management, describe/create/alter/delete, grants and tag actions. Distinct resource API, not database-role management, all Snowflake resources or complete SQL command coverage. Preserve native tenant server, KeyPair/ExternalOAuth/SnowflakeOAuth/ProgrammaticAccessToken authentication alternatives, all privilege/revocation rules, deprecated error_code compatibility prose and the active-warehouse requirement for get-tags. No previous service baseline or invented curation. Vendor 0.0.1 is retained and does not establish content freshness."
+    },
+    {
+      "id": "snowflake-role",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/role/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/role.yaml"
+      },
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      },
+      "discovery": "Official distinct Snowflake Role resource-management API linked by the generally available REST overview. Individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/roles/roles-introduction and complete reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/role have no preview designation (checked 2026-10-06). Native OpenAPI 3.0.0 / vendor 0.0.1, 11 paths / 14 operations; bundle only entry and common.yaml from one pinned public/unarchived/undisabled vendor revision using Redocly 2.57.0, zero warnings and no patches. Introductory tables omit three tag actions that the full reference and native artifact include; retain the complete artifact.",
+      "coverage": "Snowflake Role management, grants to/of/on roles, future privileges, revocation and tag actions. Distinct resource API, not database-role management, all Snowflake resources or complete SQL command coverage. Preserve native tenant server, KeyPair/ExternalOAuth/SnowflakeOAuth/ProgrammaticAccessToken authentication alternatives, all privilege/revocation rules, deprecated error_code compatibility prose and the active-warehouse requirement for get-tags. No previous service baseline or invented curation. Vendor 0.0.1 is retained and does not establish content freshness."
     }
   ]
 }
