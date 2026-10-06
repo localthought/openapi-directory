@@ -810,6 +810,25 @@
       },
       "discovery": "Official distinct Snowflake Database Role resource API linked by the generally available REST overview. Individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/database-role/database-role-introduction and complete reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/database-role have no preview designation (checked 2026-10-06). Native OpenAPI 3.0.0 / vendor 0.0.1 / 10 paths / 13 operations / 270 local refs. Bundle only entry plus common.yaml from one pinned public/unarchived/undisabled vendor revision with Redocly 2.57.0, zero warnings, no patches or version conversion. Introductory table omits three tag actions included in the full reference and source; retain the complete artifact.",
       "coverage": "Database-scoped Snowflake role creation, listing, deletion, cloning, grants and future privileges/revocation, and tag assignments. Distinct from account-level Role/User and the entirely deprecated standalone Grant artifact; endpoints are disjoint from all ten prior Snowflake services. Preserve native tenant server and KeyPair/ExternalOAuth/SnowflakeOAuth/ProgrammaticAccessToken authentication alternatives, database/name constraints, restrict/cascade revocation semantics, parallel-grant limitations, deprecated error_code compatibility prose and get-tags active-warehouse requirement. This is not all Snowflake resources or complete SQL command coverage; no prior service baseline or invented curation. Retain literal vendor 0.0.1 and compare full content rather than assuming version freshness."
+    },
+    {
+      "id": "snowflake-compute-pool",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/compute-pool/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/compute-pool.yaml"
+      },
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      },
+      "discovery": "Official Snowflake Compute Pool API, explicitly generally available in the individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/compute-pools/cp-introduction (not available in government regions; checked 2026-10-06). Full reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/compute-pool and vendor source include three tag operations omitted by the introductory table. Native 3.0.0 / declared 0.0.1 / 10 paths / 13 operations / 216 local refs; only compute-pool.yaml and common.yaml bundle at one pinned public/unarchived/undisabled vendor revision using Redocly 2.57.0, zero warnings and no patches or conversion.",
+      "coverage": "Snowpark Container Services compute-pool resource management: create/alter/delete/list/fetch, resume/suspend, stopping services, instance-family discovery and tag actions. Separate from service deployment, images and other Snowflake resource APIs, not full SQL or platform coverage. Keep both deprecated :stopallservices and its :stop-all-services replacement, get-tags active-warehouse requirement, tenant server and all four native auth alternatives, required sizing/instance family/name fields, nullable backup-family value, state enum and read-only runtime/capacity/status fields. Declared vendor 0.0.1 is not proof of current content; no prior service baseline or invented curation."
     }
   ]
 }

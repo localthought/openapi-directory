@@ -12,6 +12,55 @@ not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
+**Compute Pool registration prepared — 2026-10-06:** Native official Snowflake
+Compute Pool is **3.0.0 / vendor 0.0.1 / 10 paths / 13 operations / 216 local refs**,
+none external. All operations are disjoint from the prior eleven Snowflake services.
+The individual guide explicitly marks generally available and unavailable in government
+regions; current full reference includes three tag operations omitted by its intro table.
+Retain both deprecated `:stopallservices` and replacement `:stop-all-services`, get-tags
+warehouse requirement, all native auth/tenant/read-only/capacity/nullable/required fields
+and deprecated error-code compatibility prose. Source is public/unarchived/undisabled
+at vendor `990e25d97236a11826c9eed40e587c2b859e5680`; entry + `common.yaml` bundle with
+Redocly 2.57.0, zero warnings/patches/conversion. Independent full dereferenced entry/
+original component comparisons, native/stored preflight validation and typed vendor
+roundtrip pass; no invented curation. **151 local tests pass**. Registration infrastructure
+and actual CI must merge before a separate API-only draft; use the delivered generator
+for the latter and verify actual generated-draft CI before marking ready/merging.
+Monitoring becomes **60 artifacts / 59 services**; no full expanded audit is claimed.
+
+Entry hash `f7293eef7951904a8943f1ea63adc80297a11cb9456fc8f95dbcaf55b357362e`;
+two-file snapshot `34d7dd7fd49aa7ddaac9d263a46d29045bdeade4f7335a1e751e16fb30b6b209`.
+Original docs/health/archive/entry/helper/bundle, native diagnostics, metadata and full
+verification remain under ignored `cache/maintenance/discovery/snowflake-compute-pool/`.
+All eleven prior blocks, unanswered protection choices, §5 parked items and deprecated
+standalone Grant exclusion remain unchanged. Only unrelated #179 remains open.
+
+**New concrete HCP publication lead:** The official overview links
+`https://developer.hashicorp.com/hcp/api-docs/identity`. Its original HTML `__NEXT_DATA__`
+contains an actual vendor Swagger 2.0 document as JSON string at
+`/props/pageProps/schemaFileString`: **vendor 1.0 / 57 paths / 80 operations /
+113 definitions / 248 refs**, host `api.cloud.hashicorp.com`; page releaseStage is
+`stable`. This is an original public description, not SDK-type reconstruction or the
+old absent SDK filename pointer. Page hash
+`d8d60b5046b3e2ba762c08d0868f55a8d54b250f445e1ff998d4f42b0f3f9148`;
+decoded exact native string hash
+`b64b033f744447aab8bbcb26964e23a4c4ec35e03fd52ee2cfd3b5ccdf53dc35`.
+No HCP source is registered/imported yet. Pinned swagger2openapi 7.0.8 diagnostic
+preserves 57 paths / 80 ops, yields native 3.0.0 and passes full validation, but applies
+**eight converter repairs**, with zero warnings. The normal zero-patch expectation
+correctly blocks preparation; no allowance was enabled. Review all eight exact native
+locations/semantics, auth/lifecycle and a reproducible guarded HTML/string extraction
+recipe before delivery. Keep the original document, conversion input/result/log and
+`identity-conversion-review.json`; do not just raise an expected count to get an import.
+Original page/overview/Next data/native string plus exact pointer/provenance review are
+cached under `cache/maintenance/discovery/hashicorp-hcp/public-docs/`. A first recursive
+object scan found no OAD because this specific original document is encoded as a string;
+do not report absence or build a schema from rendered operationGroups. The bounded HCP
+SDK result remains historical. No HCP authentication, account request or vendor message
+was performed. Continue this genuine official source lead after independent delivery.
+
+---
+
 **Guarded draft generator delivered — 2026-10-06 11:42 UTC:** Separate infrastructure
 [#216](https://github.com/ontola/openapi-directory/pull/216) is merged as
 `5b7502f802c3feeb0953e3e4ce8adbc8b44f1b48` from actual full head

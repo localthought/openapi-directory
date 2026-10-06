@@ -785,6 +785,20 @@ does not change this read-only discovery workflow.
 
 ## Explicit per-API draft generation
 
+`snowflake-compute-pool` monitors the vendor's distinct Compute Pool resource API:
+native 3.0.0 / declared 0.0.1 / 10 paths / 13 operations. Its
+[individual guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/compute-pools/cp-introduction)
+explicitly labels it generally available, unavailable in government regions (checked
+2026-10-06). The complete
+[reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/compute-pool)
+and source include three tag actions omitted by the introductory table. Retain both
+deprecated `:stopallservices` and its `:stop-all-services` replacement, the get-tags
+warehouse requirement, four native authentication alternatives, sizing/name/instance
+fields, nullable backup-family value, state enum and read-only capacity/status fields.
+Only entry + `common.yaml` bundle with Redocly 2.57.0, zero warnings/patches/conversion.
+This service is separate from deployment, image repositories and other Snowflake
+resources; it is not full platform/SQL coverage. No existing service curation is borrowed.
+
 `draft_pr.py` fetches and validates one registered API, using the same pinned source
 health, bundle/conversion/patch, metadata-preserving import and typed YAML machinery.
 It defaults to a dry run and records complete candidate content, original snapshots,
