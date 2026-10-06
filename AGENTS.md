@@ -12,6 +12,56 @@ not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
+**Snowflake Database Role review — 2026-10-06:** Separate monitoring infrastructure
+registers `snowflake-database-role`, native **3.0.0 / vendor 0.0.1 / 10 paths /
+13 operations / 270 local refs**, none external. **122 local tests pass**;
+fresh selected network audit against actual main reports this valid missing service. API import remains separate until
+infrastructure CI/merge; verify actual PR state before continuing. Fresh official
+vendor branch resolves to `990e25d97236a11826c9eed40e587c2b859e5680`, same public/
+unarchived/undisabled repository. Entry + `common.yaml` bundle with Redocly 2.57.0,
+zero warnings and no patches/conversion. Full native diagnostics/validation, all refs,
+whole-entry dereferenced equality, every original named component, typed serialized
+vendor equivalence and no invented curation pass. All ten existing Snowflake operation
+sets are disjoint from this distinct database-scoped role service.
+
+[Guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/database-role/database-role-introduction)
+and [full reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/database-role)
+have no preview designation in the generally available catalog (checked 2026-10-06).
+Retain cloning, grants/future privileges, restrict/cascade semantics and parallel-grant
+limitations, all four native authentication alternatives, tenant/database/name
+constraints, deprecated error_code compatibility prose and get-tags warehouse
+requirement. Introductory table omits three tag actions present in full source/reference;
+do not truncate. Literal document 0.0.1 is not evidence of unchanged content or full SQL.
+
+**Grant lifecycle finding, do not import blindly:** Fresh official `grant.yaml` is
+native 3.0.0 / 0.0.1 / 7 paths / 7 operations / 171 local refs. Its two-file bundle
+fully validates, but **all seven operations declare deprecated:true**, independently
+confirmed by every operation heading in the current full
+[Grant reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/grant).
+Its introductory guide omits that warning, so checking only the overview would be
+misleading. This entire deprecated candidate is **not registered or imported** for
+current-priority coverage; healthy publication and validation do not establish runtime
+availability or recommendation. Preserve the raw artifact and lifecycle decision;
+reconsider only when new official source/lifecycle evidence justifies it. Existing
+Role/User and Database Role retain their separate resource-specific grant operations.
+This is a discovery decision, not a native validation block or vendor schema fix.
+
+Database Role entry SHA-256 `9e72bc5202b70e2abff1376b8f255d56b6bfff601e4f7db3d2262af68bea4f3f`,
+snapshot `d0003e3330b60d4c36386d83f13c82b340534cc9d8be30119e148eedc3ca6cf4`.
+Grant entry `e7d9ffd1eaa183e064e6ef3efe394a0e22299108296c721072334866b35e4bb9`,
+snapshot `32283f209ec24e2401f9b3da14b10a2315f9770b469d65f72dadacc788490e35`.
+Common helper `df3b8b533f189f6ae4229d4657d1251535e74a25318d5d73de24d0788dcb0b21`.
+Original docs/health/entry/archive/bundle/preflight/verification and lifecycle decision
+retained in ignored `cache/maintenance/discovery/snowflake-database-role-grant/`.
+Monitoring will be **59 artifacts / 58 services** with this registration. No new full
+freshness audit or catalog scan is claimed. Prior #209–#212 are merged; don't duplicate.
+All eleven native/source/publication blocks, unanswered protection owner choices,
+#179 and §5 parked items remain unchanged. No vendor messages, constraint waivers,
+protection bypass, power-setting change or new recurring chat automation; original
+local one-week deadline/sleep behavior remains unchanged.
+
+---
+
 **Snowflake User / Role delivery confirmed — 2026-10-06 09:22 UTC:** Monitoring
 [#209](https://github.com/ontola/openapi-directory/pull/209) is merged as
 `1922538d26f9ceea4f83202e045375dd171896a3` from actual head
