@@ -5,10 +5,62 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of `origin/main` at `c73359aaf` (PR #206 merged):
-731 provider domains; 4,284 files under `APIs/`, including 2,110
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of `origin/main` at `b2869282b` (PR #211 merged):
+731 provider domains; 4,286 files under `APIs/`, including 2,112
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
+
+---
+
+**Snowflake User / Role delivery confirmed — 2026-10-06 09:22 UTC:** Monitoring
+[#209](https://github.com/ontola/openapi-directory/pull/209) is merged as
+`1922538d26f9ceea4f83202e045375dd171896a3` from actual head
+`bbf10c1d75454db300dd759076b1d2e2a7d8095f`. **122 tests passed locally and
+in hosted CI** (run `37442095028`, tests job `112198055612`). Intended files
+were only source manifest, maintenance README and AGENTS; no API duplication.
+API-only [#210 User](https://github.com/ontola/openapi-directory/pull/210) merged
+from `a20b6f520ab27a4ac863e7f8e134456b7b53c92b` as
+`2f5b83f376e25e41044a16d89d8035b46d25d848`; API-only
+[#211 Role](https://github.com/ontola/openapi-directory/pull/211) merged from
+`3c84b8c93e01e4b71cf56c673998f502dbafbf20` as
+`b2869282bdbf7c52160af2bc7d08ea5f1edbefab`. Each intended file list, actual
+full head and CLEAN/MERGEABLE status were verified before matching-head merges;
+REST confirmed merged results. API-only PRs do not trigger maintenance CI; full
+independent native/bundle/import/serialization checks are recorded below.
+Do not duplicate these completed deliveries.
+
+Fresh selected **two-source network audit** against real merged main
+`b2869282bdbf` at 09:21 UTC finds **two matches_source, zero validation errors**;
+original entry/helper hashes, fresh repository metadata hash, full stored validation,
+all refs, complete typed vendor content and Markdown/JSON parity pass. Both fresh
+source revisions/hashes equal the individually reviewed discovery and import snapshots.
+The only API changes since previous main `de4b8225ebbc` are these two new files;
+all eight prior Snowflake services remain byte-identical. No patches or conversion.
+User 7 / 11 / 222 refs; Role 11 / 14 / 277; native 3.0.0 / literal vendor 0.0.1.
+Snowflake now has **10 distinct descriptions / 96 paths / 122 operations**, not
+whole-platform or full SQL coverage. Monitoring now **58 artifacts / 57 services**;
+this selected check is not a full 58-artifact freshness audit or a new catalog scan.
+The prior 41-candidate monthly report retains its original date; User/Role are
+now registered so subsequent discovery will skip them rather than duplicate them.
+
+Durable ignored source/docs/health/archive/bundle/import/CI/report/verifier evidence:
+`cache/maintenance/discovery/snowflake-user-role/`, including
+`selected-postdelivery.json/.md`, `postdelivery-verification.json`,
+`user-actual-import-verification.json`, `role-actual-import-verification.json`,
+`infra-ci.log`, `local-tests.log`, `verify.py`, `verify-actual-import.py` and
+`verify-postdelivery.py`. Required attachment attempts for #209–#211 failed at
+the existing 100 cap; preserve GitHub links and do not claim successful app linkage.
+No protected push rejection, owner-choice retry/redaction/unblock, vendor message,
+native constraint waiver, blanket auto-merge, power setting change or extra recurring
+chat automation. Unrelated #179 and all eleven recorded blocks remain unchanged.
+
+**Next work:** deliberately review another distinct public Snowflake candidate
+(Database Role is separate from the completed Role API) against its individual
+current lifecycle guide and full native diagnostics before registering/importing.
+Continue bounded public HCP publication discovery independently of its internal
+SDK-generation references. Per-API PR generation remains unfinished infrastructure
+work and must remain separate from imports. Preserve §5 parked items and original
+local one-week deadline/sleep behavior.
 
 ---
 
