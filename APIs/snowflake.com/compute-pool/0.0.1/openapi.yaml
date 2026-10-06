@@ -1,0 +1,1079 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Snowflake Compute Pools API
+  description: The Snowflake Compute Pools API is a REST API that you can use to access, update, and perform common actions on Compute Pool resources.
+  contact:
+    name: Snowflake, Inc.
+    url: https://snowflake.com
+    email: support@snowflake.com
+  x-origin:
+    - format: openapi
+      url: https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/compute-pool.yaml
+      version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/compute-pool.yaml at commit 990e25d97236a11826c9eed40e587c2b859e5680; entry source SHA-256 f7293eef7951904a8943f1ea63adc80297a11cb9456fc8f95dbcaf55b357362e.
+    - Bundled 2 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 0 warnings. Source-file snapshot SHA-256 34d7dd7fd49aa7ddaac9d263a46d29045bdeade4f7335a1e751e16fb30b6b209.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
+servers:
+  - description: Snowflake Compute Pools API
+    url: https://org-account.snowflakecomputing.com
+security:
+  - KeyPair: []
+  - ExternalOAuth: []
+  - SnowflakeOAuth: []
+  - ProgrammaticAccessToken: []
+tags:
+  - name: compute-pool
+paths:
+  /api/v2/compute-pools:
+    get:
+      summary: Lists compute pools.
+      tags:
+        - compute-pool
+      description: Lists the compute pools under the account.
+      operationId: listComputePools
+      parameters:
+        - $ref: '#/components/parameters/like'
+        - $ref: '#/components/parameters/startsWith'
+        - $ref: '#/components/parameters/showLimit'
+      responses:
+        '200':
+          description: Successful request.
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputePool'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    post:
+      summary: Creates a compute pool.
+      tags:
+        - compute-pool
+      description: Creates a compute pool, with standard create modifiers as query parameters. See the Compute Pool component definition for what is required to be provided in the request body.
+      operationId: createComputePool
+      parameters:
+        - $ref: '#/components/parameters/createMode'
+        - name: initiallySuspended
+          in: query
+          description: Specifies whether the compute pool is created initially in the suspended state.
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputePool'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:
+    get:
+      summary: Fetches a compute pool.
+      tags:
+        - compute-pool
+      description: Fetches a named compute pool. You can get the name of the compute pool from the `/api/v2/compute-pools` GET request.
+      operationId: fetchComputePool
+      parameters:
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          description: Successful request.
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputePool'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    put:
+      summary: Create a (or alter an existing) compute pool.
+      tags:
+        - compute-pool
+      description: Create a (or alter an existing) compute pool. Even if the operation is just an alter, the full property set must be provided.
+      operationId: createOrAlterComputePool
+      parameters:
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComputePool'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    delete:
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      summary: Deletes a compute pool.
+      tags:
+        - compute-pool
+      description: Deletes a compute pool with the given name. If you enable the `ifExists` parameter, the operation succeeds even if the object does not exist. Otherwise, a 404 failure is returned if the object does not exist.
+      operationId: deleteComputePool
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:resume:
+    post:
+      summary: Resumes a suspended compute pool.
+      tags:
+        - compute-pool
+      description: Resume a compute pool, if suspended. If the specified compute pool is already running, this will cause a 400 Bad Request error.
+      operationId: resumeComputePool
+      parameters:
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:suspend:
+    post:
+      summary: Suspends an active compute pool.
+      tags:
+        - compute-pool
+      description: Suspend a compute pool, if active. If the specified compute pool is already suspended, no action is taken.
+      operationId: suspendComputePool
+      parameters:
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:stopallservices:
+    post:
+      deprecated: true
+      summary: Stops all services on the compute pool.
+      tags:
+        - compute-pool
+      description: Stops all services in the compute pool. Deprecated - use :stop-all-services instead.
+      operationId: stopAllServicesInComputePoolDeprecated
+      parameters:
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:stop-all-services:
+    post:
+      summary: Stops all services on the compute pool.
+      tags:
+        - compute-pool
+      description: Stops all services in the compute pool.
+      operationId: stopAllServicesInComputePool
+      parameters:
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/instance-families:
+    get:
+      summary: Lists available compute pool instance families.
+      tags:
+        - compute-pool
+      description: Lists all available instance families that can be used when creating compute pools.
+      operationId: listComputePoolInstanceFamilies
+      responses:
+        '200':
+          description: Successful request.
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputePoolInstanceFamily'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/compute-pools/{name}:set-tags:
+    post:
+      summary: Set tags on a compute pool.
+      tags:
+        - compute-pool
+      description: Set tags on a compute pool.
+      operationId: setTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagAssignment'
+  /api/v2/compute-pools/{name}:unset-tags:
+    post:
+      summary: Unset tags from a compute pool.
+      tags:
+        - compute-pool
+      description: Unset tags from a compute pool.
+      operationId: unsetTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagReference'
+  /api/v2/compute-pools/{name}:get-tags:
+    get:
+      summary: Get the tag assignments for a compute pool.
+      tags:
+        - compute-pool
+      description: Returns all tags assigned to a compute pool. This operation requires an active warehouse.
+      operationId: getTags
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/withLineage'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagAssignment'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+components:
+  schemas:
+    ComputePool:
+      type: object
+      description: A Snowflake compute pool definition.
+      properties:
+        name:
+          $ref: '#/components/schemas/Identifier'
+        min_nodes:
+          type: integer
+          description: Minimum number of nodes for the compute pool.
+        max_nodes:
+          type: integer
+          description: Maximum number of nodes for the compute pool.
+        instance_family:
+          type: string
+          description: Instance family for the compute pool. Use the /api/v2/compute-pools/instance-families endpoint to retrieve available values.
+        auto_resume:
+          type: boolean
+          description: Whether Snowflake automatically resumes the compute pool when any statement that requires the compute pool is submitted.
+        comment:
+          type: string
+          description: Comment describing the compute pool.
+        state:
+          type: string
+          description: Current state of the compute pool. Possible values include UNKNOWN, STARTING, IDLE, ACTIVE, STOPPING, SUSPENDED, and RESIZING.
+          readOnly: true
+          enum:
+            - UNKNOWN
+            - STARTING
+            - IDLE
+            - ACTIVE
+            - STOPPING
+            - SUSPENDED
+            - RESIZING
+        num_services:
+          type: integer
+          description: Number of services on the compute pool.
+          readOnly: true
+        num_jobs:
+          type: integer
+          description: Number of jobs on the compute pool.
+          readOnly: true
+        auto_suspend_secs:
+          type: integer
+          description: Number of seconds until the compute pool automatically suspends.
+          format: int64
+        active_nodes:
+          type: integer
+          description: Number of currently active nodes on the compute pool.
+          readOnly: true
+        idle_nodes:
+          type: integer
+          description: Number of currently idle nodes on the compute pool.
+          readOnly: true
+        target_nodes:
+          type: integer
+          description: Number of target nodes on the compute pool.
+          readOnly: true
+        created_on:
+          type: string
+          description: Time the compute pool was created.
+          format: date-time
+          readOnly: true
+        resumed_on:
+          type: string
+          description: Time the compute pool was last resumed.
+          format: date-time
+          readOnly: true
+        updated_on:
+          type: string
+          description: Time the compute pool was last updated.
+          format: date-time
+          readOnly: true
+        owner:
+          type: string
+          description: Identifier for the current owner of the compute pool.
+          readOnly: true
+        is_exclusive:
+          type: boolean
+          description: Whether a compute pool is created exclusively for a Snowflake Native App.
+          readOnly: true
+        application:
+          type: string
+          description: Name of the Snowflake Native App if the compute pool is created exclusively for the app.
+          readOnly: true
+        budget:
+          type: string
+          description: The name of the budget monitoring the credit usage of the compute pool.
+          readOnly: true
+        error_code:
+          type: string
+          description: Current error the compute pool hit if any.
+          readOnly: true
+        status_message:
+          type: string
+          description: Current status of the compute pool if any.
+          readOnly: true
+        desired_nodes:
+          type: integer
+          description: Number of nodes to maintain on the compute pool
+          readOnly: true
+        desired_nodes_expire_after:
+          type: string
+          description: Time after which the desired nodes on the compute pool will expire.
+          format: date-time
+          readOnly: true
+        optimize_for_capacity:
+          type: boolean
+          description: Whether the compute pool is optimized for capacity.
+          readOnly: true
+        placement_group:
+          type: string
+          description: The name of the placement group on the compute pool.
+          readOnly: true
+        backup_instance_families:
+          type: string
+          nullable: true
+          description: Comma-separated list of backup instance families for the compute pool (e.g. 'CPU_X64_S,CPU_X64_M').
+          readOnly: true
+      example:
+        name: compute_pool_name
+        warehouse: test_wh
+        min_nodes: 4
+        max_nodes: 5
+        instance_family: compute_pool_family
+        auto_resume: false
+        comment: test_comment
+        state: STARTING
+        num_services: 1
+        num_jobs: 3
+        auto_suspend_secs: 10
+        active_nodes: 2
+        idle_nodes: 2
+        target_nodes: 4
+        created_on: '2024-06-18T01:01:01.111111'
+        updated_on: '2024-06-18T01:01:01.111111'
+        resumed_on: '2024-06-18T01:01:01.111111'
+        owner: POOL_ADMIN
+        is_exclusive: true
+        application: testapp
+        budget: testbudget
+        error_code: '392507'
+        status_message: Compute Pool is resizing for last 10 minutes. We have observed CAPACITY_ERROR. Please refer to our documentation.
+        desired_nodes: 4
+        desired_nodes_expire_after: '2024-06-19T01:01:01.111111'
+        placement_group: A
+      required:
+        - name
+        - instance_family
+        - min_nodes
+        - max_nodes
+    ComputePoolInstanceFamily:
+      type: object
+      description: A compute pool instance family.
+      properties:
+        name:
+          type: string
+          description: Name of the instance family.
+          example: CPU_X64_S
+        description:
+          type: string
+          description: Description of the instance family.
+          example: Ideal for hosting multiple services/jobs while saving cost.
+        vcpu:
+          type: integer
+          description: Number of vCPUs.
+          format: int64
+          example: 3
+        memory_gib:
+          type: integer
+          description: Memory in GiB.
+          format: int64
+          example: 13
+        storage_gib:
+          type: number
+          description: Storage in GiB.
+          format: double
+          example: 93.13
+        gpu:
+          type: string
+          description: GPU model (if applicable).
+          example: NVIDIA A10G
+          nullable: true
+        gpu_count:
+          type: integer
+          description: Number of GPUs.
+          format: int64
+          example: 0
+        gpu_memory_gib:
+          type: integer
+          description: GPU memory in GiB (if applicable).
+          format: int64
+          example: 0
+        current_node_usage:
+          type: integer
+          description: Number of nodes currently utilizing this instance family
+          format: int64
+          example: 0
+        message:
+          type: string
+          description: Additional information about the instance family.
+          example: ''
+          nullable: true
+      example:
+        name: CPU_X64_S
+        description: Ideal for hosting multiple services/jobs while saving cost.
+        vcpu: 3
+        memory_gib: 13
+        storage_gib: 93.13
+        gpu: NVIDIA A10G
+        gpu_count: 0
+        gpu_memory_gib: 0
+        current_node_usage: 0
+        message: ''
+    Identifier:
+      type: string
+      description: A Snowflake object identifier. If the identifier contains spaces or special characters, the entire string must be enclosed in double quotes. Identifiers enclosed in double quotes are also case-sensitive.
+      pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$|^[$][0-9]+$
+      example: TEST_NAME
+    SuccessAcceptedResponse:
+      type: object
+      description: Schema for a request in progress response returned by the server.
+      properties:
+        code:
+          type: string
+          description: Message code returned by the server.
+        message:
+          type: string
+          description: Message returned by the server
+        resultHandler:
+          type: string
+          description: Opaque result ID used for checking for request completion through one or more subsequent completion check operations.
+        job_id:
+          type: string
+          description: ID of the job/query backing the in-progress request. This is the result handler without the trailing result-type indicator appended to it.
+      example:
+        code: '392604'
+        message: Request execution in progress. Use the provided location header or result handler ID to perform query monitoring and management.
+        job_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message returned by the server
+        code:
+          type: string
+          description: Error code.
+        error_code:
+          type: string
+          description: Error code, same as `code` above. This property has been deprecated and will be removed in a future release, but is temporarily supported for for short-term backward compatibility.
+        request_id:
+          type: string
+          description: Unique request ID.
+      example:
+        message: Compilation error!
+        error_code: '390189'
+        request_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    SuccessResponse:
+      type: object
+      description: Schema for all the success responses returned by the server.
+      properties:
+        status:
+          type: string
+          description: Message returned by the server.
+      example:
+        status: Request successfully completed
+    TagReference:
+      type: object
+      description: Identifier for a tag, including optional database and schema names.
+      properties:
+        tag_database:
+          description: The database in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_schema:
+          description: The schema in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_name:
+          description: The name of the tag.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+      required:
+        - tag_name
+    TagAssignment:
+      description: Defines an association between a tag and value.
+      allOf:
+        - $ref: '#/components/schemas/TagReference'
+      properties:
+        tag_value:
+          type: string
+          description: The value of the tag.
+        level:
+          type: string
+          readOnly: true
+          description: The object domain on which the tag is set.
+      required:
+        - tag_value
+  securitySchemes:
+    KeyPair:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `KEYPAIR_JWT` if the token is a key-pair authentication JWT.
+    ExternalOAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Configure External Oauth with Snowflake (see <a href=https://docs.snowflake.com/en/user-guide/oauth-ext-overview>External OAuth overview</a>.) Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` and set the Token to the auth token received from the external Auth server.
+    SnowflakeOAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /oauth/authorize
+          scopes: {}
+      description: Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` if the token is snowflakeOAuth
+    ProgrammaticAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `PROGRAMMATIC_ACCESS_TOKEN` if the token is a programmatic access token.
+  parameters:
+    like:
+      name: like
+      description: Parameter to filter the command output by resource name. Uses case-insensitive pattern matching, with support for SQL wildcard characters.
+      in: query
+      schema:
+        type: string
+        example: test_%
+    startsWith:
+      name: startsWith
+      description: Parameter to filter the command output based on the string of characters that appear at the beginning of the object name. Uses case-sensitive pattern matching.
+      in: query
+      schema:
+        type: string
+        example: test
+    showLimit:
+      name: showLimit
+      description: Parameter to limit the maximum number of rows returned by a command.
+      in: query
+      schema:
+        type: integer
+        example: 10
+        minimum: 1
+        maximum: 10000
+    createMode:
+      name: createMode
+      description: 'Parameter allowing support for different modes of resource creation. Possible values include:
+
+        - `errorIfExists`: Throws an error if you try to create a resource that already exists.
+
+        - `orReplace`: Automatically replaces the existing resource with the current one.
+
+        - `ifNotExists`: Creates a new resource when an alter is requested for a non-existent resource.'
+      in: query
+      schema:
+        type: string
+        enum:
+          - errorIfExists
+          - orReplace
+          - ifNotExists
+        example: ifNotExists
+        default: errorIfExists
+    name:
+      name: name
+      description: Identifier (i.e. name) for the resource.
+      required: true
+      in: path
+      schema:
+        example: TEST_NAME
+        $ref: '#/components/schemas/Identifier'
+    ifExists:
+      name: ifExists
+      description: 'Parameter that specifies how to handle the request for a resource that does not exist:
+
+        - `true`: The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource.
+
+        - `false`: The endpoint throws an error if the resource doesn''t exist.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+    withLineage:
+      name: withLineage
+      description: 'Parameter that specifies whether tag assignments inherited by the object from its ancestors in securable object hierarchy should be returned as well:
+
+        - `true`: All tags assigned to this object should be returned, inheritance included.
+
+        - `false`: Only tags explicitly assigned to this object should be returned.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+  headers:
+    X-Snowflake-Request-ID:
+      description: Unique ID of the API request.
+      schema:
+        type: string
+        format: uuid
+    Link:
+      description: Links to the page of results (e.g. the first page, the last page, etc.). The header can include multiple 'url' entries with different 'rel' attribute values that specify the page to return ('first', 'next', 'prev', and 'last').
+      schema:
+        type: string
+        example: </api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=0>; rel="first",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=1>; rel="next",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=9>; rel="last"
+  responses:
+    202SuccessAcceptedResponse:
+      headers:
+        Location:
+          schema:
+            type: string
+            description: Relative path for checking request status or getting the result, if available.
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      description: Successfully accepted the request, but it is not completed yet.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessAcceptedResponse'
+    400BadRequest:
+      description: Bad Request. The request payload is invalid or malformed. This happens if the application didn't send the correct request payload. The response body may include the error code and message indicating the actual cause. The application must reconstruct the request body for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    401Unauthorized:
+      description: Unauthorized. The request is not authorized. This happens if the attached access token is invalid or missing. The response body may include the error code and message indicating the actual cause, e.g., expired, invalid token. The application must obtain a new access token for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    403Forbidden:
+      description: Forbidden. The request is forbidden. This can also happen if the request is made even if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    404NotFound:
+      description: Not Found. The request endpoint is not valid. This happens if the API endpoint does not exist, or if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    405MethodNotAllowed:
+      description: Method Not Allowed. The request method doesn't match the supported API. This happens, for example, if the application calls the API with GET method but the endpoint accepts only POST.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    429LimitExceeded:
+      description: Limit Exceeded. The number of requests hit the rate limit. The application must slow down the frequency of hitting the API endpoints.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    500InternalServerError:
+      description: Internal Server Error. The server hit an unrecoverable system error. The response body may include the error code and message for further guidance. The application owner may need to reach out the customer support.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    503ServiceUnavailable:
+      description: Service Unavailable. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    504GatewayTimeout:
+      description: Gateway Timeout. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    200SuccessResponse:
+      description: Successful request.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
+    408RequestTimeout:
+      description: Request Timeout. This indicates that the request from the client timed out and was not completed by the server.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    409Conflict:
+      description: Conflict. The requested operation could not be performed due to a conflicting state that could not be resolved. This usually happens when a CREATE request was performed when there is a pre-existing resource with the same name, and also without one of the options orReplace/ifNotExists.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    410Gone:
+      description: Gone. This error is primarily intended to assist the task of web maintenance by notifying the recipient that the resource is intentionally unavailable.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
