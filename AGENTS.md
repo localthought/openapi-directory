@@ -5,10 +5,54 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of `origin/main` at `3a2d767b1` (PR #214 merged):
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `5b7502f80` (PR #216 merged):
 731 provider domains; 4,287 files under `APIs/`, including 2,113
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
+
+---
+
+**Guarded draft generator delivered — 2026-10-06 11:42 UTC:** Separate infrastructure
+[#216](https://github.com/ontola/openapi-directory/pull/216) is merged as
+`5b7502f802c3feeb0953e3e4ce8adbc8b44f1b48` from actual full head
+`cdb44afeec430c28ff6db14901d41f5755bd1d16`. **151 tests passed locally and in
+actual hosted CI** (run `37458009707`, tests job `112250269760`, all test steps executed).
+Exact intended seven files, actual head/base and CLEAN/MERGEABLE state were checked
+before matching-head merge; REST confirmed the merged result. No API file changed,
+and full fetched Git-tree inventory above was recomputed. Only the two explicit GitHub
+publication-group fields changed in source configuration. Required #216 attachment
+attempt failed at the 100 cap; preserve its GitHub link, not an app linkage claim.
+
+`maintenance/draft_pr.py` is now delivered: default official-source dry run; explicit
+create-only `--publish`; one reviewed API/group; all existing PRs/branches held without
+duplicate/overwrite; source/native/serialization/tree/configuration guards; exact draft
+head/base/repository/files verified after pagination; durable locks/failure receipts and
+no automatic retry, redaction, protection bypass or merge command. API-only generated
+drafts have separate read-only offline CI using delivered base tools and exact head.
+That branch-specific CI job correctly skipped this infrastructure branch; its real-Git
+validation path is exercised by the 29 new regression cases in the passing hosted suite.
+No actual API draft was published this run, since the three selected live sources match.
+
+Original selected live checks at `bd7b851c319b` retain their **11:36–11:37 UTC dates**:
+GitHub companions at one vendor `836ce198db13a6fb194547e53eea99c6ddae495b`, each native
+3.0.3 / 1.1.4 / 816 paths / 1,232 ops; HF Endpoints native 3.1.0 / 2.0.0 / 40 / 46.
+All three original hashes, complete native/stored validation, typed YAML and independently
+projected full vendor content pass; shared repository-health response hash/flags pass,
+HF hosted health remains unassessed. API files are byte-identical between prior real main,
+the checked infrastructure commit and merged main. No full 59-artifact freshness audit
+or new discovery scan is claimed. Evidence/receipts/scripts/CI logs remain under ignored
+`cache/maintenance/reports/guarded-draft-generation/`, including `live/independent-verification.json`
+and `delivery-summary.json`. Do not repeat completed generator delivery or source checks.
+
+**Continue:** automatic safe pending-PR updates and scheduled PR publication remain
+authorized separate infrastructure work; neither is enabled yet. Keep local cache/guards
+and explicit per-API review, ensure actual API CI runs, and preserve weekly/monthly
+read-only permissions until a reviewed writer exists. Continue independent major-vendor
+official-source discovery/freshness reviews. All eleven prior blocks, unanswered owner
+choices, §5 parked items and fully deprecated Grant exclusion remain unchanged. Only
+unrelated #179 remains open. No vendor message, constraint waiver, blanket auto-merge,
+extra recurring chat task, power change or execution-host move. Original local one-week
+deadline and laptop-sleep behavior remain unchanged. Prepared notes below are historical.
 
 ---
 
