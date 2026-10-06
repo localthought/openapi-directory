@@ -5,10 +5,81 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Audit of `origin/main` at `cfb19aa445` (PR #194 merged):
-729 provider domains; 4,280 files under `APIs/`, including 2,106
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Audit of `origin/main` at `2af2c554a` (PR #203 merged):
+731 provider domains; 4,283 files under `APIs/`, including 2,109
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
+
+---
+
+**Latest resume state — 2026-10-06:** This supersedes earlier prepared/draft/runner-outage
+notes retained below as historical evidence. All six API deliveries and three updater
+recipes in the following table are merged; do not duplicate them.
+
+| API / delivery | Merged PRs | Current scope |
+|---|---|---|
+| Zendesk Support | [#195 updater](https://github.com/ontola/openapi-directory/pull/195), [#196 API](https://github.com/ontola/openapi-directory/pull/196) | 2.0.0; 455 paths / 657 ops / 2534 refs; exact null-only and unused-parameter guards |
+| Coinbase CDP | [#197 updater](https://github.com/ontola/openapi-directory/pull/197), [#198 API](https://github.com/ontola/openapi-directory/pull/198) | 2.0.0; 140 paths / 169 ops / 2594 refs; four redundant optional-header flag removals |
+| Confluence Cloud v2 | [#199 updater](https://github.com/ontola/openapi-directory/pull/199), [#200 API](https://github.com/ontola/openapi-directory/pull/200) | 2.0.0; 151 paths / 218 ops / 682 refs; two exact invalid-prefix-default removals |
+| Sentry | [#201](https://github.com/ontola/openapi-directory/pull/201) | v0; 155 / 249 unchanged; five monitor max_runtime limits now 10080 minutes (7 days), previously 40320 |
+| Discord HTTP | [#202](https://github.com/ontola/openapi-directory/pull/202) | 10; 153 / 246 unchanged; guild message search permits OAuth2 alongside BotToken |
+| Atlas Admin | [#203](https://github.com/ontola/openapi-directory/pull/203) | 2.0; 339 / 549 unchanged; vendor x-xgen-sha refresh, metadata-only; curated tag order retained |
+
+The hosted runner outage cleared. Initial retry heads actually executed tests; after
+resolving concurrent source/test/doc conflicts, updated Support CI run 37421730254
+passed **108 tests**, and combined Coinbase CI run 37421998779 passed **110 tests**.
+Confluence run 37421251233 passed 102. All new serialized files and refreshes passed
+full validation, typed YAML roundtrip, reference and complete curated-vendor comparisons;
+no blanket auto-merge, push-protection bypass, native constraint waiver or power-setting
+change. Live rechecks confirmed Support/CDP match their reviewed source hashes before
+merging. Only independent PR #179 remains open, unchanged and outside this workstream.
+
+**Current monitoring: 55 artifacts / 54 services.** Full network audit against real
+merged main `791051c64138` (after the three additions) found **41 matches / 3 valid
+drifts / 11 known blocks**, no fetch/prepare failures. The three drifts were reviewed
+and delivered in #201–#203. Atlas's 58 tag objects have identical per-name content:
+source order changes plus x-xgen-sha are the entire vendor diff, not invented API
+behavior. All 55 original source hashes, 26 repository-health snapshots and report
+Markdown/JSON parity were independently checked; **16 hosted artifacts** have health
+not_assessed. Original audit is `/tmp/main-55-local-audit.json/.md`, verification
+`/tmp/verify-main-55-local-audit.py`, review `/tmp/main-55-local-audit-review.json`;
+ignored durable copy `cache/maintenance/reports/main-55-791051c64138/`.
+
+Post-delivery **cached-source reconciliation** against `2af2c554a035` yields **44
+matches / 11 known blocks / no remaining drift against those snapshots**. This is
+not a second network audit: source-fetch/health observations retain their real dates.
+Git diff proves only the three reviewed API files changed since the full audit;
+those stored files and cached native sources were revalidated and compared again.
+Script `/tmp/reconcile-main-55-cached-audit.py`; report/review
+`/tmp/main-55-cached-reconciliation.json/.md`,
+`/tmp/main-55-cached-reconciliation-review.json`, retained copy
+`cache/maintenance/reports/main-55-reconciled-2af2c554a035/`. Do not claim coverage
+or freshness for the whole 731-provider historical directory.
+
+Blocks remain Cohere, Square, Slack Web, Meraki, Vercel, Mailchimp Marketing, Auth0,
+Cloudflare, Okta, Twilio Messaging and Zendesk Conversations. The last two are valid
+prepared deliveries held by unanswered push-protection owner choices; do not retry,
+unblock or redact. Preserve all other native defects and explicitly parked §5 items.
+No vendor messages/issues were sent. Attachment cap remains 100; required attachment
+calls for #197–#203 failed. Canonical removals returned app errors; legacy redirect
+removals reported success without removing actual attachments. Preserve GitHub links
+and this resume record; do not claim app linkage success or delete history to make room.
+
+**Continue with meaningful work:** extend official-source audit/discovery for major
+providers; Confluence v1 is now a concrete native-invalid candidate (separate from
+v2, which is complete). Review exact schema/default defects and lifecycle before
+any recipe/import; do not fix blindly after only the first diagnostic. A fresh bounded
+HashiCorp SDK lead checked public/unarchived/undisabled `hashicorp/hcp-sdk-go` at
+`94ea63cdc563d9ee06bc879d5565523f63219ed7`: complete untruncated tree contains no
+OpenAPI/Swagger-named artifact, and the lone specification-named file is a generated
+Go node model. Original metadata/tree/README cached under
+`cache/maintenance/discovery/hashicorp-hcp/`. SDK preview/stable release language is
+not proof of a current downloadable OAD; inspect generation inputs/official HCP docs
+next, do not derive schemas from SDK types or register guessed URLs. Anthropic's live
+SDK stats no longer expose the old Stainless download pointer (recorded in #196).
+Scheduled PR generation/monthly discovery remain authorized implementation work;
+keep infrastructure separate from API PRs and require deliberate per-API review.
+The original local one-week deadline and laptop-sleep behavior remain unchanged.
 
 ---
 
@@ -691,10 +762,10 @@ replacement discovery still need review.
 
 ### Missing, official spec not yet located
 
-Shopify, Airtable, Heroku, HashiCorp, Coinbase, Dropbox, New Relic, Anthropic,
+Shopify, Airtable, Heroku, HashiCorp, Dropbox, New Relic, Anthropic,
 NVIDIA. Snowflake and Hugging Face Inference Endpoints now have verified sources above.
-Zendesk Support and Conversations official sources were located on 2026-10-05;
-both have confirmed native validation defects, recorded in the latest discovery queue below.
+Zendesk Support and Coinbase CDP are now imported and monitored (latest resume state
+above). Zendesk Conversations has a validated recipe but remains held by push protection.
 
 **Probed and 404'd on 2026-09-22** — these exact URLs, not the vendors themselves:
 guessed paths in `snowflakedb/snowflake-rest-api-specs` (`main`, `releases/8.40/...`; resolved
