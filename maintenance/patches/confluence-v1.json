@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "description": "Remove three invalid null defaults from the non-nullable string query parameters name (required) and type on GET /wiki/rest/api/label, and accessType on GET /wiki/rest/api/group. Null violates each native string schema and both type/accessType enums. Retain required name, optionality of other parameters, every original type/enum/description and all operation content. Assert complete parameters and operation identities; remove only exact default:null, without adding nullable, selecting a replacement value or inferring server behavior on omitted filters. Stop replay on vendor corrections or contract changes.",
+  "assertions": [
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1label/get/parameters/0",
+      "value": {
+        "name": "name",
+        "in": "query",
+        "description": "Name of the label to query.",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "default": null
+        }
+      }
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1label/get/operationId",
+      "value": "getAllLabelContent"
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1label/get/parameters/1",
+      "value": {
+        "name": "type",
+        "in": "query",
+        "description": "The type of contents that are to be returned.",
+        "schema": {
+          "type": "string",
+          "default": null,
+          "enum": [
+            "page",
+            "blogpost",
+            "attachment",
+            "page_template"
+          ]
+        }
+      }
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1group/get/parameters/2",
+      "value": {
+        "name": "accessType",
+        "in": "query",
+        "description": "The group permission level for which to filter results.",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "default": null,
+          "enum": [
+            "user",
+            "admin",
+            "site-admin"
+          ]
+        }
+      }
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1group/get/operationId",
+      "value": "getGroups"
+    }
+  ],
+  "operations": [
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1label/get/parameters/0/schema/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "type": "string"
+      }
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1label/get/parameters/1/schema/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "type": "string",
+        "enum": [
+          "page",
+          "blogpost",
+          "attachment",
+          "page_template"
+        ]
+      }
+    },
+    {
+      "pointer": "#/paths/~1wiki~1rest~1api~1group/get/parameters/2/schema/default",
+      "from": null,
+      "remove": true,
+      "context": {
+        "type": "string",
+        "enum": [
+          "user",
+          "admin",
+          "site-admin"
+        ]
+      }
+    }
+  ]
+}
