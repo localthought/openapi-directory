@@ -283,9 +283,11 @@ def existing_pr(plan):
 
 
 def remote_guard(plan):
-    remote = git("remote", "get-url", "--push", "origin").decode().strip()
-    if not re.fullmatch(r"(?:https://github.com/|git@github.com:)(?:ontola|localthought)/openapi-directory(?:\.git)?", remote):
-        raise ValueError("Publication is restricted to this fork's origin")
+    for options in (("--all",), ("--push", "--all")):
+        remotes = git("remote", "get-url", *options, "origin").decode().splitlines()
+        if len(remotes) != 1 or not re.fullmatch(
+                r"(?:https://github.com/|git@github.com:)(?:ontola|localthought)/openapi-directory(?:\.git)?", remotes[0]):
+            raise ValueError("Publication is restricted to one unambiguous fetch/push origin for this fork")
     main = git("ls-remote", "--exit-code", "origin", "refs/heads/main").decode().split()
     if not main or main[0] != plan["base_revision"]:
         raise ValueError("Remote main advanced; fetch and rebuild before publication")

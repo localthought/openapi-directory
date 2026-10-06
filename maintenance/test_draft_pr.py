@@ -312,12 +312,20 @@ class DraftTests(unittest.TestCase):
     def test_origin_identity_and_advancing_main_fail_closed(self):
         plan = self.plan()
         for remote in ("https://github.com/ontola/openapi-directory.git", "git@github.com:localthought/openapi-directory.git"):
-            with patch.object(draft_pr, "git", side_effect=[remote.encode(), (self.base + "\trefs/heads/main").encode()]):
+            with patch.object(draft_pr, "git", side_effect=[remote.encode(), remote.encode(), (self.base + "\trefs/heads/main").encode()]):
                 draft_pr.remote_guard(plan)
         with patch.object(draft_pr, "git", return_value=b"https://github.com/elsewhere/openapi-directory.git"), self.assertRaisesRegex(ValueError, "restricted"):
             draft_pr.remote_guard(plan)
-        with patch.object(draft_pr, "git", side_effect=[b"https://github.com/ontola/openapi-directory.git", b"0000000000000000000000000000000000000000\trefs/heads/main"]), self.assertRaisesRegex(ValueError, "main advanced"):
+        with patch.object(draft_pr, "git", side_effect=[b"https://github.com/ontola/openapi-directory.git"] * 2 + [b"0000000000000000000000000000000000000000\trefs/heads/main"]), self.assertRaisesRegex(ValueError, "main advanced"):
             draft_pr.remote_guard(plan)
+
+    def test_secondary_fetch_or_push_urls_are_never_used_for_publication(self):
+        plan = self.plan()
+        one = b"https://github.com/ontola/openapi-directory.git"
+        two = one + b"\nhttps://github.com/elsewhere/repo.git\n"
+        for responses in ([two], [one, two]):
+            with self.subTest(responses=responses), patch.object(draft_pr, "git", side_effect=responses), self.assertRaisesRegex(ValueError, "unambiguous"):
+                draft_pr.remote_guard(plan)
 
     def test_real_atomic_branch_creation_verified_draft_and_unchanged_checkout(self):
         self.remote()

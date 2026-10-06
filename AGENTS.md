@@ -61,8 +61,8 @@ branch `codex/guarded-api-draft-generation` implements `maintenance/draft_pr.py`
 Default is a fresh official-source dry run; explicit `--publish` can create only a new
 draft for one reviewed API. Both public GitHub REST artifacts now share explicit
 `github-public-rest` grouping; companion repository/ref artifacts share one pinned
-source commit. **150 local regression tests passed** after implementation, including
-28 new real-Git/REST/outcome/CI cases; hosted CI is still pending. Source-health/native/bundle/recipe/import/YAML/vendor
+source commit. **151 local regression tests passed** after implementation, including
+29 new real-Git/REST/outcome/CI cases; hosted CI is still pending. Source-health/native/bundle/recipe/import/YAML/vendor
 comparisons are reused, local tools/configuration must equal the comparison tree, and
 full Git objects plus a temporary private index preserve sparse paths and staged work.
 Only API files and exactly reconstructed baseline-target edits are allowed. Full open
@@ -78,8 +78,15 @@ offline validation, not fresh vendor comparison. There is no merge operation, sc
 writer, automatic pending-PR update, extra chat automation or vendor message. Required
 desktop attachment is the caller's responsibility, including returned created URLs after
 verification failures; preserve actual attachment outcomes. Infrastructure remains
-separate from API deliveries. Actual tests/live checks/PR/CI state must be recorded after
-completion; do not treat this prepared note as proof of merge or hosted test success.
+separate from API deliveries. Fresh selected live dry runs at committed infrastructure head `bd7b851c319b` found
+all **three artifacts match**, with no pending API PR and no checkout/index changes.
+Both GitHub files use vendor `836ce198db13a6fb194547e53eea99c6ddae495b`, native 3.0.3 /
+1.1.4 / 816 paths / 1,232 ops each; shared fresh repository health is available. HF
+Endpoints remains native 3.1.0 / 2.0.0 / 40 paths / 46 ops, hosted health unassessed.
+Source times remain 11:36–11:37 UTC; this is not a full 59-artifact freshness audit.
+Original snapshots/candidates/results, full tests and verification retained under ignored
+`cache/maintenance/reports/guarded-draft-generation/`. Infrastructure PR/actual CI/merge
+still need confirmation; do not treat this note as proof of hosted success or delivery.
 
 **Next work:** finish verification and delivery of this infrastructure; then deliberate
 pending-PR updates and scheduled publication remain authorized separate infrastructure.
