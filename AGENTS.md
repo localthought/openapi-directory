@@ -231,6 +231,120 @@ every filename, preview-only resource or compatibility description.
 
 ---
 
+**Support delivery prepared on 2026-10-05:** [API PR #196](https://github.com/ontola/openapi-directory/pull/196) is a draft with only the new API and these progress notes; mark ready after updater #195 CI/merge, then recheck exact head/files/CLEAN/MERGEABLE before merge. Do not duplicate this PR. Separate updater
+[#195](https://github.com/ontola/openapi-directory/pull/195) adds conservative unused
+pointer guards and a checked compatibility recipe; 106 local tests pass, exact-head
+CI run 37362766037 is queued. The API-only branch `codex/zendesk-support-api-only`
+adds official Support/Ticketing 2.0.0, native 3.0.3, **455 paths / 657 operations**,
+2,534 resolved local refs, zero external refs. All endpoint/auth/server/role/plan/tag/
+deprecation content remains. Only the documented null-only alternative and the exact
+unused invalid UserLogin parameter are corrected, plus provenance. Do not merge this
+API before #195 CI/merge; no infrastructure changes are duplicated in its PR diff.
+
+Original source SHA-256
+`3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc`, recipe SHA-256
+`38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5`.
+Independent full native/prepared/import comparisons, complete validation and typed
+YAML roundtrip pass; no version conversion or invented curation. Native basic-only
+security remains a documented limitation relative to current public OAuth guidance.
+All four deprecated operations and API-token lifecycle prose retained. Original raw
+bytes cached unchanged; hosted source health unassessed and no Git revision claimed.
+Detailed implementation/import/audit progress is also retained on pushed branch
+`codex/add-zendesk-support` at `2a61ee7eb`, based on updater head `d4f05b3ec`.
+The separate API-only branch avoids including pending infrastructure in its diff.
+
+Full **53-source local audit** at the prepared API commit `dd7b9568238c` (not main)
+finds **42 matches / 11 known blocks / no new unblocked drift or fetch/prepare failure**.
+All source/26 repository metadata hashes, per-row bases/profiles, endpoint deltas and
+Markdown/JSON parity checked; 14 hosted sources unassessed. Support matches its
+pending import, Atlas its delivered refresh. Only Stripe repository revision advanced
+(`3d9ffbb79e0ff25254c498b3b7623f710401a1fb`), independently re-fetched pinned bytes
+unchanged. Preserve the earlier 52-source CI snapshot as historical. Durable ignored
+report/review `cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/`;
+verifier/log `/tmp/verify-zendesk-support-53-local-audit.py`,
+`/tmp/zendesk-support-53-local-audit-verification.log`; import review/verifier/log
+`/tmp/zendesk-support-import-review.json`, `/tmp/verify-zendesk-support-import.py`,
+`/tmp/zendesk-support-import-verification.log`. Existing Conversations/Messaging
+owner choices remain unanswered; neither rejected push retried or redacted.
+
+**Anthropic discovery lead checked, no import:** search snippets still show an old
+Stainless GCS spec URL in official SDK `.stats.yml`. Fresh pinned TypeScript
+`d49bdab458000bcdffe77bd84b03293f31824fb3`, Python
+`18f25547f20cf5f01da69ac611e700e3bc9ebf21` and CLI
+`f8457f464b72d3ac54a13f45a90e1e686d724dcb` all publish only configured-endpoint counts
+in that file; the pointer has been removed. All three repos are public/unarchived/
+undisabled; complete untruncated filename trees contain no OpenAPI/Swagger artifact
+names. Do not register the older search-snippet URL as a maintained current source
+or reconstruct a spec from generated SDK types. This is a bounded search result,
+not proof the vendor publishes no spec anywhere. Original metadata/stats/tree bytes
+and hashes retained under ignored `cache/maintenance/discovery/anthropic/`; review
+`/tmp/anthropic-live-sdk-publication-review.json`. Continue current official-source
+publication discovery separately. Attachment cap: verified merged superseded
+AGENTS-only #60 and #194 unlinked; GitHub history/API/updater attachments retained.
+
+---
+
+**CI infrastructure failure and bounded retry:** updater #195 run 37362766037
+attempt 1 ended failure because the hosted job was never assigned a runner: GitHub's
+annotation says "The job was not acquired by Runner of type hosted even after
+multiple attempts". Test steps/logs never existed; this is not a test assertion
+failure or an approval-review rejection. Same exact head was retried once with
+`gh run rerun --failed`; attempt 2 also failed on 2026-10-05 19:53 UTC with the
+same hosted-runner acquisition annotation and zero test steps. Both attempts ended
+before executing tests. Keep #195 unmerged and API #196 draft until the actual job
+passes; 106 local tests and full independent API validation remain successful. Do not waive CI, change runner/power/host settings,
+or repeatedly retry during a hosted-runner outage. Recheck the existing run on the
+next heartbeat; if still unavailable, preserve ready work and continue independently.
+Failure annotation `/tmp/zendesk-support-guards-ci-runner-failure.json`;
+run/job state `/tmp/zendesk-support-guards-ci-status.json`; retry annotation/final state
+`/tmp/zendesk-support-guards-ci-retry-runner-failure.json`,
+`/tmp/zendesk-support-guards-ci-final-run.json`. Durable ignored failure evidence
+`cache/maintenance/reports/zendesk-support-53-local-dd7b9568238c/ci/`.
+
+**New official Coinbase CDP candidate (discovery/diagnostics only):** maintained,
+public/unarchived/undisabled `coinbase/cdp-sdk` at
+`d40fb3975395033409643654faacfb3d4e4349ee` publishes root `openapi.yaml`; its pinned
+Makefile links the canonical CDN `https://drla6sbl8l00t.cloudfront.net/openapi.yaml`
+and adds a timestamp query to avoid stale caching. Root SDK snapshot is **native
+3.1.0 / 2.0.0 / 126 paths / 154 ops**, hash
+`229ed860a74b63b3c430c4fc2122e2870bcc0f7b398398d2ec31021be9e1ee4a`.
+Fresh official CDN, both plain URL and timestamp-busted URL, has identical typed
+content and hash `156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302`:
+**140 paths / 169 ops / 2,594 resolved local refs**, none external. It adds 14 paths /
+15 operations versus the SDK snapshot (delegation revoke and payment mandates),
+removes none. Do not choose the lagging SDK artifact merely to get a convenient
+Git revision or freeze the old source. Source choice/cache freshness must be reviewed.
+
+Current [public introduction](https://docs.cdp.coinbase.com/api-reference/v2/introduction)
+distinguishes non-custodial public APIs from custodial groups needing verified business
+accounts, Prime-only payment methods and Beta groups. Artifact retains private-beta
+fiat deposit destinations and complete native auth/tenant/permission/lifecycle content.
+No blanket GA claim, financial action or endpoint trimming. This is CDP v2, not
+Coinbase Exchange or all Coinbase APIs. Coinbase provider is absent from main's tree.
+
+Native CDN validation fails on four Parameter Reference Objects with unsupported
+`required:false` siblings pointing to `#/components/parameters/XDeveloperAuth`.
+The referenced header parameter itself declares exactly `required:false` already.
+Diagnostic removal of only those four redundant flags fully validates and passes
+typed YAML roundtrip; auth/requiredness and all referenced constraints remain.
+Diagnostic inlining also validated but is not adopted. A future exact recipe should
+remove only those four original false values after complete referenced-parameter
+assertions and exact reference contexts, prove positive/negative requiredness and
+reject vendor fixes/new requiredness. No recipe, registration, API PR or imported
+file yet; outside the configured 53-source audit. Do not fabricate missing schemas,
+relocate auth or infer optionality without the reviewed target.
+
+Complete original repo metadata/commit/tree/README/Makefile and native SDK/CDN bytes,
+retrieval headers/hashes and reviews cached under ignored
+`cache/maintenance/discovery/coinbase-cdp/`. Scripts/logs/reviews
+`/tmp/discover-coinbase-cdp.py`, `/tmp/review-coinbase-cdp-official-spec.py`,
+`/tmp/review-coinbase-cdp-cdn-and-ref-siblings.py`,
+`/tmp/review-coinbase-cdp-current-publication.py`,
+`/tmp/coinbase-cdp-current-publication-review.json`,
+`/tmp/coinbase-cdp-current-publication-review.log`.
+
+---
+
 ## 3. Triage progress
 
 Working dataset was `/tmp/all_issues.tsv` — **this is in `/tmp` and will not survive a reboot.** Regenerate with:
