@@ -222,6 +222,16 @@ class DraftTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "maintenance input differs"):
             draft_pr.commit_plan(plan)
 
+    def test_converter_entrypoint_is_a_guarded_delivered_input(self):
+        plan = self.plan()
+        converter = self.root / "maintenance/convert-swagger.cjs"
+        original = converter.read_bytes()
+        converter.write_text("// changed converter options\n")
+        with self.assertRaisesRegex(ValueError, "maintenance input differs"):
+            draft_pr.commit_plan(plan)
+        converter.write_bytes(original)
+        draft_pr.verify_plan(plan)
+
     def test_comparison_tree_requires_delivered_tool_modules(self):
         self.git("rm", "maintenance/draft_pr.py")
         self.base = self.commit()

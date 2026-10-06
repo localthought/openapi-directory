@@ -24,6 +24,7 @@ import releases
 import report
 import health
 import conversion
+import embedded
 import response_keys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -566,6 +567,11 @@ def cache_snapshot(cache, source_id, raw, metadata):
 def prepare_document(source, raw, metadata=None, cache=None):
     """Replay reviewed exact replacements; source changes require recipe review."""
     transformations = []
+    if source.get("embedded_document"):
+        if metadata is None or cache is None:
+            raise ValueError("Embedded documents require fetch metadata and a source cache")
+        raw, step = embedded.prepare(source, raw, metadata, cache)
+        transformations.append(step)
     if source.get("bundling") and source.get("code_samples"):
         raise ValueError("Combined schema bundling and code sample recipes require explicit support")
     if source.get("bundling"):

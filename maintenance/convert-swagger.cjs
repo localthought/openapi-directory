@@ -7,7 +7,10 @@ async function main() {
   if (version !== '7.0.8') throw new Error('Installed swagger2openapi version differs from the recipe');
   const input = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
   if (input.swagger !== '2.0') throw new Error('Conversion requires Swagger 2.0');
+  const refSiblings = process.argv[4];
+  if (refSiblings && refSiblings !== 'allOf') throw new Error('Unsupported reference-sibling conversion mode');
   const options = await converter.convertObj(input, {
+    ...(refSiblings ? {refSiblings} : {}),
     patch: true, warnOnly: true, resolve: false, targetVersion: '3.0.0',
     fetch: async () => { throw new Error('Network resolution is disabled during conversion'); }
   });
