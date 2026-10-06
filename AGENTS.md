@@ -10,6 +10,45 @@ Note the git remote resolves via an old org rename — `localthought/openapi-dir
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
+
+**Four HCP service sources reviewed — 2026-10-06:** Separate infrastructure branch
+`codex/hcp-platform-service-sources` registers the four actual references linked by the
+[official overview](https://developer.hashicorp.com/hcp/docs/hcp/api): HVN, Operations,
+RBAC Resource Manager (`/hcp/api-docs/rbac`) and Webhook. Original public HTML contains
+vendor Swagger strings, not reconstructed SDK types/rendered operations; no private
+hcp-specs is accessed or Git revision invented. Page and current/latest release are
+stable; exact service titles, versions and base paths are guarded individually.
+Full fetched Git tree has only the already delivered HCP Identity; all five method/path
+sets are disjoint. **165 local updater tests pass**; registration is not API delivery. Verify actual
+hosted CI/PR state next.
+
+Native / converted 2.0 -> 3.0.0 with locked swagger2openapi 7.0.8:
+HVN **2020-09-07 / 24 paths / 31 ops / 82 schemas / 173 converted local refs**;
+Operations **2020-05-05 / 3 / 3 / 12 / 18**;
+Resource Manager **1.0 / 27 / 35 / 89 / 153** (keep 1.0 despite dated routes);
+Webhook **2023-05-31 / 4 / 7 / 26 / 40**. Every native description and full converted
+import validate; all refs, complete independent original schema/operation/parameter/
+body/response projection, auth/server fields and typed vendor-plus-provenance equality
+pass. Full source descriptions retained, including operations not shown in abbreviated
+rendered navigation. No invented curation. Preserve native Authorization bearer apiKey
+and protocol-relative server; Swagger omits schemes. Explicit refSiblings:allOf retains
+all 82 / 10 / 60 / 17 annotated schema refs respectively, without dropping their prose.
+
+First three convert with zero warnings/patches. Webhook's one increment was traced to
+converter line 59 nullable translation of the original optional boolean
+`CreateWebhookRequestBody.enabled`. Exact full-schema/location guard and a second
+conversion removing only that extension must produce zero warnings/patches and the
+same complete output except that nullable flag. True requires successful verification,
+false disables without verification, unset enables only on success; no null semantics
+removed or unrelated repair accepted. Original HTML/native/conversion/control bytes,
+real dates, trace, preflight imports and independent checks are under ignored
+`cache/maintenance/discovery/hashicorp-hcp/other-services/`; hosted source health remains
+not_assessed. Monitoring becomes **65 artifacts / 64 services**, not a full 65-source
+audit or whole-HCP/platform coverage claim. Deliver infrastructure separately, then one
+actual generated API-only PR per service with actual CI before ready/merge. Keep all
+11 prior blocks, owner choices, parked items, deprecated Grant exclusion, independent
+#179 and original local one-week deadline/laptop-sleep behavior unchanged.
+
 ---
 
 **HCP Identity delivered — 2026-10-06:** Separate extraction/conversion registration
