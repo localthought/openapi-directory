@@ -689,3 +689,20 @@ optionality, auth/scopes and all other content remain unchanged. It chooses no
 replacement default and makes no claim about server behavior when omitted. A vendor
 correction or contract change stops replay. The separately published v1 artifact also
 has native defects and is not imported by this v2 registration.
+
+### Confluence Cloud REST v1
+
+`confluence-v1` separately follows the official v1 reference's hosted OpenAPI download.
+Keep vendor document version `1.0.0`, native OpenAPI `3.0.1`, and the protocol-relative
+tenant server. The complete publication includes seven experimental flags and two
+deprecated descendant operations. Current publication does not prove that previously
+announced retired operations remain available. Retain their labels and do not restore
+removed endpoints or combine this collection with v2 or Data Center.
+
+Full native validation finds three invalid null defaults: required label `name`, optional
+label content `type`, and optional group `accessType`, all non-nullable strings. The
+checked recipe asserts each complete parameter and operation identity, then removes
+only those defaults. Requiredness, types, enums and every other constraint remain.
+Positive and negative instance checks prove the accepted values are unchanged; vendor
+nullable/default/contract corrections stop replay. No nullable widening, replacement
+default, conversion, bundling, invented curation or runtime omission behavior is added.

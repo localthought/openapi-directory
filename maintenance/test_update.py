@@ -241,6 +241,82 @@ class UpdaterTests(unittest.TestCase):
                 update.prepare_document(source, json.dumps(changed).encode())
         self.assertEqual(json.loads(raw), spec)
 
+    def confluence_v1_fixture(self):
+        recipe = json.loads((update.ROOT / "maintenance/patches/confluence-v1.json").read_text())
+        spec = {"openapi": "3.0.1", "info": {"title": "Confluence v1 guard", "version": "1.0.0"},
+                "paths": {}}
+        for assertion in recipe["assertions"]:
+            parts = assertion["pointer"].split("/")
+            path = parts[2].replace("~1", "/").replace("~0", "~")
+            operation = spec["paths"].setdefault(path, {}).setdefault("get", {
+                "parameters": [], "responses": {"200": {"description": "OK"}}})
+            if parts[-1] == "operationId":
+                operation["operationId"] = assertion["value"]
+            else:
+                index = int(parts[-1])
+                while len(operation["parameters"]) <= index:
+                    i = len(operation["parameters"])
+                    operation["parameters"].append({"name": "other" + str(i), "in": "query",
+                                                     "schema": {"type": "integer"}})
+                operation["parameters"][index] = copy.deepcopy(assertion["value"])
+        return spec
+
+    def test_confluence_v1_null_defaults_preserve_string_constraints_and_required_name(self):
+        from openapi_schema_validator import OAS30Validator
+        source = {"patches": ["maintenance/patches/confluence-v1.json"]}
+        original = self.confluence_v1_fixture()
+        raw = json.dumps(original).encode()
+        self.assertTrue(update.validate_document(original))
+        result, steps = update.prepare_document(source, raw)
+        expected = copy.deepcopy(original)
+        cases = (("/wiki/rest/api/label", 0, ("label", ""), (None, 0, ["label"])),
+                 ("/wiki/rest/api/label", 1, ("page", "blogpost", "attachment", "page_template"),
+                  (None, "user", "", ["page"], 0)),
+                 ("/wiki/rest/api/group", 2, ("user", "admin", "site-admin"),
+                  (None, "page", "", ["admin"], 0)))
+        for path, index, accepted, rejected in cases:
+            del expected["paths"][path]["get"]["parameters"][index]["schema"]["default"]
+            old = original["paths"][path]["get"]["parameters"][index]["schema"]
+            new = result["paths"][path]["get"]["parameters"][index]["schema"]
+            for instance in accepted + rejected:
+                valid = instance in accepted
+                self.assertEqual(OAS30Validator(old).is_valid(instance), valid)
+                self.assertEqual(OAS30Validator(new).is_valid(instance), valid)
+        self.assertEqual(result, expected)
+        self.assertEqual(update.validate_document(result), [])
+        self.assertIs(result["paths"]["/wiki/rest/api/label"]["get"]["parameters"][0]["required"], True)
+        self.assertNotIn("required", result["paths"]["/wiki/rest/api/label"]["get"]["parameters"][1])
+        self.assertIs(result["paths"]["/wiki/rest/api/group"]["get"]["parameters"][2]["required"], False)
+        self.assertEqual(json.loads(raw), original)
+        self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+
+    def test_confluence_v1_recipe_stops_on_nullable_and_other_vendor_corrections(self):
+        source = {"patches": ["maintenance/patches/confluence-v1.json"]}
+        for path, index in (("/wiki/rest/api/label", 0), ("/wiki/rest/api/label", 1),
+                            ("/wiki/rest/api/group", 2)):
+            for change in ("removed", "valid-default", "nullable", "required", "type", "name", "identity"):
+                spec = self.confluence_v1_fixture()
+                op = spec["paths"][path]["get"]
+                param = op["parameters"][index]
+                if change == "removed":
+                    del param["schema"]["default"]
+                elif change == "valid-default":
+                    param["schema"]["default"] = param["schema"].get("enum", ["label"])[0]
+                elif change == "nullable":
+                    param["schema"]["nullable"] = True
+                elif change == "required":
+                    param["required"] = not param.get("required", False)
+                elif change == "type":
+                    param["schema"]["type"] = "array"
+                elif change == "name":
+                    param["name"] = "changed"
+                else:
+                    op["operationId"] = "changed"
+                raw = json.dumps(spec).encode()
+                with self.subTest(path=path, index=index, change=change), self.assertRaisesRegex(ValueError, "review recipe"):
+                    update.prepare_document(source, raw)
+                self.assertEqual(json.loads(raw), spec)
+
     def confluence_label_fixture(self):
         recipe = json.loads((update.ROOT / "maintenance/patches/confluence-v2.json").read_text())
         spec = {"openapi": "3.0.3", "info": {"title": "Confluence label guard", "version": "2.0.0"},

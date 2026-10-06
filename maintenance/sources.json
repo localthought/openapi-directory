@@ -737,6 +737,20 @@
       "discovery": "Canonical hosted OpenAPI publication explicitly fetched by maintained official coinbase/cdp-sdk Makefile (pinned discovery commit d40fb3975395033409643654faacfb3d4e4349ee). Current official https://docs.cdp.coinbase.com/api-reference/v2/introduction publishes an OpenAPI download and distinguishes generally available and Beta groups (checked 2026-10-05). Plain CDN URL and fresh timestamp query return identical bytes; ETag and Last-Modified recorded on every fetch. Native 3.1.0 / vendor 2.0.0 / 140 paths / 169 operations / 2594 resolved local refs. SDK repository snapshot lags by 14 paths / 15 operations; monitor current hosted publication, not that mirror. Hosted repository health is not assessed; no Git revision is fabricated for CDN bytes. Four redundant required:false Reference Object siblings are removed only after exact header/parameter/operation assertions; full native constraints and optionality retained. No bundling or conversion.",
       "coverage": "Coinbase Developer Platform public v2 wallet, onramp and custodial resource API, not Coinbase Exchange or all Coinbase products. Preserve complete vendor tenant/server/auth/security/schema/permission/lifecycle content, including Beta groups and private-beta fiat deposit destinations. Non-custodial groups are available after CDP signup; custodial groups require verified linked business accounts, payment methods require Coinbase Prime. This is a mixed-lifecycle public collection, not a preview-only or hand-built GA slice. No previous provider, curation baseline or invented metadata.",
       "priority": "high"
+    },
+    {
+      "id": "confluence-v1",
+      "provider": "atlassian.com",
+      "service": "confluence-v1",
+      "target": "APIs/atlassian.com/confluence-v1/1.0.0/openapi.yaml",
+      "url": "https://dac-static.atlassian.com/cloud/confluence/swagger.v3.json",
+      "version_policy": "vendor",
+      "patches": [
+        "maintenance/patches/confluence-v1.json"
+      ],
+      "discovery": "Current official https://developer.atlassian.com/cloud/confluence/rest/v1/intro/ directly links this hosted OpenAPI publication (checked 2026-10-06). Plain moving URL and linked documentation-build query have identical original bytes. Native OpenAPI 3.0.1 / document version 1.0.0 / 89 paths / 130 operations / 511 resolved local refs, none external. Full native error enumeration identifies only three invalid null defaults on non-nullable string query parameters. Exact complete-parameter/operation assertions remove these defaults while retaining every constraint; no conversion, bundling or replacement defaults. Hosted repository health is not assessed; no fabricated Git revision.",
+      "coverage": "Complete currently published Confluence Cloud REST v1 collection including search/CQL, attachments, audit, groups/users, content labels/restrictions/states/versions, spaces/settings/permissions, templates and app modules. Distinct from Jira, Data Center and the separately imported v2 collection; no cross-product curation baseline. Retain native Basic/OAuth authentication/scopes, protocol-relative tenant server, permissions/app-access rules, seven experimental flags and two deprecated descendant operations. Official current descendants reference still labels these operations deprecated; historical retirement announcements mean publication is not proof every endpoint remains operational. Do not restore previously removed v1 endpoints, concatenate v2, or label this all-GA/current-runtime coverage. Vendor document version 1.0.0 is distinct from runtime v1.",
+      "priority": "high"
     }
   ]
 }

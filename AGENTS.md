@@ -4813,3 +4813,41 @@ Review/script `/tmp/review-support-unused-parameter.py`,
 historical; this entry supersedes them once the infrastructure is merged.
 At the attachment cap, verified merged AGENTS-only #60 unlinked to make
 room; GitHub history and all API/updater attachments retained.
+
+### 2026-10-06 Confluence v1 source review and monitoring preparation
+
+Fresh official v1 download and its currently linked `_v=1.8516.128` query are byte-identical
+at 07:46 UTC: SHA-256 `6c66a606fa7535268512f07f599fe1e3f9de2ba0b1da7eb6ead405509875577e`.
+Native 3.0.1 / document 1.0.0 / 89 paths / 130 operations / 511 resolved local refs;
+none external. The earlier note calling the first invalid parameter `prefix` was wrong:
+GET `/wiki/rest/api/label` parameter 0 is **required `name`**. Complete native error
+enumeration (not only the first diagnostic) identifies three invalid null defaults:
+that name, optional label `type`, and optional group `accessType`. Removing exactly
+these defaults produces zero full/native validation errors; requiredness, types,
+enums and all remaining vendor content are unchanged.
+
+Separate registration `confluence-v1` targets
+`APIs/atlassian.com/confluence-v1/1.0.0/openapi.yaml`; neither Jira nor v2 is a curation
+baseline. The complete checked recipe asserts three whole parameters and two operation
+IDs, refuses vendor fixes/nullable changes/contract changes, and chooses no replacement
+default or runtime omission behavior. Two meaningful regressions cover accepted/rejected
+instances and all three parameter guards. **112 local tests pass**. Preflight import
+passes full validation, all references, typed YAML roundtrip and complete vendor
+comparison except the three defaults and provenance. No conversion or bundling.
+
+Current official v1 intro, label/group and descendants reference pages are retained.
+This is a mixed-lifecycle public collection: seven experimental flags and two deprecated
+descendant operations retained. Current references still label the descendants deprecated;
+historical retirement announcements make runtime availability uncertain. Do not claim
+all v1 endpoints are GA/operational, resurrect retired paths, or concatenate v2. Hosted
+source health remains not_assessed. Native protocol-relative tenant server/auth/permission/
+app-access content stays unchanged. Selected audit against main `62adb98e65b0` reports
+valid missing coverage, not a full new 56-artifact network audit.
+
+Original bytes/HTTP metadata, docs, diagnostic review, preflight YAML/review and selected
+JSON/Markdown audit are under ignored `cache/maintenance/discovery/confluence/v1-current/`.
+Scratch verifier `/tmp/verify-confluence-v1-preparation.py`, logs
+`/tmp/confluence-v1-preparation.log`, `/tmp/confluence-v1-tests.log`; restored pinned
+Python 3.12 environment `/tmp/openapi-maintenance-py312/` (old scratch venv disappeared).
+Deliver monitoring/recipe infrastructure separately, require its actual CI before API
+merge, and record created PR identities below; no API has been committed yet.
