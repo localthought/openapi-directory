@@ -799,6 +799,42 @@ Only entry + `common.yaml` bundle with Redocly 2.57.0, zero warnings/patches/con
 This service is separate from deployment, image repositories and other Snowflake
 resources; it is not full platform/SQL coverage. No existing service curation is borrowed.
 
+`hcp-identity` monitors the original HashiCorp IAM Swagger 2.0 description embedded
+as a JSON string in the [official Identity reference](https://developer.hashicorp.com/hcp/api-docs/identity),
+linked by the [HCP API overview](https://developer.hashicorp.com/hcp/docs/hcp/api).
+The extractor parses the single `__NEXT_DATA__` application/json script without running
+HTML or vendor code, checks exact page identity, stable lifecycle and current service
+version `2019-12-10`, and caches both the unchanged original HTML and exact decoded
+JSON string with separate hashes. It rejects duplicate script attributes/JSON keys,
+missing or changed pointers, lifecycle changes, non-string descriptions and redirects.
+This is hosted publication; repository health remains `not_assessed`, with no invented
+Git revision. Page metadata names `hashicorp/hcp-specs`, but its public metadata request
+returned 404; that observation does not prove deletion or authorize a private fetch.
+
+Native declared `1.0` is retained for the directory despite dated service routes.
+The source covers Identity/IAM only, including groups, organizations, invitations,
+service principals/keys, auth configuration and workload identity providers. Other HCP
+products need separate review. Preserve the native bearer Authorization `apiKey`
+convention rather than inventing OAuth schemes from the access-token guide. Native
+Swagger omits `schemes`; conversion keeps its protocol-relative `//api.cloud.hashicorp.com`
+server instead of adding a scheme absent from the original description.
+
+Pinned swagger2openapi 7.0.8 preserves all 57 paths / 80 operations and 113 schemas.
+Explicit `ref_siblings: allOf` retains all 53 vendor title/description annotations on
+52 schema references, which the converter default drops. Six exact native nullable
+schema guards assert complete context and converted locations. The converter counts
+eight `x-nullable:true` translation visits (the two inline timestamps are visited twice).
+A second conversion with only those six extensions removed must have zero warnings
+and patches, and its complete output must match except the six translated `nullable`
+annotations. This guards actual content, beyond accepting a counter. Original input,
+output, control input/result/logs and hashes remain in the cache/provenance; no null
+semantics, constraints, prose or auth fields are removed. Independent comparisons
+cover every original schema, operation attribute, query/path/body/response and security
+value, plus 253 fully resolved local refs and typed YAML roundtrip. Source recipes using
+this mode retain full native validation. Generated-draft guards now include the converter
+`.cjs` entrypoint and extraction module as delivered comparison-tree inputs.
+
+
 `draft_pr.py` fetches and validates one registered API, using the same pinned source
 health, bundle/conversion/patch, metadata-preserving import and typed YAML machinery.
 It defaults to a dry run and records complete candidate content, original snapshots,

@@ -12,6 +12,54 @@ not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
+**HCP Identity source/recipe reviewed — 2026-10-06:** Infrastructure is prepared on
+`codex/hcp-identity-source-extraction`; actual CI and merge must precede a separate
+API-only generator draft. **165 local tests pass**; actual CI remains required.
+No HCP API is imported/published yet. The official reference
+publishes its original Swagger string at the previously recorded pointer. Fresh original
+HTML hash `d8d60b5046b3e2ba762c08d0868f55a8d54b250f445e1ff998d4f42b0f3f9148`; exact decoded native hash remains
+`b64b033f744447aab8bbcb26964e23a4c4ec35e03fd52ee2cfd3b5ccdf53dc35`. Native **2.0 / vendor 1.0 /
+57 paths / 80 ops / 113 schemas / 248 refs** becomes **3.0.0 / same version/counts /
+253 local refs**, none external (the converter factors repeated request bodies).
+Do not invent a version from dated route segments or replace native bearer apiKey auth
+with an inferred OAuth scheme. Swagger omits `schemes`; the protocol-relative converted
+server `//api.cloud.hashicorp.com` is preserved. No existing HCP/HashiCorp provider or
+service was found in the full fetched Git tree; no curation is borrowed.
+
+All eight diagnostic counter increments were traced to nullable handling in locked
+swagger2openapi 7.0.8: six exact original `x-nullable:true` schemas, with two inline
+workload-provider timestamps visited twice. They are **nullable translations, not eight
+invented schema repairs**. The source recipe guards full original schemas and converted
+locations. A second conversion removes only those six extensions: it must produce zero
+warnings/patches and exactly the same complete output except those six nullable flags.
+Unexpected same-count repairs cannot pass by merely accepting eight. Original native,
+input/output/control bytes/logs/hashes are retained; null semantics are unchanged.
+
+Full vendor projection also found the converter default discards **53 descriptions/titles
+on 52 schema refs**. Explicit vendor-tool `refSiblings:allOf` preserves all of them as
+schema composition, with zero additional patches. Independent comparisons now verify
+every original schema, operation attribute, query/path parameter, request body, response,
+auth/server value and resolved reference, plus native validation and typed YAML import
+roundtrip. No prose, constraints or auth fields are removed. The extractor executes no
+HTML/vendor code, retains exact HTML and JSON-string bytes, requires a single complete
+application/json script, rejects duplicate script attributes/JSON keys, and checks exact
+page identity, stable page/current-release lifecycle and `2019-12-10` service version.
+Generated-draft guards now include the extraction module and `.cjs` converter input.
+
+The public page's versionAlert names `hashicorp/hcp-specs` and a concrete source path;
+a public repository metadata request returned 404. This does not prove deletion or
+make a private source public. Use the actual hosted original publication, preserve real
+fetch dates and `not_assessed` repository health; do not claim a Git revision or all-HCP
+GA coverage. Native IAM/principal/SCIM/permission/workload identity content is complete;
+other HashiCorp products need separate reviews. Target is
+`APIs/hashicorp.com/hcp-identity/1.0/openapi.yaml`; proposed registry **61 artifacts /
+60 services**, not a whole-directory freshness claim. Evidence and independent verifier
+remain under ignored `cache/maintenance/discovery/hashicorp-hcp/identity-delivery/`;
+prior original discovery/trace remains in `hashicorp-hcp/public-docs/`. All eleven blocks,
+unanswered publication choices, parked items and the local one-week deadline are unchanged.
+
+---
+
 **Compute Pool delivered — 2026-10-06 12:27 UTC:** Separate source registration
 [#218](https://github.com/ontola/openapi-directory/pull/218) merged as
 `3a019a1d1e317145857d55001017799c7f0c5466` from actual full head

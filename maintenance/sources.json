@@ -829,6 +829,110 @@
       },
       "discovery": "Official Snowflake Compute Pool API, explicitly generally available in the individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/compute-pools/cp-introduction (not available in government regions; checked 2026-10-06). Full reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/compute-pool and vendor source include three tag operations omitted by the introductory table. Native 3.0.0 / declared 0.0.1 / 10 paths / 13 operations / 216 local refs; only compute-pool.yaml and common.yaml bundle at one pinned public/unarchived/undisabled vendor revision using Redocly 2.57.0, zero warnings and no patches or conversion.",
       "coverage": "Snowpark Container Services compute-pool resource management: create/alter/delete/list/fetch, resume/suspend, stopping services, instance-family discovery and tag actions. Separate from service deployment, images and other Snowflake resource APIs, not full SQL or platform coverage. Keep both deprecated :stopallservices and its :stop-all-services replacement, get-tags active-warehouse requirement, tenant server and all four native auth alternatives, required sizing/instance family/name fields, nullable backup-family value, state enum and read-only runtime/capacity/status fields. Declared vendor 0.0.1 is not proof of current content; no prior service baseline or invented curation."
+    },
+    {
+      "id": "hcp-identity",
+      "provider": "hashicorp.com",
+      "target": "APIs/hashicorp.com/hcp-identity/1.0/openapi.yaml",
+      "url": "https://developer.hashicorp.com/hcp/api-docs/identity",
+      "version_policy": "vendor",
+      "priority": "high",
+      "embedded_document": {
+        "format": "next-data-json-string",
+        "pointer": "#/props/pageProps/schemaFileString",
+        "assertions": [
+          {
+            "pointer": "#/props/pageProps/serviceProductSlug",
+            "value": "hcp"
+          },
+          {
+            "pointer": "#/props/pageProps/releaseStage",
+            "value": "stable"
+          },
+          {
+            "pointer": "#/props/pageProps/metadata/title",
+            "value": "HashiCorp IAM Service"
+          },
+          {
+            "pointer": "#/props/pageProps/versionAlert/currentVersion/versionId",
+            "value": "2019-12-10"
+          },
+          {
+            "pointer": "#/props/pageProps/versionAlert/currentVersion/releaseStage",
+            "value": "stable"
+          }
+        ]
+      },
+      "conversion": {
+        "tool": "swagger2openapi",
+        "version": "7.0.8",
+        "expected_warnings": 0,
+        "expected_patches": 8,
+        "nullable_extensions": [
+          {
+            "from": "#/paths/~12019-12-10~1{provider.resource_name}/patch/parameters/1/schema/properties/created_at",
+            "to": "#/paths/~12019-12-10~1{provider.resource_name}/patch/requestBody/content/application~1json/schema/properties/created_at",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "x-nullable": true,
+              "description": "created_at is when the workload identity provider was created."
+            }
+          },
+          {
+            "from": "#/paths/~12019-12-10~1{provider.resource_name}/patch/parameters/1/schema/properties/updated_at",
+            "to": "#/paths/~12019-12-10~1{provider.resource_name}/patch/requestBody/content/application~1json/schema/properties/updated_at",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "x-nullable": true,
+              "description": "updated_at is when the workload identity provider was last updated."
+            }
+          },
+          {
+            "from": "#/definitions/hashicorp.cloud.iam.ServicePrincipal/properties/managed_by",
+            "to": "#/components/schemas/hashicorp.cloud.iam.ServicePrincipal/properties/managed_by",
+            "schema": {
+              "type": "string",
+              "x-nullable": true,
+              "description": "managed_by is the optional resource_id of the resource which manages this service principal.\nThe presence of this field denotes that the service principal's lifecycle is not managed by\na user."
+            }
+          },
+          {
+            "from": "#/definitions/hashicorp.cloud.iam.UserPrincipal/properties/tfc_synchronized_at",
+            "to": "#/components/schemas/hashicorp.cloud.iam.UserPrincipal/properties/tfc_synchronized_at",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "x-nullable": true,
+              "description": "tfc_synchronized_at denotes the timestamp of when the user was synced to TFC when applicable."
+            }
+          },
+          {
+            "from": "#/definitions/hashicorp.cloud.iam.WorkloadIdentityProvider/properties/created_at",
+            "to": "#/components/schemas/hashicorp.cloud.iam.WorkloadIdentityProvider/properties/created_at",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "x-nullable": true,
+              "description": "created_at is when the workload identity provider was created."
+            }
+          },
+          {
+            "from": "#/definitions/hashicorp.cloud.iam.WorkloadIdentityProvider/properties/updated_at",
+            "to": "#/components/schemas/hashicorp.cloud.iam.WorkloadIdentityProvider/properties/updated_at",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "x-nullable": true,
+              "description": "updated_at is when the workload identity provider was last updated."
+            }
+          }
+        ],
+        "ref_siblings": "allOf"
+      },
+      "discovery": "Official HCP API overview https://developer.hashicorp.com/hcp/docs/hcp/api links the Identity reference. Original vendor Swagger 2.0 string is embedded at the reviewed __NEXT_DATA__ pointer; extract it unchanged without executing HTML or reconstructing rendered operations/SDK types. Hosted page releaseStage stable checked 2026-10-06; retain source page/native hashes, real retrieval date and lifecycle assertion, with no fabricated Git revision or universal GA claim.",
+      "coverage": "HCP Identity and Access Management only: organizations, invitations, groups, users, service principals and keys, workload identity providers, auth configuration and caller identity. Distinct from HCP Terraform, Vault, networking and other platform services. Native bearer Authorization apiKey convention, dated route segments, tenant/resource placeholders, IAM/SCIM/protobuf descriptions and all nullable/required fields retained. Converter counts eight nullable visits for six exact x-nullable:true schemas (two inline fields visited twice); zero-patch control and complete output equality prevent unrelated repairs. Declared 1.0 retained verbatim despite dated service routes. Explicit refSiblings:allOf keeps the vendor descriptions/titles on schema references; the converter default would discard them."
     }
   ]
 }

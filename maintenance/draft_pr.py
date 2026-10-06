@@ -16,8 +16,8 @@ REPOSITORY = "ontola/openapi-directory"
 MANIFEST = "maintenance/sources.json"
 REQUIRED_INPUTS = {"maintenance/" + name for name in (
     "draft_pr.py", "update.py", "validation.py", "bundle.py", "samples.py", "releases.py",
-    "report.py", "health.py", "conversion.py", "response_keys.py", "requirements.txt",
-    "package.json", "package-lock.json")}
+    "report.py", "health.py", "conversion.py", "embedded.py", "response_keys.py", "requirements.txt",
+    "package.json", "package-lock.json", "convert-swagger.cjs")}
 
 
 class PublicationFailure(ValueError):
@@ -42,7 +42,7 @@ def guard_inputs(base):
     if not REQUIRED_INPUTS <= set(paths):
         raise ValueError("Comparison tree is missing required maintenance inputs; use the delivered tool revision")
     for path in paths:
-        if Path(path).suffix in {".py", ".json", ".txt", ".yaml", ".yml"}:
+        if Path(path).suffix in {".py", ".json", ".txt", ".yaml", ".yml", ".cjs"}:
             local = update.ROOT / path
             if local.is_symlink() or not local.is_file() or local.read_bytes() != git("show", base + ":" + path):
                 raise ValueError("Local maintenance input differs from comparison tree: " + path)
