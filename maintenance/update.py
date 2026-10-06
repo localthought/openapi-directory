@@ -218,6 +218,62 @@ def pointer(spec, ref):
     return current
 
 
+def assert_unreferenced(spec, targets):
+    """Conservatively reject JSON Pointer uses before removing an unused node."""
+    def tokens(fragment):
+        if re.search(r"%(?![0-9a-fA-F]{2})", fragment):
+            raise ValueError("Malformed percent escape in reference guard")
+        decoded = urllib.parse.unquote(fragment, errors="strict")
+        if decoded == "":
+            return ()
+        if not decoded.startswith("/") or re.search(r"~(?![01])", decoded):
+            raise ValueError("Invalid JSON Pointer in reference guard")
+        return tuple(token.replace("~1", "/").replace("~0", "~")
+                     for token in decoded[1:].split("/"))
+
+    if not isinstance(targets, list) or not targets:
+        raise ValueError("Unreferenced preconditions require a nonempty pointer list")
+    guarded = {}
+    for ref in targets:
+        if not isinstance(ref, str) or not ref.startswith("#/"):
+            raise ValueError("Unreferenced target must be a local JSON Pointer")
+        key = tokens(ref[1:])
+        if key in guarded:
+            raise ValueError("Duplicate unreferenced target")
+        try:
+            pointer(spec, ref)
+        except (KeyError, IndexError, TypeError, ValueError) as error:
+            raise ValueError("Unreferenced target missing; review recipe: " + ref) from error
+        guarded[key] = ref
+
+    def strings(value):
+        # Include literal examples, extensions, discriminator mappings and keys.
+        # A false positive requires review; these must not conceal a new use.
+        if isinstance(value, dict):
+            for key, child in value.items():
+                yield from strings(key)
+                yield from strings(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from strings(child)
+        elif isinstance(value, str):
+            yield value
+
+    for value in strings(spec):
+        if "#" not in value:
+            continue
+        fragment = value.split("#", 1)[1]
+        decoded = urllib.parse.unquote(fragment)
+        if decoded and not decoded.startswith("/"):
+            continue  # A named anchor or prose, not a JSON Pointer.
+        used = tokens(fragment)
+        for target, ref in guarded.items():
+            # Direct uses, descendants and referenced enclosing nodes all block.
+            common = min(len(target), len(used))
+            if target[:common] == used[:common]:
+                raise ValueError("Unreferenced target is used; review recipe: " + ref)
+
+
 def dereference(spec, value):
     seen = set()
     while isinstance(value, dict) and "$ref" in value:
@@ -542,7 +598,7 @@ def prepare_document(source, raw, metadata=None, cache=None):
         recipe = json.loads(recipe_raw)
         operations = recipe.get("operations") if isinstance(recipe, dict) else None
         if (not isinstance(recipe, dict)
-                or set(recipe) - {"schema_version", "description", "assertions", "operations"}
+                or set(recipe) - {"schema_version", "description", "assertions", "unreferenced", "operations"}
                 or recipe.get("schema_version") != 1 or not recipe.get("description")
                 or not isinstance(operations, list) or not operations):
             raise ValueError("Invalid patch recipe: " + filename)
@@ -564,6 +620,8 @@ def prepare_document(source, raw, metadata=None, cache=None):
                     raise ValueError("Patch assertion target missing; review recipe: " + ref) from error
                 if canonical(actual) != canonical(assertion["value"]):
                     raise ValueError("Patch assertion changed; review recipe: " + ref)
+        if "unreferenced" in recipe:
+            assert_unreferenced(spec, recipe["unreferenced"])
         # Work on a separate parsed document. No caller's object or original
         # cached bytes are modified, even if a later precondition fails.
         for operation in operations:

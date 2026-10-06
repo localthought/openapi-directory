@@ -292,6 +292,15 @@ schema or optionality outside its immediate siblings. Missing/changed nodes, mal
 or duplicate assertions and unknown recipe fields fail closed; assertions do not
 modify content. Recipe hashes/provenance include these preconditions. A simulated
 valid vendor fix must stop replay, including changes to the referenced target.
+An optional nonempty `unreferenced` list asserts that existing local JSON Pointer
+targets have no pointer uses before any operation in that recipe. The conservative
+scan includes strings in examples, extensions, mappings and keys, percent-decoded
+fragments and escaped tokens. Uses of the target, its descendants or an enclosing
+node (including the document root) stop replay. URI-prefixed pointer fragments also
+block; named anchors and prose are not pointer references. This guard establishes
+pointer absence, not an arbitrary vendor's implicit name-resolution semantics;
+review those independently before removing an unused definition. Missing, malformed
+or duplicate targets fail closed. Original bytes stay cached on guard failure.
 
 Recipes can also remove an explicitly asserted invalid field using `remove: true` in
 place of `value`. This never supplies a replacement value or infers server behavior.
@@ -608,13 +617,17 @@ Hosted repository health remains unassessed.
 
 Zendesk Support (`zendesk-support`) follows the hosted OAS download linked from
 the official Ticketing introduction, separate from Sunshine Conversations. Fixed
-document version `2.0.0` continues to receive content updates. Source monitoring
-reports the native unsupported `type:null` branch in OpenAPI 3.0.3 as an import
-block; matching hashes or valid references do not establish successful validation.
-A diagnostic null-only compatibility representation exposes another invalid,
-unused `UserLogin` path parameter with `deepObject` style. Neither correction nor
-component removal is adopted. Preserve original bytes, tenant/auth/permission and
-lifecycle restrictions; review complete validation and semantics before import.
+document version `2.0.0` continues to receive content updates. Its checked recipe
+expresses the documented null-only alternative as explicit `type:string`,
+`nullable:true`, `enum:[null]`, retaining every other alternative and original
+`oneOf` exclusivity (including integer/number overlap). It removes only the invalid,
+unused `UserLogin` path parameter component with query-only `deepObject` style.
+Complete condition/parameter assertions and conservative pointer absence guards
+stop on changed definitions, new uses or vendor corrections. Every path/operation,
+other constraint and native tenant/auth/permission/lifecycle declaration remains.
+The artifact models basic auth only; current public auth docs recommend OAuth and
+mark API tokens deprecated. Retain that publication limitation without inventing
+schemes. Original bytes, exact recipe hash and full validation remain required.
 
 Zendesk Conversations (`zendesk-conversations`) follows the maintained official
 `zendesk/sunshine-conversations-api-spec` public v2 source, separate from Support
