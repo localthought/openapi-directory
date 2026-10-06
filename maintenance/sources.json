@@ -3,6 +3,7 @@
   "sources": [
     {
       "id": "github-rest",
+      "publication_group": "github-public-rest",
       "provider": "github.com",
       "target": "APIs/github.com/api.github.com/1.1.4/openapi.yaml",
       "github": {"repository": "github/rest-api-description", "ref": "main", "path": "descriptions/api.github.com/api.github.com.json"},
@@ -12,6 +13,7 @@
     },
     {
       "id": "github-rest-2022-11-28",
+      "publication_group": "github-public-rest",
       "provider": "github.com",
       "target": "APIs/github.com/api.github.com.2022-11-28/1.1.4/openapi.yaml",
       "github": {"repository": "github/rest-api-description", "ref": "main", "path": "descriptions/api.github.com/api.github.com.2022-11-28.json"},
