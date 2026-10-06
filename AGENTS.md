@@ -831,6 +831,54 @@ Real defects caught this way: Eventbrite's `<angle>` path params (fixed), Vertex
 
 ## 7. Environment gotchas
 
+**Coinbase CDP delivery prepared (2026-10-05):** separate updater
+[PR #197](https://github.com/ontola/openapi-directory/pull/197) at
+`58bbea99b101a5e2fe153569bce61c1c89c1e9b9` registers the current canonical CDN
+publication linked by official SDK Makefile at discovery commit
+`d40fb3975395033409643654faacfb3d4e4349ee`. It includes the exact four redundant
+required:false Reference Object removals, nine assertions and two regression tests;
+**102 local tests pass**. CI run 37371438690 is queued, not passed. Infrastructure
+must pass actual CI and merge before marking the separate API addition ready.
+
+[API PR #198](https://github.com/ontola/openapi-directory/pull/198) is DRAFT; do not
+duplicate it. Branch `codex/coinbase-cdp-api-only` adds only this progress and
+`APIs/coinbase.com/cdp/2.0.0/openapi.yaml`. Native 3.1.0 / vendor 2.0.0, **140 paths /
+169 ops / 2594 resolved local refs**, none external. Main at cfb19aa445 has no
+Coinbase provider; no previous metadata/baseline is borrowed or fabricated.
+Current canonical raw hash
+`156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302`, recipe hash
+`2119fac0681727ae3560bdd6b945eb05ce0018f6ba4d1048d93d93efd7f31f24`.
+Complete corrected native and actual serialized import fully validate; all typed
+vendor content matches except the four reviewed sibling removals and provenance.
+Reference targets, optional header required:false, security/auth/server/tags and
+all schema/prose/lifecycle content remain exact. No bundling, conversion or inlining.
+Public scope is mixed GA/Beta, with private-beta fiat deposit destinations retained;
+custodial resources require verified business accounts, payment methods Prime-only.
+This is CDP v2, not Coinbase Exchange or a hand-built all-GA slice.
+
+Official SDK snapshot lags by 14 paths / 15 operations; do not substitute its old
+artifact for the current CDN. Plain/fresh timestamp queries match independently,
+ETag/Last-Modified and 20:41 UTC CloudFront RefreshHit evidence retained. Hosted
+health is not_assessed and provenance claims no Git revision. Raw bytes/cache/header
+and official guide evidence remain under `cache/maintenance/discovery/coinbase-cdp/`
+and `cache/maintenance/coinbase-cdp/`. Scripts/reviews
+`/tmp/verify-coinbase-cdp-import.py`, `/tmp/coinbase-cdp-import-review.json`,
+`/tmp/coinbase-cdp-actual-import.log`, `/tmp/coinbase-cdp-tests.log`,
+`/tmp/coinbase-cdp-selected-audit.json/.md`. Selected audit against actual main
+reports valid missing source. Configured scope becomes 54 artifacts only with #197.
+API-only branch intentionally excludes the recipe until infrastructure merges;
+do not run native CDP import here before that dependency is available.
+
+Zendesk #195/#196 remain pending two hosted runner-acquisition failures without
+executed tests; preserve their branches and avoid duplicate PRs. Push-protection
+choices for Twilio Messaging/Zendesk Conversations remain unanswered. Attachment
+cap is 100: attaching #197 and #198 failed, canonical removals of superseded merged #61/#66
+returned app errors, legacy redirect URL removal reported success but a fresh
+inventory confirms no actual canonical attachment removal. Preserve current
+artifacts; do not claim linkage success. Retry exact new-PR attachment when possible
+and keep repository/GitHub links as durable delivery state.
+
+
 - **Work has been running in a git worktree.** `git checkout main` fails there — main is checked out in the primary dir. Always `git checkout -B <branch> origin/main`. To resync: `git reset --hard origin/main`.
 - **Never bare `git stash`** — the stash stack is shared across worktrees and other sessions.
 - **`gh` GraphQL 502s intermittently** on this repo. Fall back to REST: `gh api --method GET "repos/.../issues?..." --paginate`. **Always pass `--method GET`** — bare `-f key=value` defaults to POST and will 422.
