@@ -1,0 +1,1102 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Snowflake Database Role API
+  description: The Snowflake Database Role API is a REST API that you can use to access, update, and perform certain actions on Database Role resource in a Snowflake database.
+  contact:
+    name: Snowflake, Inc.
+    url: https://snowflake.com
+    email: support@snowflake.com
+  x-origin:
+    - format: openapi
+      url: https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/database-role.yaml
+      version: '3.0'
+  x-conversion:
+    - Fetched from https://raw.githubusercontent.com/snowflakedb/snowflake-rest-api-specs/990e25d97236a11826c9eed40e587c2b859e5680/specifications/database-role.yaml at commit 990e25d97236a11826c9eed40e587c2b859e5680; entry source SHA-256 9e72bc5202b70e2abff1376b8f255d56b6bfff601e4f7db3d2262af68bea4f3f.
+    - Bundled 2 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 0 warnings. Source-file snapshot SHA-256 d0003e3330b60d4c36386d83f13c82b340534cc9d8be30119e148eedc3ca6cf4.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
+servers:
+  - description: Snowflake REST Server
+    url: https://org-account.snowflakecomputing.com
+security:
+  - KeyPair: []
+  - ExternalOAuth: []
+  - SnowflakeOAuth: []
+  - ProgrammaticAccessToken: []
+paths:
+  /api/v2/databases/{database}/database-roles:
+    get:
+      summary: List database roles
+      tags:
+        - database-role
+      description: List database roles
+      operationId: listDatabaseRoles
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/showLimit'
+        - $ref: '#/components/parameters/fromName'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DatabaseRole'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    post:
+      summary: Create a database role
+      tags:
+        - database-role
+      description: Create a database role
+      operationId: createDatabaseRole
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/createMode'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseRole'
+  /api/v2/databases/{database}/database-roles/{name}:
+    delete:
+      summary: Delete a database role
+      tags:
+        - database-role
+      description: Delete a database role
+      operationId: deleteDatabaseRole
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+  /api/v2/databases/{database}/database-roles/{name}:clone:
+    post:
+      summary: Create a new database role by cloning from the specified resource
+      tags:
+        - database-role
+      description: Create a new database role by cloning from the specified resource
+      operationId: cloneDatabaseRole
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/createMode'
+        - name: targetDatabase
+          description: Database of the target resource. Defaults to the source's database
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseRoleClone'
+  /api/v2/databases/{database}/database-roles/{name}/grants:
+    get:
+      summary: List all grants to the role
+      tags:
+        - database-role
+      description: List all grants to the role
+      operationId: listGrants
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/showLimit'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Grant'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    post:
+      summary: Grant privileges to the role
+      tags:
+        - database-role
+      description: Grant privileges to the role
+      operationId: grantPrivileges
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+  /api/v2/databases/{database}/database-roles/{name}/grants:revoke:
+    post:
+      summary: Revoke grants from the role
+      tags:
+        - database-role
+      description: Revoke grants from the role
+      operationId: revokeGrants
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/mode'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+  /api/v2/databases/{database}/database-roles/{name}/future-grants:
+    get:
+      summary: List all future grants to the role
+      tags:
+        - database-role
+      description: List all future grants to the role
+      operationId: listFutureGrants
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/showLimit'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Grant'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+    post:
+      summary: Grant future privileges to the role
+      tags:
+        - database-role
+      description: Grant future privileges to the role
+      operationId: grantFuturePrivileges
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+  /api/v2/databases/{database}/database-roles/{name}/future-grants:revoke:
+    post:
+      summary: Revoke future grants from the role
+      tags:
+        - database-role
+      description: Revoke future grants from the role
+      operationId: revokeFutureGrants
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/mode'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Grant'
+  /api/v2/databases/{database}/database-roles/{name}:set-tags:
+    post:
+      summary: Set tags on a database role.
+      tags:
+        - database-role
+      description: Set tags on a database role.
+      operationId: setTags
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagAssignment'
+  /api/v2/databases/{database}/database-roles/{name}:unset-tags:
+    post:
+      summary: Unset tags from a database role.
+      tags:
+        - database-role
+      description: Unset tags from a database role.
+      operationId: unsetTags
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/ifExists'
+      responses:
+        '200':
+          $ref: '#/components/responses/200SuccessResponse'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/TagReference'
+  /api/v2/databases/{database}/database-roles/{name}:get-tags:
+    get:
+      summary: Get the tag assignments for a database role.
+      tags:
+        - database-role
+      description: Returns all tags assigned to a database role. This operation requires an active warehouse.
+      operationId: getTags
+      parameters:
+        - $ref: '#/components/parameters/database'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/withLineage'
+      responses:
+        '200':
+          description: successful
+          headers:
+            X-Snowflake-Request-ID:
+              $ref: '#/components/headers/X-Snowflake-Request-ID'
+            Link:
+              $ref: '#/components/headers/Link'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagAssignment'
+        '202':
+          $ref: '#/components/responses/202SuccessAcceptedResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '405':
+          $ref: '#/components/responses/405MethodNotAllowed'
+        '408':
+          $ref: '#/components/responses/408RequestTimeout'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+        '410':
+          $ref: '#/components/responses/410Gone'
+        '429':
+          $ref: '#/components/responses/429LimitExceeded'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+        '503':
+          $ref: '#/components/responses/503ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504GatewayTimeout'
+components:
+  schemas:
+    DatabaseRole:
+      type: object
+      description: A Snowflake database role
+      properties:
+        name:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Name of the database role
+        comment:
+          type: string
+          description: User comment associated to an object in the dictionary
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date and time when the database role was created
+        granted_to_roles:
+          type: integer
+          format: int64
+          readOnly: true
+          description: How many roles this database role has been granted to
+        granted_to_database_roles:
+          type: integer
+          format: int64
+          readOnly: true
+          description: How many database roles this database role has been granted to
+        granted_database_roles:
+          type: integer
+          format: int64
+          readOnly: true
+          description: How many database roles this database role has been granted
+        owner:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          readOnly: true
+          description: Role that owns the database role
+        owner_role_type:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          readOnly: true
+          description: The type of role that owns the database role
+      required:
+        - name
+    DatabaseRoleClone:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Name of the database role
+      required:
+        - name
+    Grant:
+      type: object
+      properties:
+        securable:
+          $ref: '#/components/schemas/Securable'
+          description: Securable of the grant
+        containing_scope:
+          $ref: '#/components/schemas/ContainingScope'
+          description: Containing scope of the grant
+        securable_type:
+          type: string
+          description: Type of the securable to be granted.
+        grant_option:
+          type: boolean
+          description: If true, allows the recipient role to grant the privileges to other roles.
+        privileges:
+          type: array
+          items:
+            type: string
+          description: List of privileges to be granted.
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Date and time when the grant was created
+        granted_by:
+          type: string
+          readOnly: true
+          description: The role that granted this privilege to this grantee
+      required:
+        - securable_type
+    Securable:
+      type: object
+      properties:
+        database:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Database name of the securable if applicable.
+        schema:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Schema name of the securable if applicable.
+        service:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Service name of the securable if applicable.
+        name:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Name of the securable if applicable.
+      required:
+        - name
+    ContainingScope:
+      type: object
+      properties:
+        database:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Database name of the securable scope if applicable.
+        schema:
+          type: string
+          pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$
+          description: Schema name of the securable scope if applicable.
+      required:
+        - database
+    Identifier:
+      type: string
+      description: A Snowflake object identifier. If the identifier contains spaces or special characters, the entire string must be enclosed in double quotes. Identifiers enclosed in double quotes are also case-sensitive.
+      pattern: ^"([^"]|"")+"|[a-zA-Z_][a-zA-Z0-9_$]*$|^[$][0-9]+$
+      example: TEST_NAME
+    SuccessAcceptedResponse:
+      type: object
+      description: Schema for a request in progress response returned by the server.
+      properties:
+        code:
+          type: string
+          description: Message code returned by the server.
+        message:
+          type: string
+          description: Message returned by the server
+        resultHandler:
+          type: string
+          description: Opaque result ID used for checking for request completion through one or more subsequent completion check operations.
+        job_id:
+          type: string
+          description: ID of the job/query backing the in-progress request. This is the result handler without the trailing result-type indicator appended to it.
+      example:
+        code: '392604'
+        message: Request execution in progress. Use the provided location header or result handler ID to perform query monitoring and management.
+        job_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message returned by the server
+        code:
+          type: string
+          description: Error code.
+        error_code:
+          type: string
+          description: Error code, same as `code` above. This property has been deprecated and will be removed in a future release, but is temporarily supported for for short-term backward compatibility.
+        request_id:
+          type: string
+          description: Unique request ID.
+      example:
+        message: Compilation error!
+        error_code: '390189'
+        request_id: 01afef9d-0607-0550-0001-dd270c3902d7
+    SuccessResponse:
+      type: object
+      description: Schema for all the success responses returned by the server.
+      properties:
+        status:
+          type: string
+          description: Message returned by the server.
+      example:
+        status: Request successfully completed
+    TagReference:
+      type: object
+      description: Identifier for a tag, including optional database and schema names.
+      properties:
+        tag_database:
+          description: The database in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_schema:
+          description: The schema in which the tag is defined.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+        tag_name:
+          description: The name of the tag.
+          allOf:
+            - $ref: '#/components/schemas/Identifier'
+      required:
+        - tag_name
+    TagAssignment:
+      description: Defines an association between a tag and value.
+      allOf:
+        - $ref: '#/components/schemas/TagReference'
+      properties:
+        tag_value:
+          type: string
+          description: The value of the tag.
+        level:
+          type: string
+          readOnly: true
+          description: The object domain on which the tag is set.
+      required:
+        - tag_value
+  securitySchemes:
+    KeyPair:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `KEYPAIR_JWT` if the token is a key-pair authentication JWT.
+    ExternalOAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Configure External Oauth with Snowflake (see <a href=https://docs.snowflake.com/en/user-guide/oauth-ext-overview>External OAuth overview</a>.) Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` and set the Token to the auth token received from the external Auth server.
+    SnowflakeOAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: /oauth/authorize
+          scopes: {}
+      description: Set `X-Snowflake-Authorization-Token-Type` to `OAUTH` if the token is snowflakeOAuth
+    ProgrammaticAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Set `X-Snowflake-Authorization-Token-Type` to `PROGRAMMATIC_ACCESS_TOKEN` if the token is a programmatic access token.
+  parameters:
+    database:
+      name: database
+      description: Identifier (i.e. name) for the database to which the resource belongs. You can use the `/api/v2/databases` GET request to get a list of available databases.
+      required: true
+      in: path
+      schema:
+        example: TEST_DB
+        $ref: '#/components/schemas/Identifier'
+    showLimit:
+      name: showLimit
+      description: Parameter to limit the maximum number of rows returned by a command.
+      in: query
+      schema:
+        type: integer
+        example: 10
+        minimum: 1
+        maximum: 10000
+    fromName:
+      name: fromName
+      description: Parameter to enable fetching rows only following the first row whose object name matches the specified string. Case-sensitive and does not have to be the full name.
+      in: query
+      schema:
+        type: string
+        example: from_test
+    createMode:
+      name: createMode
+      description: 'Parameter allowing support for different modes of resource creation. Possible values include:
+
+        - `errorIfExists`: Throws an error if you try to create a resource that already exists.
+
+        - `orReplace`: Automatically replaces the existing resource with the current one.
+
+        - `ifNotExists`: Creates a new resource when an alter is requested for a non-existent resource.'
+      in: query
+      schema:
+        type: string
+        enum:
+          - errorIfExists
+          - orReplace
+          - ifNotExists
+        example: ifNotExists
+        default: errorIfExists
+    name:
+      name: name
+      description: Identifier (i.e. name) for the resource.
+      required: true
+      in: path
+      schema:
+        example: TEST_NAME
+        $ref: '#/components/schemas/Identifier'
+    ifExists:
+      name: ifExists
+      description: 'Parameter that specifies how to handle the request for a resource that does not exist:
+
+        - `true`: The endpoint does not throw an error if the resource does not exist. It returns a 200 success response, but does not take any action on the resource.
+
+        - `false`: The endpoint throws an error if the resource doesn''t exist.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+    mode:
+      name: mode
+      description: 'Parameter determines whether the revoke operation succeeds or fails for the privileges, based on the whether the privileges had been re-granted to another role.
+
+        - restrict: If the privilege being revoked has been re-granted to another role, the REVOKE command fails.
+
+        - cascade: If the privilege being revoked has been re-granted, the REVOKE command recursively revokes these dependent grants. If the same privilege on an object has been granted to the target role by a different grantor (parallel grant), that grant is not affected and the target role retains the privilege.'
+      in: query
+      schema:
+        type: string
+        enum:
+          - restrict
+          - cascade
+        example: restrict
+    withLineage:
+      name: withLineage
+      description: 'Parameter that specifies whether tag assignments inherited by the object from its ancestors in securable object hierarchy should be returned as well:
+
+        - `true`: All tags assigned to this object should be returned, inheritance included.
+
+        - `false`: Only tags explicitly assigned to this object should be returned.'
+      in: query
+      schema:
+        type: boolean
+        example: true
+        default: false
+  headers:
+    X-Snowflake-Request-ID:
+      description: Unique ID of the API request.
+      schema:
+        type: string
+        format: uuid
+    Link:
+      description: Links to the page of results (e.g. the first page, the last page, etc.). The header can include multiple 'url' entries with different 'rel' attribute values that specify the page to return ('first', 'next', 'prev', and 'last').
+      schema:
+        type: string
+        example: </api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=0>; rel="first",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=1>; rel="next",</api/v2/results/01b66701-0000-001c-0000-0030000b91521?page=9>; rel="last"
+  responses:
+    202SuccessAcceptedResponse:
+      headers:
+        Location:
+          schema:
+            type: string
+            description: Relative path for checking request status or getting the result, if available.
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      description: Successfully accepted the request, but it is not completed yet.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessAcceptedResponse'
+    400BadRequest:
+      description: Bad Request. The request payload is invalid or malformed. This happens if the application didn't send the correct request payload. The response body may include the error code and message indicating the actual cause. The application must reconstruct the request body for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    401Unauthorized:
+      description: Unauthorized. The request is not authorized. This happens if the attached access token is invalid or missing. The response body may include the error code and message indicating the actual cause, e.g., expired, invalid token. The application must obtain a new access token for retry.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    403Forbidden:
+      description: Forbidden. The request is forbidden. This can also happen if the request is made even if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    404NotFound:
+      description: Not Found. The request endpoint is not valid. This happens if the API endpoint does not exist, or if the API is not enabled.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    405MethodNotAllowed:
+      description: Method Not Allowed. The request method doesn't match the supported API. This happens, for example, if the application calls the API with GET method but the endpoint accepts only POST.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    408RequestTimeout:
+      description: Request Timeout. This indicates that the request from the client timed out and was not completed by the server.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    409Conflict:
+      description: Conflict. The requested operation could not be performed due to a conflicting state that could not be resolved. This usually happens when a CREATE request was performed when there is a pre-existing resource with the same name, and also without one of the options orReplace/ifNotExists.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    410Gone:
+      description: Gone. This error is primarily intended to assist the task of web maintenance by notifying the recipient that the resource is intentionally unavailable.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    429LimitExceeded:
+      description: Limit Exceeded. The number of requests hit the rate limit. The application must slow down the frequency of hitting the API endpoints.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    500InternalServerError:
+      description: Internal Server Error. The server hit an unrecoverable system error. The response body may include the error code and message for further guidance. The application owner may need to reach out the customer support.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    503ServiceUnavailable:
+      description: Service Unavailable. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    504GatewayTimeout:
+      description: Gateway Timeout. The request was not processed due to server side timeouts. The application may retry with backoff. The jittered backoff is recommended.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    200SuccessResponse:
+      description: Successful request.
+      headers:
+        X-Snowflake-Request-ID:
+          $ref: '#/components/headers/X-Snowflake-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessResponse'
