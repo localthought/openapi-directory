@@ -5,14 +5,64 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Audit of `origin/main` at `2af2c554a` (PR #203 merged):
-731 provider domains; 4,283 files under `APIs/`, including 2,109
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of `origin/main` at `c73359aaf` (PR #206 merged):
+731 provider domains; 4,284 files under `APIs/`, including 2,110
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
-**Latest resume state — 2026-10-06:** This supersedes earlier prepared/draft/runner-outage
+**Latest follow-up — 2026-10-06 07:52 UTC:** Confluence Cloud **v1 is now delivered**,
+separate from v2. Do not repeat its prepared/import queue below. Updater
+[#205](https://github.com/ontola/openapi-directory/pull/205) merged at
+`8fd1bcd65def291af1c181ba9d53db282a829fee` after actual head
+`6db22972d34b9cc606bc893d1972dc867e9feea9` passed **112 local and hosted CI tests**
+(run `37432049207`, tests job `112164954722`). API-only
+[#206](https://github.com/ontola/openapi-directory/pull/206) merged at
+`c73359aaf5e914eebb772bfe993784229f99ea2f`, exact head
+`fbcb5887c71ccc57c54639c8b29420e80b965e6d`; only new file
+`APIs/atlassian.com/confluence-v1/1.0.0/openapi.yaml`. Both PRs were explicitly
+verified CLEAN/MERGEABLE and merged with their actual matching head; no auto-merge.
+
+Native 3.0.1 / document 1.0.0 / **89 paths / 130 operations / 511 local refs**,
+no external refs. All original content survives except three exact invalid null
+defaults (required label `name`, optional label `type`, optional group `accessType`)
+and added provenance. Requiredness/types/enums remain; recipe assertions stop vendor
+corrections. Source hash `6c66a606fa7535268512f07f599fe1e3f9de2ba0b1da7eb6ead405509875577e`,
+recipe hash `46315783f6954dad648794827c5f969905188b38fbd03e17113f12caac921bcf`.
+Complete native/serialized validation, typed roundtrip, all references and full
+curated vendor comparison pass. Native auth/scopes, tenant server, permissions,
+seven experimental flags and two deprecated descendant operations remain. Publication
+does not establish runtime availability of deprecated endpoints. No conversion,
+bundling, new curation, nullable widening or inferred omission behavior.
+
+**Monitoring now registers 56 artifacts / 55 services.** Fresh selected Confluence
+v1 audit against real merged main `c73359aaf5e9` at 07:51 UTC reports
+`matches_source` with no validation errors. This is **one newly checked artifact**,
+not a second full network audit. Preserve the earlier 55-artifact network audit and
+cached reconciliation below with their actual dates/bases; the other 55 registrations
+and all previously stored APIs are unchanged by #205/#206. Known 11 blocks and
+unanswered Twilio Messaging/Zendesk Conversations owner choices remain untouched.
+Only independent #179 remains open after delivery. No vendor messages/issues sent.
+
+Durable ignored evidence, original native source/HTTP metadata, current official
+intro/label/group/descendants references, all-error enumeration, independent preflight
+and actual import comparisons, verifier copies/local and CI logs, and selected
+before/after JSON+Markdown audit reports are in
+`cache/maintenance/discovery/confluence/v1-current/`. Old scratch venv disappeared;
+pinned local Python environment is now `/tmp/openapi-maintenance-py312/`.
+Attachment attempts #205/#206 failed at the existing 100 cap; preserve GitHub links,
+do not claim app linkage success or repeat ineffective legacy-URL removals.
+
+Next meaningful work: official-source discovery for well-known providers (HCP generation
+inputs/official docs and current Anthropic publication remain bounded leads), or separate
+authorized updater PR-generation/monthly-discovery infrastructure. Confluence v1/v2 are
+complete. Keep all native-defect blocks and explicitly parked §5 work intact. The original
+local one-week deadline and laptop-sleep behavior remain unchanged.
+
+---
+
+**Earlier resume state — 2026-10-06 (before #205/#206):** This supersedes earlier prepared/draft/runner-outage
 notes retained below as historical evidence. All six API deliveries and three updater
 recipes in the following table are merged; do not duplicate them.
 
