@@ -5,14 +5,53 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `5b7502f80` (PR #216 merged):
-731 provider domains; 4,287 files under `APIs/`, including 2,113
+**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `960c763ba` (PR #219 merged):
+731 provider domains; 4,288 files under `APIs/`, including 2,114
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
 ---
 
-**Compute Pool registration prepared — 2026-10-06:** Native official Snowflake
+**Compute Pool delivered — 2026-10-06 12:27 UTC:** Separate source registration
+[#218](https://github.com/ontola/openapi-directory/pull/218) merged as
+`3a019a1d1e317145857d55001017799c7f0c5466` from actual full head
+`3961d38b53130538eefa2777628f18937ee2603a`; **151 local and hosted tests pass**
+(run `37462713260`, tests job `112266006314`, actual test steps executed).
+The create-only generator then published separate API-only
+[#219](https://github.com/ontola/openapi-directory/pull/219), actual generated head
+`103927f96dded4a64b330d1a7fe585aee9335b26`, base `3a019a1d1e317145857d55001017799c7f0c5466`.
+Its real **Generated API draft validation** run `37463240868`, job `112267777732`,
+passed against that exact head, using trusted base tools. This is the first actual API
+use of the delivered validation workflow, beyond its regression tests. Native validation,
+typed YAML roundtrip, single-parent/full Git-tree/API-only scope, all 216 local refs,
+original entry/helper/bundle/health hashes and complete vendor-plus-provenance comparison
+also pass independently. The generator left the checkout/index unchanged. Draft was
+marked ready only after CI success; exact head/files/CLEAN/MERGEABLE were rechecked before
+matching-head merge. REST confirmed API merge `960c763bab32285a05a0d61effa3629796cc0f21`.
+No automatic merge policy, source repair, invented curation or constraint waiver was added.
+
+Fresh selected post-delivery network audit against this actual main reports **one
+matches_source / zero errors**; original source/health dates are retained in the report.
+Markdown/JSON parity, original entry/helper/health hashes and native/stored equality pass.
+Only Compute Pool's new API file changed since main `4e938868656b`; fetched full tree
+inventory above was recomputed. This is **not a new full 60-artifact audit**. Monitoring
+is now **60 artifacts / 59 services**; Snowflake imported coverage is **12 distinct
+descriptions / 116 paths / 148 operations**, not its whole platform. Required #218 and
+#219 attachment attempts both failed with the 100-attachment-cap error; retain the
+GitHub links without claiming app linkage. Only unrelated #179 remains open.
+
+Original preflight, generated candidate/result, source/health/bundle snapshots, actual CI
+logs/states, premerge/merged receipts and independent import/post-delivery verification
+remain under ignored `cache/maintenance/discovery/snowflake-compute-pool/`.
+Next independent work: review all eight HCP Identity converter repairs and guarded
+original HTML/string extraction before registering/importing; continue pending-PR update
+and scheduled-publishing infrastructure separately. All eleven blocks, unanswered owner
+protection choices, §5 parked items, Grant exclusion and the original local one-week
+deadline/laptop-sleep behavior remain unchanged. Do not duplicate #218 or #219.
+
+---
+
+**Compute Pool original source review — 2026-10-06:** Native official Snowflake
 Compute Pool is **3.0.0 / vendor 0.0.1 / 10 paths / 13 operations / 216 local refs**,
 none external. All operations are disjoint from the prior eleven Snowflake services.
 The individual guide explicitly marks generally available and unavailable in government
@@ -23,10 +62,9 @@ and deprecated error-code compatibility prose. Source is public/unarchived/undis
 at vendor `990e25d97236a11826c9eed40e587c2b859e5680`; entry + `common.yaml` bundle with
 Redocly 2.57.0, zero warnings/patches/conversion. Independent full dereferenced entry/
 original component comparisons, native/stored preflight validation and typed vendor
-roundtrip pass; no invented curation. **151 local tests pass**. Registration infrastructure
-and actual CI must merge before a separate API-only draft; use the delivered generator
-for the latter and verify actual generated-draft CI before marking ready/merging.
-Monitoring becomes **60 artifacts / 59 services**; no full expanded audit is claimed.
+roundtrip pass; no invented curation. **151 local tests pass**. Source registration and the separate generated API-only draft
+are now delivered as #218/#219 above; retain this original review as evidence.
+Monitoring is **60 artifacts / 59 services**; no full expanded audit is claimed.
 
 Entry hash `f7293eef7951904a8943f1ea63adc80297a11cb9456fc8f95dbcaf55b357362e`;
 two-file snapshot `34d7dd7fd49aa7ddaac9d263a46d29045bdeade4f7335a1e751e16fb30b6b209`.
