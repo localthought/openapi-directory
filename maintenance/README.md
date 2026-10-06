@@ -220,6 +220,19 @@ authentication alternatives, privilege/revocation restrictions and the active-wa
 requirement for retrieving tag assignments. Neither is complete SQL coverage or the
 separate Database Role API. Keep vendor `0.0.1` and compare full content on future checks.
 
+Snowflake Database Role is a separate database-scoped resource API, distinct from the
+account-level Role and User descriptions. Its [guide](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/database-role/database-role-introduction)
+and [complete reference](https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/database-role)
+have no preview designation (checked 2026-10-06). Keep all 10 paths / 13 operations,
+including three tag actions absent from the introductory table; bundle the entry and
+`common.yaml` with zero warnings and no patches. Retain the native authentication,
+restrict/cascade and parallel-grant behavior, and the active-warehouse requirement for
+get-tags. Keep literal vendor `0.0.1`; this is not complete SQL or platform coverage.
+The separate native `grant.yaml` and current Grant reference mark **all seven operations
+deprecated**. That valid but wholly deprecated candidate is neither registered nor
+imported; publication alone is not a reason to add a current-priority API. The native
+lifecycle decision and source hashes are retained in the maintenance discovery cache.
+
 Discord follows `discord/discord-api-spec/specs/openapi.json`, the vendor's standard
 stable public v10 HTTP artifact. The [vendor README](https://github.com/discord/discord-api-spec/blob/main/README.md)
 distinguishes it from `openapi_preview.json`, which includes experimental features.

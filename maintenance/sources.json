@@ -789,6 +789,25 @@
       },
       "discovery": "Official distinct Snowflake Role resource-management API linked by the generally available REST overview. Individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/roles/roles-introduction and complete reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/role have no preview designation (checked 2026-10-06). Native OpenAPI 3.0.0 / vendor 0.0.1, 11 paths / 14 operations; bundle only entry and common.yaml from one pinned public/unarchived/undisabled vendor revision using Redocly 2.57.0, zero warnings and no patches. Introductory tables omit three tag actions that the full reference and native artifact include; retain the complete artifact.",
       "coverage": "Snowflake Role management, grants to/of/on roles, future privileges, revocation and tag actions. Distinct resource API, not database-role management, all Snowflake resources or complete SQL command coverage. Preserve native tenant server, KeyPair/ExternalOAuth/SnowflakeOAuth/ProgrammaticAccessToken authentication alternatives, all privilege/revocation rules, deprecated error_code compatibility prose and the active-warehouse requirement for get-tags. No previous service baseline or invented curation. Vendor 0.0.1 is retained and does not establish content freshness."
+    },
+    {
+      "id": "snowflake-database-role",
+      "provider": "snowflake.com",
+      "target": "APIs/snowflake.com/database-role/0.0.1/openapi.yaml",
+      "github": {
+        "repository": "snowflakedb/snowflake-rest-api-specs",
+        "ref": "main",
+        "path": "specifications/database-role.yaml"
+      },
+      "version_policy": "vendor",
+      "priority": "high",
+      "bundling": {
+        "tool": "redocly",
+        "version": "2.57.0",
+        "root": "specifications"
+      },
+      "discovery": "Official distinct Snowflake Database Role resource API linked by the generally available REST overview. Individual guide https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/database-role/database-role-introduction and complete reference https://docs.snowflake.com/en/developer-guide/snowflake-rest-api/reference/database-role have no preview designation (checked 2026-10-06). Native OpenAPI 3.0.0 / vendor 0.0.1 / 10 paths / 13 operations / 270 local refs. Bundle only entry plus common.yaml from one pinned public/unarchived/undisabled vendor revision with Redocly 2.57.0, zero warnings, no patches or version conversion. Introductory table omits three tag actions included in the full reference and source; retain the complete artifact.",
+      "coverage": "Database-scoped Snowflake role creation, listing, deletion, cloning, grants and future privileges/revocation, and tag assignments. Distinct from account-level Role/User and the entirely deprecated standalone Grant artifact; endpoints are disjoint from all ten prior Snowflake services. Preserve native tenant server and KeyPair/ExternalOAuth/SnowflakeOAuth/ProgrammaticAccessToken authentication alternatives, database/name constraints, restrict/cascade revocation semantics, parallel-grant limitations, deprecated error_code compatibility prose and get-tags active-warehouse requirement. This is not all Snowflake resources or complete SQL command coverage; no prior service baseline or invented curation. Retain literal vendor 0.0.1 and compare full content rather than assuming version freshness."
     }
   ]
 }
