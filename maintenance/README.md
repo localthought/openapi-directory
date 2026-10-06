@@ -656,6 +656,24 @@ default valid and blocks replay for review. No nullability or replacement defaul
 is inferred. This new v3 service has no old curation/comparison baseline; keep v2
 and historical Polls bytes intact. Hosted health is unassessed.
 
+### Coinbase Developer Platform v2
+
+`coinbase-cdp` monitors the current hosted publication linked by the official
+`coinbase/cdp-sdk` Makefile, rather than its lagging committed SDK snapshot. Fetch
+metadata records the final URL, ETag, Last-Modified, time and raw hash; hosted repository
+health remains `not_assessed`, and the CDN artifact has no claimed Git revision.
+During source selection the plain URL and fresh timestamp query returned identical
+bytes. If caching or public scope changes, recheck the vendor download and SDK input
+before treating an unchanged CDN result as current.
+
+The complete public collection contains generally available and Beta groups, including
+account restrictions; it is not all Coinbase APIs. The exact recipe removes four
+unsupported `required:false` Parameter Reference Object siblings only after asserting
+the complete referenced optional header, original parameter lists and operation IDs.
+It retains `$ref`, the target's `required:false` and all auth/schema/prose content.
+A vendor fix or changed referenced contract stops replay for review. There is no
+OpenAPI conversion, reference inlining, endpoint trimming or inferred authentication.
+
 ### Confluence Cloud REST v2
 
 `confluence-v2` follows the moving Atlassian download directly linked by the official

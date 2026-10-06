@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "description": "Remove four unsupported required:false siblings from OpenAPI 3.1 Parameter Reference Objects in end-user delegation deletion/revocation. Their exact referenced XDeveloperAuth header already declares required:false; the siblings are redundant and are not supported Reference Object fields. Assert the complete referenced header, original parameter lists and operation identities, then remove only each false flag. Preserve all referenced authentication/schema/example/prose constraints, endpoints and native optionality. Stop for vendor corrections, changed header contracts or references; no inlining, authentication invention or dialect conversion.",
+  "assertions": [
+    {
+      "pointer": "#/components/parameters/XDeveloperAuth",
+      "value": {
+        "name": "X-Developer-Auth",
+        "in": "header",
+        "required": false,
+        "description": "A JWT signed using your Wallet Secret, encoded in base64. Refer to the\n[Generate Wallet Token](https://docs.cdp.coinbase.com/api-reference/v2/authentication#2-generate-wallet-token)\nsection of our Authentication docs for more details on how to generate your Wallet Token.\n",
+        "schema": {
+          "type": "string"
+        },
+        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywicm9sZSI6ImFkbWluIiwiZXhwIjoxNzAxOTgwMDAwfQ.HWvMTKmCCTxHaxjvZyLaC6UQ6TV3ErTDWBf7zmdH0Lw"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation/delete/parameters",
+      "value": [
+        {
+          "$ref": "#/components/parameters/XWalletAuthOptional"
+        },
+        {
+          "$ref": "#/components/parameters/XDeveloperAuth",
+          "required": false
+        },
+        {
+          "$ref": "#/components/parameters/IdempotencyKey"
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the end user.",
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{1,100}$",
+            "example": "e051beeb-7163-4527-a5b6-35e301529ff2"
+          }
+        },
+        {
+          "$ref": "#/components/parameters/ProjectIDOptional"
+        }
+      ]
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation/delete/operationId",
+      "value": "revokeDelegationForEndUserDeprecated"
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation~1revoke/post/parameters",
+      "value": [
+        {
+          "$ref": "#/components/parameters/XWalletAuthOptional"
+        },
+        {
+          "$ref": "#/components/parameters/XDeveloperAuth",
+          "required": false
+        },
+        {
+          "$ref": "#/components/parameters/IdempotencyKey"
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the end user.",
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{1,100}$",
+            "example": "e051beeb-7163-4527-a5b6-35e301529ff2"
+          }
+        },
+        {
+          "$ref": "#/components/parameters/ProjectIDOptional"
+        }
+      ]
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation~1revoke/post/operationId",
+      "value": "revokeDelegationForEndUser"
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation/delete/parameters",
+      "value": [
+        {
+          "$ref": "#/components/parameters/XWalletAuthOptional"
+        },
+        {
+          "$ref": "#/components/parameters/XDeveloperAuth",
+          "required": false
+        },
+        {
+          "$ref": "#/components/parameters/IdempotencyKey"
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the end user.",
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{1,100}$",
+            "example": "e051beeb-7163-4527-a5b6-35e301529ff2"
+          }
+        },
+        {
+          "name": "address",
+          "in": "path",
+          "required": true,
+          "description": "The blockchain address of the end user account whose delegation should be revoked. For EVM addresses, matching is case-insensitive.",
+          "schema": {
+            "$ref": "#/components/schemas/BlockchainAddress"
+          },
+          "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        },
+        {
+          "$ref": "#/components/parameters/ProjectIDOptional"
+        }
+      ]
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation/delete/operationId",
+      "value": "revokeDelegationForEndUserAccountDeprecated"
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation~1revoke/post/parameters",
+      "value": [
+        {
+          "$ref": "#/components/parameters/XWalletAuthOptional"
+        },
+        {
+          "$ref": "#/components/parameters/XDeveloperAuth",
+          "required": false
+        },
+        {
+          "$ref": "#/components/parameters/IdempotencyKey"
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "description": "The ID of the end user.",
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-]{1,100}$",
+            "example": "e051beeb-7163-4527-a5b6-35e301529ff2"
+          }
+        },
+        {
+          "name": "address",
+          "in": "path",
+          "required": true,
+          "description": "The blockchain address of the end user account whose delegation should be revoked. For EVM addresses, matching is case-insensitive.",
+          "schema": {
+            "$ref": "#/components/schemas/BlockchainAddress"
+          },
+          "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+        },
+        {
+          "$ref": "#/components/parameters/ProjectIDOptional"
+        }
+      ]
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation~1revoke/post/operationId",
+      "value": "revokeDelegationForEndUserAccount"
+    }
+  ],
+  "operations": [
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation/delete/parameters/1/required",
+      "from": false,
+      "remove": true,
+      "context": {
+        "$ref": "#/components/parameters/XDeveloperAuth"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1delegation~1revoke/post/parameters/1/required",
+      "from": false,
+      "remove": true,
+      "context": {
+        "$ref": "#/components/parameters/XDeveloperAuth"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation/delete/parameters/1/required",
+      "from": false,
+      "remove": true,
+      "context": {
+        "$ref": "#/components/parameters/XDeveloperAuth"
+      }
+    },
+    {
+      "pointer": "#/paths/~1v2~1embedded-wallet-api~1end-users~1{userId}~1address~1{address}~1delegation~1revoke/post/parameters/1/required",
+      "from": false,
+      "remove": true,
+      "context": {
+        "$ref": "#/components/parameters/XDeveloperAuth"
+      }
+    }
+  ]
+}

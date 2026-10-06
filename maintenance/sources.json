@@ -723,6 +723,20 @@
       "discovery": "Current official https://developer.atlassian.com/cloud/confluence/rest/v2/intro/ directly links this vendor OpenAPI download with a documentation-build cache query (checked 2026-10-06 Europe/Amsterdam). Plain moving URL and currently linked query return identical original bytes. Native OpenAPI 3.0.3 / vendor 2.0.0 / 151 paths / 218 ops / 682 resolved local references, none external. Hosted repository health is not assessed. Two optional label-prefix scalar parameters declare enum my or team but default literal my, team; exact complete-parameter/operation assertions permit removal only of those invalid defaults, retaining every constraint and stopping for vendor correction. No conversion, bundling or invented replacement default.",
       "coverage": "Complete Confluence Cloud REST v2 collection for pages, spaces, blog posts, attachments, labels, comments, content properties, custom content, databases, whiteboards, folders, Smart Links, roles/permissions and tasks. Preserve native Basic/OAuth authentication/scopes, tenant server, app-access rules and permission restrictions. Thirteen experimental operation flags and one deprecated operation remain; this is a mixed-lifecycle public collection, not an all-GA slice. Distinct from Jira and legacy Confluence v1/Data Center; no Jira curation baseline or fabricated metadata. v1 official download has separate native validation defects and is not imported by this registration.",
       "priority": "high"
+    },
+    {
+      "id": "coinbase-cdp",
+      "provider": "coinbase.com",
+      "service": "cdp",
+      "target": "APIs/coinbase.com/cdp/2.0.0/openapi.yaml",
+      "url": "https://drla6sbl8l00t.cloudfront.net/openapi.yaml",
+      "version_policy": "vendor",
+      "patches": [
+        "maintenance/patches/coinbase-cdp.json"
+      ],
+      "discovery": "Canonical hosted OpenAPI publication explicitly fetched by maintained official coinbase/cdp-sdk Makefile (pinned discovery commit d40fb3975395033409643654faacfb3d4e4349ee). Current official https://docs.cdp.coinbase.com/api-reference/v2/introduction publishes an OpenAPI download and distinguishes generally available and Beta groups (checked 2026-10-05). Plain CDN URL and fresh timestamp query return identical bytes; ETag and Last-Modified recorded on every fetch. Native 3.1.0 / vendor 2.0.0 / 140 paths / 169 operations / 2594 resolved local refs. SDK repository snapshot lags by 14 paths / 15 operations; monitor current hosted publication, not that mirror. Hosted repository health is not assessed; no Git revision is fabricated for CDN bytes. Four redundant required:false Reference Object siblings are removed only after exact header/parameter/operation assertions; full native constraints and optionality retained. No bundling or conversion.",
+      "coverage": "Coinbase Developer Platform public v2 wallet, onramp and custodial resource API, not Coinbase Exchange or all Coinbase products. Preserve complete vendor tenant/server/auth/security/schema/permission/lifecycle content, including Beta groups and private-beta fiat deposit destinations. Non-custodial groups are available after CDP signup; custodial groups require verified linked business accounts, payment methods require Coinbase Prime. This is a mixed-lifecycle public collection, not a preview-only or hand-built GA slice. No previous provider, curation baseline or invented metadata.",
+      "priority": "high"
     }
   ]
 }
