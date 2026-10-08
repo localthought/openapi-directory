@@ -15,11 +15,11 @@ info:
   x-providerName: digitalocean.com
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/digitalocean/openapi/4a87b3bd8e541f72450c426cf4ba197724b0e479/specification/DigitalOcean-public.v2.yaml
+      url: https://raw.githubusercontent.com/digitalocean/openapi/e326f5060794769b6835084e48be7ce4db062d39/specification/DigitalOcean-public.v2.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/digitalocean/openapi/4a87b3bd8e541f72450c426cf4ba197724b0e479/specification/DigitalOcean-public.v2.yaml at commit 4a87b3bd8e541f72450c426cf4ba197724b0e479; entry source SHA-256 10fc8825506628176d9d0161e3eda83244da7341f4e860137a828f48e71f1b6e.
-    - Bundled 3134 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 21 warnings. Source-file snapshot SHA-256 2e022194ed65ecc9481e3f54677491e8fd7b807ae2ac57c6996490512f100d92.
+    - Fetched from https://raw.githubusercontent.com/digitalocean/openapi/e326f5060794769b6835084e48be7ce4db062d39/specification/DigitalOcean-public.v2.yaml at commit e326f5060794769b6835084e48be7ce4db062d39; entry source SHA-256 e18ad525a336da3dd83776659d5b574e30748b1d59efc53a42c86115b290a76a.
+    - Bundled 3148 pinned repository files with @redocly/cli 2.57.0, using bundle and an empty configuration; distinct components with conflicting basenames are renamed, not merged; 21 warnings. Source-file snapshot SHA-256 0e939ba8d0f6e06cba0ece1a60c0104ec8b35826281cc8376a5ab05153be8a41.
     - 'Applied maintenance/patches/digitalocean.json (SHA-256 1a05c8c6a246c2d44570f685f0fd35f40779184872612e7b8d53fe2355d61759): Removed only the invalid null defaults from chat_completion_request.stop and create_response_request.stop: each oneOf admits strings or arrays, so null does not satisfy the declared alternatives. All types, alternatives, nullable annotations, and other constraints are preserved; no replacement default or server behavior is invented.'
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/digitalocean.com/2.0/openapi.yaml.
@@ -16096,7 +16096,9 @@ paths:
 
         use HTTPS. Secret fields (`slack.webhook_url`, webhook credentials) are
 
-        write-only and returned masked on subsequent reads.
+        write-only. Subsequent reads never return secret values; they include
+
+        optional `*_status` objects when a secret is configured.
 
         '
       tags:
@@ -16158,9 +16160,13 @@ paths:
       summary: Retrieve a Notification Channel
       description: 'To retrieve a notification channel, send a GET request to
 
-        `/v2/insights/notification-channels/{id}`. Secret fields are returned masked
+        `/v2/insights/notification-channels/{id}`. Secret credentials are never
 
-        as `********`.
+        returned. When a secret is configured, the response includes an optional
+
+        `*_status` object (for example `webhook_url_status`) with
+
+        `configured: true`.
 
         '
       tags:
@@ -16198,7 +16204,9 @@ paths:
 
         Sending a secret field rotates it; omitting the secret field keeps the
 
-        existing value.
+        existing value. Responses never return secret values; they include optional
+
+        `*_status` objects when a secret is configured.
 
         '
       tags:
@@ -16212,8 +16220,14 @@ paths:
             schema:
               $ref: '#/components/schemas/notification_channel_request'
             examples:
-              slack:
-                summary: Slack channel
+              slack_preserve_webhook:
+                summary: Update Slack channel without rotating webhook
+                value:
+                  name: Platform alerts (updated)
+                  slack:
+                    channel: '#platform-alerts-prod'
+              slack_rotate_webhook:
+                summary: Update Slack channel and rotate webhook
                 value:
                   name: Platform alerts (updated)
                   slack:
@@ -16236,7 +16250,7 @@ paths:
           $ref: '#/components/responses/unexpected_error'
       x-codeSamples:
         - lang: cURL
-          source: "curl -X PUT \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -d '{\"name\":\"Platform alerts (updated)\",\"slack\":{\"webhook_url\":\"https://hooks.slack.com/services/T000/B000/NEWTOKEN\",\"channel\":\"#platform-alerts-prod\"}}' \\\n  \"https://api.digitalocean.com/v2/insights/notification-channels/550e8400-e29b-41d4-a716-446655440000\""
+          source: "curl -X PUT \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -d '{\"name\":\"Platform alerts (updated)\",\"slack\":{\"channel\":\"#platform-alerts-prod\"}}' \\\n  \"https://api.digitalocean.com/v2/insights/notification-channels/550e8400-e29b-41d4-a716-446655440000\""
       security:
         - bearer_auth:
             - insights:update
@@ -16317,6 +16331,62 @@ paths:
       security:
         - bearer_auth:
             - insights:read
+    post:
+      operationId: insights_post_promQuery
+      summary: Execute an instant PromQL query
+      description: To evaluate a PromQL expression at a single point in time, send a POST request to `/v2/insights/query/{region}/prom/api/v1/query` with `application/x-www-form-urlencoded` parameters.
+      tags:
+        - Insights
+      parameters:
+        - $ref: '#/components/parameters/region-2'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: A PromQL expression to evaluate.
+                  example: do.droplets.cpu_time
+                time:
+                  type: string
+                  description: Evaluation timestamp. RFC3339 or UNIX timestamp.
+                  example: '1620683817'
+                timeout:
+                  type: string
+                  description: Optional evaluation timeout duration.
+                  example: 30s
+      responses:
+        '200':
+          $ref: '#/components/responses/prom_query'
+        '400':
+          $ref: '#/components/responses/prom_error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/not_found'
+        '422':
+          $ref: '#/components/responses/prom_error'
+        '429':
+          $ref: '#/components/responses/too_many_requests'
+        '500':
+          $ref: '#/components/responses/prom_error'
+        '503':
+          $ref: '#/components/responses/prom_error'
+        default:
+          $ref: '#/components/responses/unexpected_error'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl -X POST \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"query=do.droplets.cpu_time\" \\\n  \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/query\""
+      security:
+        - bearer_auth:
+            - insights:read
   /v2/insights/query/{region}/prom/api/v1/query_range:
     get:
       operationId: insights_get_promQueryRange
@@ -16358,6 +16428,73 @@ paths:
       security:
         - bearer_auth:
             - insights:read
+    post:
+      operationId: insights_post_promQueryRange
+      summary: Execute a range PromQL query
+      description: To evaluate a PromQL expression over a time range, send a POST request to `/v2/insights/query/{region}/prom/api/v1/query_range` with `application/x-www-form-urlencoded` parameters.
+      tags:
+        - Insights
+      parameters:
+        - $ref: '#/components/parameters/region-2'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - query
+                - start
+                - end
+                - step
+              properties:
+                query:
+                  type: string
+                  description: A PromQL expression to evaluate.
+                  example: do.droplets.cpu_time
+                start:
+                  type: string
+                  description: Start timestamp. RFC3339 or UNIX timestamp.
+                  example: '1620683817'
+                end:
+                  type: string
+                  description: End timestamp. RFC3339 or UNIX timestamp.
+                  example: '1620705417'
+                step:
+                  type: string
+                  description: Query resolution step width.
+                  example: 15s
+                timeout:
+                  type: string
+                  description: Optional evaluation timeout duration.
+                  example: 30s
+      responses:
+        '200':
+          $ref: '#/components/responses/prom_query_range'
+        '400':
+          $ref: '#/components/responses/prom_error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/not_found'
+        '422':
+          $ref: '#/components/responses/prom_error'
+        '429':
+          $ref: '#/components/responses/too_many_requests'
+        '500':
+          $ref: '#/components/responses/prom_error'
+        '503':
+          $ref: '#/components/responses/prom_error'
+        default:
+          $ref: '#/components/responses/unexpected_error'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl -X POST \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  -d \"query=do.droplets.cpu_time\" \\\n  -d \"start=1620683817\" \\\n  -d \"end=1620705417\" \\\n  -d \"step=15s\" \\\n  \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/query_range\""
+      security:
+        - bearer_auth:
+            - insights:read
   /v2/insights/query/{region}/prom/api/v1/labels:
     get:
       operationId: insights_get_promLabels
@@ -16394,6 +16531,61 @@ paths:
       x-codeSamples:
         - lang: cURL
           source: "curl -X GET \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/labels\""
+      security:
+        - bearer_auth:
+            - insights:read
+    post:
+      operationId: insights_post_promLabels
+      summary: List label names
+      description: To list label names, send a POST request to `/v2/insights/query/{region}/prom/api/v1/labels` with `application/x-www-form-urlencoded` parameters.
+      tags:
+        - Insights
+      parameters:
+        - $ref: '#/components/parameters/region-2'
+      requestBody:
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                start:
+                  type: string
+                  description: Optional start timestamp.
+                  example: '1620683817'
+                end:
+                  type: string
+                  description: Optional end timestamp.
+                  example: '1620705417'
+                match[]:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional series selectors.
+      responses:
+        '200':
+          $ref: '#/components/responses/prom_labels'
+        '400':
+          $ref: '#/components/responses/prom_error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/not_found'
+        '422':
+          $ref: '#/components/responses/prom_error'
+        '429':
+          $ref: '#/components/responses/too_many_requests'
+        '500':
+          $ref: '#/components/responses/prom_error'
+        '503':
+          $ref: '#/components/responses/prom_error'
+        default:
+          $ref: '#/components/responses/unexpected_error'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl -X POST \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  --data-urlencode 'match[]={__name__=\"do.droplets.cpu_time\"}' \\\n  \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/labels\""
       security:
         - bearer_auth:
             - insights:read
@@ -16473,6 +16665,63 @@ paths:
       x-codeSamples:
         - lang: cURL
           source: "curl -X GET \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  --get \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/series\" \\\n  --data-urlencode 'match[]={__name__=\"do.droplets.cpu_time\"}'"
+      security:
+        - bearer_auth:
+            - insights:read
+    post:
+      operationId: insights_post_promSeries
+      summary: Find series by label selectors
+      description: To find series matching one or more selectors, send a POST request to `/v2/insights/query/{region}/prom/api/v1/series` with `application/x-www-form-urlencoded` parameters.
+      tags:
+        - Insights
+      parameters:
+        - $ref: '#/components/parameters/region-2'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - match[]
+              properties:
+                match[]:
+                  type: array
+                  items:
+                    type: string
+                  description: One or more series selectors.
+                start:
+                  type: string
+                  description: Optional start timestamp.
+                  example: '1620683817'
+                end:
+                  type: string
+                  description: Optional end timestamp.
+                  example: '1620705417'
+      responses:
+        '200':
+          $ref: '#/components/responses/prom_series'
+        '400':
+          $ref: '#/components/responses/prom_error'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/not_found'
+        '422':
+          $ref: '#/components/responses/prom_error'
+        '429':
+          $ref: '#/components/responses/too_many_requests'
+        '500':
+          $ref: '#/components/responses/prom_error'
+        '503':
+          $ref: '#/components/responses/prom_error'
+        default:
+          $ref: '#/components/responses/unexpected_error'
+      x-codeSamples:
+        - lang: cURL
+          source: "curl -X POST \\\n  -H \"Authorization: Bearer $DIGITALOCEAN_TOKEN\" \\\n  -H \"Content-Type: application/x-www-form-urlencoded\" \\\n  --data-urlencode 'match[]={__name__=\"do.droplets.cpu_time\"}' \\\n  \"https://api.digitalocean.com/v2/insights/query/nyc3/prom/api/v1/series\""
       security:
         - bearer_auth:
             - insights:read
@@ -44844,7 +45093,7 @@ components:
           type: string
           description: 'The ID of the project the app should be assigned to. If omitted, it will be assigned to your default project.
 
-            <br><br>Requires `project:assign_resource` scope.
+            <br><br>Requires `project:assign_resource` and `project:update` scopes.
 
             '
       required:
@@ -52816,39 +53065,51 @@ components:
 
             '
           example: alerts@example.com, backup@example.com
-    slack_notification_config:
+    secret_status:
       type: object
-      description: 'Slack notification channel configuration. `webhook_url` is write-only: send
+      description: 'Indicates whether a secret credential is configured without exposing its
 
-        the full value on create/update; reads return a masked value (`********`).
+        value. Status fields that use this schema are omitted from responses when
 
-        Omit `webhook_url` on update to keep the existing secret.
+        the secret is not set.
+
+        '
+      required:
+        - configured
+      properties:
+        configured:
+          type: boolean
+          description: Whether the secret is configured.
+          example: true
+    slack_notification_config_response:
+      type: object
+      description: 'Slack notification channel configuration as returned in API responses. The
+
+        webhook URL is never returned; `webhook_url_status` indicates whether it is
+
+        configured.
 
         '
       required:
         - channel
       properties:
-        webhook_url:
-          type: string
-          description: 'Slack incoming webhook URL. Write-only secret — full value on
-
-            create/update; masked as `********` on read. Omit on update to retain the
-
-            existing value.
-
-            '
-          example: https://hooks.slack.com/services/T000/B000/XXXXXXXX
         channel:
           type: string
           description: The Slack channel name to notify.
           example: '#platform-alerts'
-    webhook_basic_auth:
+        webhook_url_status:
+          allOf:
+            - $ref: '#/components/schemas/secret_status'
+          description: 'Present when a Slack webhook URL is configured. Omitted when not
+
+            configured.
+
+            '
+    webhook_basic_auth_response:
       type: object
-      description: 'HTTP basic authentication credentials for a webhook. `password` is
+      description: 'HTTP basic authentication as returned in API responses. The password is
 
-        write-only: full value on create/update; masked (`********`) on read. Omit on
-
-        update to keep the existing password.
+        never returned; `password_status` indicates whether it is configured.
 
         '
       required:
@@ -52858,71 +53119,55 @@ components:
           type: string
           description: Basic auth username.
           example: webhook-user
-        password:
-          type: string
-          format: password
-          description: 'Basic auth password. Write-only secret — full value on create/update;
+        password_status:
+          allOf:
+            - $ref: '#/components/schemas/secret_status'
+          description: 'Present when a basic auth password is configured. Omitted when not
 
-            masked as `********` on read.
+            configured.
 
             '
-          example: secret-password
-    webhook_bearer_token:
+    webhook_bearer_token_response:
       type: object
-      description: 'Bearer token authentication for a webhook. `token` is write-only: full value
+      description: 'Bearer token authentication as returned in API responses. The token is never
 
-        on create/update; masked (`********`) on read. Omit on update to keep the
-
-        existing token.
+        returned; `token_status` indicates whether it is configured.
 
         '
       properties:
-        token:
-          type: string
-          format: password
-          description: 'Bearer token value sent in the Authorization header. Write-only secret —
-
-            full value on create/update; masked as `********` on read.
+        token_status:
+          allOf:
+            - $ref: '#/components/schemas/secret_status'
+          description: 'Present when a bearer token is configured. Omitted when not configured.
 
             '
-          example: secret-token
-    webhook_signature_config:
+    webhook_signature_config_response:
       type: object
-      description: 'Optional HMAC signature configuration. `secret` is write-only: full value on
+      description: 'HMAC signature configuration as returned in API responses. The signing
 
-        create/update; masked (`********`) on read. Omit on update to keep the
+        secret is never returned; `secret_status` indicates whether it is
 
-        existing secret.
+        configured.
 
         '
       properties:
-        secret:
-          type: string
-          format: password
-          description: 'Shared secret used to sign webhook payloads. Write-only secret — full
+        secret_status:
+          allOf:
+            - $ref: '#/components/schemas/secret_status'
+          description: 'Present when a signing secret is configured. Omitted when not
 
-            value on create/update; masked as `********` on read.
+            configured.
 
             '
-          example: whsec
-    webhook_notification_config:
+    webhook_notification_config_response:
       type: object
-      description: 'Generic HTTPS webhook notification channel configuration. The URL must use
+      description: 'Generic HTTPS webhook notification channel configuration as returned in API
 
-        HTTPS and must not include userinfo. Optionally configure either
+        responses. The URL and headers are returned in full. Credential secrets are
 
-        `basic_auth` or `bearer_token` (not both), custom headers, and a signing
+        never returned; nested `*_status` objects indicate whether they are
 
-        secret.
-
-
-        `url` is not a secret and is returned in full on read. Credential fields
-
-        (`basic_auth.password`, `bearer_token.token`, `signature.secret`) are
-
-        write-only: full value on create/update; masked as `********` on read. Omit
-
-        a secret field on update to keep the existing value.
+        configured.
 
         '
       required:
@@ -52931,29 +53176,27 @@ components:
         url:
           type: string
           format: uri
-          description: HTTPS URL that receives webhook deliveries. Returned in full on read.
+          description: HTTPS URL that receives webhook deliveries.
           example: https://example.com/hook
         basic_auth:
-          $ref: '#/components/schemas/webhook_basic_auth'
+          $ref: '#/components/schemas/webhook_basic_auth_response'
         bearer_token:
-          $ref: '#/components/schemas/webhook_bearer_token'
+          $ref: '#/components/schemas/webhook_bearer_token_response'
         headers:
           type: object
           maxProperties: 20
           additionalProperties:
             type: string
             example: '1'
-          description: 'Optional custom HTTP headers to include on webhook deliveries. At most
+          description: 'Optional custom HTTP headers included on webhook deliveries. At most 20
 
-            20 headers are allowed. Reserved header names such as `host`,
-
-            `content-type`, and `proxy-*` are rejected.
+            headers are allowed.
 
             '
           example:
             X-Custom: '1'
         signature:
-          $ref: '#/components/schemas/webhook_signature_config'
+          $ref: '#/components/schemas/webhook_signature_config_response'
     notification_channel_usage:
       type: object
       description: 'Output-only usage summary derived from alert rules that reference this
@@ -53007,9 +53250,9 @@ components:
         email:
           $ref: '#/components/schemas/email_notification_config'
         slack:
-          $ref: '#/components/schemas/slack_notification_config'
+          $ref: '#/components/schemas/slack_notification_config_response'
         webhook:
-          $ref: '#/components/schemas/webhook_notification_config'
+          $ref: '#/components/schemas/webhook_notification_config_response'
         usage:
           allOf:
             - $ref: '#/components/schemas/notification_channel_usage'
@@ -53035,6 +53278,156 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/notification_channel'
+    slack_notification_config:
+      type: object
+      description: 'Slack notification channel configuration for create and update requests.
+
+        `webhook_url` is write-only: send the full value to set or rotate. Omit
+
+        `webhook_url` on update to keep the existing secret.
+
+        '
+      required:
+        - channel
+      properties:
+        webhook_url:
+          type: string
+          writeOnly: true
+          description: 'Slack incoming webhook URL. Write-only secret — send the full value on
+
+            create or update. Omit on update to retain the existing value. Never
+
+            returned in responses.
+
+            '
+          example: https://hooks.slack.com/services/T000/B000/XXXXXXXX
+        channel:
+          type: string
+          description: The Slack channel name to notify.
+          example: '#platform-alerts'
+    webhook_basic_auth:
+      type: object
+      description: 'HTTP basic authentication credentials for a webhook create or update
+
+        request. `password` is write-only: send the full value to set or rotate.
+
+        Omit `password` on update to keep the existing password.
+
+        '
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          description: Basic auth username.
+          example: webhook-user
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          description: 'Basic auth password. Write-only secret — send the full value on create
+
+            or update. Omit on update to retain the existing value. Never returned
+
+            in responses.
+
+            '
+          example: secret-password
+    webhook_bearer_token:
+      type: object
+      description: 'Bearer token authentication for a webhook create or update request. `token`
+
+        is write-only: send the full value to set or rotate. Omit `token` on update
+
+        to keep the existing token.
+
+        '
+      properties:
+        token:
+          type: string
+          format: password
+          writeOnly: true
+          description: 'Bearer token value sent in the Authorization header. Write-only secret —
+
+            send the full value on create or update. Omit on update to retain the
+
+            existing value. Never returned in responses.
+
+            '
+          example: secret-token
+    webhook_signature_config:
+      type: object
+      description: 'Optional HMAC signature configuration for a webhook create or update
+
+        request. `secret` is write-only: send the full value to set or rotate. Omit
+
+        `secret` on update to keep the existing secret.
+
+        '
+      properties:
+        secret:
+          type: string
+          format: password
+          writeOnly: true
+          description: 'Shared secret used to sign webhook payloads. Write-only secret — send
+
+            the full value on create or update. Omit on update to retain the
+
+            existing value. Never returned in responses.
+
+            '
+          example: whsec
+    webhook_notification_config:
+      type: object
+      description: 'Generic HTTPS webhook notification channel configuration for create and
+
+        update requests. The URL must use HTTPS and must not include userinfo.
+
+        Optionally configure either `basic_auth` or `bearer_token` (not both),
+
+        custom headers, and a signing secret.
+
+
+        `url` is not a secret and is returned in full on read. Credential fields
+
+        (`basic_auth.password`, `bearer_token.token`, `signature.secret`) are
+
+        write-only: send the full value to set or rotate. Omit a secret field on
+
+        update to keep the existing value. Responses return nested `*_status`
+
+        objects instead of secret values.
+
+        '
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: HTTPS URL that receives webhook deliveries. Returned in full on read.
+          example: https://example.com/hook
+        basic_auth:
+          $ref: '#/components/schemas/webhook_basic_auth'
+        bearer_token:
+          $ref: '#/components/schemas/webhook_bearer_token'
+        headers:
+          type: object
+          maxProperties: 20
+          additionalProperties:
+            type: string
+            example: '1'
+          description: 'Optional custom HTTP headers to include on webhook deliveries. At most
+
+            20 headers are allowed. Reserved header names such as `host`,
+
+            `content-type`, and `proxy-*` are rejected.
+
+            '
+          example:
+            X-Custom: '1'
+        signature:
+          $ref: '#/components/schemas/webhook_signature_config'
     notification_channel_request:
       type: object
       description: 'Create or update body for a notification channel. Provide a `name` and
@@ -75460,21 +75853,22 @@ components:
                   created_at: '2026-09-03T10:15:00Z'
                   updated_at: '2026-09-03T10:15:00Z'
             slack:
-              summary: Slack channel with masked webhook
+              summary: Slack channel with webhook status
               value:
                 notification_channel:
                   id: 660e8400-e29b-41d4-a716-446655440001
                   name: Platform alerts
                   channel_type: CHANNEL_TYPE_SLACK
                   slack:
-                    webhook_url: '********'
+                    webhook_url_status:
+                      configured: true
                     channel: '#platform-alerts'
                   usage:
                     rule_count: 0
                   created_at: '2026-09-03T10:16:00Z'
                   updated_at: '2026-09-03T10:16:00Z'
             webhook:
-              summary: Webhook channel with masked credentials
+              summary: Webhook channel with credential status
               value:
                 notification_channel:
                   id: 770e8400-e29b-41d4-a716-446655440002
@@ -75483,11 +75877,13 @@ components:
                   webhook:
                     url: https://example.com/hook
                     bearer_token:
-                      token: '********'
+                      token_status:
+                        configured: true
                     headers:
                       X-Custom: '1'
                     signature:
-                      secret: '********'
+                      secret_status:
+                        configured: true
                   usage:
                     rule_count: 0
                   created_at: '2026-09-03T10:17:00Z'
