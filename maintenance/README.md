@@ -1142,3 +1142,20 @@ go-ahead.
   using only `contents: read` and `pull-requests: read`. It posts no status or comment.
   Posting an exact-SHA commit status (which needs `statuses: write`) is part of the
   owner-approved step.
+
+## Path-aware PR gate
+
+`.github/workflows/pr-gate.yml` runs `pr_gate.py` (from the trusted base revision) on
+every PR, so a single check named **PR gate / gate** can be made required without
+blocking docs-only PRs. It decides from the changed paths which validations are needed,
+then waits for those workflow runs on the exact head SHA. It passes only if each needed
+job actually succeeded; skipped, missing, failed or cancelled jobs fail the gate.
+
+- `maintenance/**` or `.github/workflows/**`: Official-source maintenance `tests`.
+- A generated `codex/official-update-*` branch touching `APIs/**` or
+  `maintenance/sources.json`: Generated API draft validation `validate`.
+- Hand-made API PRs have no automated validation. The gate says so in its summary rather
+  than pretending a check ran.
+
+Permissions are read-only (`contents`, `actions`, `pull-requests`). Making the check
+required in branch protection is an owner decision.
