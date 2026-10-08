@@ -1164,6 +1164,128 @@
       },
       "discovery": "Official HCP API overview https://developer.hashicorp.com/hcp/docs/hcp/api links this service reference. Original vendor Swagger 2.0 string extracted unchanged from the sole __NEXT_DATA__ application/json script at the reviewed pointer, with exact service title, stable page/current/latest release and base-path assertions (reviewed 2026-10-06). No HTML/vendor code execution, SDK/rendered schema reconstruction, fabricated Git revision or universal GA claim. Original HTML/native hashes and actual fetch dates retained; private hcp-specs is not used.",
       "coverage": "HCP Webhook configuration management: create/list/get/update/delete, name updates and delivery listing; subscription/event and optional HMAC signing configuration. Preserve optional nullable enabled on creation: true requires successful verification; false disables without verification; unset enables only on successful verification. One exact nullable schema/control guards its conversion. Distinct from HCP Identity and other product services. Preserve native bearer Authorization apiKey security, protocol-relative host server (Swagger declares no schemes), all protobuf schema prose, tenant/path/query constraints and vendor version. Explicit refSiblings:allOf retains schema-reference descriptions/titles with zero unrelated converter repairs and one guarded nullable translation."
+    },
+    {
+      "id": "xero-assets",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero_assets/2.9.4/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero_assets.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Fixed Assets under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. The stored historical 2.9.4 description is the initial comparison and curation baseline; a new vendor version is imported into its own directory, retaining 2.9.4 byte-for-byte. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. At review 19.1.0 has the same 4 paths / 6 operations as stored 2.9.4; content changes only.",
+      "coverage": "Official Xero Fixed Assets API (assets, asset types, settings). Preserve native OAuth2 scopes and Xero-Tenant-Id requirements. Not Accounting or other Xero products.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-bankfeeds",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero_bankfeeds/2.9.4/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero_bankfeeds.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Bank Feeds under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. The stored historical 2.9.4 description is the initial comparison and curation baseline; a new vendor version is imported into its own directory, retaining 2.9.4 byte-for-byte. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. At review 19.1.0 renames path parameter /Statements/{statementID} to /Statements/{statementId} (one path/operation pair); that is a published path-template rename, not a runtime retirement.",
+      "coverage": "Official Xero Bank Feeds API v1 (feed connections and statements), which the vendor description calls a closed API available only to established financial-services partners. The separate xero_bankfeeds_v2.yaml is not listed as In Release and is not registered here.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-files",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero_files/2.9.4/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero_files.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Files under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. The stored historical 2.9.4 description is the initial comparison and curation baseline; a new vendor version is imported into its own directory, retaining 2.9.4 byte-for-byte. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. At review 19.1.0 adds GET /Associations/Count and the /Files/{FolderId} path (2 paths / 2 operations) with no removals relative to stored 2.9.4.",
+      "coverage": "Official Xero Files API (files, folders, associations, inbox). Preserve native OAuth2 scopes and tenant requirements.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-identity",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero-identity/2.9.4/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero-identity.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Identity under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. The stored historical 2.9.4 description is the initial comparison and curation baseline; a new vendor version is imported into its own directory, retaining 2.9.4 byte-for-byte. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. At review 19.1.0 has the same 2 paths / 2 operations as stored 2.9.4; content changes only.",
+      "coverage": "Official Xero OAuth 2 Identity service connections API (list/delete tenant connections). Not the OAuth authorization server itself.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-payroll-au",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero-payroll-au/2.9.4/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero-payroll-au.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Payroll AU under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. The stored historical 2.9.4 description is the initial comparison and curation baseline; a new vendor version is imported into its own directory, retaining 2.9.4 byte-for-byte. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. At review 19.1.0 adds /LeaveApplications/v2 and leave-application approve/reject paths (3 paths / 3 operations) with no removals relative to stored 2.9.4.",
+      "coverage": "Official Xero Payroll AU API (v1 payroll resources). The separate xero-payroll-au-v2.yaml is not listed as In Release and is not registered here. Preserve native OAuth2 scopes, tenant requirements and country-specific scope.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-projects",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero-projects/19.1.0/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero-projects.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Project under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. No existing description for this service is present anywhere in the full fetched main tree (checked 2026-10-08); there is no curation baseline and none is invented. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. Native 19.1.0 / 7 paths / 16 operations at review.",
+      "coverage": "Official Xero Projects API (projects, tasks, time entries, project users). Preserve native OAuth2 scopes and tenant requirements; not Accounting or Practice Manager.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-payroll-uk",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero-payroll-uk/19.1.0/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero-payroll-uk.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Payroll UK under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. No existing description for this service is present anywhere in the full fetched main tree (checked 2026-10-08); there is no curation baseline and none is invented. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. Native 19.1.0 / 47 paths / 69 operations at review; two vendor deprecated:true annotations retained.",
+      "coverage": "Official Xero Payroll UK API. Preserve native OAuth2 scopes, tenant requirements, country-specific scope and vendor deprecation annotations.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "xero-payroll-nz",
+      "provider": "xero.com",
+      "target": "APIs/xero.com/xero-payroll-nz/19.1.0/openapi.yaml",
+      "github": {
+        "repository": "XeroAPI/Xero-OpenAPI",
+        "ref": "master",
+        "path": "xero-payroll-nz.yaml"
+      },
+      "discovery": "The vendor README (XeroAPI/Xero-OpenAPI, pinned fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f, checked 2026-10-08) calls these the official Xero OpenAPI descriptions and lists Payroll NZ under 'In Release (used for one or more SDKs)'. All files in the repository share one semantic-release version (19.1.0 at review), the same policy already followed for monitored Accounting. No existing description for this service is present anywhere in the full fetched main tree (checked 2026-10-08); there is no curation baseline and none is invented. Native 3.0.0 validates strictly at review with no patches, conversion or bundling. Native 19.1.0 / 46 paths / 71 operations at review.",
+      "coverage": "Official Xero Payroll NZ API. Preserve native OAuth2 scopes, tenant requirements and country-specific scope.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "ynab",
+      "provider": "youneedabudget.com",
+      "target": "APIs/youneedabudget.com/1.0.0/openapi.yaml",
+      "url": "https://api.ynab.com/papi/open_api_spec.yaml",
+      "discovery": "The official YNAB API Endpoints reference (https://api.ynab.com/v1) loads this hosted description (/papi/open_api_spec.yaml), and the official changelog at https://api.ynab.com lists every release through v1.87.0 (checked 2026-10-08). The committed open_api_spec.yaml in the official ynab/ynab-sdk-js repository is an SDK-generation copy whose bytes differ from the hosted publication; monitor the hosted publication, not that mirror. Hosted repository health is not assessed and no Git revision is claimed. Native OpenAPI 3.1.1 / vendor 1.87.0 / 31 paths / 44 operations validates strictly at review with no patches, conversion or bundling. The stored 1.0.0 description (legacy x-origin https://api.youneedabudget.com/papi/spec-v1-swagger.json) is the initial comparison and curation baseline; the new vendor version is imported into its own directory, retaining 1.0.0 byte-for-byte.",
+      "coverage": "Official YNAB API v1 (user, plans, accounts, categories, payees, payee locations, months, money movements, transactions, scheduled transactions). The vendor changelog for v1.79.0 (2026-03-05) moved all documented routes from /budgets/{budget_id} to /plans/{plan_id}; it states the /budgets paths continue to work with the original response keys but are no longer documented. Reported /budgets removals against 1.0.0 are therefore documentation renames, not runtime retirements. Preserve vendor deprecated-field descriptions, bearer authentication and rate-limit prose.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }

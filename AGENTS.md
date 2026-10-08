@@ -15,6 +15,33 @@ Start with [HANDOVER.md](HANDOVER.md) for current delivery, remaining work, prot
 local evidence and restart commands. This supersedes ongoing Codex execution notes
 below; standing repository conventions and parked-item/owner-choice protections remain.
 
+**Claude maintenance on the claude-build VPS — 2026-10-08:** Claude (Opus 5.5) took over
+at Michiel's request. Fresh blobless sparse checkout `~/work/openapi-directory-maint`,
+Python 3.12 venv `~/work/.venv-openapi-maint` (pip-less venv + user pip) and `npm ci`.
+The laptop-only caches (`cache/maintenance/drafts/`, `reports/...`, `discovery/...`) are
+**not** on the VPS: the pending/refresh tools correctly hold any pre-existing generated
+draft there. No receipts were recreated. New generated drafts created on the VPS keep
+their own original cache root under `cache/maintenance/claude-drafts/`. Codex's paused
+automation was not resumed; no scheduled publication or auto-merge was added.
+
+Baseline at main `528504bfe813` (after another session's GitLab v4 read-only subset #236,
+which is not maintenance work): **206 tests pass** locally (38.4 s). Full fresh read-only
+audit of all **65 artifacts** (11:40–11:46 UTC): **42 matches_source, 13 valid unblocked
+content drifts, 11 recorded blocks, zero fetch/prepare failures**. Drifts: DigitalOcean
+(+4 ops), Figma (new vendor 0.44.0), Atlas, Sentry (+1 path/op), Intercom, Datadog v2
+(+3/+3), Discord, Grafana, Twilio REST, Twilio Verify, Asana, Zendesk Support (+4/+4),
+Coinbase CDP; no endpoint removals in any of them. The eleven blocks are unchanged in
+kind; Meraki's source is now 1.75.0 (733 paths / 1,035 ops, still 2 native errors), Okta
+2026.09.2 and Cloudflare 2,299 / 3,663, all still blocked. Inventory recomputed:
+**733 domains / 4,298 files / 2,121 openapi.yaml / 2,168 swagger.yaml** (+4 files from
+#236). Report: VPS `cache/maintenance/reports/claude-baseline-2026-10-08/`.
+
+Registered nine new sources in a separate infrastructure PR: the eight remaining Xero
+services the official README lists as In Release (five stale 2.9.4 refreshes, plus
+Projects, Payroll UK, Payroll NZ), and YNAB's hosted 1.87.0 description (documented
+`/budgets` → `/plans` rename per vendor changelog v1.79.0). All nine validate natively
+with no patches. Monitoring becomes **74 artifacts**. API files follow one PR per service.
+
 **Ongoing authorization — 2026-10-06:** The user explicitly said "you can continue
 past friday, no problem". The original 2026-10-09 deadline is superseded: continue
 local maintenance until the user asks to stop or pause. The existing hourly heartbeat
