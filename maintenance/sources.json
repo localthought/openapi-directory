@@ -1182,7 +1182,7 @@
     {
       "id": "xero-bankfeeds",
       "provider": "xero.com",
-      "target": "APIs/xero.com/xero_bankfeeds/2.9.4/openapi.yaml",
+      "target": "APIs/xero.com/xero_bankfeeds/19.1.0/openapi.yaml",
       "github": {
         "repository": "XeroAPI/Xero-OpenAPI",
         "ref": "master",
