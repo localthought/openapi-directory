@@ -1396,6 +1396,8 @@ info:
       format: openapi
       url: https://raw.githubusercontent.com/bunq/doc/master/swagger.json
       version: "3.0"
+  x-conversion:
+    - 'Fixed for strict YAML parsers (2026-10-08, ontola/openapi-directory#179): info.description contained two U+2028 LINE SEPARATOR characters inside a block scalar, which libyaml/serde_yaml treat as line breaks, ending the scalar early. Replaced them with a paragraph break; the text after the separators was kept. Only this whitespace changed; no other content.'
   x-providerName: bunq.com
 tags:
   - description: ""

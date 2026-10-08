@@ -19,6 +19,8 @@ info:
     - format: openapi
       url: https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai.json
       version: "3.0"
+  x-conversion:
+    - 'Fixed for strict YAML parsers (2026-10-08, ontola/openapi-directory#179): three double-quoted example city strings held raw C1 control characters (U+009F, U+0091, U+0090, U+009C), which YAML forbids unescaped. Wrote them as \x9f, \x91, \x90 and \x9c escapes; every string value is unchanged.'
   x-providerName: sendgrid.com
 externalDocs:
   url: https://sendgrid.com/docs/API_Reference/Web_API_v3/index.html
