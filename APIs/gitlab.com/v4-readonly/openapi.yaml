@@ -1,0 +1,1916 @@
+openapi: 3.0.0
+info:
+  title: GitLab REST API (read-only subset)
+  version: v4-readonly
+  description: Read-only GitLab.com subset for project discovery and issue synchronization. The project
+    list retains GitLab's membership filter; consumers can select projects with membership=true. Based
+    on GitLab's official OpenAPI 3.0 source, pinned and preserved in source/openapi_v3.yaml. Only GitLab.com
+    is represented; self-managed instance hosts are not included. The official Issues API reference describes
+    the list response as a collection; this subset corrects a single-object response shape in the pinned
+    upstream OAS; see https://docs.gitlab.com/api/issues/#list-project-issues.
+  termsOfService: https://handbook.gitlab.com/handbook/legal/api-terms/
+  license:
+    name: CC BY-SA 4.0
+    url: https://gitlab.com/gitlab-org/gitlab/-/blob/master/LICENSE
+    x-gitlab-description: The license applies to the OpenAPI specification document itself. For terms
+      governing use of the GitLab API, see the termsOfService field.
+  x-origin:
+  - format: openapi
+    url: https://gitlab.com/gitlab-org/gitlab/-/raw/e8b0b4728b9a69a9767a623ca6bf745998061b78/doc/api/openapi/openapi_v3.yaml
+    version: '19.5'
+  x-providerName: gitlab.com
+  x-serviceName: v4-readonly
+servers:
+- url: https://gitlab.com/api/v4
+  description: GitLab.com REST API v4
+security:
+- http: []
+- oauth2:
+  - read_api
+- apiKey: []
+paths:
+  /projects:
+    get:
+      operationId: getApiV4Projects
+      summary: List all projects
+      description: Lists all projects. Unauthenticated requests return only public projects with a limited
+        subset of attributes. You can filter responses by custom attributes. To use the `updated_after`
+        or `updated_before` filters, you must also set `order_by` to `updated_at`.
+      tags:
+      - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/APIEntitiesBasicProjectDetails'
+        '400':
+          description: Bad request
+      parameters:
+      - name: order_by
+        required: false
+        description: Return projects ordered by field. storage_size, repository_size, wiki_size, packages_size
+          are only available to admins. Similarity is available when searching and is limited to projects
+          the user has access to.
+        schema:
+          type: string
+          enum:
+          - id
+          - name
+          - path
+          - created_at
+          - updated_at
+          - last_activity_at
+          - similarity
+          - star_count
+          - storage_size
+          - repository_size
+          - wiki_size
+          - packages_size
+          default: created_at
+        in: query
+      - name: sort
+        required: false
+        description: Sort results in ascending or descending order.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        in: query
+      - name: archived
+        required: false
+        description: If `true`, returns only archived projects.
+        schema:
+          type: boolean
+          nullable: true
+        in: query
+      - name: visibility
+        required: false
+        description: Return projects with the specified visibility.
+        schema:
+          type: string
+          enum:
+          - private
+          - internal
+          - public
+          nullable: true
+        in: query
+      - name: search
+        required: false
+        description: 'Return a list of projects with a `path`, `name`, or `description` matching the search
+          criteria (case-insensitive, substring match). Multiple terms can be provided, separated by an
+          escaped space, either `+` or `%20`, and are ANDed together. Example: `one+two` matches substrings
+          `one` and `two` (in any order).'
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: search_namespaces
+        required: false
+        description: If `true`, includes ancestor namespaces when matching search criteria.
+        schema:
+          type: boolean
+          nullable: true
+        in: query
+      - name: owned
+        required: false
+        description: If `true`, returns only projects explicitly owned by the current user.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: starred
+        required: false
+        description: If `true`, returns only projects starred by the current user.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: imported
+        required: false
+        description: If `true`, returns only projects that were imported from external systems by the
+          authenticated user.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: membership
+        required: false
+        description: If `true`, returns only projects that the current user is a member of.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: with_issues_enabled
+        required: false
+        description: If `true`, returns only projects that have the issues feature enabled.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: with_merge_requests_enabled
+        required: false
+        description: If `true`, returns only projects that have the merge requests feature enabled.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: with_programming_language
+        required: false
+        description: Return projects that use the given programming language.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: min_access_level
+        required: false
+        description: Return results where the current user has at least the specified access level. For
+          a list of values, see [roles](https://docs.gitlab.com/user/permissions/#default-roles).
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 15
+          - 20
+          - 25
+          - 30
+          - 40
+          - 50
+          nullable: true
+        in: query
+      - name: id_after
+        required: false
+        description: Return projects with IDs greater than the specified ID.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: id_before
+        required: false
+        description: Return projects with IDs less than the specified ID.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: last_activity_after
+        required: false
+        description: Return projects with last activity after the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: last_activity_before
+        required: false
+        description: Return projects with last activity before the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: repository_storage
+        required: false
+        description: Return projects stored on the specified repository storage shard. Administrators
+          only.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: topic
+        required: false
+        description: Comma-separated list of topics. Return projects having all topics.
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+        in: query
+        style: form
+        explode: false
+      - name: topic_id
+        required: false
+        description: Filter projects by the given topic ID.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: updated_before
+        required: false
+        description: Return projects last updated on or before the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: updated_after
+        required: false
+        description: Return projects last updated on or after the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: include_pending_delete
+        required: false
+        description: If `true`, includes projects that are pending deletion in the response. Administrators
+          only.
+        schema:
+          type: boolean
+          nullable: true
+        in: query
+      - name: marked_for_deletion_on
+        required: false
+        description: Return projects that are marked for deletion on this date. Premium and Ultimate only.
+          [Introduced](https://gitlab.com/gitlab-org/gitlab/-/issues/463939) in GitLab 17.1.
+        schema:
+          type: string
+          format: date
+          nullable: true
+        in: query
+      - name: active
+        required: false
+        description: If `true`, returns only projects that are not archived and not marked for deletion.
+        schema:
+          type: boolean
+          nullable: true
+        in: query
+      - name: wiki_checksum_failed
+        required: false
+        description: If `true`, returns only projects whose wiki checksum calculation failed. Premium
+          and Ultimate only.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: repository_checksum_failed
+        required: false
+        description: If `true`, returns only projects whose repository checksum calculation failed. Premium
+          and Ultimate only.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: include_hidden
+        required: false
+        description: If `true`, includes hidden projects. Administrators only. Premium and Ultimate only.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: page
+        required: false
+        description: Page number of results to retrieve.
+        schema:
+          type: integer
+          default: 1
+        in: query
+        example: 1
+      - name: per_page
+        required: false
+        description: Number of items to list per page.
+        schema:
+          type: integer
+          default: 20
+        in: query
+        example: 20
+      - name: simple
+        required: false
+        description: If `true`, returns only limited fields for each project. Without authentication,
+          only limited fields are returned regardless of this setting.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: statistics
+        required: false
+        description: If `true`, includes project statistics. Available only to users with the Reporter,
+          Developer, Maintainer, or Owner role.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: with_custom_attributes
+        required: false
+        description: If `true`, includes [custom attributes](https://docs.gitlab.com/api/custom_attributes/)
+          in the response. Administrators only.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: custom_attributes
+        required: false
+        description: Filter by [custom attributes](https://docs.gitlab.com/api/custom_attributes/) that
+          match all of the specified key and value pairs. Administrators only.
+        schema:
+          type: object
+          nullable: true
+        in: query
+  /projects/{id}:
+    get:
+      operationId: getApiV4ProjectsId
+      summary: Retrieve a project
+      description: Retrieves details on a specified project. This endpoint can be accessed without authentication
+        if the project is publicly accessible.
+      tags:
+      - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIEntitiesProjectsWithAccessAndCatalogSetting'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request
+      parameters:
+      - name: id
+        required: true
+        description: ID or URL-encoded path of the project.
+        schema:
+          oneOf:
+          - type: string
+          - type: integer
+        in: path
+      - name: statistics
+        required: false
+        description: If `true`, includes project statistics. Available only to users with the Reporter,
+          Developer, Maintainer, or Owner role.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: with_custom_attributes
+        required: false
+        description: If `true`, includes [custom attributes](https://docs.gitlab.com/api/custom_attributes/)
+          in the response. Administrators only.
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: custom_attributes
+        required: false
+        description: Filter by [custom attributes](https://docs.gitlab.com/api/custom_attributes/) that
+          match all of the specified key and value pairs. Administrators only.
+        schema:
+          type: object
+          nullable: true
+        in: query
+      - name: license
+        required: false
+        description: If `true`, includes the project license data in the response.
+        schema:
+          type: boolean
+          default: false
+        in: query
+  /projects/{id}/issues:
+    get:
+      operationId: getApiV4ProjectsIdIssues
+      summary: List all project issues
+      description: Lists all issues for a specified project. If the project is private, you need to provide
+        credentials to authorize. In most cases, you should authenticate with a personal access token.
+      tags:
+      - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/APIEntitiesIssue'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request
+      parameters:
+      - name: id
+        required: true
+        description: ID or URL-encoded path of the project.
+        schema:
+          oneOf:
+          - type: string
+          - type: integer
+        in: path
+      - name: with_labels_details
+        required: false
+        description: 'If `true`, the response returns more details for each label in the labels field:
+          `name`, `color`, `description`, `description_html`, `text_color`.'
+        schema:
+          type: boolean
+          default: false
+        in: query
+      - name: state
+        required: false
+        description: Filter issues by state.
+        schema:
+          type: string
+          enum:
+          - opened
+          - closed
+          - all
+          default: all
+        in: query
+      - name: closed_by_id
+        required: false
+        description: Return issues closed by the user with the given ID.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: order_by
+        required: false
+        description: Sort results by the specified field.
+        schema:
+          type: string
+          enum:
+          - created_at
+          - due_date
+          - label_priority
+          - milestone_due
+          - popularity
+          - priority
+          - relative_position
+          - title
+          - updated_at
+          - weight
+          default: created_at
+        in: query
+      - name: sort
+        required: false
+        description: Sort results in ascending or descending order.
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        in: query
+      - name: due_date
+        required: false
+        description: Return issues that have no due date, are overdue, or whose due date is this week,
+          this month, or between two weeks ago and next month.
+        schema:
+          type: string
+          enum:
+          - '0'
+          - any
+          - today
+          - tomorrow
+          - overdue
+          - week
+          - month
+          - next_month_and_previous_two_weeks
+          - ''
+          nullable: true
+        in: query
+      - name: issue_type
+        required: false
+        description: 'The type of the issue. Accepts: issue, incident, test_case, requirement, task, ticket'
+        schema:
+          type: string
+          enum:
+          - issue
+          - incident
+          - test_case
+          - requirement
+          - task
+          - ticket
+          nullable: true
+        in: query
+      - name: labels
+        required: false
+        description: Comma-separated list of label names. `None` means no labels are assigned. `Any` means
+          at least one label is assigned. `No+Label` (deprecated) means no labels are assigned. Set to
+          an empty string to unassign all labels. If a label does not already exist, this creates a new
+          project label and assigns it to the issue. Predefined names are case-insensitive.
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+        in: query
+        style: form
+        explode: false
+      - name: milestone
+        required: false
+        description: Milestone title. `None` lists all issues with no milestone. `Any` lists all issues
+          that have an assigned milestone. Support for `None` and `Any` is [planned for removal](https://gitlab.com/gitlab-org/gitlab/-/issues/336044).
+          Use the `milestone_id` attribute instead. Mutually exclusive with `milestone_id`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: milestone_id
+        required: false
+        description: Return issues assigned to milestones with a given timebox value. `None` lists all
+          issues with no milestone. `Any` lists all issues that have an assigned milestone. `Upcoming`
+          lists all issues assigned to milestones due in the future. `Started` lists all issues assigned
+          to open, started milestones. The logic for `Upcoming` and `Started` differs from the logic used
+          in the [GraphQL API](https://docs.gitlab.com/user/project/milestones/#special-milestone-filters).
+          Mutually exclusive with `milestone`.
+        schema:
+          type: string
+          enum:
+          - Any
+          - None
+          - Upcoming
+          - Started
+          nullable: true
+        in: query
+      - name: iids
+        required: false
+        description: Return only the issues having the given `iid`.
+        schema:
+          type: array
+          items:
+            type: integer
+          nullable: true
+        in: query
+        style: form
+        explode: false
+      - name: search
+        required: false
+        description: Search issues against their `title` and `description`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: in
+        required: false
+        description: Modify the scope of the `search` attribute to `title`, `description`, or `title,description`.
+          If omitted, defaults to `title,description`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: author_id
+        required: false
+        description: Return issues created by the given user ID. Combine with `scope=all` or `scope=assigned_to_me`.
+          Mutually exclusive with `author_username`.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: author_username
+        required: false
+        description: Return issues created by the given `username`. Mutually exclusive with `author_id`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: assignee_id
+        required: false
+        description: Return issues assigned to the given user `id`. `None` returns unassigned issues and
+          `Any` returns issues with an assignee. Mutually exclusive with `assignee_username`.
+        schema:
+          oneOf:
+          - type: integer
+            nullable: true
+          - type: string
+            nullable: true
+        in: query
+      - name: assignee_username
+        required: false
+        description: Return issues assigned to the given username. In GitLab Community Edition, only a
+          single value is accepted. Otherwise, an invalid parameter error is returned. When multiple usernames
+          are given, only issues assigned to all of them are returned. Mutually exclusive with `assignee_id`.
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+        in: query
+      - name: created_after
+        required: false
+        description: Return issues created on or after the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: created_before
+        required: false
+        description: Return issues created on or before the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: updated_after
+        required: false
+        description: Return issues updated on or after the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: updated_before
+        required: false
+        description: Return issues updated on or before the specified time.
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+        in: query
+      - name: not
+        required: false
+        description: Return issues that do not match the specified parameters.
+        schema:
+          type: object
+          nullable: true
+        in: query
+      - name: not[labels]
+        required: false
+        description: Comma-separated list of label names.
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+        in: query
+      - name: not[milestone]
+        required: false
+        description: Milestone title. Mutually exclusive with `not[milestone_id]`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: not[milestone_id]
+        required: false
+        description: Return issues assigned to milestones without the specified timebox value. Mutually
+          exclusive with `not[milestone]`.
+        schema:
+          type: string
+          enum:
+          - Any
+          - None
+          - Upcoming
+          - Started
+          nullable: true
+        in: query
+      - name: not[iids]
+        required: false
+        description: Internal IDs of issues to exclude.
+        schema:
+          type: array
+          items:
+            type: integer
+          nullable: true
+        in: query
+      - name: not[author_id]
+        required: false
+        description: Return issues not authored by the user with the given ID. Mutually exclusive with
+          `not[author_username]`.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: not[author_username]
+        required: false
+        description: Return issues not authored by the user with the given username. Mutually exclusive
+          with `not[author_id]`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: not[assignee_id]
+        required: false
+        description: Return issues not assigned to the user with the given ID. Mutually exclusive with
+          `not[assignee_username]`.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: not[assignee_username]
+        required: false
+        description: Return issues not assigned to the user with the given username. Mutually exclusive
+          with `not[assignee_id]`.
+        schema:
+          type: array
+          items:
+            type: string
+          nullable: true
+        in: query
+      - name: not[weight]
+        required: false
+        description: Return issues that do not have the specified weight.
+        schema:
+          type: integer
+          nullable: true
+        in: query
+      - name: not[iteration_id]
+        required: false
+        description: Return issues not assigned to the iteration with the given ID. Mutually exclusive
+          with `not[iteration_title]`.
+        schema:
+          oneOf:
+          - type: integer
+            nullable: true
+          - type: string
+            nullable: true
+        in: query
+      - name: not[iteration_title]
+        required: false
+        description: Return issues not assigned to the iteration with the given title. Mutually exclusive
+          with `not[iteration_id]`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: scope
+        required: false
+        description: Return issues for the given scope.
+        schema:
+          type: string
+          enum:
+          - created-by-me
+          - assigned-to-me
+          - created_by_me
+          - assigned_to_me
+          - all
+          nullable: true
+        in: query
+      - name: my_reaction_emoji
+        required: false
+        description: Return issues reacted to by the authenticated user with the given `emoji`. `None`
+          returns issues with no reaction and `Any` returns issues with at least one reaction.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: confidential
+        required: false
+        description: If `true`, returns only confidential issues. If `false`, returns only public issues.
+        schema:
+          type: boolean
+          nullable: true
+        in: query
+      - name: weight
+        required: false
+        description: The weight of the issue
+        schema:
+          oneOf:
+          - type: integer
+            nullable: true
+          - type: string
+            nullable: true
+        in: query
+      - name: epic_id
+        required: false
+        description: Return issues associated with the epic with the given ID. `None` returns issues that
+          are not associated with an epic. `Any` returns issues that are associated with an epic. Premium
+          and Ultimate only.
+        schema:
+          oneOf:
+          - type: integer
+            nullable: true
+          - type: string
+            nullable: true
+        in: query
+      - name: health_status
+        required: false
+        description: 'The health status of the issue. Must be one of: on_track, needs_attention, at_risk,
+          none, any'
+        schema:
+          type: string
+          enum:
+          - on_track
+          - needs_attention
+          - at_risk
+          - none
+          - any
+          nullable: true
+        in: query
+      - name: iteration_id
+        required: false
+        description: Return issues assigned to the iteration with the given ID. `None` returns issues
+          that do not belong to an iteration. `Any` returns issues that belong to an iteration. Premium
+          and Ultimate only. Mutually exclusive with `iteration_title`.
+        schema:
+          oneOf:
+          - type: integer
+            nullable: true
+          - type: string
+            nullable: true
+        in: query
+      - name: iteration_title
+        required: false
+        description: Return issues assigned to the iteration with the given title. Premium and Ultimate
+          only. Mutually exclusive with `iteration_id`.
+        schema:
+          type: string
+          nullable: true
+        in: query
+      - name: page
+        required: false
+        description: Page number of results to retrieve.
+        schema:
+          type: integer
+          default: 1
+        in: query
+        example: 1
+      - name: per_page
+        required: false
+        description: Number of items to list per page.
+        schema:
+          type: integer
+          default: 20
+        in: query
+        example: 20
+      - name: cursor
+        required: false
+        description: Cursor for obtaining the next set of records.
+        schema:
+          type: string
+          nullable: true
+        in: query
+  /projects/{id}/issues/{issue_iid}:
+    get:
+      operationId: getApiV4ProjectsIdIssuesIssueIid
+      summary: Retrieve a project issue
+      description: Retrieves a specified issue for a project. If the project is private or the issue is
+        confidential, you need to provide credentials to authorize. In most cases, you should authenticate
+        with a personal access token.
+      tags:
+      - Projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIEntitiesIssue'
+        '404':
+          description: Not Found
+        '400':
+          description: Bad Request
+      parameters:
+      - name: id
+        required: true
+        description: ID or URL-encoded path of the project.
+        schema:
+          oneOf:
+          - type: string
+          - type: integer
+        in: path
+      - name: issue_iid
+        required: true
+        description: Internal ID of the issue.
+        schema:
+          type: integer
+        in: path
+components:
+  schemas:
+    APIEntitiesIssue:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 84
+        iid:
+          type: integer
+          example: 14
+        project_id:
+          type: integer
+          format: int64
+          example: 4
+        title:
+          type: string
+          example: Impedit et ut et dolores vero provident ullam est
+        description:
+          type: string
+          example: Repellendus impedit et vel velit dignissimos.
+        state:
+          type: string
+          example: closed
+        created_at:
+          type: string
+          format: date-time
+          example: '2022-08-17T12:46:35.053Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2022-11-14T17:22:01.470Z'
+        closed_at:
+          type: string
+          format: date-time
+          example: '2022-11-15T08:30:55.232Z'
+        closed_by:
+          $ref: '#/components/schemas/APIEntitiesUserBasic'
+        labels:
+          type: array
+          example:
+          - bug
+          items:
+            type: string
+        milestone:
+          $ref: '#/components/schemas/APIEntitiesMilestone'
+        assignees:
+          $ref: '#/components/schemas/APIEntitiesUserBasic'
+        author:
+          $ref: '#/components/schemas/APIEntitiesUserBasic'
+        type:
+          type: string
+          description: The type of the issue.
+          enum:
+          - ISSUE
+          - INCIDENT
+          - TEST_CASE
+          - REQUIREMENT
+          - TASK
+          - TICKET
+          example: ISSUE
+        assignee:
+          $ref: '#/components/schemas/APIEntitiesUserBasic'
+        user_notes_count:
+          type: integer
+        merge_requests_count:
+          type: integer
+        upvotes:
+          type: integer
+        downvotes:
+          type: integer
+        start_date:
+          type: string
+          format: date
+          example: '2022-11-18'
+        due_date:
+          type: string
+          format: date
+          example: '2022-11-20'
+        confidential:
+          type: boolean
+        discussion_locked:
+          type: boolean
+        issue_type:
+          type: string
+          example: issue
+        web_url:
+          type: string
+          example: http://example.com/example/example/issues/14
+        time_stats:
+          $ref: '#/components/schemas/APIEntitiesIssuableTimeStats'
+        task_completion_status:
+          $ref: '#/components/schemas/APIEntitiesTaskCompletionStatus'
+        weight:
+          type: integer
+          example: 5
+        blocking_issues_count:
+          type: integer
+          example: 2
+        has_tasks:
+          type: boolean
+          example: true
+        task_status:
+          type: string
+          example: 2 of 4 tasks completed
+        _links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: http://example.com/api/v4/projects/1/issues/2
+            notes:
+              type: string
+              example: http://example.com/api/v4/projects/1/issues/2/notes
+            award_emoji:
+              type: string
+              example: http://example.com/api/v4/projects/1/issues/2/award_emoji
+            project:
+              type: string
+              example: http://example.com/api/v4/projects/1
+            closed_as_duplicate_of:
+              type: string
+              example: http://example.com/api/v4/projects/1/issues/75
+        references:
+          $ref: '#/components/schemas/APIEntitiesIssuableReferences'
+        severity:
+          type: string
+          description: The severity of the issue.
+          enum:
+          - UNKNOWN
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+        subscribed:
+          type: boolean
+          example: false
+        moved_to_id:
+          type: integer
+          format: int64
+          example: 1
+        imported:
+          type: boolean
+          example: false
+        imported_from:
+          type: string
+          example: github
+        service_desk_reply_to:
+          type: string
+          example: user@example.com
+        epic_iid:
+          type: string
+        epic:
+          $ref: '#/components/schemas/EpicBaseEntity'
+        iteration:
+          $ref: '#/components/schemas/APIEntitiesIteration'
+        health_status:
+          type: string
+    APIEntitiesIteration:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        iid:
+          type: integer
+          example: 1
+        sequence:
+          type: integer
+          example: 1
+        group_id:
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+          example: Iteration I
+        description:
+          type: string
+          example: Iteration description
+        state:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: '2022-01-31T15:10:45.080Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2022-01-31T15:10:45.080Z'
+        start_date:
+          type: string
+          format: date
+          example: '2022-01-01'
+        due_date:
+          type: string
+          format: date
+          example: '2022-01-31'
+        web_url:
+          type: string
+          example: https://gitlab.example.com/groups/gitlab-org/-/iterations/1
+    EpicBaseEntity:
+      type: object
+      properties:
+        id:
+          type: string
+        iid:
+          type: string
+        title:
+          type: string
+        url:
+          type: string
+        group_id:
+          type: string
+        human_readable_end_date:
+          type: string
+        human_readable_timestamp:
+          type: string
+    APIEntitiesIssuableReferences:
+      type: object
+      properties:
+        short:
+          type: string
+          example: '&6'
+        relative:
+          type: string
+          example: '&6'
+        full:
+          type: string
+          example: test&6
+    APIEntitiesTaskCompletionStatus:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 5
+        completed_count:
+          type: integer
+          example: 3
+    APIEntitiesIssuableTimeStats:
+      type: object
+      properties:
+        time_estimate:
+          type: integer
+          example: 12600
+        total_time_spent:
+          type: integer
+          example: 3600
+        human_time_estimate:
+          type: string
+          example: 3h 30m
+        human_total_time_spent:
+          type: string
+          example: 1h
+    APIEntitiesUserBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        username:
+          type: string
+          example: admin
+        public_email:
+          type: string
+          example: john@example.com
+        name:
+          type: string
+          example: Administrator
+        state:
+          type: string
+          example: active
+        locked:
+          type: boolean
+        avatar_url:
+          type: string
+          example: https://gravatar.com/avatar/1
+        avatar_path:
+          type: string
+          example: /user/avatar/28/The-Big-Lebowski-400-400.png
+        custom_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/APIEntitiesCustomAttribute'
+        web_url:
+          type: string
+          example: https://gitlab.example.com/root
+    APIEntitiesCustomAttribute:
+      type: object
+      properties:
+        key:
+          type: string
+          example: foo
+        value:
+          type: string
+          example: bar
+    APIEntitiesMilestone:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        iid:
+          type: integer
+          format: int64
+        project_id:
+          type: integer
+          format: int64
+        group_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        state:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        due_date:
+          type: string
+        start_date:
+          type: string
+        expired:
+          type: boolean
+        web_url:
+          type: string
+    APIEntitiesProjectsWithAccessAndCatalogSetting:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        description:
+          type: string
+          example: desc
+        name:
+          type: string
+          example: project1
+        name_with_namespace:
+          type: string
+          example: John Doe / project1
+        path:
+          type: string
+          example: project1
+        path_with_namespace:
+          type: string
+          example: namespace1/project1
+        created_at:
+          type: string
+          format: date-time
+          example: '2020-05-07T04:27:17.016Z'
+        default_branch:
+          type: string
+          example: main
+        tag_list:
+          type: array
+          example:
+          - tag
+          items:
+            type: string
+        topics:
+          type: array
+          example:
+          - topic
+          items:
+            type: string
+        ssh_url_to_repo:
+          type: string
+          example: git@gitlab.example.com:gitlab/gitlab.git
+        http_url_to_repo:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab.git
+        web_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab
+        readme_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab/blob/master/README.md
+        forks_count:
+          type: integer
+          example: 1
+        license_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab/blob/master/LICENCE
+        license:
+          $ref: '#/components/schemas/APIEntitiesLicenseBasic'
+        avatar_url:
+          type: string
+          example: http://example.com/uploads/project/avatar/3/uploads/avatar.png
+        star_count:
+          type: integer
+          example: 1
+        last_activity_at:
+          type: string
+          format: date-time
+          example: '2013-09-30T13:46:02Z'
+        visibility:
+          type: string
+          example: public
+        namespace:
+          $ref: '#/components/schemas/APIEntitiesNamespaceBasic'
+        custom_attributes:
+          $ref: '#/components/schemas/APIEntitiesCustomAttribute'
+        repository_storage:
+          type: string
+          example: default
+        forked_from_project:
+          $ref: '#/components/schemas/APIEntitiesBasicProjectDetails'
+        container_registry_image_prefix:
+          type: string
+          example: registry.gitlab.example.com/gitlab/gitlab-client
+        _links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4
+            issues:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/issues
+            merge_requests:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/merge_requests
+            repo_branches:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/repository/branches
+            labels:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/labels
+            events:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/events
+            members:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/members
+            cluster_agents:
+              type: string
+              example: https://gitlab.example.com/api/v4/projects/4/cluster_agents
+        marked_for_deletion_at:
+          type: string
+          format: date-time
+          example: '2020-05-07T04:27:17.016Z'
+        marked_for_deletion_on:
+          type: string
+          format: date-time
+          example: '2020-05-07T04:27:17.016Z'
+        packages_enabled:
+          type: boolean
+        empty_repo:
+          type: boolean
+        archived:
+          type: boolean
+        owner:
+          $ref: '#/components/schemas/APIEntitiesUserBasic'
+        resolve_outdated_diff_discussions:
+          type: boolean
+        container_expiration_policy:
+          $ref: '#/components/schemas/APIEntitiesContainerExpirationPolicy'
+        repository_object_format:
+          type: string
+          example: sha1
+        issues_enabled:
+          type: boolean
+        merge_requests_enabled:
+          type: boolean
+        wiki_enabled:
+          type: boolean
+        jobs_enabled:
+          type: boolean
+        snippets_enabled:
+          type: boolean
+        container_registry_enabled:
+          type: boolean
+        service_desk_enabled:
+          type: boolean
+        service_desk_address:
+          type: string
+          example: address@example.com
+        can_create_merge_request_in:
+          type: boolean
+        issues_access_level:
+          type: string
+          example: enabled
+        repository_access_level:
+          type: string
+          example: enabled
+        merge_requests_access_level:
+          type: string
+          example: enabled
+        forking_access_level:
+          type: string
+          example: enabled
+        wiki_access_level:
+          type: string
+          example: enabled
+        builds_access_level:
+          type: string
+          example: enabled
+        snippets_access_level:
+          type: string
+          example: enabled
+        pages_access_level:
+          type: string
+          example: enabled
+        analytics_access_level:
+          type: string
+          example: enabled
+        container_registry_access_level:
+          type: string
+          example: enabled
+        security_and_compliance_access_level:
+          type: string
+          example: enabled
+        releases_access_level:
+          type: string
+          example: enabled
+        environments_access_level:
+          type: string
+          example: enabled
+        feature_flags_access_level:
+          type: string
+          example: enabled
+        infrastructure_access_level:
+          type: string
+          example: enabled
+        monitor_access_level:
+          type: string
+          example: enabled
+        model_experiments_access_level:
+          type: string
+          example: enabled
+        model_registry_access_level:
+          type: string
+          example: enabled
+        package_registry_access_level:
+          type: string
+          example: enabled
+        emails_disabled:
+          type: boolean
+        emails_enabled:
+          type: boolean
+        show_diff_preview_in_email:
+          type: boolean
+        shared_runners_enabled:
+          type: boolean
+        lfs_enabled:
+          type: boolean
+        creator_id:
+          type: integer
+          format: int64
+          example: 1
+        mr_default_target_self:
+          type: boolean
+        import_url:
+          type: string
+          example: https://gitlab.com/gitlab/gitlab.git
+        import_type:
+          type: string
+          example: git
+        import_status:
+          type: string
+          example: none
+        import_error:
+          type: string
+          example: Import error
+        open_issues_count:
+          type: integer
+          example: 1
+        description_html:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+          example: '2020-05-07T04:27:17.016Z'
+        ci_default_git_depth:
+          type: integer
+          example: 20
+        ci_delete_pipelines_in_seconds:
+          type: integer
+          example: 86400
+        ci_forward_deployment_enabled:
+          type: boolean
+        ci_forward_deployment_rollback_allowed:
+          type: boolean
+        ci_job_token_scope_enabled:
+          type: boolean
+        ci_separated_caches:
+          type: boolean
+        ci_allow_fork_pipelines_to_run_in_parent_project:
+          type: boolean
+        ci_id_token_sub_claim_components:
+          type: array
+          items:
+            type: string
+        build_git_strategy:
+          type: string
+          example: fetch
+        keep_latest_artifact:
+          type: boolean
+        restrict_user_defined_variables:
+          type: boolean
+        ci_pipeline_variables_minimum_override_role:
+          type: string
+        runner_token_expiration_interval:
+          type: integer
+          example: 3600
+        group_runners_enabled:
+          type: boolean
+        resource_group_default_process_mode:
+          type: string
+          example: unordered
+        auto_cancel_pending_pipelines:
+          type: string
+          example: enabled
+        build_timeout:
+          type: integer
+          example: 3600
+        auto_devops_enabled:
+          type: boolean
+        auto_devops_deploy_strategy:
+          type: string
+          example: continuous
+        ci_push_repository_for_job_token_allowed:
+          type: boolean
+        protect_merge_request_pipelines:
+          type: boolean
+        ci_display_pipeline_variables:
+          type: boolean
+        ci_skip_branch_pipelines_for_mrs:
+          type: boolean
+        runners_token:
+          type: string
+          example: b8547b1dc37721d05889db52fa2f02
+        ci_config_path:
+          type: string
+          example: ''
+        public_jobs:
+          type: boolean
+        shared_with_groups:
+          type: array
+          items:
+            type: object
+        only_allow_merge_if_pipeline_succeeds:
+          type: boolean
+        allow_merge_on_skipped_pipeline:
+          type: boolean
+        request_access_enabled:
+          type: boolean
+        only_allow_merge_if_all_discussions_are_resolved:
+          type: boolean
+        remove_source_branch_after_merge:
+          type: boolean
+        printing_merge_request_link_enabled:
+          type: boolean
+        merge_method:
+          type: string
+          example: merge
+        squash_option:
+          type: string
+          example: default_off
+        automatic_rebase_enabled:
+          type: boolean
+        enforce_auth_checks_on_uploads:
+          type: boolean
+        suggestion_commit_message:
+          type: string
+          example: Suggestion message
+        merge_commit_template:
+          type: string
+          example: '%(title)'
+        squash_commit_template:
+          type: string
+          example: '%(source_branch)'
+        mr_default_title_template:
+          type: string
+          example: '%(source_branch)'
+        issue_branch_template:
+          type: string
+          example: '%(title)'
+        statistics:
+          $ref: '#/components/schemas/APIEntitiesProjectStatistics'
+        warn_about_potentially_unwanted_characters:
+          type: boolean
+        autoclose_referenced_issues:
+          type: boolean
+        max_artifacts_size:
+          type: integer
+        approvals_before_merge:
+          type: string
+        mirror:
+          type: string
+        mirror_user_id:
+          type: string
+        mirror_trigger_builds:
+          type: string
+        only_mirror_protected_branches:
+          type: string
+        mirror_overwrites_diverged_branches:
+          type: string
+        external_authorization_classification_label:
+          type: string
+        requirements_enabled:
+          type: string
+        requirements_access_level:
+          type: string
+        security_and_compliance_enabled:
+          type: string
+        secret_push_protection_enabled:
+          type: boolean
+        pre_receive_secret_detection_enabled:
+          type: boolean
+        compliance_frameworks:
+          type: string
+        issues_template:
+          type: string
+        merge_requests_template:
+          type: string
+        ci_restrict_pipeline_cancellation_role:
+          type: string
+        merge_pipelines_enabled:
+          type: string
+        merge_trains_enabled:
+          type: string
+        merge_trains_skip_train_allowed:
+          type: string
+        merge_train_enforcement:
+          type: string
+        max_pipelines_per_merge_train:
+          type: string
+        only_allow_merge_if_all_status_checks_passed:
+          type: string
+        allow_pipeline_trigger_approve_deployment:
+          type: boolean
+        prevent_merge_without_jira_issue:
+          type: string
+        auto_duo_code_review_enabled:
+          type: string
+        reviewer_assignment_strategy:
+          type: string
+          example: code_owners
+        duo_remote_flows_enabled:
+          type: string
+        duo_foundational_flows_enabled:
+          type: string
+        duo_sast_fp_detection_enabled:
+          type: string
+        duo_secret_detection_fp_enabled:
+          type: string
+        duo_dependency_bump_breaking_changes_enabled:
+          type: string
+        duo_sast_vr_workflow_enabled:
+          type: string
+        web_based_commit_signing_enabled:
+          type: string
+        spp_repository_pipeline_access:
+          type: boolean
+          description: The spp_repository_pipeline_access setting is only visible if the security_orchestration_policies
+            feature is available.
+        security_policy_pipeline_must_succeed:
+          type: boolean
+          description: Require all security policy pipelines to succeed before merge requests can be merged.
+        merge_request_title_regex:
+          type: string
+          example: /Title of merge request/
+        merge_request_title_regex_description:
+          type: string
+          example: This requires the title to include a Jira label
+        permissions:
+          type: object
+          properties:
+            project_access:
+              $ref: '#/components/schemas/APIEntitiesProjectAccess'
+            group_access:
+              $ref: '#/components/schemas/APIEntitiesGroupAccess'
+        cicd_catalog_enabled:
+          type: boolean
+    APIEntitiesGroupAccess:
+      type: object
+      properties:
+        access_level:
+          type: string
+        notification_level:
+          type: string
+    APIEntitiesProjectAccess:
+      type: object
+      properties:
+        access_level:
+          type: string
+        notification_level:
+          type: string
+    APIEntitiesProjectStatistics:
+      type: object
+      properties:
+        commit_count:
+          type: integer
+          example: 37
+        storage_size:
+          type: integer
+          example: 1038090
+        repository_size:
+          type: integer
+          example: 1038090
+        wiki_size:
+          type: integer
+          example: 0
+        lfs_objects_size:
+          type: integer
+          example: 0
+        job_artifacts_size:
+          type: integer
+          example: 0
+        pipeline_artifacts_size:
+          type: integer
+          example: 0
+        packages_size:
+          type: integer
+          example: 0
+        snippets_size:
+          type: integer
+          example: 0
+        uploads_size:
+          type: integer
+          example: 0
+        container_registry_size:
+          type: integer
+          example: 0
+    APIEntitiesContainerExpirationPolicy:
+      type: object
+      properties:
+        cadence:
+          type: string
+        enabled:
+          type: string
+        keep_n:
+          type: string
+        older_than:
+          type: string
+        name_regex:
+          type: string
+        name_regex_keep:
+          type: string
+        next_run_at:
+          type: string
+    APIEntitiesBasicProjectDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        description:
+          type: string
+          example: desc
+        name:
+          type: string
+          example: project1
+        name_with_namespace:
+          type: string
+          example: John Doe / project1
+        path:
+          type: string
+          example: project1
+        path_with_namespace:
+          type: string
+          example: namespace1/project1
+        created_at:
+          type: string
+          format: date-time
+          example: '2020-05-07T04:27:17.016Z'
+        default_branch:
+          type: string
+          example: main
+        tag_list:
+          type: array
+          example:
+          - tag
+          items:
+            type: string
+        topics:
+          type: array
+          example:
+          - topic
+          items:
+            type: string
+        ssh_url_to_repo:
+          type: string
+          example: git@gitlab.example.com:gitlab/gitlab.git
+        http_url_to_repo:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab.git
+        web_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab
+        readme_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab/blob/master/README.md
+        forks_count:
+          type: integer
+          example: 1
+        license_url:
+          type: string
+          example: https://gitlab.example.com/gitlab/gitlab/blob/master/LICENCE
+        license:
+          $ref: '#/components/schemas/APIEntitiesLicenseBasic'
+        avatar_url:
+          type: string
+          example: http://example.com/uploads/project/avatar/3/uploads/avatar.png
+        star_count:
+          type: integer
+          example: 1
+        last_activity_at:
+          type: string
+          format: date-time
+          example: '2013-09-30T13:46:02Z'
+        visibility:
+          type: string
+          example: public
+        namespace:
+          $ref: '#/components/schemas/APIEntitiesNamespaceBasic'
+        custom_attributes:
+          $ref: '#/components/schemas/APIEntitiesCustomAttribute'
+        repository_storage:
+          type: string
+          example: default
+    APIEntitiesNamespaceBasic:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        name:
+          type: string
+          example: project
+        path:
+          type: string
+          example: my_project
+        kind:
+          type: string
+          example: project
+        full_path:
+          type: string
+          example: group/my_project
+        parent_id:
+          type: integer
+          format: int64
+          example: 1
+        avatar_url:
+          type: string
+          example: https://example.com/avatar/12345
+        web_url:
+          type: string
+          example: https://example.com/group/my_project
+    APIEntitiesLicenseBasic:
+      type: object
+      properties:
+        key:
+          type: string
+          example: gpl-3.0
+        name:
+          type: string
+          example: GNU General Public License v3.0
+        nickname:
+          type: string
+          example: GNU GPLv3
+        html_url:
+          type: string
+          example: http://choosealicense.com/licenses/gpl-3.0
+        source_url:
+          type: string
+  securitySchemes:
+    http:
+      type: http
+      scheme: bearer
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://gitlab.com/oauth/authorize
+          tokenUrl: https://gitlab.com/oauth/token
+          refreshUrl: https://gitlab.com/oauth/token
+          scopes:
+            api: Grants complete read/write access to the API, including all groups and projects, the
+              container registry, the dependency proxy, and the package registry.
+            read_api: Grants read access to the API, including all groups and projects, the container
+              registry, and the package registry.
+            read_user: Grants read-only access to your profile through the /user API endpoint, which includes
+              username, public email, and full name. Also grants access to read-only API endpoints under
+              /users.
+            create_runner: Grants create access to the runners.
+            manage_runner: Grants access to manage the runners.
+            k8s_proxy: Grants permission to perform Kubernetes API calls using the agent for Kubernetes.
+            self_rotate: Grants permission for token to rotate itself.
+            mcp: Grants read-write access to remote Model Context Protocol (MCP) server for tools execution.
+            mcp_orbit: Grants access to the Orbit Knowledge Graph MCP server for graph queries and schema
+              retrieval.
+    apiKey:
+      type: apiKey
+      name: PRIVATE-TOKEN
+      in: header
