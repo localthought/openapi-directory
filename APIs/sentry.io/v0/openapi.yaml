@@ -11,10 +11,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/7644b769d158f83bc0079e77566bf6247f1c6c0c/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/db7a25833324c7a3639fe04b4063a7703ab3ee50/openapi-derefed.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/7644b769d158f83bc0079e77566bf6247f1c6c0c/openapi-derefed.json at commit 7644b769d158f83bc0079e77566bf6247f1c6c0c; entry source SHA-256 36523e3f4e861a452216d02175e5401e175e3fbfd8b83371be18b3e96c319f2c.
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/db7a25833324c7a3639fe04b4063a7703ab3ee50/openapi-derefed.json at commit db7a25833324c7a3639fe04b4063a7703ab3ee50; entry source SHA-256 803c8de0360e0b840a83bc401192bc144e3716fd1e2c6786589bf26860ffd939.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -1819,7 +1819,7 @@ paths:
   /api/0/organizations/{organization_id_or_slug}/agents/conversations/:
     get:
       operationId: listOrganizationAIConversations
-      description: "**Experimental:** This API is under active development and may change.\n\nReturn AI conversations ordered by latest span time.\n\n`query` uses Sentry search syntax.\n\n**Span filters**\n\n- Description: `\"payment failed\"`; status: `span.status:[error,internal_error]`.\n- Operation: `gen_ai.operation.type:tool`; tool: `gen_ai.tool.name:get_weather`.\n- Duration: `span.duration:>2s`; ID: `gen_ai.conversation.id:\"session:123\"`\n  or `conversation.conversationId:\"session:123\"`.\n\n**Conversation filters**\n\n- Calls: `conversation.llmCalls` or `conversation.messages`, and\n  `conversation.toolCalls`; failures: `conversation.errors` and\n  `conversation.toolErrors`.\n- Usage: `conversation.inputTokens`, `conversation.outputTokens`,\n  `conversation.totalTokens`, and `conversation.totalCost`.\n- Duration: `conversation.duration` sums AI spans;\n  `conversation.generationDuration` sums LLM calls.\n\nUse numeric comparisons such as `conversation.toolCalls:>2`. Queries return\nconversations, not spans. Each `AND` condition may match a different span.\nReturned totals include all AI spans in selected project, environment, and time\nfilters, not only matching spans.\n\nNegation means no span matches, including when an attribute is absent. Payloads\nare searchable only when recorded and not scrubbed. Payload failure text does\nnot mark a span as failed; set `span.status:error` for reliable failure search."
+      description: "**Experimental:** This API is under active development and may change.\n\nReturn AI conversations ordered by latest span time.\n\n`query` uses Sentry search syntax.\n\n**Span filters**\n\n- Description: `\"payment failed\"`; status: `span.status:[error,internal_error]`.\n- Operation: `gen_ai.operation.type:tool`; tool: `gen_ai.tool.name:get_weather`.\n- Duration: `span.duration:>2s`; ID: `gen_ai.conversation.id:\"session:123\"`\n  or `conversation.conversationId:\"session:123\"`.\n\n**Conversation filters**\n\n- Calls: `conversation.llmCalls` or `conversation.messages`, and\n  `conversation.toolCalls`; failures: `conversation.errors` and\n  `conversation.toolErrors`.\n- Usage: `conversation.inputTokens`, `conversation.outputTokens`,\n  `conversation.totalTokens`, and `conversation.totalCost`.\n- Timespan: `conversation.timeSpan` measures elapsed time between first and last AI spans;\n  `conversation.generationDuration` sums LLM call durations. Both use milliseconds.\n\nUse numeric comparisons such as `conversation.toolCalls:>2`. Queries return\nconversations, not spans. Each `AND` condition may match a different span.\nReturned totals include all AI spans in selected project, environment, and time\nfilters, not only matching spans.\n\nNegation means no span matches, including when an attribute is absent. Payloads\nare searchable only when recorded and not scrubbed. Payload failure text does\nnot mark a span as failed; set `span.status:error` for reliable failure search."
       summary: List an Organization's AI Conversations
       parameters:
         - in: path
@@ -1947,6 +1947,9 @@ paths:
                       type: integer
                     conversationId:
                       type: string
+                    timeSpan:
+                      type: number
+                      format: double
                     title:
                       type: string
                       nullable: true
@@ -2021,6 +2024,7 @@ paths:
                     - projectId
                     - projects
                     - startTimestamp
+                    - timeSpan
                     - title
                     - toolCalls
                     - toolErrors
@@ -2051,6 +2055,7 @@ paths:
                       inputTokens: 320
                       outputTokens: 165
                       totalCost: 0.0042
+                      timeSpan: 2500
                       generationDuration: 1250.5
                       startTimestamp: 1743465600000
                       endTimestamp: 1743465602500
@@ -75206,6 +75211,9 @@ components:
             type: integer
           conversationId:
             type: string
+          timeSpan:
+            type: number
+            format: double
           title:
             type: string
             nullable: true
@@ -75280,6 +75288,7 @@ components:
           - projectId
           - projects
           - startTimestamp
+          - timeSpan
           - title
           - toolCalls
           - toolErrors
