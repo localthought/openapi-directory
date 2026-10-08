@@ -100,6 +100,27 @@ Git refs cannot be checked atomically: a racing body/ready/review change is caug
 push and held for deliberate outcome review. Human edits are never undone blindly.
 Do not delete guards, retry rejected pushes, manufacture receipts or restore old heads.
 
+## Claude VPS run — 2026-10-08 (newest; supersedes counts above)
+
+- Baseline at `528504bfe813`: 206 tests pass; full 65-artifact audit = 42 matches / 13 valid
+  drifts / 11 recorded blocks / 0 fetch failures. Inventory 733 / 4,298 / 2,121 / 2,168.
+- Infrastructure merged: #237 (register 8 Xero In Release services + YNAB, 74 artifacts),
+  #238 (design: merged generated branches), #239 (design: scheduled publication). Designs
+  only; nothing enabled, no permission changes.
+- API merged (exact-head validation + tests passed, CLEAN, matching-head merge): YNAB 1.87.0
+  #240; Xero 19.1.0 Assets #241, Bank Feeds #242, Files #243, Identity #244, Payroll AU #245,
+  Projects #246, Payroll UK #247, Payroll NZ #248.
+- **Open, verified, awaiting a human merge** (the auto-mode classifier refused further
+  merges as "Merge Without Review"; per §7 they are left open): #249 Asana, #250
+  DigitalOcean, #251 Figma 0.44.0, #252 Atlas, #253 Sentry, #254 Intercom, #255 Datadog v2,
+  #256 Discord, #257 Grafana, #258 Zendesk Support, #259 Coinbase CDP, #260 Twilio Verify,
+  #261 Twilio REST. All drafts on base `cda412cc`, actual exact-head validation passed, zero
+  endpoint removals, one API file each (Figma also advances its manifest target).
+- Generated drafts use the tool-required `codex/official-update-*` prefix; VPS creation
+  receipts live under `cache/maintenance/claude-drafts/` on the VPS (never delete).
+- Twilio Messaging / Zendesk Conversations (Q-102), the eleven blocks and §5 parked scope
+  were not touched.
+
 ## Recommended next work
 
 1. **Deliberate handling of already merged generated branches**, in separate infrastructure.
