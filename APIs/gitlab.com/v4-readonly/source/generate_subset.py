@@ -10,6 +10,7 @@ SOURCE = HERE / "openapi_v3.yaml"
 OUTPUT = HERE.parent / "openapi.yaml"
 SELECTED_PATHS = {
     "/api/v4/projects": {"get"},
+    "/api/v4/projects/{id}": {"get"},
     "/api/v4/projects/{id}/issues": {"get"},
     "/api/v4/projects/{id}/issues/{issue_iid}": {"get"},
 }
@@ -49,7 +50,6 @@ def main():
     # but GitLab's current Issues API docs define this as a paginated list. Preserve
     # the source unchanged and correct the subset's response shape to the documented
     # collection shape.
-    issue_list = paths["/projects/{id}/issues"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
     paths["/projects/{id}/issues"]["get"]["responses"]["200"]["content"]["application/json"]["schema"] = {
         "type": "array",
         "items": {"$ref": "#/components/schemas/APIEntitiesIssue"},
@@ -88,7 +88,8 @@ def main():
                 "source, pinned and preserved in source/openapi_v3.yaml. Only GitLab.com "
                 "is represented; self-managed instance hosts are not included. The official "
                 "Issues API reference describes the list response as a collection; this "
-                "subset corrects a single-object response shape in the pinned upstream OAS."
+                "subset corrects a single-object response shape in the pinned upstream OAS; "
+                "see https://docs.gitlab.com/api/issues/#list-project-issues."
             ),
             "termsOfService": source["info"].get("termsOfService"),
             "license": source["info"].get("license"),
