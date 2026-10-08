@@ -15,9 +15,10 @@ info:
       url: https://drla6sbl8l00t.cloudfront.net/openapi.yaml
       version: '3.1'
   x-conversion:
-    - Fetched from https://drla6sbl8l00t.cloudfront.net/openapi.yaml on 2026-10-05T20:43:14.478354+00:00; entry source SHA-256 156440e9f8df1eb23aa0c30c78157dbe8fbd4e96929f2c1ff0b409963f704302.
+    - Fetched from https://drla6sbl8l00t.cloudfront.net/openapi.yaml on 2026-10-08T12:20:36.206642+00:00; entry source SHA-256 498e51930484703cca6272186e680a121e3939ab2af2ff487e47991d60937a81.
     - 'Applied maintenance/patches/coinbase-cdp.json (SHA-256 2119fac0681727ae3560bdd6b945eb05ce0018f6ba4d1048d93d93efd7f31f24): Remove four unsupported required:false siblings from OpenAPI 3.1 Parameter Reference Objects in end-user delegation deletion/revocation. Their exact referenced XDeveloperAuth header already declares required:false; the siblings are redundant and are not supported Reference Object fields. Assert the complete referenced header, original parameter lists and operation identities, then remove only each false flag. Preserve all referenced authentication/schema/example/prose constraints, endpoints and native optionality. Stop for vendor corrections, changed header contracts or references; no inlining, authentication invention or dialect conversion.'
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Preserved existing APIs.guru curation metadata from APIs/coinbase.com/cdp/2.0.0/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 servers:
   - url: https://api.cdp.coinbase.com/platform
@@ -21908,7 +21909,8 @@ components:
           example: 20240101MMQFMP2P000001
         accountNumber:
           type: string
-          pattern: ^[0-9]{4,17}$
+          minLength: 4
+          maxLength: 17
           description: The originator's bank account number. Masked on webhook payloads.
           example: '89770098'
         originatorName:
