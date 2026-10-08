@@ -76,6 +76,8 @@ def refresh(plan, fresh_cache, prior_cache):
             return {"status": "held", "reason": reason, "review": review, "publication_authorized": False}
         pr = review["pr_snapshot"]
         plan = copy.deepcopy(plan)
+        if review.get("branch"):
+            plan["branch"] = review["branch"]  # the reviewed generation's branch
         marker = {"previous_head": review["head"], "previous_candidate_sha256": review["prior_candidate_sha256"],
                   "creation_candidate_sha256": review["creation_candidate_sha256"],
                   "body_sha256": update.sha256(pr["body"].encode())}

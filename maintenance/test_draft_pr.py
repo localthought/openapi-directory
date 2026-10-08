@@ -513,6 +513,151 @@ class DraftTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "comparison base/head changed"):
             draft_pr.validate_commit(advanced, commit, plan["branch"])
 
+    # --- Generations after verified merged generated branches (design #238) ---
+
+    def merged_generation(self, message=None, squash=False, open_pr=False, unmerged=False, move_tip=False):
+        """Create generation 1 on the remote and (optionally) merge it into main."""
+        self.remote()
+        first = self.plan()
+        commit = draft_pr.commit_plan(first)
+        if message is not None:
+            tree = self.git("rev-parse", commit + "^{tree}")
+            commit = self.git("commit-tree", tree, "-p", self.base, "-m", message)
+        self.git("push", "origin", commit + ":refs/heads/" + first["branch"])
+        tip = commit
+        if move_tip:
+            tip = self.git("commit-tree", self.git("rev-parse", commit + "^{tree}"), "-p", commit, "-m", "later")
+            self.git("push", "-f", "origin", tip + ":refs/heads/" + first["branch"])
+        if squash:
+            merged = self.git("commit-tree", self.git("rev-parse", commit + "^{tree}"), "-p", self.base, "-m", "squash")
+        elif open_pr or unmerged:
+            merged = self.base
+        else:
+            merged = self.git("commit-tree", self.git("rev-parse", commit + "^{tree}"), "-p", self.base, "-p", commit, "-m", "merge")
+        self.git("push", "-f", "origin", merged + ":refs/heads/main")
+        self.git("reset", "-q", "--hard", merged)
+        self.base = merged
+        pr = {"number": 7, "html_url": "https://github.com/ontola/openapi-directory/pull/7",
+              "state": "open" if open_pr else "closed",
+              "merged_at": None if (open_pr or unmerged) else "2026-10-08T12:00:00Z",
+              "merge_commit_sha": merged,
+              "head": {"ref": first["branch"], "sha": commit, "repo": {"full_name": draft_pr.REPOSITORY}}}
+        return first, commit, pr
+
+    def github_with(self, pr, created=None):
+        def respond(endpoint, method="GET", payload=None):
+            if "pulls?state=all&head=" in endpoint:
+                return [pr] if "page=1" in endpoint else []
+            if created is not None:
+                return created(endpoint, method, payload)
+            return []
+        return respond
+
+    def test_generated_branch_names_parse_strictly(self):
+        self.assertEqual(draft_pr.branch_name("github-public-rest"), "codex/official-update-github-public-rest")
+        self.assertEqual(draft_pr.branch_name("hcp-hvn", 2), "codex/official-update-hcp-hvn--g2")
+        self.assertEqual(draft_pr.branch_group("codex/official-update-hcp-hvn"), ("hcp-hvn", 1))
+        self.assertEqual(draft_pr.branch_group("codex/official-update-hcp-hvn--g12"), ("hcp-hvn", 12))
+        for bad in ("codex/official-update-hcp-hvn--g02", "codex/official-update-hcp-hvn--g1",
+                    "codex/official-update-hcp-hvn--g", "codex/official-update-x--g2--g3",
+                    "claude/official-update-hcp-hvn", None):
+            self.assertEqual(draft_pr.branch_group(bad), (None, None), bad)
+        with self.assertRaises(ValueError):
+            draft_pr.branch_name("x", 0)
+
+    def test_reserved_generation_suffix_in_source_ids_is_rejected(self):
+        manifest = {"schema_version": 1, "sources": [dict(self.sources[0], id="example--g2")]}
+        with self.assertRaisesRegex(ValueError, "Unsafe source ID"):
+            draft_pr.select_sources(manifest, "example--g2")
+        manifest = {"schema_version": 1, "sources": [dict(self.sources[0], publication_group="example--g3")]}
+        with self.assertRaisesRegex(ValueError, "Unsafe publication group"):
+            draft_pr.select_sources(manifest, "example")
+
+    def test_verified_merged_generation_allows_g2_with_observation_and_real_push(self):
+        first, commit, pr = self.merged_generation()
+        self.specs["example"] = copy.deepcopy(self.new)
+        self.specs["example"]["paths"]["/items/{id}"]["get"]["responses"]["200"]["description"] = "Newer response"
+        plan = self.plan()
+        with patch.object(draft_pr, "gh_json", side_effect=self.github_with(pr)):
+            chosen = draft_pr.next_generation(plan, self.cache)
+        self.assertEqual(chosen["branch"], "codex/official-update-example--g2")
+        self.assertEqual(chosen["seal"], draft_pr.seal(chosen))
+        draft_pr.verify_plan(chosen)
+        observation = json.loads((self.cache / "publication/example/retired/g1.json").read_text())
+        self.assertTrue(observation["not_a_creation_receipt"])
+        self.assertEqual((observation["tip"], observation["number"]), (commit, 7))
+        new_pr = {}
+        def created(endpoint, method, payload):
+            if method == "POST" or endpoint.endswith("/pulls/42"):
+                head = self.git("ls-remote", "origin", "refs/heads/" + chosen["branch"]).split()[0]
+                return {"number": 42, "html_url": "https://github.com/ontola/openapi-directory/pull/42",
+                        "draft": True, "state": "open",
+                        "head": {"ref": chosen["branch"], "sha": head, "repo": {"full_name": draft_pr.REPOSITORY}},
+                        "base": {"ref": "main", "sha": self.base, "repo": {"full_name": draft_pr.REPOSITORY}}}
+            if "/pulls/42/files" in endpoint:
+                return [{"filename": path} for path in chosen["files"]]
+            return []
+        with patch.object(draft_pr, "remote_guard"), patch.object(draft_pr, "gh_json", side_effect=self.github_with(pr, created)):
+            result = draft_pr.publish(chosen, self.cache)
+        self.assertEqual(result["status"], "draft_created")
+        # Generation 1 is untouched; generation 2 is a new single-parent commit on main.
+        self.assertEqual(self.git("ls-remote", "origin", "refs/heads/" + first["branch"]).split()[0], commit)
+        self.assertEqual(self.git("rev-list", "--parents", "-n", "1", result["head"]).split()[1:], [self.base])
+        validated = draft_pr.validate_commit(self.base, result["head"], chosen["branch"])
+        self.assertEqual(validated["status"], "draft_commit_validated")
+
+    def test_unverified_generations_hold_without_new_branch(self):
+        cases = {"open": dict(open_pr=True), "closed_unmerged": dict(unmerged=True),
+                 "squash": dict(squash=True), "moved_tip": dict(move_tip=True),
+                 "foreign_message": dict(message="Hand-written change")}
+        for name, options in cases.items():
+            with self.subTest(case=name):
+                self.setUp_again()
+                first, commit, pr = self.merged_generation(**options)
+                if name == "moved_tip":
+                    pr["head"]["sha"] = commit
+                self.specs["example"] = copy.deepcopy(self.new)
+                self.specs["example"]["info"]["description"] = "Changed again"
+                plan = self.plan()
+                with patch.object(draft_pr, "gh_json", side_effect=self.github_with(pr)):
+                    chosen = draft_pr.next_generation(plan, self.cache)
+                self.assertEqual(chosen["branch"], first["branch"])
+                self.assertFalse((self.cache / "publication/example/retired").exists())
+                with patch.object(draft_pr, "remote_guard"), patch.object(draft_pr, "existing_pr", return_value=[]), \
+                        patch.object(draft_pr, "gh_json", side_effect=self.github_with(pr)), \
+                        patch.object(draft_pr, "commit_plan") as build:
+                    self.assertEqual(draft_pr.publish(chosen, self.cache)["status"], "existing_branch")
+                build.assert_not_called()
+
+    def test_g2_plan_is_reverified_under_lock_and_held_if_generation_changed(self):
+        first, commit, pr = self.merged_generation()
+        self.specs["example"] = copy.deepcopy(self.new)
+        self.specs["example"]["info"]["description"] = "Changed again"
+        plan = self.plan()
+        with patch.object(draft_pr, "gh_json", side_effect=self.github_with(pr)):
+            chosen = draft_pr.next_generation(plan, self.cache)
+        reopened = dict(pr, state="open", merged_at=None)
+        with patch.object(draft_pr, "remote_guard"), patch.object(draft_pr, "existing_pr", return_value=[]), \
+                patch.object(draft_pr, "gh_json", side_effect=self.github_with(reopened)), \
+                patch.object(draft_pr, "commit_plan") as build:
+            self.assertEqual(draft_pr.publish(chosen, self.cache)["status"], "existing_branch")
+        build.assert_not_called()
+
+    def test_offline_ci_accepts_only_valid_generations_of_configured_groups(self):
+        plan = self.plan()
+        commit = draft_pr.commit_plan(plan)
+        self.assertEqual(draft_pr.validate_commit(self.base, commit, plan["branch"] + "--g2")["status"],
+                         "draft_commit_validated")
+        for bad in ("--g02", "--g1", "--g"):
+            with self.subTest(suffix=bad), self.assertRaisesRegex(ValueError, "configured publication group"):
+                draft_pr.validate_commit(self.base, commit, plan["branch"] + bad)
+        with self.assertRaisesRegex(ValueError, "configured publication group"):
+            draft_pr.validate_commit(self.base, commit, "codex/official-update-unregistered--g2")
+
+    def setUp_again(self):
+        self.doCleanups()
+        self.setUp()
+
 
 if __name__ == "__main__":
     unittest.main()

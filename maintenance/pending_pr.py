@@ -218,6 +218,10 @@ def review_pending(plan, prior_cache, result):
     endpoint = "repos/" + draft_pr.REPOSITORY + "/pulls/" + str(pending[0]["number"])
     try:
         pr = draft_pr.gh_json(endpoint)
+        # A later generation (codex/official-update-<group>--g<N>) is reviewed as
+        # that generation; its own retained creation receipt is still required.
+        plan = draft_pr.with_branch(plan, pr.get("head", {}).get("ref"))
+        result["branch"] = plan["branch"]
         check_identity(pr, plan)
         if pr["head"]["sha"] != pending[0]["head"] or pr["html_url"] != pending[0]["url"]:
             raise ValueError("Pending identity changed during discovery")
