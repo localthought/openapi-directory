@@ -44,6 +44,62 @@ def check_identity(pr, plan):
         raise ValueError("Pending PR has human/bot discussion or review requests; deliberate review required")
 
 
+def candidate_evidence(directory):
+    if directory.is_symlink() or not re.fullmatch(r"[0-9a-f]{64}", directory.name):
+        raise ValueError("Redirected or invalid retained candidate directory")
+    receipt = read_json(directory / "result.json")
+    prior = read_json(directory / "candidate.json")
+    if (not re.fullmatch(r"[0-9a-f]{40}", receipt.get("head") or "")
+            or receipt.get("candidate_sha256") != directory.name
+            or draft_pr.seal(prior) != directory.name or prior.get("seal") != directory.name
+            or receipt.get("base_revision") != prior.get("base_revision")
+            or receipt.get("group") != prior.get("group")
+            or receipt.get("files") != sorted(prior.get("files", {}))):
+        raise ValueError("Retained candidate/creation receipt integrity changed")
+    return prior, receipt
+
+
+def creation_candidate(cache, plan, pr, prior):
+    """Follow a bounded, intact successful-update chain to its original body."""
+    directory = cache / plan["group"]
+    visited = set()
+    current = prior
+    for _ in range(100):
+        if current["seal"] in visited:
+            raise ValueError("Cyclic retained update history")
+        visited.add(current["seal"])
+        current, receipt = candidate_evidence(directory / current["seal"])
+        if (receipt.get("number") != pr["number"] or receipt.get("url") != pr["html_url"]
+                or current.get("group") != plan["group"] or current.get("branch") != plan["branch"]
+                or [s["configuration"] for s in current["sources"]] != [s["configuration"] for s in plan["sources"]]):
+            raise ValueError("Source group/recipe changed in retained update history, or PR identity differs")
+        marker = current.get("pending_update")
+        if receipt.get("status") == "draft_created":
+            if marker:
+                raise ValueError("Creation receipt contains an update marker")
+            if prior.get("pending_update", {}).get("creation_candidate_sha256", current["seal"]) != current["seal"]:
+                raise ValueError("Retained update history has a different creation root")
+            return current
+        if receipt.get("status") != "draft_updated" or not isinstance(marker, dict):
+            raise ValueError("Retained update history lacks a successful receipt")
+        if any(receipt.get(key) != marker.get(key) for key in (
+                "previous_head", "previous_candidate_sha256", "creation_candidate_sha256", "body_sha256")):
+            raise ValueError("Retained update receipt/marker changed")
+        digest = marker.get("previous_candidate_sha256")
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError("Invalid retained update parent")
+        previous, previous_receipt = candidate_evidence(directory / digest)
+        if (marker.get("previous_head") != previous_receipt.get("head")
+                or current["base_revision"] != previous["base_revision"]
+                or current.get("publication_protocol") != 2 or previous.get("publication_protocol") != 2
+                or marker.get("body_sha256") != update.sha256(pr["body"].encode())
+                or marker.get("creation_candidate_sha256") != prior["pending_update"].get("creation_candidate_sha256")):
+            raise ValueError("Retained update predecessor head/base/protocol/body changed")
+        verify_artifact(previous, plan, previous_receipt["head"])
+        current = previous
+    raise ValueError("Retained update history exceeds review bounds")
+
+
 def retained_candidate(cache, plan, pr):
     """Require a successful original creation receipt, not a branch-name assumption."""
     directory = cache / plan["group"]
@@ -57,24 +113,18 @@ def retained_candidate(cache, plan, pr):
         if path.parent.is_symlink() or directory.is_symlink():
             raise ValueError("Redirected retained candidate directory")
         receipt = read_json(path)
-        if (receipt.get("status") == "draft_created" and receipt.get("head") == pr["head"]["sha"]
+        if (receipt.get("status") in {"draft_created", "draft_updated"} and receipt.get("head") == pr["head"]["sha"]
                 and receipt.get("number") == pr["number"] and receipt.get("url") == pr["html_url"]):
-            prior = read_json(path.parent / "candidate.json")
-            if (receipt.get("candidate_sha256") != path.parent.name
-                    or draft_pr.seal(prior) != path.parent.name or prior.get("seal") != path.parent.name
-                    or receipt.get("base_revision") != prior.get("base_revision")
-                    or receipt.get("group") != prior.get("group")
-                    or receipt.get("files") != sorted(prior.get("files", {}))):
-                raise ValueError("Retained candidate/creation receipt integrity changed")
+            prior, _ = candidate_evidence(path.parent)
             found.append(prior)
     if len(found) != 1:
         raise ValueError("Exactly one retained successful creation receipt is required for the actual head")
     return found[0]
 
 
-def verify_prior(prior, plan, pr, files):
-    """Check full original Git content without executing historical or vendor code."""
-    base, head = prior.get("base_revision"), pr["head"]["sha"]
+def verify_artifact(prior, plan, head):
+    """Check retained full Git content without executing historical/vendor code."""
+    base = prior.get("base_revision")
     if not isinstance(base, str) or not re.fullmatch(r"[0-9a-f]{40}", base):
         raise ValueError("Invalid retained comparison revision")
     if draft_pr.git("rev-list", "--parents", "-n", "1", head).decode().split() != [head, base]:
@@ -93,10 +143,8 @@ def verify_prior(prior, plan, pr, files):
             or [s["configuration"] for s in plan["sources"]] != sources):
         raise ValueError("Source group/recipe changed since publication; deliberate review required")
     changed = draft_pr.git("diff-tree", "--no-commit-id", "--name-only", "-r", base, head).decode().splitlines()
-    if (not prior["files"] or set(changed) != set(prior["files"])
-            or type(pr.get("changed_files")) is not int or pr["changed_files"] != len(files)
-            or len(files) != len(changed) or {f["filename"] for f in files} != set(changed)):
-        raise ValueError("Pending PR/full Git file scope differs from retained candidate")
+    if not prior["files"] or set(changed) != set(prior["files"]):
+        raise ValueError("Pending full Git file scope differs from retained candidate")
     allowed = {s["destination"] for s in prior["sources"]} | {draft_pr.MANIFEST}
     if not set(changed) <= allowed:
         raise ValueError("Pending candidate contains unrelated files")
@@ -120,9 +168,20 @@ def verify_prior(prior, plan, pr, files):
     for path, content in prior["files"].items():
         if not isinstance(content, str) or draft_pr.git("show", head + ":" + path) != content.encode():
             raise ValueError("Pending Git bytes differ from retained candidate")
-    if (pr.get("body") != draft_pr.pr_body(prior)
+    return base, prefixes, changed
+
+
+def verify_prior(prior, plan, pr, files, creation=None):
+    base, prefixes, changed = verify_artifact(prior, plan, pr["head"]["sha"])
+    if (type(pr.get("changed_files")) is not int or pr["changed_files"] != len(files)
+            or len(files) != len(changed) or {f["filename"] for f in files} != set(changed)):
+        raise ValueError("Pending PR file scope differs from retained candidate")
+    creation = creation or prior
+    if (pr.get("body") != draft_pr.pr_body(creation)
             or pr.get("title") != "Update official " + plan["group"] + " API"):
         raise ValueError("Pending title/body has been edited; preserve existing review work")
+    if prior.get("pending_update") and update.sha256(pr["body"].encode()) != prior["pending_update"].get("body_sha256"):
+        raise ValueError("Retained update body integrity changed")
     # Unrelated main advances are observable, but changes to this API's baseline
     # or configuration never become an implicit overwrite/rebase permission.
     draft_pr.git("merge-base", "--is-ancestor", base, plan["base_revision"])
@@ -134,13 +193,22 @@ def verify_prior(prior, plan, pr, files):
     return main_changes
 
 
-def review(plan, prior_cache):
-    result = {"schema_version": 1, "group": plan["group"], "base_revision": plan["base_revision"],
+def observation(plan):
+    return {"schema_version": 1, "group": plan["group"], "base_revision": plan["base_revision"],
               "candidate_sha256": plan["seal"], "checked_at": update.now(),
               "read_only": True, "publication_authorized": False}
+
+
+def review(plan, prior_cache):
+    result = observation(plan)
     directory = prior_cache / "publication" / plan["group"]
     if any(p.exists() or p.is_symlink() for p in (directory / "blocked.json", directory / "publishing.lock")):
         return {**result, "status": "held", "reason": "Retained failed/uncertain publication or lock; no retry"}
+    return review_pending(plan, prior_cache, result)
+
+
+def review_pending(plan, prior_cache, result):
+    """Read-only verification; writers call this only under their owned guard/lock."""
     pending = draft_pr.existing_pr(plan)
     if not pending:
         return {**result, "status": "no_pending_pr", "source_status": plan["status"]}
@@ -157,7 +225,8 @@ def review(plan, prior_cache):
             raise ValueError("Pending PR has submitted reviews; preserve review work")
         files = draft_pr.pages(endpoint + "/files", limit=30)
         prior = retained_candidate(prior_cache, plan, pr)
-        main_changes = verify_prior(prior, plan, pr, files)
+        creation = creation_candidate(prior_cache, plan, pr, prior)
+        main_changes = verify_prior(prior, plan, pr, files, creation)
         if snapshot(draft_pr.gh_json(endpoint)) != snapshot(pr):
             raise ValueError("Pending PR changed during verification")
         comparisons = []
@@ -173,6 +242,9 @@ def review(plan, prior_cache):
         return {**result, "status": status, "head": pr["head"]["sha"],
                 "original_base": prior["base_revision"], "advertised_base": pr["base"]["sha"],
                 "prior_candidate_sha256": prior["seal"], "intervening_main_changes": main_changes,
+                "creation_candidate_sha256": creation["seal"],
+                "publication_protocol": creation.get("publication_protocol", 1),
+                "pr_snapshot": snapshot(pr),
                 "comparisons_from_pending": comparisons,
                 "note": "Exact retained draft verified; fresh comparison is a review result, not permission to mutate, rebase, close or merge."}
     except (ValueError, KeyError, TypeError, OSError) as error:
