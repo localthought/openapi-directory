@@ -11,10 +11,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/658c82e501665b9a1977a0136ece4040d73efcd9/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/7644b769d158f83bc0079e77566bf6247f1c6c0c/openapi-derefed.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/658c82e501665b9a1977a0136ece4040d73efcd9/openapi-derefed.json at commit 658c82e501665b9a1977a0136ece4040d73efcd9; entry source SHA-256 cee2e95a48cdffb37efc7d2f4abe80fa2214b5e5626d0f46abb1496d92bad397.
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/7644b769d158f83bc0079e77566bf6247f1c6c0c/openapi-derefed.json at commit 7644b769d158f83bc0079e77566bf6247f1c6c0c; entry source SHA-256 36523e3f4e861a452216d02175e5401e175e3fbfd8b83371be18b3e96c319f2c.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -1919,6 +1919,8 @@ paths:
                   properties:
                     endTimestamp:
                       type: integer
+                    errors:
+                      type: integer
                     generationDuration:
                       type: number
                       format: double
@@ -1945,8 +1947,6 @@ paths:
                       type: integer
                     conversationId:
                       type: string
-                    errors:
-                      type: integer
                     title:
                       type: string
                       nullable: true
@@ -2089,6 +2089,10 @@ paths:
 
         Message, tool, and response attributes contain their recorded string values.
 
+        `stats.errors` counts spans whose status is not `ok`, `cancelled`, or `unknown`.
+
+        `stats.errorToolNames` lists tools used by those spans.
+
         Without an explicit range, Sentry widens the search across available retention.
 
         A missing conversation returns an empty `spans` list.'
@@ -2221,6 +2225,8 @@ paths:
                     properties:
                       endTimestamp:
                         type: integer
+                      errors:
+                        type: integer
                       generationDuration:
                         type: number
                         format: double
@@ -2245,6 +2251,10 @@ paths:
                         format: double
                       totalTokens:
                         type: integer
+                      errorToolNames:
+                        type: array
+                        items:
+                          type: string
                       usageByModel:
                         type: array
                         items:
@@ -2290,6 +2300,8 @@ paths:
                             - totalTokens
                     required:
                       - endTimestamp
+                      - errorToolNames
+                      - errors
                       - generationDuration
                       - inputTokens
                       - llmCalls
@@ -2320,6 +2332,8 @@ paths:
                     webUrl: https://sentry.io/organizations/org-slug/explore/agents/conversations/01JQZ4W8X7J2Q9B4R5M6N7P8T9/?project=1
                     stats:
                       endTimestamp: 1743465601250
+                      errors: 0
+                      errorToolNames: []
                       generationDuration: 1250
                       inputTokens: 0
                       llmCalls: 1
@@ -2360,8 +2374,8 @@ paths:
                         gen_ai.operation.type: ai_client
                         gen_ai.request.model: gpt-4o-mini
                         gen_ai.response.model: gpt-4o-mini-2024-07-18
-                        gen_ai.request.messages: '[{"role":"user","content":"What is the weather in San Francisco?"}]'
-                        gen_ai.response.text: It is currently 18°C and sunny in San Francisco.
+                        gen_ai.input.messages: '[{"role":"user","content":"What is the weather in San Francisco?"}]'
+                        gen_ai.output.messages: '[{"role":"assistant","content":"It is currently 18°C and sunny in San Francisco."}]'
                         gen_ai.usage.total_tokens: 485
                         gen_ai.cost.total_tokens: 0.0042
                         user.id: '123'
@@ -2821,7 +2835,7 @@ paths:
                           author: The Sentry Team
                           noun: Installation
                           issue_url: https://github.com/getsentry/sentry/issues/new?assignees=&labels=Component:%20Integrations&template=bug.yml&title=Vercel%20Integration%20Problem
-                          source_url: https://github.com/getsentry/sentry/tree/master/src/sentry/integrations/vercel
+                          source_url: https://docs.sentry.io/integrations/deployment/vercel/
                           aspects:
                             externalInstall:
                               url: https://vercel.com/integrations/sentry/add
@@ -8887,10 +8901,22 @@ paths:
           name: query
           schema:
             type: string
-          description: 'Filters results by using [query syntax](/product/sentry-basics/search/).
+          description: 'Filters results by using [query syntax](/concepts/search/).
 
 
             Example: `query=(transaction:foo AND release:abc) OR (transaction:[bar,baz] AND release:def)`
+
+
+            With the `logs` dataset, a string attribute can also be matched against a regular expression written as `key://pattern//`, and excluded with `!key://pattern//`.
+
+            Patterns use [RE2 syntax](https://github.com/google/re2/wiki/Syntax), match anywhere in the value unless anchored with `^` or `$`, are case sensitive unless they start with `(?i)`, and are limited to 64 characters.
+
+            To search for a literal value that starts with `//`, quote it: `key:"//value"`.
+
+            See [regular expressions](/concepts/search/#regular-expressions-logs-only) for more details.
+
+
+            Example: `query=message://^Timeout after \d+ms//`
 
             '
         - in: query
@@ -9015,6 +9041,261 @@ paths:
           description: Invalid Query
         '403':
           description: Forbidden
+  /api/0/organizations/{organization_id_or_slug}/events-dropped/:
+    get:
+      operationId: listOrganizationEventsDropped
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Return the events Sentry received but dropped (rate limited, filtered,
+
+        invalid, abuse, client discarded, cardinality limited) bucketed over the
+
+        requested interval, alongside the accepted volume per bucket so a caller
+
+        can compute the dropped share.
+
+
+        Select the dropped-data type with ``dataset`` and the bucket size with
+
+        ``interval``. Optionally scope the dropped side to one classification with
+
+        ``outcome`` (top-level) and/or ``reason`` (sub-classification within an
+
+        outcome); the accepted volume is always returned in full.'
+      summary: Query Dropped Events
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: query
+          name: dataset
+          schema:
+            type: string
+            enum:
+              - errors
+              - logs
+              - profile_functions
+              - spans
+              - tracemetrics
+              - uptime_results
+          description: 'Which dataset to query. The chosen dataset determines which fields are queryable.
+
+            - `errors` - Error events.
+
+            - `logs` - Structured log events.
+
+            - `profile_functions` - Function-level Profiling data.
+
+            - `spans` - Distributed tracing span events.
+
+            - `tracemetrics` - Application Metrics.
+
+            - `uptime_results` - Uptime monitoring check results.
+
+            '
+          required: true
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: The end of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
+        - in: query
+          name: environment
+          schema:
+            type: array
+            items:
+              type: string
+          description: The name of environments to filter by.
+        - in: query
+          name: project
+          schema:
+            type: array
+            items:
+              anyOf:
+                - type: integer
+                - type: string
+          description: 'The IDs or slugs of projects to filter by. Project slugs are unique within each organization. Omit this parameter to include all accessible projects. `-1` is also accepted to include all accessible projects.
+
+            For example, the following are valid parameters:
+
+            - `/?project=1234&project=56789`
+
+            - `/?project=android&project=javascript-react`
+
+            - `/?project=-1`
+
+            '
+        - in: query
+          name: start
+          schema:
+            type: string
+            format: date-time
+          description: The start of the period of time for the query, expected in ISO-8601 format. For example, `2001-12-14T12:34:56.7890`.
+        - in: query
+          name: statsPeriod
+          schema:
+            type: string
+          description: 'The period of time for the query, will override the start & end parameters, a number followed by one of:
+
+            - `d` for days
+
+            - `h` for hours
+
+            - `m` for minutes
+
+            - `s` for seconds
+
+            - `w` for weeks
+
+
+            For example, `24h`, to mean query data starting from 24 hours ago to now.'
+        - in: query
+          name: interval
+          schema:
+            type: integer
+          description: 'The size of the bucket for the timeseries to have, must be a value smaller than the window being
+
+            queried. If the interval is invalid a default interval will be selected instead'
+        - in: query
+          name: outcome
+          schema:
+            enum:
+              - filtered
+              - rate_limited
+              - invalid
+              - abuse
+              - client_discard
+              - cardinality_limited
+            type: string
+            minLength: 1
+          description: 'Narrow the dropped events (only) to a single top-level drop classification (e.g. `rate_limited`, `filtered`).
+
+
+            * `filtered`
+
+            * `rate_limited`
+
+            * `invalid`
+
+            * `abuse`
+
+            * `client_discard`
+
+            * `cardinality_limited`'
+        - in: query
+          name: reason
+          schema:
+            type: string
+            minLength: 1
+          description: Narrow the dropped events to a single reason, the sub-classification within an outcome (e.g. `spike_protection` within `rate_limited`). Should be combined with `outcome`.
+      tags:
+        - Explore
+      security:
+        - auth_token:
+            - org:admin
+            - org:read
+            - org:write
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      dataset:
+                        type: string
+                      start:
+                        type: number
+                        format: double
+                      end:
+                        type: number
+                        format: double
+                      interval:
+                        type: number
+                        format: double
+                    required:
+                      - dataset
+                      - end
+                      - interval
+                      - start
+                  droppedEvents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        category:
+                          type: string
+                        outcome:
+                          type: string
+                        reason:
+                          type: string
+                        start:
+                          type: number
+                          format: double
+                        end:
+                          type: number
+                          format: double
+                        count:
+                          type: number
+                          format: double
+                      required:
+                        - category
+                        - count
+                        - end
+                        - outcome
+                        - reason
+                        - start
+                        - type
+                  acceptedEvents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        category:
+                          type: string
+                        outcome:
+                          type: string
+                        reason:
+                          type: string
+                        start:
+                          type: number
+                          format: double
+                        end:
+                          type: number
+                          format: double
+                        count:
+                          type: number
+                          format: double
+                      required:
+                        - category
+                        - count
+                        - end
+                        - outcome
+                        - reason
+                        - start
+                        - type
+                required:
+                  - acceptedEvents
+                  - droppedEvents
+                  - meta
+          description: ''
+        '400':
+          description: Invalid Query
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
   /api/0/organizations/{organization_id_or_slug}/events-timeseries/:
     get:
       operationId: listOrganizationEventsTimeseries
@@ -9166,10 +9447,22 @@ paths:
           name: query
           schema:
             type: string
-          description: 'Filters results by using [query syntax](/product/sentry-basics/search/).
+          description: 'Filters results by using [query syntax](/concepts/search/).
 
 
             Example: `query=(transaction:foo AND release:abc) OR (transaction:[bar,baz] AND release:def)`
+
+
+            With the `logs` dataset, a string attribute can also be matched against a regular expression written as `key://pattern//`, and excluded with `!key://pattern//`.
+
+            Patterns use [RE2 syntax](https://github.com/google/re2/wiki/Syntax), match anywhere in the value unless anchored with `^` or `$`, are case sensitive unless they start with `(?i)`, and are limited to 64 characters.
+
+            To search for a literal value that starts with `//`, quote it: `key:"//value"`.
+
+            See [regular expressions](/concepts/search/#regular-expressions-logs-only) for more details.
+
+
+            Example: `query=message://^Timeout after \d+ms//`
 
             '
         - in: query
@@ -9250,9 +9543,6 @@ paths:
                             eventCount:
                               type: number
                               format: double
-                            byteSize:
-                              type: number
-                              format: double
                           required:
                             - category
                             - end
@@ -9284,9 +9574,6 @@ paths:
                               type: number
                               format: double
                             eventCount:
-                              type: number
-                              format: double
-                            byteSize:
                               type: number
                               format: double
                           required:
@@ -9410,12 +9697,17 @@ paths:
                   value:
                     timeSeries:
                       - values:
-                          - timestamp: 1741368281123
+                          - timestamp: 1741366800000
                             value: 5
                             incomplete: false
-                          - timestamp: 1741368281123
-                            value: 5
-                            incomplete: false
+                          - timestamp: 1741370400000
+                            value: 3
+                            incomplete: true
+                            incompleteReason: INGESTION_PENDING
+                          - timestamp: 1741374000000
+                            value: 4
+                            incomplete: true
+                            incompleteReason: NOT_ELAPSED
                         yAxis: count()
                         groupBy:
                           - key: transaction
@@ -9429,12 +9721,17 @@ paths:
                           valueType: integer
                           interval: 3600
                       - values:
-                          - timestamp: 1741368281123
+                          - timestamp: 1741366800000
                             value: 5
                             incomplete: false
-                          - timestamp: 1741368281123
-                            value: 5
-                            incomplete: false
+                          - timestamp: 1741370400000
+                            value: 2
+                            incomplete: true
+                            incompleteReason: INGESTION_PENDING
+                          - timestamp: 1741374000000
+                            value: 1
+                            incomplete: true
+                            incompleteReason: NOT_ELAPSED
                         yAxis: count()
                         groupBy:
                           - key: transaction
@@ -9449,8 +9746,12 @@ paths:
                           interval: 3600
                     meta:
                       dataset: spans
-                      start: 1741368281123
-                      end: 1741368281123
+                      start: 1741366800000
+                      end: 1741374060000
+                      ingestion:
+                        status: healthy
+                        delaySeconds: 130.5
+                        completeThrough: 1741373929500
                   summary: Query Top Events as a Timeseries
           description: ''
         '400':
@@ -17371,8 +17672,16 @@ paths:
                                 type: integer
                                 description: ID of target object
                               target_type:
+                                enum:
+                                  - Member
+                                  - Team
                                 type: string
-                                description: One of [Member, Team]
+                                description: 'One of [Member, Team]
+
+
+                                  * `Member`
+
+                                  * `Team`'
                             required:
                               - target_identifier
                               - target_type
@@ -19977,8 +20286,16 @@ paths:
                                 type: integer
                                 description: ID of target object
                               target_type:
+                                enum:
+                                  - Member
+                                  - Team
                                 type: string
-                                description: One of [Member, Team]
+                                description: 'One of [Member, Team]
+
+
+                                  * `Member`
+
+                                  * `Team`'
                             required:
                               - target_identifier
                               - target_type
@@ -40796,8 +41113,9 @@ paths:
                               - metric_name
                               - release
                               - ip_address
+                              - geo_country_code
                             type: string
-                            description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                            description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                               * `error_type`
@@ -40810,7 +41128,9 @@ paths:
 
                               * `release`
 
-                              * `ip_address`'
+                              * `ip_address`
+
+                              * `geo_country_code`'
                           value:
                             type: array
                             items:
@@ -40933,8 +41253,9 @@ paths:
                           - metric_name
                           - release
                           - ip_address
+                          - geo_country_code
                         type: string
-                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                           * `error_type`
@@ -40947,7 +41268,9 @@ paths:
 
                           * `release`
 
-                          * `ip_address`'
+                          * `ip_address`
+
+                          * `geo_country_code`'
                       value:
                         type: array
                         items:
@@ -41030,8 +41353,9 @@ paths:
                             - metric_name
                             - release
                             - ip_address
+                            - geo_country_code
                           type: string
-                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                             * `error_type`
@@ -41044,7 +41368,9 @@ paths:
 
                             * `release`
 
-                            * `ip_address`'
+                            * `ip_address`
+
+                            * `geo_country_code`'
                         value:
                           type: array
                           items:
@@ -41180,8 +41506,9 @@ paths:
                             - metric_name
                             - release
                             - ip_address
+                            - geo_country_code
                           type: string
-                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                             * `error_type`
@@ -41194,7 +41521,9 @@ paths:
 
                             * `release`
 
-                            * `ip_address`'
+                            * `ip_address`
+
+                            * `geo_country_code`'
                         value:
                           type: array
                           items:
@@ -41323,8 +41652,9 @@ paths:
                           - metric_name
                           - release
                           - ip_address
+                          - geo_country_code
                         type: string
-                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                        description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                           * `error_type`
@@ -41337,7 +41667,9 @@ paths:
 
                           * `release`
 
-                          * `ip_address`'
+                          * `ip_address`
+
+                          * `geo_country_code`'
                       value:
                         type: array
                         items:
@@ -41420,8 +41752,9 @@ paths:
                             - metric_name
                             - release
                             - ip_address
+                            - geo_country_code
                           type: string
-                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                             * `error_type`
@@ -41434,7 +41767,9 @@ paths:
 
                             * `release`
 
-                            * `ip_address`'
+                            * `ip_address`
+
+                            * `geo_country_code`'
                         value:
                           type: array
                           items:
@@ -47419,8 +47754,16 @@ paths:
                                 type: integer
                                 description: ID of target object
                               target_type:
+                                enum:
+                                  - Member
+                                  - Team
                                 type: string
-                                description: One of [Member, Team]
+                                description: 'One of [Member, Team]
+
+
+                                  * `Member`
+
+                                  * `Team`'
                             required:
                               - target_identifier
                               - target_type
@@ -51019,6 +51362,8 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+        '429':
+          description: Too Many Requests
   /api/0/projects/{organization_id_or_slug}/{project_id_or_slug}/replays/{replay_id}/recording-segments/{segment_id}/:
     get:
       operationId: getProjectReplayRecordingSegment
@@ -51831,6 +52176,7 @@ paths:
                                 - unified
                                 - debuginfod
                                 - slashsymbols
+                                - nxsymstore
                             casing:
                               type: string
                               enum:
@@ -51924,6 +52270,7 @@ paths:
                                 - unified
                                 - debuginfod
                                 - slashsymbols
+                                - nxsymstore
                             casing:
                               type: string
                               enum:
@@ -52018,6 +52365,7 @@ paths:
                                 - unified
                                 - debuginfod
                                 - slashsymbols
+                                - nxsymstore
                             casing:
                               type: string
                               enum:
@@ -52116,6 +52464,7 @@ paths:
                                 - unified
                                 - debuginfod
                                 - slashsymbols
+                                - nxsymstore
                             casing:
                               type: string
                               enum:
@@ -52293,7 +52642,7 @@ paths:
                   description: The internal ID of the source. Must be distinct from all other source IDs and cannot start with '`sentry:`'. If this is not provided, a new UUID will be generated.
                 layout:
                   type: object
-                  description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
+                  description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n- `nxsymstore` - Nintendo NXSymStore\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
                   properties:
                     type:
                       enum:
@@ -52304,6 +52653,7 @@ paths:
                         - unified
                         - debuginfod
                         - slashsymbols
+                        - nxsymstore
                       type: string
                       description: 'The source''s layout type.
 
@@ -52320,7 +52670,9 @@ paths:
 
                         * `debuginfod`
 
-                        * `slashsymbols`'
+                        * `slashsymbols`
+
+                        * `nxsymstore`'
                     casing:
                       enum:
                         - lowercase
@@ -52562,6 +52914,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -52655,6 +53008,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -52749,6 +53103,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -52847,6 +53202,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -53021,7 +53377,7 @@ paths:
                   description: The internal ID of the source. Must be distinct from all other source IDs and cannot start with '`sentry:`'. If this is not provided, a new UUID will be generated.
                 layout:
                   type: object
-                  description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
+                  description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n- `nxsymstore` - Nintendo NXSymStore\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
                   properties:
                     type:
                       enum:
@@ -53032,6 +53388,7 @@ paths:
                         - unified
                         - debuginfod
                         - slashsymbols
+                        - nxsymstore
                       type: string
                       description: 'The source''s layout type.
 
@@ -53048,7 +53405,9 @@ paths:
 
                         * `debuginfod`
 
-                        * `slashsymbols`'
+                        * `slashsymbols`
+
+                        * `nxsymstore`'
                     casing:
                       enum:
                         - lowercase
@@ -53290,6 +53649,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -53383,6 +53743,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -53477,6 +53838,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -53575,6 +53937,7 @@ paths:
                               - unified
                               - debuginfod
                               - slashsymbols
+                              - nxsymstore
                           casing:
                             type: string
                             enum:
@@ -66481,8 +66844,9 @@ components:
                   - metric_name
                   - release
                   - ip_address
+                  - geo_country_code
                 type: string
-                description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+                description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
                   * `error_type`
@@ -66495,7 +66859,9 @@ components:
 
                   * `release`
 
-                  * `ip_address`'
+                  * `ip_address`
+
+                  * `geo_country_code`'
               value:
                 type: array
                 items:
@@ -66540,8 +66906,9 @@ components:
             - metric_name
             - release
             - ip_address
+            - geo_country_code
           type: string
-          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type` and `error_message`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
+          description: 'The field the condition matches against. Every `dataType` accepts `release` and `ip_address`. In addition, `error` accepts `error_type`, `error_message` and `geo_country_code`, `log` accepts `log_message`, and `metric` accepts `metric_name`. `span` and `all` accept no other types.
 
 
             * `error_type`
@@ -66554,7 +66921,9 @@ components:
 
             * `release`
 
-            * `ip_address`'
+            * `ip_address`
+
+            * `geo_country_code`'
         value:
           type: array
           items:
@@ -73611,7 +73980,7 @@ components:
         - latestArtifact
     Layout:
       type: object
-      description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
+      description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n- `nxsymstore` - Nintendo NXSymStore\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
       properties:
         type:
           enum:
@@ -73622,6 +73991,7 @@ components:
             - unified
             - debuginfod
             - slashsymbols
+            - nxsymstore
           type: string
           description: 'The source''s layout type.
 
@@ -73638,7 +74008,9 @@ components:
 
             * `debuginfod`
 
-            * `slashsymbols`'
+            * `slashsymbols`
+
+            * `nxsymstore`'
         casing:
           enum:
             - lowercase
@@ -74806,6 +75178,8 @@ components:
         properties:
           endTimestamp:
             type: integer
+          errors:
+            type: integer
           generationDuration:
             type: number
             format: double
@@ -74832,8 +75206,6 @@ components:
             type: integer
           conversationId:
             type: string
-          errors:
-            type: integer
           title:
             type: string
             nullable: true
@@ -78391,8 +78763,16 @@ components:
           type: integer
           description: ID of target object
         target_type:
+          enum:
+            - Member
+            - Team
           type: string
-          description: One of [Member, Team]
+          description: 'One of [Member, Team]
+
+
+            * `Member`
+
+            * `Team`'
       required:
         - target_identifier
         - target_type
@@ -78413,8 +78793,16 @@ components:
                 type: integer
                 description: ID of target object
               target_type:
+                enum:
+                  - Member
+                  - Team
                 type: string
-                description: One of [Member, Team]
+                description: 'One of [Member, Team]
+
+
+                  * `Member`
+
+                  * `Team`'
             required:
               - target_identifier
               - target_type
@@ -80626,8 +81014,16 @@ components:
                         type: integer
                         description: ID of target object
                       target_type:
+                        enum:
+                          - Member
+                          - Team
                         type: string
-                        description: One of [Member, Team]
+                        description: 'One of [Member, Team]
+
+
+                          * `Member`
+
+                          * `Team`'
                     required:
                       - target_identifier
                       - target_type
@@ -81304,6 +81700,92 @@ components:
         required:
           - id
           - name
+    OrganizationEventsDroppedResponse:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            dataset:
+              type: string
+            start:
+              type: number
+              format: double
+            end:
+              type: number
+              format: double
+            interval:
+              type: number
+              format: double
+          required:
+            - dataset
+            - end
+            - interval
+            - start
+        droppedEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              category:
+                type: string
+              outcome:
+                type: string
+              reason:
+                type: string
+              start:
+                type: number
+                format: double
+              end:
+                type: number
+                format: double
+              count:
+                type: number
+                format: double
+            required:
+              - category
+              - count
+              - end
+              - outcome
+              - reason
+              - start
+              - type
+        acceptedEvents:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              category:
+                type: string
+              outcome:
+                type: string
+              reason:
+                type: string
+              start:
+                type: number
+                format: double
+              end:
+                type: number
+                format: double
+              count:
+                type: number
+                format: double
+            required:
+              - category
+              - count
+              - end
+              - outcome
+              - reason
+              - start
+              - type
+      required:
+        - acceptedEvents
+        - droppedEvents
+        - meta
     OrganizationEventsResponseDict:
       type: object
       properties:
@@ -81409,9 +81891,6 @@ components:
                   eventCount:
                     type: number
                     format: double
-                  byteSize:
-                    type: number
-                    format: double
                 required:
                   - category
                   - end
@@ -81443,9 +81922,6 @@ components:
                     type: number
                     format: double
                   eventCount:
-                    type: number
-                    format: double
-                  byteSize:
                     type: number
                     format: double
                 required:
@@ -87814,6 +88290,8 @@ components:
           properties:
             endTimestamp:
               type: integer
+            errors:
+              type: integer
             generationDuration:
               type: number
               format: double
@@ -87838,6 +88316,10 @@ components:
               format: double
             totalTokens:
               type: integer
+            errorToolNames:
+              type: array
+              items:
+                type: string
             usageByModel:
               type: array
               items:
@@ -87883,6 +88365,8 @@ components:
                   - totalTokens
           required:
             - endTimestamp
+            - errorToolNames
+            - errors
             - generationDuration
             - inputTokens
             - llmCalls
@@ -90101,7 +90585,7 @@ components:
           description: The internal ID of the source. Must be distinct from all other source IDs and cannot start with '`sentry:`'. If this is not provided, a new UUID will be generated.
         layout:
           type: object
-          description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
+          description: "Layout settings for the source. This is required for HTTP, GCS, and S3 sources.\n\n**`type`** ***(string)*** - The layout of the folder structure. The options are:\n- `native` - Platform-Specific (SymStore / GDB / LLVM)\n- `symstore` - Microsoft SymStore\n- `symstore_index2` - Microsoft SymStore (with index2.txt)\n- `ssqp` - Microsoft SSQP\n- `unified` - Unified Symbol Server Layout\n- `debuginfod` - debuginfod\n- `nxsymstore` - Nintendo NXSymStore\n\n**`casing`** ***(string)*** - The layout of the folder structure. The options are:\n- `default` - Default (mixed case)\n- `uppercase` - Uppercase\n- `lowercase` - Lowercase\n\n```json\n{\n    \"layout\": {\n        \"type\": \"native\"\n        \"casing\": \"default\"\n    }\n}\n```"
           properties:
             type:
               enum:
@@ -90112,6 +90596,7 @@ components:
                 - unified
                 - debuginfod
                 - slashsymbols
+                - nxsymstore
               type: string
               description: 'The source''s layout type.
 
@@ -90128,7 +90613,9 @@ components:
 
                 * `debuginfod`
 
-                * `slashsymbols`'
+                * `slashsymbols`
+
+                * `nxsymstore`'
             casing:
               enum:
                 - lowercase
