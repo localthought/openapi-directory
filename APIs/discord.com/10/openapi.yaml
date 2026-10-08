@@ -9,10 +9,10 @@ info:
   version: '10'
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/discord/discord-api-spec/a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069/specs/openapi.json
+      url: https://raw.githubusercontent.com/discord/discord-api-spec/1ff2dee3677fabef7b49f942bbae93d06c0c9f2c/specs/openapi.json
       version: '3.1'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/discord/discord-api-spec/a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069/specs/openapi.json at commit a8693cc7e4230ebc6a9d68c31d5eb7ee81ab1069; entry source SHA-256 b2d342221dadb4c185c474954e92c053c3ce6a26a7503750887ab33f5036c4e5.
+    - Fetched from https://raw.githubusercontent.com/discord/discord-api-spec/1ff2dee3677fabef7b49f942bbae93d06c0c9f2c/specs/openapi.json at commit 1ff2dee3677fabef7b49f942bbae93d06c0c9f2c; entry source SHA-256 7fd37d558c01b7a1a16287bd31cb2b65abfaa372c18e912dc67fbeead5e23653.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/discord.com/10/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -13505,6 +13505,8 @@ components:
             $ref: '#/components/schemas/MessageSnapshotResponse'
         lobby_member:
           $ref: '#/components/schemas/MessageLobbyMemberResponse'
+        actor:
+          $ref: '#/components/schemas/UserResponse'
       required:
         - type
         - content
@@ -19600,7 +19602,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/MediaGalleryItemRequest'
+            $ref: '#/components/schemas/MediaGalleryItemForMessageRequest'
           minItems: 1
           maxItems: 10
       required:
@@ -19627,7 +19629,7 @@ components:
         - type
         - id
         - items
-    MediaGalleryItemRequest:
+    MediaGalleryItemForMessageRequest:
       type: object
       properties:
         description:
@@ -20783,6 +20785,8 @@ components:
             $ref: '#/components/schemas/MessageSnapshotResponse'
         lobby_member:
           $ref: '#/components/schemas/MessageLobbyMemberResponse'
+        actor:
+          $ref: '#/components/schemas/UserResponse'
         reactions:
           type: array
           items:
@@ -23521,6 +23525,8 @@ components:
             $ref: '#/components/schemas/MessageSnapshotResponse'
         lobby_member:
           $ref: '#/components/schemas/MessageLobbyMemberResponse'
+        actor:
+          $ref: '#/components/schemas/UserResponse'
         reactions:
           type: array
           items:
