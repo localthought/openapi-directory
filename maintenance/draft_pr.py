@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import tempfile
+import urllib.parse
 from pathlib import Path
 
 import health
@@ -14,6 +15,11 @@ import update
 
 REPOSITORY = "ontola/openapi-directory"
 MANIFEST = "maintenance/sources.json"
+BRANCH_PREFIX = "codex/official-update-"
+# Generation 1 keeps the historical branch name; later generations of the same
+# publication group use "--g<N>" (N >= 2, no leading zeros, bounded).
+GENERATED_BRANCH = re.compile(r"(?P<group>[a-z0-9][a-z0-9-]{0,63}?)(?:--g(?P<n>[2-9]|[1-9][0-9]{1,2}))?")
+RESERVED_SUFFIX = re.compile(r".*--g[0-9]*")
 REQUIRED_INPUTS = {"maintenance/" + name for name in (
     "draft_pr.py", "update.py", "validation.py", "bundle.py", "samples.py", "releases.py",
     "report.py", "health.py", "conversion.py", "embedded.py", "response_keys.py", "requirements.txt",
@@ -48,17 +54,46 @@ def guard_inputs(base):
                 raise ValueError("Local maintenance input differs from comparison tree: " + path)
 
 
+def branch_name(group, generation=1):
+    if type(generation) is not int or not 1 <= generation <= 999:
+        raise ValueError("Invalid generated branch generation")
+    return BRANCH_PREFIX + group + ("" if generation == 1 else "--g" + str(generation))
+
+
+def branch_group(branch):
+    """Return (group, generation) for a generated branch name, or (None, None)."""
+    if not isinstance(branch, str) or not branch.startswith(BRANCH_PREFIX):
+        return None, None
+    match = GENERATED_BRANCH.fullmatch(branch[len(BRANCH_PREFIX):])
+    if not match or RESERVED_SUFFIX.fullmatch(match["group"]):
+        return None, None
+    return match["group"], int(match["n"] or 1)
+
+
+def with_branch(plan, branch):
+    """A resealed copy of a plan for another generation of the same group."""
+    group, _ = branch_group(branch)
+    if group != plan["group"]:
+        return plan
+    result = copy.deepcopy(plan)
+    result["branch"] = branch
+    result["seal"] = seal(result)
+    return result
+
+
 def select_sources(manifest, source_id):
     sources = manifest["sources"]
     if manifest.get("schema_version") != 1 or len({s["id"] for s in sources}) != len(sources):
         raise ValueError("Invalid source manifest")
-    if any(not isinstance(s["id"], str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", s["id"]) for s in sources):
+    if any(not isinstance(s["id"], str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", s["id"])
+           or RESERVED_SUFFIX.fullmatch(s["id"]) for s in sources):
         raise ValueError("Unsafe source ID")
     selected = next((s for s in sources if s["id"] == source_id), None)
     if selected is None:
         raise ValueError("Unknown source ID: " + source_id)
     group = selected.get("publication_group", selected["id"])
-    if not isinstance(group, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", group):
+    if (not isinstance(group, str) or not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", group)
+            or RESERVED_SUFFIX.fullmatch(group)):
         raise ValueError("Unsafe publication group")
     members = [s for s in sources if s.get("publication_group", s["id"]) == group]
     if len({s["provider"] for s in members}) != 1:
@@ -87,7 +122,7 @@ def build_plan(source_id, base, cache):
     checker = health.Checker(update.request, update.now, cache)
     shared_revisions = {}
     plan = {"schema_version": 1, "publication_protocol": 2, "group": group, "base_revision": revision,
-            "branch": "codex/official-update-" + group, "sources": [], "files": {},
+            "branch": branch_name(group), "sources": [], "files": {},
             "service_prefixes": sorted({str(Path(s["target"]).parent.parent) + "/" for s in sources})}
     with tempfile.TemporaryDirectory() as directory:
         manifest = Path(directory) / "sources.json"
@@ -160,7 +195,7 @@ def verify_plan(plan):
     guard_inputs(plan["base_revision"])
     original = git("show", plan["base_revision"] + ":" + MANIFEST)
     group, sources = select_sources(json.loads(original), plan["sources"][0]["id"])
-    if (plan["group"] != group or plan["branch"] != "codex/official-update-" + group
+    if (plan["group"] != group or branch_group(plan["branch"])[0] != group
             or [s["configuration"] for s in plan["sources"]] != sources
             or [s["id"] for s in plan["sources"]] != [s["id"] for s in sources]
             or plan["service_prefixes"] != sorted({str(Path(s["target"]).parent.parent) + "/" for s in sources})):
@@ -221,7 +256,8 @@ def validate_commit(base, head, branch):
         raise ValueError("Draft comparison base/head changed; rebuild or review the pending PR deliberately")
     original = git("show", base + ":" + MANIFEST)
     manifest = json.loads(original)
-    members = [s for s in manifest["sources"] if branch == "codex/official-update-" + s.get("publication_group", s["id"])]
+    group_name, _ = branch_group(branch)
+    members = [s for s in manifest["sources"] if group_name is not None and group_name == s.get("publication_group", s["id"])]
     if not members:
         raise ValueError("Draft branch is not a configured publication group")
     group, sources = select_sources(manifest, members[0]["id"])
@@ -306,6 +342,97 @@ def remote_guard(plan):
         raise ValueError("Remote main advanced; fetch and rebuild before publication")
 
 
+def remote_generations(group):
+    """All remote generated branches of exactly this group: {generation: (branch, sha)}."""
+    output = git("ls-remote", "origin", "refs/heads/" + BRANCH_PREFIX + group + "*").decode()
+    found = {}
+    for line in output.splitlines():
+        sha, ref = line.split()
+        name = ref[len("refs/heads/"):] if ref.startswith("refs/heads/") else None
+        found_group, generation = branch_group(name)
+        if found_group == group:
+            found[generation] = (name, sha)
+    return found
+
+
+def merged_outcome(plan, branch, sha):
+    """Read-only checks that a generation is a verified merged generated outcome.
+
+    Returns (verified, observation). Missing objects, foreign commits, squash or
+    rebase merges, unmerged/closed PRs and moved tips are all unverified (held).
+    """
+    checks = {"branch": branch, "tip": sha}
+    try:
+        prs = [pr for pr in pages("repos/" + REPOSITORY + "/pulls?state=all&head="
+                                  + urllib.parse.quote(REPOSITORY.split("/")[0] + ":" + branch, safe=""))
+               if pr.get("head", {}).get("ref") == branch
+               and pr.get("head", {}).get("repo", {}).get("full_name") == REPOSITORY]
+        checks["pull_requests"] = [pr.get("number") for pr in prs]
+        if len(prs) != 1:
+            return False, {**checks, "reason": "Exactly one PR must exist for the branch"}
+        pr = prs[0]
+        checks.update(number=pr.get("number"), merge_commit=pr.get("merge_commit_sha"), merged_at=pr.get("merged_at"))
+        if pr.get("state") != "closed" or not pr.get("merged_at"):
+            return False, {**checks, "reason": "PR is open or closed without merging"}
+        if pr.get("head", {}).get("sha") != sha:
+            return False, {**checks, "reason": "Branch tip moved after the PR"}
+        git("cat-file", "-e", sha + "^{commit}")
+        try:
+            git("merge-base", "--is-ancestor", sha, plan["base_revision"])
+        except subprocess.CalledProcessError:
+            return False, {**checks, "reason": "Head is not in main history (squash/rebase merge or unmerged)"}
+        parents = git("rev-list", "--parents", "-n", "1", sha).decode().split()[1:]
+        if len(parents) != 1:
+            return False, {**checks, "reason": "Generated commit must have exactly one parent"}
+        message = git("show", "-s", "--format=%B", sha).decode()
+        if not re.fullmatch(r"Update official " + re.escape(plan["group"])
+                            + r" API description\n\nCandidate SHA-256: [0-9a-f]{64}\n*", message):
+            return False, {**checks, "reason": "Commit message is not a generated candidate"}
+        changed = git("diff-tree", "--no-commit-id", "--name-only", "-r", parents[0], sha).decode().splitlines()
+        if not changed or any(path != MANIFEST and not any(path.startswith(prefix) for prefix in plan["service_prefixes"])
+                              for path in changed):
+            return False, {**checks, "reason": "Generated commit touches files outside this API"}
+    except subprocess.CalledProcessError:
+        return False, {**checks, "reason": "Required Git objects or ancestry are unavailable"}
+    return True, {**checks, "verified": True}
+
+
+def next_generation(plan, cache):
+    """Choose the branch for a new draft without deleting or reusing any branch.
+
+    Returns the plan unchanged when generation 1 is absent or when any existing
+    generation is not a verified merged outcome (publish() then holds as before).
+    Otherwise returns a resealed plan for the lowest unused generation and records
+    an immutable retirement observation for each verified merged generation.
+    """
+    group = plan["group"]
+    existing = remote_generations(group)
+    if 1 not in existing:
+        return plan
+    observations = []
+    for generation, (branch, sha) in sorted(existing.items()):
+        verified, observation = merged_outcome(plan, branch, sha)
+        if not verified:
+            return plan
+        observations.append((generation, observation))
+    generation = next(n for n in range(2, 1000) if n not in existing)
+    directory = cache / "publication" / group / "retired"
+    if directory.is_symlink() or directory.parent.is_symlink():
+        raise ValueError("Redirected publication guard directory")
+    directory.mkdir(parents=True, exist_ok=True)
+    for number, observation in observations:
+        path = directory / ("g" + str(number) + ".json")
+        record = {"kind": "merged_generation_observation", "not_a_creation_receipt": True,
+                  "group": group, "generation": number, **observation}
+        if path.exists() or path.is_symlink():
+            old = json.loads(path.read_text())
+            if {k: old.get(k) for k in ("branch", "tip", "number")} != {k: record.get(k) for k in ("branch", "tip", "number")}:
+                raise ValueError("Retained retirement observation differs; deliberate review required")
+            continue
+        path.write_text(json.dumps({**record, "observed_at": update.now()}, indent=2) + "\n")
+    return with_branch(plan, branch_name(group, generation))
+
+
 def pr_body(plan):
     lines = ["Validated official-source update for " + plan["group"] + ".", "",
              "Draft for deliberate per-API review; no automatic merge. Comparison base: " + plan["base_revision"] + "."]
@@ -387,6 +514,17 @@ def publish_locked(plan, blocked):
         return {"status": "existing_pending", "pull_requests": pending,
                 "note": "Review/update existing PRs; no new branch, overwrite, comment or duplicate PR."}
     branch_ref = "refs/heads/" + plan["branch"]
+    _, generation = branch_group(plan["branch"])
+    if generation is None:
+        raise ValueError("Unexpected generated branch name")
+    if generation > 1:
+        # Re-verify every existing generation under the lock; never trust an
+        # earlier observation if a branch or PR changed in between.
+        existing = remote_generations(plan["group"])
+        if 1 not in existing or any(not merged_outcome(plan, branch, sha)[0]
+                                    for number, (branch, sha) in existing.items() if number != generation):
+            return {"status": "existing_branch", "branch": plan["branch"],
+                    "note": "An earlier generation is not a verified merged outcome; investigate manually."}
     if git("ls-remote", "origin", branch_ref).strip():
         return {"status": "existing_branch", "branch": plan["branch"],
                 "note": "Existing branch retained; investigate/recover prior outcome manually."}
@@ -459,6 +597,8 @@ def main(argv=None):
 def run_plan(plan, args):
     # Candidate directories identify an immutable attempt, so a later no-op does
     # not leave an earlier body alongside a report claiming the current source.
+    if args.publish and plan["files"]:
+        plan = next_generation(plan, args.cache)
     directory = args.cache / plan["group"] / plan["seal"]
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "candidate.json").write_text(json.dumps(plan, indent=2) + "\n")

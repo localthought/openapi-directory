@@ -937,9 +937,22 @@ and pull-request write permissions. It reads all open PRs and complete bounded f
 pagination before creating anything. A PR touching any historical/current version of
 the API, or the same generated branch, yields `existing_pending`. An orphan branch
 yields `existing_branch`. Both outcomes preserve existing work. Explicit updates of
-eligible pending drafts use the separate command below; reuse of merged branches and
-scheduled publication remain separate work. Do not remove a pending PR or delete a
-merged branch to force another delivery.
+eligible pending drafts use the separate command below; scheduled publication remains
+separate work. Do not remove a pending PR or delete a merged branch to force another delivery.
+
+After a generated draft has been merged, the next draft for that group uses a new
+generation branch `codex/official-update-<group>--g<N>` (lowest unused N ≥ 2), as
+designed in `design/merged-generated-branches.md`. A new generation is chosen only if
+**every** existing generation is a verified merged outcome: exactly one PR, closed and
+merged; the branch tip equals the PR head; that head is in main's history (squash or
+rebase merges are held); it has a single parent, a generator-shaped commit message, and
+touches only this API's files and the manifest. Otherwise the existing hold is reported
+unchanged. An immutable `publication/<group>/retired/g<N>.json` observation records each
+verified generation; it is not a creation receipt. Publication re-verifies every
+generation under its lock. No branch is ever deleted, reused or force-pushed. The
+pending reviewer and refresh command review a later-generation draft as that generation,
+still requiring its own retained creation receipt. Source IDs and groups ending in
+`--g<digits>` are rejected so branch names stay unambiguous.
 An atomic empty-ref lease permits only creating an absent branch, including under races.
 The PR is always a **draft**, with official URL/hash/revision, scope, versions/counts,
 additions/removals, transformations and validation results. Its returned repository,

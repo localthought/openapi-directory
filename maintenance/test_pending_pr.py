@@ -68,6 +68,30 @@ class PendingTests(unittest.TestCase):
         self.assertIs(result["read_only"], True)
         self.assertIs(result["publication_authorized"], False)
 
+    def use_generation(self, generation, receipt_branch=None):
+        plan = self.fixture.plan()
+        self.old = draft_pr.with_branch(plan, draft_pr.branch_name(plan["group"], generation))
+        self.head = draft_pr.commit_plan(self.old)
+        self.pr["head"] = {"sha": self.head, "ref": self.old["branch"], "repo": {"full_name": draft_pr.REPOSITORY}}
+        self.pr["body"] = draft_pr.pr_body(self.old)
+        self.matches = [{"number": 42, "url": self.pr["html_url"], "head": self.head}]
+        if receipt_branch is not None:
+            # Retained evidence claims a different generation than the actual PR.
+            self.old = draft_pr.with_branch(self.old, receipt_branch)
+        self.receipt()
+
+    def test_later_generation_draft_is_reviewed_with_its_own_receipt(self):
+        self.use_generation(2)
+        result = self.review()
+        self.assertEqual(result["status"], "pending_matches_source")
+        self.assertEqual(result["branch"], "codex/official-update-example--g2")
+        self.assertEqual(result["head"], self.head)
+        self.assertIs(result["publication_authorized"], False)
+
+    def test_later_generation_with_another_generations_receipt_is_held(self):
+        self.use_generation(2, receipt_branch="codex/official-update-example")
+        self.held("PR identity differs")
+
     def test_exact_pending_vendor_match_ignores_fetch_timestamp_only_changes(self):
         original_fetch = self.fixture.fetch
         def fetch(source):

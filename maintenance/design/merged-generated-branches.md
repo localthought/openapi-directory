@@ -1,7 +1,7 @@
 # Design: handling already-merged generated branches
 
-Status: **proposal only, not implemented.** No code, workflow, permission or branch
-changes accompany this document. Written 2026-10-08 for HANDOVER.md item 1.
+Status: **implemented** in `draft_pr.py` (2026-10-08; see maintenance/README.md). No
+workflow, permission or branch changes. Written 2026-10-08 for HANDOVER.md item 1.
 
 ## Problem
 
