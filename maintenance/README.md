@@ -900,8 +900,10 @@ an accidental-change guard, not an authorization token or proof of current fresh
 and pull-request write permissions. It reads all open PRs and complete bounded file
 pagination before creating anything. A PR touching any historical/current version of
 the API, or the same generated branch, yields `existing_pending`. An orphan branch
-yields `existing_branch`. Both outcomes preserve existing work; automatic branch/PR
-updates remain unfinished. Do not remove a pending PR to force a duplicate delivery.
+yields `existing_branch`. Both outcomes preserve existing work. Explicit updates of
+eligible pending drafts use the separate command below; reuse of merged branches and
+scheduled publication remain separate work. Do not remove a pending PR or delete a
+merged branch to force another delivery.
 An atomic empty-ref lease permits only creating an absent branch, including under races.
 The PR is always a **draft**, with official URL/hash/revision, scope, versions/counts,
 additions/removals, transformations and validation results. Its returned repository,
@@ -934,8 +936,9 @@ writer is enabled by this command. A future publisher must retain guards/outcome
 across runners and ensure PR validation actually runs: events created by Actions'
 `GITHUB_TOKEN` generally do not start other workflows, per GitHub's
 [token documentation](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token).
-Implement pending-PR updates and scheduled publication separately, with deliberate
-per-API review; don't weaken permissions or waive checks just to trigger delivery.
+The explicit pending updater below does not enable a scheduled publisher. Implement
+scheduling separately, with deliberate per-API review; don't weaken permissions or
+waive checks just to trigger delivery.
 
 ## Read-only review of pending API drafts
 
@@ -958,8 +961,8 @@ are held for deliberate fetching/reconciliation. Original vendor bytes, the fres
 candidate and `pending-review.json` are saved under the fresh cache. No GitHub test
 PR is created. GitHub access is read-only: PR/file/review pagination uses GET requests.
 
-An eligible draft must have exactly one matching successful creation receipt, an
-intact candidate digest, its original single-parent commit/message, exact complete
+An eligible draft must have exactly one matching successful creation/update receipt,
+a bounded intact history back to its successful original creation, intact candidate digests, its original single-parent commit/message, exact complete
 Git file content, native-valid typed YAML, target-only manifest edits, and the original
 generated title/body. The digest checks accidental changes; it is not authorization.
 Ready, foreign, manually edited, discussed or reviewed PRs are held. Failed/uncertain
@@ -984,5 +987,77 @@ do not count as vendor drift. Result states are:
 All results contain `read_only: true` and `publication_authorized: false`. The reviewer
 has no publish flag and cannot update, rebase, close, mark ready, comment on or merge a
 PR. It exits nonzero for held/failed results. These observations are prerequisites
-for a future reviewed writer; pending-PR updates and scheduled publication remain
-unfinished. The weekly/monthly workflows retain their existing read-only permissions.
+for the explicit updater below. The weekly/monthly workflows retain their existing
+read-only permissions; neither command enables scheduled publication.
+
+
+## Explicit refresh of an untouched generated draft
+
+`refresh_pr.py` defaults to the same fresh read-only review. Its separate `--publish`
+flag requests a head update of one verified pending draft, rather than creating a PR:
+
+```sh
+git fetch origin main
+python maintenance/refresh_pr.py --source plaid \
+  --prior-cache cache/maintenance/drafts \
+  --cache cache/maintenance/pending-refresh/plaid
+# After reviewing the source changes, request a new fetch and guarded update:
+python maintenance/refresh_pr.py --source plaid \
+  --prior-cache cache/maintenance/drafts \
+  --cache cache/maintenance/pending-refresh/plaid --publish
+```
+
+The original creation cache must remain available and differ from the fresh cache.
+The command never publishes an edited cached candidate. It repeats official-source
+fetch/health checks, pinning of explicit companions, native/conversion validation,
+metadata preservation, typed YAML and full tree/recipe checks. Actual vendor drift
+from the verified pending artifact is required. Unchanged content and timestamp-only
+observations leave the head intact. An invalid or blocked companion prevents the
+whole group update. No source validation or repair expectation is waived.
+
+Publication protocol 2 labels newly created PR text an **initial submission snapshot**.
+The updater preserves that text and title byte for byte. Current versions, provenance,
+path/operation changes against main and validation appear in the latest head/diff and
+the exact-head validation job's JSON/Actions summary. Offline CI does not fetch vendors
+or claim current freshness. Legacy PRs lacking this explicit snapshot label remain
+readable but are held for deliberate reconciliation before updates. This avoids an
+unconditional PR-body PATCH overwriting a concurrent human edit: GitHub documents that
+[conditional writes for unsafe methods are unsupported unless specifically documented
+for an endpoint](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api).
+The updater uses only REST GET requests and a Git push; it makes no PR-text, comment,
+review, ready/close or merge request.
+
+The pending draft must still satisfy every read-only review guard. In addition, its
+original comparison base, current main and advertised PR base must be identical.
+Even unrelated main advances require deliberate reconciliation; no automatic rebase
+is attempted. Vendor-version changes, endpoint/operation or schema-name removals,
+server/authentication changes on existing document/path/operation fields, and changed
+callbacks/webhooks are held. Other content changes still require deliberate per-API
+review of the retained full candidate/diff; the command is not a blanket approval or
+merge policy.
+
+The command holds the original publication lock, creates a sealed candidate and
+immutable prepared attempt, then rechecks the full PR snapshot/reviews and remote main.
+It creates a single-parent commit using a private index and pushes with an explicit
+`--force-with-lease=refs/heads/BRANCH:VERIFIED_PREVIOUS_HEAD`. A concurrent Git commit
+cannot be overwritten. The prior Git object, candidate and successful receipt remain.
+A successful update saves a `draft_updated` receipt linking its exact previous head,
+previous candidate, original creation candidate and original body digest. Read-only
+review verifies every predecessor's full Git tree, message, recipe, manifest/native
+content and typed YAML, not merely the latest API bytes. The history is bounded at
+100 candidates. No local checkout, index or historical spec is replaced.
+
+GitHub PR metadata and a Git ref cannot be changed/checked in one atomic operation.
+A human discussion, body edit or ready-state change racing after the last pre-push
+check is detected by post-push checks and held for outcome review. The updater never
+restores old content blindly or undoes human edits. Any rejected/uncertain push or
+post-push mismatch persists `blocked.json` and is not automatically retried. If neither
+a success nor failure receipt can be saved after a push, the interrupted lock remains.
+Prepared attempts, raw source snapshots, success history and guards must be retained.
+The local `current-report.md` describes the prepared update; it is not a GitHub body
+write. Verify actual new-head CI and independently review scope before ready/merge.
+
+This explicit command does not schedule writes, resolve main/base advances, reconcile
+legacy/manual drafts, retire merged branches, retry guards or merge anything. These
+remain separate infrastructure and per-API review work. Weekly/monthly workflow
+permissions stay `contents: read`, and laptop sleep behavior remains unchanged.

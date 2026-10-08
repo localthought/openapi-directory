@@ -17,7 +17,7 @@ MANIFEST = "maintenance/sources.json"
 REQUIRED_INPUTS = {"maintenance/" + name for name in (
     "draft_pr.py", "update.py", "validation.py", "bundle.py", "samples.py", "releases.py",
     "report.py", "health.py", "conversion.py", "embedded.py", "response_keys.py", "requirements.txt",
-    "package.json", "package-lock.json", "convert-swagger.cjs", "pending_pr.py")}
+    "package.json", "package-lock.json", "convert-swagger.cjs", "pending_pr.py", "refresh_pr.py")}
 
 
 class PublicationFailure(ValueError):
@@ -86,7 +86,7 @@ def build_plan(source_id, base, cache):
     group, sources = select_sources(json.loads(manifest_raw), source_id)
     checker = health.Checker(update.request, update.now, cache)
     shared_revisions = {}
-    plan = {"schema_version": 1, "group": group, "base_revision": revision,
+    plan = {"schema_version": 1, "publication_protocol": 2, "group": group, "base_revision": revision,
             "branch": "codex/official-update-" + group, "sources": [], "files": {},
             "service_prefixes": sorted({str(Path(s["target"]).parent.parent) + "/" for s in sources})}
     with tempfile.TemporaryDirectory() as directory:
@@ -246,8 +246,21 @@ def validate_commit(base, head, branch):
     plan["seal"] = seal(plan)
     verify_plan(plan)
     guard_tree_paths(head, {s["destination"] for s in rows} | {MANIFEST})
+    comparisons = []
+    for source, row in zip(sources, rows):
+        current = update.stored(row["destination"], head)
+        _, previous = update.baseline(source, current, base)
+        comparison = update.compare(previous, current)
+        if previous is None:
+            comparison.update(added_paths=sorted(current["paths"]), removed_paths=[],
+                              added_operations=sorted(update.operation_set(current)), removed_operations=[])
+        comparisons.append({"id": source["id"], "destination": row["destination"],
+                            "origin": current["info"].get("x-origin"),
+                            "conversion": current["info"].get("x-conversion"),
+                            **comparison})
     return {"status": "draft_commit_validated", "base_revision": base, "head": head,
             "group": group, "files": sorted(files),
+            "comparisons_from_main": comparisons,
             "note": "Offline native validation, typed YAML and exact tree/configuration scope; no fresh vendor comparison."}
 
 
@@ -296,6 +309,10 @@ def remote_guard(plan):
 def pr_body(plan):
     lines = ["Validated official-source update for " + plan["group"] + ".", "",
              "Draft for deliberate per-API review; no automatic merge. Comparison base: " + plan["base_revision"] + "."]
+    if plan.get("publication_protocol") == 2:
+        lines += ["", "Initial submission snapshot. This text is retained if the generated draft is refreshed. "
+                  "Review the latest head/diff and its Generated API draft validation summary for current versions, "
+                  "changes and provenance; the snapshot below describes the original submission."]
     for source in plan["sources"]:
         metadata, comparison = source["fetch"], source["comparison"]
         lines += ["", "Source " + source["id"] + ": [official artifact](" + metadata["url"] + ").",
@@ -331,7 +348,7 @@ def publish(plan, cache):
     except FileExistsError:
         raise ValueError("Publication already running or interrupted; review retained lock before retrying") from None
     try:
-        if blocked.exists():
+        if blocked.exists() or blocked.is_symlink():
             raise ValueError("A previous publication failed; retain evidence and require deliberate review before retrying")
         return publish_locked(plan, blocked)
     finally:

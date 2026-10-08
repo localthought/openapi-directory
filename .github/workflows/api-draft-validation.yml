@@ -32,4 +32,17 @@ jobs:
           DRAFT_BASE: ${{ github.event.pull_request.base.sha }}
           DRAFT_HEAD: ${{ github.event.pull_request.head.sha }}
           DRAFT_BRANCH: ${{ github.head_ref }}
-        run: python maintenance/draft_pr.py --base "$DRAFT_BASE" --validate-head "$DRAFT_HEAD" --branch "$DRAFT_BRANCH"
+        run: |
+          python maintenance/draft_pr.py --base "$DRAFT_BASE" --validate-head "$DRAFT_HEAD" --branch "$DRAFT_BRANCH" > draft-validation.json
+          cat draft-validation.json
+      - name: Publish current validated head summary
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          result = json.loads(Path("draft-validation.json").read_text())
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write("## Current generated API head\n\n")
+              summary.write("Offline validation of this exact head; no fresh vendor comparison.\n\n")
+              summary.write("```json\n" + json.dumps(result, indent=2) + "\n```\n")
+          PY

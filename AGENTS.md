@@ -13,6 +13,25 @@ schedule/prompt verified. No additional automation was created. Preserve laptop-
 behavior, no power changes/cloud-host move, quiet notifications, all parked work and
 publication/merge protections. Older one-week/deadline notes below are historical.
 
+**Pending draft head updater prepared — 2026-10-08:** Branch
+`codex/guarded-pending-draft-updates` adds explicit `maintenance/refresh_pr.py`.
+Default mode is a fresh read-only review. Explicit `--publish` can update only an
+untouched owned generated draft with retained successful evidence, same original/
+current/advertised base, fixed vendor version, no endpoint/schema-name removals or
+server/auth/callback changes, intact full native/typed-YAML/recipe/Git checks and no
+review work. It uses an exact previous-head Git lease, preserves original PR title/body
+and checkout/index, and records a bounded immutable chain back to original creation.
+Legacy unlabelled initial PR bodies are held; new protocol 2 labels the body an initial
+submission snapshot, with current provenance/counts/deltas in actual new-head CI JSON
+and Actions summary. No REST writes, ready/comment/merge or scheduled publisher.
+Rejected/uncertain outcomes retain guards; if outcome receipts cannot be saved, the
+interrupted lock remains. Human PR metadata can race with Git push; post-push changes
+are held and human edits preserved, never blindly restored. Main advances, merged
+branch handling and scheduled publishing remain separate work. Local/hosted full
+validation and infrastructure delivery are pending; no production draft update is
+claimed. Preserve eleven blocks, parked choices/items, original creation caches,
+deprecated Grant exclusion, unrelated #179 and local laptop-sleep behavior.
+
 **Resumed — 2026-10-08:** The user explicitly said "resume" after the 2026-10-06
 pause. The existing hourly local maintenance automation is ACTIVE again, with the
 ongoing prompt and quiet notifications preserved; no new automation was created.
