@@ -5794,12 +5794,12 @@ info:
   x-serviceName: api
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/twilio/twilio-oai/218b7821602a93ae63e83e20ab5e8637e870250f/spec/json/twilio_api_v2010.json
+      url: https://raw.githubusercontent.com/twilio/twilio-oai/141f1201b55abcc16b3aa8089e71c4a927326975/spec/json/twilio_api_v2010.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/twilio/twilio-oai/218b7821602a93ae63e83e20ab5e8637e870250f/spec/json/twilio_api_v2010.json at commit 218b7821602a93ae63e83e20ab5e8637e870250f; entry source SHA-256 78e76cc93c355a259e241866c241663eddb6ce0ed528f066c6cf0958648f5637.
+    - Fetched from https://raw.githubusercontent.com/twilio/twilio-oai/141f1201b55abcc16b3aa8089e71c4a927326975/spec/json/twilio_api_v2010.json at commit 141f1201b55abcc16b3aa8089e71c4a927326975; entry source SHA-256 bfdf249a129819af274d6bdc7672156ea3416ad48670a6f0544def6ef386ba87.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
-    - Preserved existing APIs.guru curation metadata from APIs/twilio.com/api/1.55.0/openapi.yaml.
+    - Preserved existing APIs.guru curation metadata from APIs/twilio.com/api/1.0.0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
 openapi: 3.0.1
 paths:
@@ -12769,7 +12769,7 @@ paths:
               value: MyRoom
         - name: Status
           in: query
-          description: 'The status of the resources to read. Can be: `init`, `in-progress`, or `completed`.'
+          description: 'The status of the resources to read. Can be: `init`, `in-progress`, or `completed`. Starting from September 30th, 2026, the default is `in-progress`. To read completed conferences, set `Status` to `completed`.'
           schema:
             $ref: '#/components/schemas/conference_enum_status'
           examples:
