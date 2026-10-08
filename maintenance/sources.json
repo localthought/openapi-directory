@@ -1423,6 +1423,7 @@
         "expected_warnings": 0,
         "expected_patches": 1
       },
+      "import_blocker": "In-place refresh of fixed 2.0 would remove 28 paths / 47 operations. The vendor changelog evidences 25 (Issue Tracker removal announced 2026-08-20; Connect addon linker removal); five cross-workspace routes (/workspaces, /repositories, /user/permissions/repositories, /user/permissions/workspaces, /pullrequests/{selected_user}) lack vendor evidence (checked 2026-10-08). Review before importing.",
       "version_policy": "vendor",
       "priority": "high"
     }
