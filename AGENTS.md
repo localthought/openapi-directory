@@ -13,6 +13,34 @@ schedule/prompt verified. No additional automation was created. Preserve laptop-
 behavior, no power changes/cloud-host move, quiet notifications, all parked work and
 publication/merge protections. Older one-week/deadline notes below are historical.
 
+**Resumed — 2026-10-08:** The user explicitly said "resume" after the 2026-10-06
+pause. The existing hourly local maintenance automation is ACTIVE again, with the
+ongoing prompt and quiet notifications preserved; no new automation was created.
+Fetched main remains `b511912dbb26ef97747a9f3331e1313f030db584` (#229). Only
+unrelated #179 is open. Saved uncommitted pending-review work was preserved and
+continued on `codex/pending-api-refresh-review`; no completed HCP addition is repeated.
+
+**Pending-draft review infrastructure in progress — 2026-10-08:** New
+`maintenance/pending_pr.py` is read-only. It requires retained successful creation
+evidence, an intact full generated Git tree/message/single parent, complete native
+and typed-YAML validation, exact target-only manifest edits, original title/body,
+unchanged source recipe, and no discussion/review requests/submitted reviews. Fresh
+vendor content is compared against the verified pending artifact, including explicit
+companions; timestamp-only changes do not count. Main service/manifest changes,
+missing objects, pagination/snapshot changes, manual work and prior publication
+failure/interruption guards are held. Separate fresh/original cache roots prevent
+overwriting creation receipts. All results explicitly deny publication authorization.
+
+This does not update/rebase/close/comment/ready/merge PRs or enable a scheduled writer.
+Automatic pending updates and scheduled publication remain subsequent separate work.
+**188 local updater tests pass**, including 23 new real-Git pending-review cases
+(complete suite 174.794 seconds). Selected live checks and actual hosted CI remain
+to be verified before delivery; no real pending API PR was updated or tested live.
+Evidence is retained under ignored
+`cache/maintenance/reports/pending-api-refresh-review/`. All eleven source/native/
+publication blocks, unanswered owner choices, §5 parked items and deprecated Grant
+exclusion remain; preserve laptop sleep and the other session's #179.
+
 **Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `2704d663d` (PR #228 merged):
 732 provider domains; 4,293 files under `APIs/`, including 2,119
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,

@@ -936,3 +936,53 @@ across runners and ensure PR validation actually runs: events created by Actions
 [token documentation](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token).
 Implement pending-PR updates and scheduled publication separately, with deliberate
 per-API review; don't weaken permissions or waive checks just to trigger delivery.
+
+## Read-only review of pending API drafts
+
+`pending_pr.py` re-fetches one registered API/group and checks an existing generated
+draft against its original successful creation receipt and complete Git content.
+Use a separate fresh cache so the retained creation evidence remains intact:
+
+```sh
+git fetch origin main
+python maintenance/pending_pr.py --source plaid \
+  --prior-cache cache/maintenance/drafts \
+  --cache cache/maintenance/pending-review/plaid
+```
+
+`--prior-cache` is the original `draft_pr.py --cache` root, including its candidate,
+`result.json` and publication guards. Retain that root across runs. The reviewer
+requires the delivered local tools/recipes to equal the comparison commit. It reads
+Git objects without changing the checkout or index; unavailable pending-head objects
+are held for deliberate fetching/reconciliation. Original vendor bytes, the fresh
+candidate and `pending-review.json` are saved under the fresh cache. No GitHub test
+PR is created. GitHub access is read-only: PR/file/review pagination uses GET requests.
+
+An eligible draft must have exactly one matching successful creation receipt, an
+intact candidate digest, its original single-parent commit/message, exact complete
+Git file content, native-valid typed YAML, target-only manifest edits, and the original
+generated title/body. The digest checks accidental changes; it is not authorization.
+Ready, foreign, manually edited, discussed or reviewed PRs are held. Failed/uncertain
+publication guards and interrupted locks are preserved, including broken symlinks.
+Multiple overlapping PRs, changed source recipes, changes to the source manifest or
+this service on main, missing Git objects and PR changes during inspection are held.
+Unrelated main advances can be observed without rebasing a branch.
+
+The fresh comparison uses the verified pending artifact as its baseline, including
+every member of an explicit companion group. Fetch-date/provenance-only differences
+do not count as vendor drift. Result states are:
+
+- `no_pending_pr`: no overlap was found; `source_status` records the fresh main comparison.
+- `pending_matches_source`: the verified pending artifacts match fresh vendor content.
+- `pending_refresh_requires_review`: fresh vendor content differs from the pending draft,
+  with versions, path/operation additions and removals reported from that draft.
+- `pending_superseded_by_main_requires_review`: fresh content matches main but differs
+  from the draft. This may be a vendor reversion and does not justify closing the PR.
+- `held` or `failed`: integrity/review guards or fresh source validation prevented a
+  successful comparison. Failures are never labelled unchanged.
+
+All results contain `read_only: true` and `publication_authorized: false`. The reviewer
+has no publish flag and cannot update, rebase, close, mark ready, comment on or merge a
+PR. It exits nonzero for held/failed results. These observations are prerequisites
+for a future reviewed writer; pending-PR updates and scheduled publication remain
+unfinished. The weekly/monthly workflows retain their existing read-only permissions.

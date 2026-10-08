@@ -17,7 +17,7 @@ MANIFEST = "maintenance/sources.json"
 REQUIRED_INPUTS = {"maintenance/" + name for name in (
     "draft_pr.py", "update.py", "validation.py", "bundle.py", "samples.py", "releases.py",
     "report.py", "health.py", "conversion.py", "embedded.py", "response_keys.py", "requirements.txt",
-    "package.json", "package-lock.json", "convert-swagger.cjs")}
+    "package.json", "package-lock.json", "convert-swagger.cjs", "pending_pr.py")}
 
 
 class PublicationFailure(ValueError):
