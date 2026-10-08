@@ -11,14 +11,15 @@ info:
   version: 0.0.1
   x-origin:
     - format: swagger
-      url: https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json
+      url: https://raw.githubusercontent.com/grafana/grafana/9dba45e257b16721d26ea864d9077bb15d1df003/public/api-merged.json
       version: '2.0'
     - format: openapi
-      url: https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json
+      url: https://raw.githubusercontent.com/grafana/grafana/9dba45e257b16721d26ea864d9077bb15d1df003/public/api-merged.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/grafana/grafana/c58da1723a80496cc505922e457e2a0dc78993d0/public/api-merged.json at commit c58da1723a80496cc505922e457e2a0dc78993d0; entry source SHA-256 5dde6d9a86399e9640ca0208664f7a78a8c5e63c0edbceb925686336471455a5.
-    - Converted Swagger 2.0 to OpenAPI 3.0.0 with swagger2openapi 7.0.8 (patch:true, warnOnly:true, resolve:false, targetVersion:3.0.0); 0 warnings and 0 converter patches. External resolution is disabled; the complete converted document must pass validation. Converted SHA-256 84895fb7bdb6cbd94d28f77202f4bf923cf20ec7f2c34579715596584cf0fb51.
+    - Fetched from https://raw.githubusercontent.com/grafana/grafana/9dba45e257b16721d26ea864d9077bb15d1df003/public/api-merged.json at commit 9dba45e257b16721d26ea864d9077bb15d1df003; entry source SHA-256 7aac3090b232eebc23158bb7861e8fc8cdc363a5a46aecfed54db5f4cdef34ca.
+    - Converted Swagger 2.0 to OpenAPI 3.0.0 with swagger2openapi 7.0.8 (patch:true, warnOnly:true, resolve:false, targetVersion:3.0.0); 0 warnings and 0 converter patches. External resolution is disabled; the complete converted document must pass validation. Converted SHA-256 6ab1a3305152699b3e45a52c9eeff39179425d5107b22e74f2a7037c5cea8af8.
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/grafana.com/0.0.1/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3.
 paths:
@@ -15877,7 +15878,13 @@ components:
       type: object
       properties:
         homeDashboardUID:
-          description: UID for the home dashboard
+          description: 'UID for the home dashboard. The reserved value "global-home" is not a
+
+            dashboard UID: it selects the instance default home (home_page, the
+
+            configured home dashboard file, or the built-in home page) instead of
+
+            falling through to lower-precedence preferences.'
           type: string
         homeURL:
           description: 'Explicit home URL (NOTE: this can only be modified in the system settings)'
