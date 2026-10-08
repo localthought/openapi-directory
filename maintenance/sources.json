@@ -240,7 +240,7 @@
     {
       "id": "figma",
       "provider": "figma.com",
-      "target": "APIs/figma.com/0.43.0/openapi.yaml",
+      "target": "APIs/figma.com/0.44.0/openapi.yaml",
       "github": {
         "repository": "figma/rest-api-spec",
         "ref": "main",
