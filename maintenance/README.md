@@ -734,6 +734,42 @@ Positive and negative instance checks prove the accepted values are unchanged; v
 nullable/default/contract corrections stop replay. No nullable widening, replacement
 default, conversion, bundling, invented curation or runtime omission behavior is added.
 
+### Other Xero In Release services
+
+Eight further Xero services follow their own files in the official
+[`XeroAPI/Xero-OpenAPI`](https://github.com/XeroAPI/Xero-OpenAPI) repository, exactly the
+services its README lists as "In Release (used for one or more SDKs)" besides Accounting:
+Fixed Assets, Bank Feeds (v1), Files, Identity, Payroll AU, Projects, Payroll UK and
+Payroll NZ (reviewed 2026-10-08 at `fd9d44b04bf4934a7509b8e7ece51a9e0e462e4f`). Every
+file shares the repository's semantic-release version (19.1.0 at review), as Accounting
+already does. Each is one API: deliver one PR per service, never a combined Xero file.
+
+The five services already stored at `2.9.4` use that file as their initial comparison
+and curation baseline; a new vendor version is imported into its own directory and the
+historical `2.9.4` bytes stay unchanged. Bank Feeds renames the path template
+`/Statements/{statementID}` to `/Statements/{statementId}`; that is not an endpoint
+retirement. Projects, Payroll UK and Payroll NZ are absent from the full fetched tree and
+have no curation baseline. All eight validate natively with no patches, conversion or
+bundling. Finance, App Store, Payroll AU v2 and Bank Feeds v2 are published in the same
+repository but are not listed as In Release; they are deliberately not registered.
+Bank Feeds is a closed partner-only API per its own description; preserve that prose,
+native OAuth2 scopes and `Xero-Tenant-Id` requirements in every service.
+
+### YNAB API v1
+
+`ynab` follows the hosted `https://api.ynab.com/papi/open_api_spec.yaml`, which the
+official [Endpoints reference](https://api.ynab.com/v1) loads; the
+[changelog](https://api.ynab.com) lists each release (v1.87.0 at review, 2026-10-08).
+The `open_api_spec.yaml` committed in `ynab/ynab-sdk-js` differs from the hosted bytes and
+is an SDK-generation copy, not a replacement. Hosted health is `not_assessed` and no Git
+revision is claimed. Native OpenAPI 3.1.1 validates with no patches or conversion.
+
+The stored `youneedabudget.com/1.0.0` description is the initial curation baseline;
+1.87.0 is imported into its own directory. Since v1.79.0 the documented routes use
+`/plans/{plan_id}` instead of `/budgets/{budget_id}`. The vendor changelog states the old
+paths continue to work with the original response keys but are no longer documented, so
+the reported `/budgets` removals are documentation renames, not runtime retirements.
+
 ## Monthly official-repository discovery
 
 The separate read-only `discovery.py` command produces a review queue from
