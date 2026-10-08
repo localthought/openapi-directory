@@ -1224,7 +1224,7 @@
     {
       "id": "xero-payroll-au",
       "provider": "xero.com",
-      "target": "APIs/xero.com/xero-payroll-au/2.9.4/openapi.yaml",
+      "target": "APIs/xero.com/xero-payroll-au/19.1.0/openapi.yaml",
       "github": {
         "repository": "XeroAPI/Xero-OpenAPI",
         "ref": "master",
