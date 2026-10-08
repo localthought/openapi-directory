@@ -1,0 +1,2471 @@
+openapi: 3.0.3
+info:
+  title: ClickUp API v2 (read-only subset)
+  version: v2-readonly
+  description: Read-only subset for authorized Workspace discovery and task synchronization. Derived from
+    the maintained ClickUp v2 source pinned in source/README.md. The source is OpenAPI 3.1; this document
+    converts its schema null unions, numeric contentEncoding annotations, and schema examples to OAS 3.0
+    forms. The pinned source task examples do not fully match their response schemas; they are retained
+    as published.
+  x-origin:
+  - format: openapi
+    url: https://developer.clickup.com/openapi/clickup-api-v2-reference.json
+    version: 3.1.0
+  x-providerName: clickup.com
+  x-serviceName: v2-readonly
+  x-source-commit: f3b0d16b015e11f98aaa78aebfb7d5c954436dbe
+  x-source-sha256: 91786855cf012ef7472ba15f86c2e164d69e994a5faae1b584c5338adabbf9de
+servers:
+- url: https://api.clickup.com/api
+  description: ClickUp
+  variables: {}
+security:
+- Authorization_Token: []
+paths:
+  /v2/team:
+    get:
+      summary: Get Authorized Workspaces
+      tags:
+      - Workspaces
+      description: View the Workspaces available to the authenticated user.
+      operationId: GetAuthorizedTeams
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                title: GetAuthorizedTeamsresponse
+                required:
+                - teams
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      title: Team
+                      required:
+                      - id
+                      - name
+                      - color
+                      - avatar
+                      - members
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        color:
+                          type: string
+                        avatar:
+                          type: string
+                        members:
+                          type: array
+                          items:
+                            title: Member
+                            required:
+                            - user
+                            type: object
+                            properties:
+                              user:
+                                $ref: '#/components/schemas/SourceSchema_2bc477c5db9d3f50'
+                            example:
+                              user:
+                                id: 123
+                                username: John Doe
+                                color: '#000000'
+                                profilePicture: https://clickup.com/avatar.jpg
+                          description: ''
+                      example:
+                        id: '1234'
+                        name: My ClickUp Workspace
+                        color: '#000000'
+                        avatar: https://clickup.com/avatar.jpg
+                        members:
+                        - user:
+                            id: 123
+                            username: John Doe
+                            color: '#000000'
+                            profilePicture: https://clickup.com/avatar.jpg
+                    description: ''
+                example:
+                  teams:
+                  - id: '1234'
+                    name: My ClickUp Workspace
+                    color: '#000000'
+                    avatar: https://clickup.com/avatar.jpg
+                    members:
+                    - user:
+                        id: 123
+                        username: John Doe
+                        color: '#000000'
+                        profilePicture: https://clickup.com/avatar.jpg
+              example:
+                teams:
+                - id: '1234'
+                  name: My ClickUp Workspace
+                  color: '#000000'
+                  avatar: https://clickup.com/avatar.jpg
+                  members:
+                  - user:
+                      id: 123
+                      username: John Doe
+                      color: '#000000'
+                      profilePicture: https://clickup.com/avatar.jpg
+      deprecated: false
+    parameters: []
+  /v2/team/{team_Id}/task:
+    get:
+      summary: Get Filtered Team Tasks
+      tags:
+      - Tasks
+      description: "View the tasks that meet specific criteria from a Workspace. Responses are limited\
+        \ to 100 tasks per page.  \\\n \\\nYou can only view task information of tasks you can access.\
+        \ \\\n \\\nEach task's `custom_fields` array only includes Custom Fields applicable to that task's\
+        \ `custom_item_id`.\\\n \\\n Our Try It modal currently supports filtering by two or more Lists,\
+        \ Folders, or Spaces. To filter by a single List, Folder, or Space, we recommend using a free\
+        \ app like [Postman](https://www.postman.com/) to test our public API."
+      operationId: GetFilteredTeamTasks
+      parameters:
+      - name: team_Id
+        in: path
+        description: Workspace ID
+        required: true
+        style: simple
+        schema:
+          type: number
+          format: double
+          example: 123
+      - name: page
+        in: query
+        description: Page to fetch (starts at 0).
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: order_by
+        in: query
+        description: "Order by a particular field. By default, tasks are ordered by `created`.\\\n \\\n\
+          Options include: `id`, `created`, `updated`, and `due_date`."
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: reverse
+        in: query
+        description: Tasks are displayed in reverse order.
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: subtasks
+        in: query
+        description: Include or exclude subtasks. By default, subtasks are excluded.
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: space_ids[]
+        in: query
+        description: "Filter by Spaces. For example: \\\n \\\n`?space_ids[]=1234&space_ids[]=6789`"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: project_ids[]
+        in: query
+        description: "Filter by Folders. For example: \\\n \\\n`?project_ids[]=1234&project_ids[]=6789`"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: list_ids[]
+        in: query
+        description: "Filter by Lists. For example: \\\n \\\n`?list_ids[]=1234&list_ids[]=6789` "
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: statuses[]
+        in: query
+        description: "Filter by statuses. Use `%20` to represent a space character. To include closed\
+          \ tasks, use the `include_closed` parameter. \\\n \\\nFor example: \\\n \\\n`?statuses[]=to%20do&statuses[]=in%20progress`"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: include_closed
+        in: query
+        description: "Include or excluse closed tasks. By default, they are excluded.\\\n \\\nTo include\
+          \ closed tasks, use `include_closed: true`."
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: assignees[]
+        in: query
+        description: "Filter by Assignees using people's ClickUp user id. For example: \\\n \\\n`?assignees[]=1234&assignees[]=5678`"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: tags[]
+        in: query
+        description: "Filter by tags. User `%20` to represent a space character. For example: \\\n \\\n\
+          `?tags[]=tag1&tags[]=this%20tag`"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: due_date_gt
+        in: query
+        description: Filter by due date greater than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: due_date_lt
+        in: query
+        description: Filter by due date less than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_created_gt
+        in: query
+        description: Filter by date created greater than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_created_lt
+        in: query
+        description: Filter by date created less than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_updated_gt
+        in: query
+        description: Filter by date updated greater than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_updated_lt
+        in: query
+        description: Filter by date updated less than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_done_gt
+        in: query
+        description: Filter by date done greater than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: date_done_lt
+        in: query
+        description: Filter by date done less than Unix time in milliseconds.
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: custom_fields
+        in: query
+        description: "Include tasks with specific values in one or more Custom Fields. Custom Relationships\
+          \ are included.\\\n \\\nFor example: `?custom_fields=[{\"field_id\":\"abcdefghi12345678\",\"\
+          operator\":\"=\",\"value\":\"1234\"}{\"field_id\":\"jklmnop123456\",\"operator\":\"<\",\"value\"\
+          :\"5\"}]`\\\n \\\nOnly set Custom Field values display in the `value` property of the `custom_fields`\
+          \ parameter. The `=` operator isn't supported with Label Custom Fields.\\\n \\\nLearn more about\
+          \ [filtering using Custom Fields.](doc:taskfilters)"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: parent
+        in: query
+        description: Include the parent task ID to return subtasks.
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: include_markdown_description
+        in: query
+        description: To return task descriptions in Markdown format, use `?include_markdown_description=true`.
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      - name: custom_items[]
+        in: query
+        description: "Filter by custom task types. For example: \\\n \\\n`?custom_items[]=0&custom_items[]=1300`\
+          \ \\\n \\\nIncluding `0` returns tasks. Including `1` returns Milestones. Including any other\
+          \ number returns the custom task type as defined in your Workspace."
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: number
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                title: GetFilteredTeamTasksresponse
+                required:
+                - tasks
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      title: Task3
+                      required:
+                      - id
+                      - custom_id
+                      - name
+                      - text_content
+                      - description
+                      - status
+                      - orderindex
+                      - date_created
+                      - date_updated
+                      - date_closed
+                      - date_done
+                      - creator
+                      - assignees
+                      - watchers
+                      - checklists
+                      - tags
+                      - parent
+                      - priority
+                      - due_date
+                      - start_date
+                      - points
+                      - time_estimate
+                      - custom_fields
+                      - dependencies
+                      - linked_tasks
+                      - team_id
+                      - url
+                      - permission_level
+                      - list
+                      - project
+                      - folder
+                      - space
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        custom_id:
+                          type: string
+                          nullable: true
+                        name:
+                          type: string
+                        text_content:
+                          type: string
+                        description:
+                          type: string
+                        markdown_description:
+                          type: string
+                        status:
+                          $ref: '#/components/schemas/SourceSchema_3ada371c9123e6c4'
+                        orderindex:
+                          type: string
+                        date_created:
+                          type: string
+                        date_updated:
+                          type: string
+                        date_closed:
+                          type: string
+                        date_done:
+                          type: string
+                          nullable: true
+                        creator:
+                          title: Creator5
+                          required:
+                          - id
+                          - username
+                          - color
+                          - email
+                          - profilePicture
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                            username:
+                              type: string
+                            color:
+                              type: string
+                            email:
+                              type: string
+                            profilePicture:
+                              type: string
+                          example:
+                            id: 123
+                            username: John Doe
+                            color: '#000000'
+                            email: johndoe@website.com
+                            profilePicture: https://clickup.com/avatar.jpg
+                        assignees:
+                          type: array
+                          items:
+                            title: Assignees1
+                            required:
+                            - id
+                            - username
+                            - color
+                            - email
+                            - profilePicture
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int32
+                              username:
+                                type: string
+                              color:
+                                type: string
+                              email:
+                                type: string
+                              profilePicture:
+                                type: string
+                            example:
+                              id: 123
+                              username: John Doe
+                              color: '#000000'
+                              email: johndoe@website.com
+                              profilePicture: https://clickup.com/avatar.jpg
+                          description: ''
+                        watchers:
+                          type: array
+                          items:
+                            title: Watchers1
+                            required:
+                            - id
+                            - username
+                            - color
+                            - email
+                            - profilePicture
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                format: int32
+                              username:
+                                type: string
+                              color:
+                                type: string
+                              email:
+                                type: string
+                              profilePicture:
+                                type: string
+                            example:
+                              id: 123
+                              username: John Doe
+                              color: '#000000'
+                              email: johndoe@website.com
+                              profilePicture: https://clickup.com/avatar.jpg
+                          description: ''
+                        checklists:
+                          type: array
+                          items:
+                            title: Checklists6
+                            required:
+                            - id
+                            - task_id
+                            - name
+                            - date_created
+                            - orderindex
+                            - creator
+                            - resolved
+                            - unresolved
+                            - items
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              task_id:
+                                type: string
+                              name:
+                                type: string
+                              date_created:
+                                type: string
+                              orderindex:
+                                type: integer
+                                format: int32
+                              creator:
+                                type: integer
+                                format: int32
+                              resolved:
+                                type: integer
+                                format: int32
+                              unresolved:
+                                type: integer
+                                format: int32
+                              items:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/SourceSchema_801f1269eb03596c'
+                                description: ''
+                            example:
+                              id: d41340bc-2f17-43cc-ae71-86628f45825f
+                              task_id: 3cxv9f
+                              name: Checklist
+                              date_created: '1618455803730'
+                              orderindex: 1
+                              creator: 2770032
+                              resolved: 0
+                              unresolved: 1
+                              items:
+                              - id: 9398cb3d-55a4-4c45-ab46-2a47a371e375
+                                name: checklist item 1
+                                orderindex: 0
+                                assignee: null
+                                resolved: false
+                                parent: null
+                                date_created: '1618455810454'
+                                children: []
+                          description: ''
+                        tags:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SourceSchema_5ef4f1846233ed50'
+                          description: ''
+                        parent:
+                          type: string
+                        priority:
+                          type: integer
+                          format: int32
+                        due_date:
+                          type: string
+                        start_date:
+                          type: string
+                        points:
+                          type: number
+                        time_estimate:
+                          type: number
+                        custom_fields:
+                          type: array
+                          items:
+                            title: CustomFields9
+                            required:
+                            - id
+                            - name
+                            - type
+                            - type_config
+                            - date_created
+                            - hide_from_guests
+                            - required
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              name:
+                                type: string
+                              type:
+                                type: string
+                              type_config:
+                                type: object
+                              date_created:
+                                type: string
+                              hide_from_guests:
+                                type: boolean
+                              required:
+                                type: boolean
+                            example:
+                              id: be43f58e-989e-4233-9f25-27584f094b74
+                              name: Location type Custom Field
+                              type: location
+                              type_config: {}
+                              date_created: '1617765143523'
+                              hide_from_guests: false
+                              required: false
+                          description: ''
+                        dependencies:
+                          type: array
+                          items:
+                            type: string
+                          description: ''
+                        linked_tasks:
+                          type: array
+                          items:
+                            type: string
+                          description: ''
+                        locations:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SourceSchema_c02b2f71af1196e7'
+                          description: Array of Lists where the task has been added.
+                        team_id:
+                          type: string
+                        url:
+                          type: string
+                        permission_level:
+                          type: string
+                        list:
+                          title: List2
+                          required:
+                          - id
+                          - name
+                          - access
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            access:
+                              type: boolean
+                          example:
+                            id: '1752'
+                            name: Shared with me
+                            access: false
+                        project:
+                          title: Project
+                          required:
+                          - id
+                          - name
+                          - hidden
+                          - access
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            hidden:
+                              type: boolean
+                            access:
+                              type: boolean
+                          example:
+                            id: '1'
+                            name: Folder
+                            hidden: false
+                            access: true
+                        folder:
+                          $ref: '#/components/schemas/SourceSchema_cb76552bfaa1b1f7'
+                        space:
+                          $ref: '#/components/schemas/SourceSchema_69991f42e15f5b98'
+                      example:
+                        id: av1
+                        custom_id: null
+                        name: My First Task
+                        text_content: Task description
+                        description: Task description
+                        markdown_description: Task description
+                        status:
+                          status: Open
+                          type: open
+                          orderindex: 1
+                          color: '#000000'
+                        orderindex: '1.0000'
+                        date_created: '1508369194377'
+                        date_updated: '1508369194377'
+                        date_closed: '1508369194377'
+                        creator:
+                          id: 123
+                          username: John Doe
+                          color: '#000000'
+                          email: johndoe@website.com
+                          profilePicture: https://clickup.com/avatar.jpg
+                        assignees:
+                        - id: 123
+                          username: John Doe
+                          color: '#000000'
+                          email: johndoe@website.com
+                          profilePicture: https://clickup.com/avatar.jpg
+                        watchers:
+                        - id: 123
+                          username: John Doe
+                          color: '#000000'
+                          email: johndoe@website.com
+                          profilePicture: https://clickup.com/avatar.jpg
+                        checklists:
+                        - id: d41340bc-2f17-43cc-ae71-86628f45825f
+                          task_id: 3cxv9f
+                          name: Checklist
+                          date_created: '1618455803730'
+                          orderindex: 1
+                          creator: 2770032
+                          resolved: 0
+                          unresolved: 1
+                          items:
+                          - id: 9398cb3d-55a4-4c45-ab46-2a47a371e375
+                            name: checklist item 1
+                            orderindex: 0
+                            assignee: null
+                            resolved: false
+                            parent: null
+                            date_created: '1618455810454'
+                            children: []
+                        tags:
+                        - name: tagged
+                          tag_fg: '#000000'
+                          tag_bg: '#000000'
+                        parent: av2
+                        priority: 1
+                        due_date: '1508369194377'
+                        start_date: '1508369194377'
+                        points: 3
+                        time_estimate: 1.2
+                        custom_fields:
+                        - id: be43f58e-989e-4233-9f25-27584f094b74
+                          name: Location type Custom Field
+                          type: location
+                          type_config: {}
+                          date_created: '1617765143523'
+                          hide_from_guests: false
+                          required: false
+                        dependencies: []
+                        linked_tasks: []
+                        locations:
+                        - id: '123456'
+                          name: Secondary List
+                        team_id: '1234'
+                        url: https://app.clickup.com/t/av1
+                        permission_level: create
+                        list:
+                          id: '1'
+                          name: List
+                          access: true
+                        project:
+                          id: '1'
+                          name: Folder
+                          hidden: false
+                          access: true
+                        folder:
+                          id: '1'
+                          name: Folder
+                          hidden: false
+                          access: true
+                        space:
+                          id: '1'
+                    description: ''
+                example:
+                  tasks:
+                  - id: 9hx
+                    custom_id: null
+                    custom_item_id: 0
+                    name: Fix login bug
+                    text_content: Users are unable to log in when SSO is enabled.
+                    description: Users are unable to log in when SSO is enabled.
+                    markdown_description: Users are unable to log in when SSO is enabled.
+                    status:
+                      id: p7001234_FxGmgrnk
+                      status: in progress
+                      color: '#d3d3d3'
+                      orderindex: 1
+                      type: custom
+                    orderindex: '1.00000000000000000000000000000000'
+                    date_created: '1567780450202'
+                    date_updated: '1567780450202'
+                    date_closed: null
+                    date_done: null
+                    archived: false
+                    creator:
+                      id: 183
+                      username: Alex Johnson
+                      color: '#827718'
+                      profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                    assignees: []
+                    group_assignees: []
+                    watchers: []
+                    checklists:
+                    - id: 595495f8-4557-41b7-a527-f808664816a0
+                      task_id: 9hx
+                      name: Checklist on a task
+                      date_created: '1714661812846'
+                      orderindex: '1'
+                      creator: 183
+                      resolved: 0
+                      unresolved: 2
+                      items: []
+                    tags: []
+                    parent: null
+                    top_level_parent: null
+                    priority:
+                      color: '#f50000'
+                      id: '1'
+                      orderindex: '1'
+                      priority: urgent
+                    due_date: '1508369194377'
+                    start_date: null
+                    points: 3
+                    time_estimate: '8640000'
+                    time_spent: 7200000
+                    custom_fields:
+                    - id: d2ab17e0-41d3-4d28-bdbb-f3f0f2c62f8b
+                      name: Sprint Goal
+                      type: short_text
+                      type_config: {}
+                      date_created: '1621915186877'
+                      hide_from_guests: false
+                      value: Fix critical auth issues
+                      value_richtext: ''
+                      required: false
+                    - id: 1f3cc395-3448-4264-bedd-590a3b3fa178
+                      name: Story Points
+                      type: number
+                      type_config: {}
+                      date_created: '1627004071219'
+                      hide_from_guests: false
+                      value: '8'
+                      value_richtext: ''
+                      required: false
+                    - id: f4d2a20d-6759-4420-b897-222dbe2587d4
+                      name: Assigned Reviewer
+                      type: users
+                      type_config:
+                        include_guests: false
+                        include_team_members: true
+                        single_user: false
+                      date_created: '1618440378816'
+                      hide_from_guests: false
+                      value:
+                      - id: 2772463
+                        username: Alex Johnson
+                        email: user@company.com
+                        color: '#FC575E'
+                        initials: AJ
+                        profilePicture: null
+                      value_richtext: ''
+                      required: false
+                    - id: b2e4be70-c4d3-4726-985b-46ac25375b28
+                      name: Marketing Requirements
+                      type: drop_down
+                      type_config:
+                        sorting: manual
+                        new_drop_down: true
+                        options:
+                        - id: f8249998-9c0a-4b1d-a8b7-67a072aca05a
+                          name: No Marketing Needed
+                          color: '#b5bcc2'
+                          orderindex: 0
+                        - id: 97704092-e5aa-4005-a87f-677b764d2e4c
+                          name: Internal Announcement
+                          color: '#02BCD4'
+                          orderindex: 1
+                        - id: c3d4e5f6-a7b8-4c9d-0e1f-a2b3c4d5e6f7
+                          name: Release Notes Only
+                          color: '#7b68ee'
+                          orderindex: 2
+                        - id: b32b5b93-1839-431e-b9b0-8c4f9de9a84d
+                          name: Social Media Post
+                          color: '#2ecd6f'
+                          orderindex: 3
+                        - id: 87b3c808-a335-4284-a671-e2f9bce66713
+                          name: Blog Post
+                          color: '#f9ae27'
+                          orderindex: 4
+                        - id: a1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6
+                          name: Dedicated Campaign with Press
+                          color: '#e50000'
+                          orderindex: 5
+                      date_created: '1762838079415'
+                      hide_from_guests: false
+                      value: 2
+                      value_richtext: ''
+                      required: false
+                    dependencies: []
+                    linked_tasks: []
+                    locations:
+                    - id: '123456789'
+                      name: Bug Triage
+                    team_id: '7002367'
+                    url: https://app.clickup.com/t/9hx
+                    sharing:
+                      public: false
+                      public_share_expires_on: null
+                      public_fields:
+                      - assignees
+                      - priority
+                      - due_date
+                      - content
+                      - comments
+                      - attachments
+                      - customFields
+                      - subtasks
+                      - tags
+                      - checklists
+                      - coverimage
+                      token: null
+                      seo_optimized: false
+                    permission_level: create
+                    list:
+                      id: '15505202'
+                      name: Sprint Backlog
+                      access: true
+                    project:
+                      id: '6992470'
+                      name: Mobile Squad
+                      hidden: false
+                      access: true
+                    folder:
+                      id: '6992470'
+                      name: Mobile Squad
+                      hidden: false
+                      access: true
+                    space:
+                      id: '7002367'
+                  - id: 9hz
+                    custom_id: null
+                    custom_item_id: 0
+                    name: Update onboarding docs
+                    text_content: ''
+                    description: ''
+                    markdown_description: ''
+                    status:
+                      id: p7002367_HxJmgqni
+                      status: to do
+                      color: '#f8ae00'
+                      orderindex: 0
+                      type: open
+                    orderindex: '2.00000000000000000000000000000000'
+                    date_created: '1567780450202'
+                    date_updated: '1567780450202'
+                    date_closed: null
+                    date_done: null
+                    archived: false
+                    creator:
+                      id: 183
+                      username: Alex Johnson
+                      color: '#827718'
+                      profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                    assignees: []
+                    group_assignees: []
+                    watchers: []
+                    checklists: []
+                    tags: []
+                    parent: null
+                    top_level_parent: null
+                    priority: null
+                    due_date: null
+                    start_date: null
+                    points: null
+                    time_estimate: null
+                    custom_fields:
+                    - id: d2ab17e0-41d3-4d28-bdbb-f3f0f2c62f8b
+                      name: Sprint Goal
+                      type: short_text
+                      type_config: {}
+                      date_created: '1621915186877'
+                      hide_from_guests: false
+                      required: false
+                    - id: 1f3cc395-3448-4264-bedd-590a3b3fa178
+                      name: Story Points
+                      type: number
+                      type_config: {}
+                      date_created: '1627004071219'
+                      hide_from_guests: false
+                      required: false
+                    - id: f4d2a20d-6759-4420-b897-222dbe2587d4
+                      name: Assigned Reviewer
+                      type: users
+                      type_config:
+                        include_guests: false
+                        include_team_members: true
+                        single_user: false
+                      date_created: '1618440378816'
+                      hide_from_guests: false
+                      required: false
+                    - id: b2e4be70-c4d3-4726-985b-46ac25375b28
+                      name: Marketing Requirements
+                      type: drop_down
+                      type_config:
+                        sorting: manual
+                        new_drop_down: true
+                        options:
+                        - id: f8249998-9c0a-4b1d-a8b7-67a072aca05a
+                          name: No Marketing Needed
+                          color: '#b5bcc2'
+                          orderindex: 0
+                        - id: 97704092-e5aa-4005-a87f-677b764d2e4c
+                          name: Internal Announcement
+                          color: '#02BCD4'
+                          orderindex: 1
+                        - id: c3d4e5f6-a7b8-4c9d-0e1f-a2b3c4d5e6f7
+                          name: Release Notes Only
+                          color: '#7b68ee'
+                          orderindex: 2
+                        - id: b32b5b93-1839-431e-b9b0-8c4f9de9a84d
+                          name: Social Media Post
+                          color: '#2ecd6f'
+                          orderindex: 3
+                        - id: 87b3c808-a335-4284-a671-e2f9bce66713
+                          name: Blog Post
+                          color: '#f9ae27'
+                          orderindex: 4
+                        - id: a1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6
+                          name: Dedicated Campaign with Press
+                          color: '#e50000'
+                          orderindex: 5
+                      date_created: '1762838079415'
+                      hide_from_guests: false
+                      required: false
+                    dependencies: []
+                    linked_tasks: []
+                    locations: []
+                    team_id: '7002367'
+                    url: https://app.clickup.com/t/9hz
+                    sharing:
+                      public: false
+                      public_share_expires_on: null
+                      public_fields:
+                      - assignees
+                      - priority
+                      - due_date
+                      - content
+                      - comments
+                      - attachments
+                      - customFields
+                      - subtasks
+                      - tags
+                      - checklists
+                      - coverimage
+                      token: null
+                      seo_optimized: false
+                    permission_level: create
+                    list:
+                      id: '15505202'
+                      name: Sprint Backlog
+                      access: true
+                    project:
+                      id: '6992470'
+                      name: Mobile Squad
+                      hidden: false
+                      access: true
+                    folder:
+                      id: '6992470'
+                      name: Mobile Squad
+                      hidden: false
+                      access: true
+                    space:
+                      id: '7002367'
+              example:
+                tasks:
+                - id: av1
+                  custom_id: null
+                  name: My First Task
+                  text_content: Task description
+                  description: Task description
+                  markdown_description: Task description
+                  status:
+                    status: Open
+                    type: open
+                    orderindex: 1
+                    color: '#000000'
+                  orderindex: '1.0000'
+                  date_created: '1508369194377'
+                  date_updated: '1508369194377'
+                  date_closed: '1508369194377'
+                  date_done: '1508369194377'
+                  creator:
+                    id: 123
+                    username: John Doe
+                    color: '#000000'
+                    email: johndoe@website.com
+                    profilePicture: https://clickup.com/avatar.jpg
+                  assignees:
+                  - id: 123
+                    username: John Doe
+                    color: '#000000'
+                    email: johndoe@website.com
+                    profilePicture: https://clickup.com/avatar.jpg
+                  watchers:
+                  - id: 123
+                    username: John Doe
+                    color: '#000000'
+                    email: johndoe@website.com
+                    profilePicture: https://clickup.com/avatar.jpg
+                  checklists:
+                  - id: d41340bc-2f17-43cc-ae71-86628f45825f
+                    task_id: 3cxv9f
+                    name: Checklist
+                    date_created: '1618455803730'
+                    orderindex: 1
+                    creator: 2770032
+                    resolved: 0
+                    unresolved: 1
+                    items:
+                    - id: 9398cb3d-55a4-4c45-ab46-2a47a371e375
+                      name: checklist item 1
+                      orderindex: 0
+                      assignee: null
+                      resolved: false
+                      parent: null
+                      date_created: '1618455810454'
+                      children: []
+                  tags:
+                  - name: tagged
+                    tag_fg: '#000000'
+                    tag_bg: '#000000'
+                  parent: av2
+                  priority: 1
+                  due_date: '1508369194377'
+                  start_date: '1508369194377'
+                  points: 3
+                  time_estimate: 1.2
+                  custom_fields:
+                  - id: be43f58e-989e-4233-9f25-27584f094b74
+                    name: Location type Custom Field
+                    type: location
+                    type_config: {}
+                    date_created: '1617765143523'
+                    hide_from_guests: false
+                    required: false
+                  dependencies: []
+                  linked_tasks: []
+                  locations:
+                  - id: '123456'
+                    name: Secondary List
+                  team_id: '1234'
+                  url: https://app.clickup.com/t/av1
+                  permission_level: create
+                  list:
+                    id: '1'
+                    name: List
+                    access: true
+                  project:
+                    id: '1'
+                    name: Folder
+                    hidden: false
+                    access: true
+                  folder:
+                    id: '1'
+                    name: Folder
+                    hidden: false
+                    access: true
+                  space:
+                    id: '1'
+      deprecated: false
+    parameters: []
+  /v2/task/{task_id}:
+    get:
+      summary: Get Task
+      tags:
+      - Tasks
+      description: "View information about a task. You can only view task information of tasks you can\
+        \ access. \\\n \\\nTasks with attachments will return an \"attachments\" response. \\\n \\\nDocs\
+        \ attached to a task are not returned.\\\n \\\nThe `custom_fields` array only includes Custom\
+        \ Fields applicable to the task's `custom_item_id`. Use [Get Custom Fields](ref:getaccessiblecustomfields)\
+        \ and each field's `applied_objects` to discover which fields apply to which task types."
+      operationId: GetTask
+      parameters:
+      - name: task_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: 9hz
+      - name: custom_task_ids
+        in: query
+        description: If you want to reference a task by its custom task id, this value must be `true`.
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      - name: team_id
+        in: query
+        description: "When the `custom_task_ids` parameter is set to `true`, the Workspace ID must be\
+          \ provided using the `team_id` parameter.\n \\\nFor example: `custom_task_ids=true&team_id=123`."
+        style: form
+        explode: true
+        schema:
+          type: number
+          format: double
+          example: 123
+      - name: include_subtasks
+        in: query
+        description: Include subtasks, default false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      - name: include_markdown_description
+        in: query
+        description: To return task descriptions in Markdown format, use `?include_markdown_description=true`.
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      - name: custom_fields
+        in: query
+        description: "Include tasks with specific values in one or more Custom Fields. Custom Relationships\
+          \ are included.\\\n \\\nFor example: `?custom_fields=[{\"field_id\":\"abcdefghi12345678\",\"\
+          operator\":\"=\",\"value\":\"1234\"},{\"field_id\":\"jklmnop123456\",\"operator\":\"<\",\"value\"\
+          :\"5\"}]`\\\n \\\nOnly set Custom Field values display in the `value` property of the `custom_fields`\
+          \ parameter. If you want to include tasks with specific values in only one Custom Field, use\
+          \ `custom_field` instead.\\\n \\\nLearn more about [filtering using Custom Fields.](doc:filtertasks)"
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                title: GetTaskresponse
+                type: object
+                example:
+                  id: 9hx
+                  custom_id: null
+                  custom_item_id: 0
+                  name: Fix login bug
+                  text_content: Users are unable to log in when SSO is enabled.
+                  description: Users are unable to log in when SSO is enabled.
+                  status:
+                    id: p7001234_FxGmgrnk
+                    status: in progress
+                    color: '#d3d3d3'
+                    orderindex: 1
+                    type: custom
+                  orderindex: '1.00000000000000000000000000000000'
+                  date_created: '1567780450202'
+                  date_updated: '1567780450202'
+                  date_closed: null
+                  date_done: null
+                  archived: false
+                  creator:
+                    id: 183
+                    username: Alex Johnson
+                    color: '#827718'
+                    email: user@company.com
+                    profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                  assignees:
+                  - id: 2772463
+                    username: Alex Johnson
+                    color: '#FC575E'
+                    initials: AJ
+                    email: user@company.com
+                    profilePicture: null
+                  group_assignees: []
+                  watchers:
+                  - id: 2772463
+                    username: Alex Johnson
+                    color: '#FC575E'
+                    initials: AJ
+                    email: user@company.com
+                    profilePicture: null
+                  checklists: []
+                  tags:
+                  - name: bug
+                    tag_fg: '#EA80FC'
+                    tag_bg: '#EA80FC'
+                    creator: 183
+                  parent: null
+                  top_level_parent: null
+                  priority:
+                    color: '#f8ae00'
+                    id: '3'
+                    orderindex: '3'
+                    priority: normal
+                  due_date: '1508369194377'
+                  start_date: null
+                  points: 3
+                  time_estimate: '8640000'
+                  time_spent: 0
+                  custom_fields:
+                  - id: d2ab17e0-41d3-4d28-bdbb-f3f0f2c62f8b
+                    name: Sprint Goal
+                    type: short_text
+                    type_config: {}
+                    date_created: '1621915186877'
+                    hide_from_guests: false
+                    value: Fix critical auth issues
+                    value_richtext: ''
+                    required: false
+                  - id: 1f3cc395-3448-4264-bedd-590a3b3fa178
+                    name: Story Points
+                    type: number
+                    type_config: {}
+                    date_created: '1627004071219'
+                    hide_from_guests: false
+                    value: '8'
+                    value_richtext: ''
+                    required: false
+                  - id: f4d2a20d-6759-4420-b897-222dbe2587d4
+                    name: Assigned Reviewer
+                    type: users
+                    type_config:
+                      include_guests: false
+                      include_team_members: true
+                      single_user: false
+                    date_created: '1618440378816'
+                    hide_from_guests: false
+                    value:
+                    - id: 2772463
+                      username: Alex Johnson
+                      email: user@company.com
+                      color: '#FC575E'
+                      initials: AJ
+                      profilePicture: null
+                    value_richtext: ''
+                    required: false
+                  - id: b2e4be70-c4d3-4726-985b-46ac25375b28
+                    name: Marketing Requirements
+                    type: drop_down
+                    type_config:
+                      sorting: manual
+                      new_drop_down: true
+                      options:
+                      - id: f8249998-9c0a-4b1d-a8b7-67a072aca05a
+                        name: No Marketing Needed
+                        color: '#b5bcc2'
+                        orderindex: 0
+                      - id: 97704092-e5aa-4005-a87f-677b764d2e4c
+                        name: Internal Announcement
+                        color: '#02BCD4'
+                        orderindex: 1
+                      - id: c3d4e5f6-a7b8-4c9d-0e1f-a2b3c4d5e6f7
+                        name: Release Notes Only
+                        color: '#7b68ee'
+                        orderindex: 2
+                      - id: b32b5b93-1839-431e-b9b0-8c4f9de9a84d
+                        name: Social Media Post
+                        color: '#2ecd6f'
+                        orderindex: 3
+                      - id: 87b3c808-a335-4284-a671-e2f9bce66713
+                        name: Blog Post
+                        color: '#f9ae27'
+                        orderindex: 4
+                      - id: a1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6
+                        name: Dedicated Campaign with Press
+                        color: '#e50000'
+                        orderindex: 5
+                    date_created: '1762838079415'
+                    hide_from_guests: false
+                    value: 2
+                    value_richtext: ''
+                    required: false
+                  dependencies:
+                  - task_id: 9hx
+                    depends_on: 8gx
+                    type: 1
+                    date_created: '1675970762803'
+                    userid: '183'
+                    workspace_id: '1234567'
+                    chain_id: null
+                  linked_tasks: []
+                  locations: []
+                  team_id: '1234567'
+                  url: https://app.clickup.com/t/9hx
+                  sharing:
+                    public: false
+                    public_share_expires_on: null
+                    public_fields:
+                    - assignees
+                    - priority
+                    - due_date
+                    - content
+                    - comments
+                    - attachments
+                    - customFields
+                    - subtasks
+                    - tags
+                    - checklists
+                    - coverimage
+                    token: null
+                    seo_optimized: false
+                  permission_level: create
+                  list:
+                    id: '15505202'
+                    name: Sprint Backlog
+                    access: true
+                  project:
+                    id: '6992470'
+                    name: Mobile Squad
+                    hidden: false
+                    access: true
+                  folder:
+                    id: '6992470'
+                    name: Mobile Squad
+                    hidden: false
+                    access: true
+                  space:
+                    id: '7002367'
+                  attachments:
+                  - id: 62447c77-2086-4cda-b274-f53eccf0547b.txt
+                    date: 1711570108374
+                    title: error-logs.txt
+                    type: 1
+                    source: 1
+                    version: 0
+                    extension: txt
+                    thumbnail_small: null
+                    thumbnail_medium: null
+                    thumbnail_large: null
+                    is_folder: null
+                    mimetype: text/plain
+                    hidden: false
+                    parent_id: 9hx
+                    size: 140970
+                    total_comments: 0
+                    resolved_comments: 0
+                    user:
+                      id: 183
+                      username: Alex Johnson
+                      initials: AJ
+                      email: user@company.com
+                      color: '#827718'
+                      profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                    deleted: false
+                    orientation: null
+                    url: https://t123456.p.clickup-attachments.com/t123456/62447c77-2086-4cda-b274-f53eccf0547b/error-logs.txt
+                    email_data: null
+                    url_w_query: https://t123456.p.clickup-attachments.com/t123456/62447c77-2086-4cda-b274-f53eccf0547b/error-logs.txt?view=open
+                    url_w_host: https://t123456.p.clickup-attachments.com/t123456/62447c77-2086-4cda-b274-f53eccf0547b/error-logs.txt
+                properties:
+                  id:
+                    type: string
+                  custom_id:
+                    type: string
+                    nullable: true
+                  custom_item_id:
+                    type: number
+                    description: "The custom task type ID for this task. A value of `0` represents task\
+                      \ type \"Task\".\\\n \\\nTo get a list of available custom task type IDs for your\
+                      \ Workspace, use the [Get Custom Task Types endpoint](ref:getcustomitems)."
+                    nullable: true
+                  name:
+                    type: string
+                  text_content:
+                    type: string
+                  description:
+                    type: string
+                  markdown_description:
+                    type: string
+                    description: Only returned if `include_markdown_description=true` is passed as a query
+                      parameter.
+                  status:
+                    title: Status
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                      color:
+                        type: string
+                      orderindex:
+                        type: integer
+                        format: int32
+                      type:
+                        type: string
+                    example:
+                      id: p7001234_FxGmgrnk
+                      status: in progress
+                      color: '#d3d3d3'
+                      orderindex: 1
+                      type: custom
+                  orderindex:
+                    type: string
+                  date_created:
+                    type: string
+                  date_updated:
+                    type: string
+                  date_closed:
+                    type: string
+                    nullable: true
+                  date_done:
+                    type: string
+                    nullable: true
+                  archived:
+                    type: boolean
+                  creator:
+                    title: Creator
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                      username:
+                        type: string
+                      color:
+                        type: string
+                      email:
+                        type: string
+                      profilePicture:
+                        type: string
+                        nullable: true
+                    example:
+                      id: 183
+                      username: Alex Johnson
+                      color: '#827718'
+                      email: user@company.com
+                      profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                  assignees:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                        color:
+                          type: string
+                        initials:
+                          type: string
+                        email:
+                          type: string
+                        profilePicture:
+                          type: string
+                          nullable: true
+                    description: ''
+                  group_assignees:
+                    type: array
+                    items:
+                      type: object
+                    description: ''
+                  watchers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                        color:
+                          type: string
+                        initials:
+                          type: string
+                        email:
+                          type: string
+                        profilePicture:
+                          type: string
+                          nullable: true
+                    description: ''
+                  checklists:
+                    type: array
+                    items:
+                      type: object
+                    description: ''
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        tag_fg:
+                          type: string
+                        tag_bg:
+                          type: string
+                        creator:
+                          type: integer
+                    description: ''
+                  parent:
+                    type: string
+                    nullable: true
+                  top_level_parent:
+                    type: string
+                    nullable: true
+                  priority:
+                    title: Priority
+                    type: object
+                    nullable: true
+                    properties:
+                      color:
+                        type: string
+                      id:
+                        type: string
+                      orderindex:
+                        type: string
+                      priority:
+                        type: string
+                    example:
+                      color: '#f8ae00'
+                      id: '3'
+                      orderindex: '3'
+                      priority: normal
+                  due_date:
+                    type: string
+                    nullable: true
+                  start_date:
+                    type: string
+                    nullable: true
+                  points:
+                    type: number
+                    nullable: true
+                  time_estimate:
+                    type: number
+                    nullable: true
+                  time_spent:
+                    type: number
+                    nullable: true
+                  custom_fields:
+                    type: array
+                    items:
+                      title: CustomFields8
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        type_config:
+                          type: object
+                          description: The configuration of the Custom Field. The structure of this object
+                            varies depending on the [Custom Field type](ref:docs/customfields).
+                        date_created:
+                          type: string
+                        hide_from_guests:
+                          type: boolean
+                        value:
+                          description: The value of the Custom Field. The structure of this value varies
+                            depending on the [Custom Field type](https://developer.clickup.com/docs/customfields).
+                        value_richtext:
+                          type: string
+                        value_markdown:
+                          type: string
+                        required:
+                          type: boolean
+                      example: &id001
+                        id: d2ab17e0-41d3-4d28-bdbb-f3f0f2c62f8b
+                        name: Sprint Goal
+                        type: short_text
+                        type_config: {}
+                        date_created: '1621915186877'
+                        hide_from_guests: false
+                        value: Improve onboarding flow
+                        value_richtext: ''
+                        required: false
+                      x-json-schema-examples:
+                      - *id001
+                      - id: 1f3cc395-3448-4264-bedd-590a3b3fa178
+                        name: Story Points
+                        type: number
+                        type_config: {}
+                        date_created: '1627004071219'
+                        hide_from_guests: false
+                        value: '8'
+                        value_richtext: ''
+                        required: false
+                      - id: f4d2a20d-6759-4420-b897-222dbe2587d4
+                        name: Assigned Reviewer
+                        type: users
+                        type_config:
+                          include_guests: false
+                          include_team_members: true
+                          single_user: false
+                        date_created: '1618440378816'
+                        hide_from_guests: false
+                        value:
+                        - id: 2772463
+                          username: Alex Johnson
+                          email: user@company.com
+                          color: '#FC575E'
+                          initials: AJ
+                          profilePicture: null
+                        value_richtext: ''
+                        required: false
+                      - id: b2e4be70-c4d3-4726-985b-46ac25375b28
+                        name: Marketing Requirements
+                        type: drop_down
+                        type_config:
+                          sorting: manual
+                          new_drop_down: true
+                          options:
+                          - id: f8249998-9c0a-4b1d-a8b7-67a072aca05a
+                            name: No Marketing Needed
+                            color: '#b5bcc2'
+                            orderindex: 0
+                          - id: 97704092-e5aa-4005-a87f-677b764d2e4c
+                            name: Internal Announcement
+                            color: '#02BCD4'
+                            orderindex: 1
+                          - id: c3d4e5f6-a7b8-4c9d-0e1f-a2b3c4d5e6f7
+                            name: Release Notes Only
+                            color: '#7b68ee'
+                            orderindex: 2
+                          - id: b32b5b93-1839-431e-b9b0-8c4f9de9a84d
+                            name: Social Media Post
+                            color: '#2ecd6f'
+                            orderindex: 3
+                          - id: 87b3c808-a335-4284-a671-e2f9bce66713
+                            name: Blog Post
+                            color: '#f9ae27'
+                            orderindex: 4
+                          - id: a1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6
+                            name: Dedicated Campaign with Press
+                            color: '#e50000'
+                            orderindex: 5
+                        date_created: '1762838079415'
+                        hide_from_guests: false
+                        value: 2
+                        value_richtext: ''
+                        required: false
+                      - id: 0aef6ee9-3c54-49e7-aa1a-e981845c773a
+                        name: Team
+                        type: labels
+                        type_config:
+                          sorting: manual
+                          options:
+                          - id: 2245c581-0fb7-4bba-b5f9-d40e421ab2d2
+                            label: Frontend
+                            color: '#bf55ec'
+                            orderindex: 0
+                          - id: 6992d629-f336-4e3a-87a5-6fd0738d91dd
+                            label: Backend
+                            color: '#04A9F4'
+                            orderindex: 1
+                        date_created: '1614656692549'
+                        hide_from_guests: false
+                        value:
+                        - 978d9762-34f7-4b6e-8e1b-0ac3216deb39
+                        - cd82b57c-7511-4c9d-a25f-0c8d7db807d4
+                        value_richtext: ''
+                        required: false
+                      - id: be43f58e-989e-4233-9f25-27584f094b74
+                        name: Office Location
+                        type: location
+                        type_config: {}
+                        date_created: '1617765143523'
+                        hide_from_guests: false
+                        value:
+                          location:
+                            lat: 47.306988
+                            lng: -122.5263212
+                          place_id: ChIJs79efm1TkFQRJjrP-xr8u0M
+                          formatted_address: 5400 N Pearl St, Tacoma, WA 98407, USA
+                        value_richtext: ''
+                        required: false
+                    description: Custom Fields applicable to the task's `custom_item_id`. Fields scoped
+                      to other custom task types are excluded. Fields without a value may still appear
+                      with their definition.
+                  dependencies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        task_id:
+                          type: string
+                        depends_on:
+                          type: string
+                        type:
+                          type: integer
+                        date_created:
+                          type: string
+                        userid:
+                          type: string
+                        workspace_id:
+                          type: string
+                        chain_id:
+                          type: string
+                          nullable: true
+                    description: ''
+                  linked_tasks:
+                    type: array
+                    items:
+                      type: object
+                    description: ''
+                  locations:
+                    type: array
+                    items:
+                      title: ListLocation
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: The ID of the List where the task has been added.
+                        name:
+                          type: string
+                          description: The name of the List where the task has been added.
+                      example:
+                        id: '123456789'
+                        name: Secondary List
+                    description: Array of Lists where the task has been added.
+                  team_id:
+                    type: string
+                  url:
+                    type: string
+                  sharing:
+                    type: object
+                    properties:
+                      public:
+                        type: boolean
+                      public_share_expires_on:
+                        type: string
+                        nullable: true
+                      public_fields:
+                        type: array
+                        items:
+                          type: string
+                      token:
+                        type: string
+                        nullable: true
+                      seo_optimized:
+                        type: boolean
+                  permission_level:
+                    type: string
+                  list:
+                    title: List
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      access:
+                        type: boolean
+                    example:
+                      id: '15505202'
+                      name: Sprint Backlog
+                      access: true
+                  project:
+                    $ref: '#/components/schemas/SourceSchema_fa6338b8984e0f3f'
+                  folder:
+                    title: Folder
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      hidden:
+                        type: boolean
+                      access:
+                        type: boolean
+                    example:
+                      id: '6992470'
+                      name: Mobile Squad
+                      hidden: false
+                      access: true
+                  space:
+                    title: Space
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                    example:
+                      id: '7002367'
+                  subtasks:
+                    type: array
+                    description: Only returned if `include_subtasks=true` is passed as a query parameter.
+                    items:
+                      title: Subtask
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        custom_item_id:
+                          type: number
+                          nullable: true
+                        name:
+                          type: string
+                        status:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                            orderindex:
+                              type: integer
+                            color:
+                              type: string
+                            type:
+                              type: string
+                        orderindex:
+                          type: string
+                        date_created:
+                          type: string
+                        date_updated:
+                          type: string
+                        date_closed:
+                          type: string
+                          nullable: true
+                        date_done:
+                          type: string
+                          nullable: true
+                        archived:
+                          type: boolean
+                        creator:
+                          $ref: '#/components/schemas/SourceSchema_dfad3db21b31f11c'
+                        assignees:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              username:
+                                type: string
+                              color:
+                                type: string
+                              initials:
+                                type: string
+                              email:
+                                type: string
+                              profilePicture:
+                                type: string
+                                nullable: true
+                        group_assignees:
+                          type: array
+                          items:
+                            type: object
+                        watchers:
+                          type: array
+                          items:
+                            type: object
+                        checklists:
+                          type: array
+                          items:
+                            type: object
+                        tags:
+                          type: array
+                          items:
+                            type: object
+                        parent:
+                          type: string
+                          nullable: true
+                        top_level_parent:
+                          type: string
+                          nullable: true
+                        due_date:
+                          type: string
+                          nullable: true
+                        start_date:
+                          type: string
+                          nullable: true
+                        points:
+                          type: number
+                          nullable: true
+                        time_estimate:
+                          type: number
+                          nullable: true
+                        time_spent:
+                          type: number
+                          nullable: true
+                        custom_fields:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SourceSchema_bf4f5389a8644c03'
+                        dependencies:
+                          type: array
+                          items:
+                            type: object
+                        linked_tasks:
+                          type: array
+                          items:
+                            type: object
+                        locations:
+                          type: array
+                          items:
+                            type: object
+                        url:
+                          type: string
+                      example:
+                        id: 86d2m1awy
+                        custom_item_id: 0
+                        name: Reproduce the issue on staging
+                        status:
+                          status: to do
+                          orderindex: 0
+                          color: '#f8ae00'
+                          type: open
+                        orderindex: '237672022.00000000000000000000000000000000'
+                        date_created: '1775848408603'
+                        date_updated: '1775848408603'
+                        date_closed: null
+                        date_done: null
+                        archived: false
+                        creator:
+                          id: 183
+                          username: Alex Johnson
+                          color: '#595d66'
+                          email: user@company.com
+                          profilePicture: null
+                        assignees: []
+                        group_assignees: []
+                        watchers: []
+                        checklists: []
+                        tags: []
+                        parent: 9hx
+                        top_level_parent: 9hx
+                        due_date: null
+                        start_date: null
+                        points: null
+                        time_estimate: null
+                        time_spent: 0
+                        custom_fields: []
+                        dependencies: []
+                        linked_tasks: []
+                        locations: []
+                        url: https://app.clickup.com/t/86d2m1awy
+                  attachments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        date:
+                          type: integer
+                          format: int64
+                        title:
+                          type: string
+                        type:
+                          type: integer
+                        source:
+                          type: integer
+                        version:
+                          type: integer
+                        extension:
+                          type: string
+                        thumbnail_small:
+                          type: string
+                        thumbnail_medium:
+                          type: string
+                        thumbnail_large:
+                          type: string
+                        is_folder:
+                          type: boolean
+                        mimetype:
+                          type: string
+                        hidden:
+                          type: boolean
+                        parent_id:
+                          type: string
+                        size:
+                          type: integer
+                          format: int64
+                        total_comments:
+                          type: integer
+                        resolved_comments:
+                          type: integer
+                        user:
+                          title: User2
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              format: int32
+                            username:
+                              type: string
+                            initials:
+                              type: string
+                            email:
+                              type: string
+                            color:
+                              type: string
+                            profilePicture:
+                              type: string
+                          example:
+                            id: 183
+                            username: John Doe
+                            initials: JD
+                            email: user@company.com
+                            color: '#827718'
+                            profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+                        deleted:
+                          type: boolean
+                        orientation:
+                          type: string
+                        url:
+                          type: string
+                        email_data:
+                          type: object
+                        url_w_query:
+                          type: string
+                        url_w_host:
+                          type: string
+      deprecated: false
+    parameters: []
+components:
+  securitySchemes:
+    Authorization_Token:
+      name: Authorization
+      type: apiKey
+      in: header
+      description: 'API token required for authentication. Two types of tokens are supported:
+
+        **Personal API Key** Obtain from ClickUp''s settings page under ''Apps'' and add it to the header
+        as `Authorization: pk_...`
+
+        **OAuth2 Access Token** Generated through the OAuth2 flow and add it to the header as `Authorization:
+        Bearer {access_token}`'
+  schemas:
+    SourceSchema_2bc477c5db9d3f50:
+      title: User
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+        email:
+          type: string
+        color:
+          type: string
+        profilePicture:
+          type: string
+        initials:
+          type: string
+        week_start_day:
+          type: integer
+          description: The user's preferred start of the calendar week setting. \ `0` is Sunday. \ `1`
+            is Monday.
+          format: int32
+        global_font_support:
+          type: boolean
+        timezeone:
+          type: string
+      example:
+        id: 123
+        username: John Doe
+        email: user@company.com
+        color: '#000000'
+        profilePicture: https://clickup.com/avatar.jpg
+        initials: JD
+        week_start_day: 0
+        global_font_support: false
+        timezone: America/Los_Angeles
+    SourceSchema_3ada371c9123e6c4:
+      title: Status
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        color:
+          type: string
+        orderindex:
+          type: integer
+          format: int32
+        type:
+          type: string
+      example:
+        id: p7001234_FxGmgrnk
+        status: in progress
+        color: '#d3d3d3'
+        orderindex: 1
+        type: custom
+    SourceSchema_801f1269eb03596c:
+      title: Item1
+      required:
+      - id
+      - name
+      - orderindex
+      - assignee
+      - resolved
+      - parent
+      - date_created
+      - children
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        orderindex:
+          type: integer
+          format: int32
+        assignee:
+          type: string
+          nullable: true
+        resolved:
+          type: boolean
+        parent:
+          type: string
+          nullable: true
+        date_created:
+          type: string
+        children:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        id: 21e08dc8-e491-47f5-9fd8-d1dc4cedcc6f
+        name: Updated Checklist Item
+        orderindex: 0
+        assignee: null
+        resolved: true
+        parent: null
+        date_created: '1567711566859'
+        children: []
+    SourceSchema_5ef4f1846233ed50:
+      title: Tags6
+      required:
+      - name
+      - tag_fg
+      - tag_bg
+      type: object
+      properties:
+        name:
+          type: string
+        tag_fg:
+          type: string
+        tag_bg:
+          type: string
+      example:
+        name: Tag name
+        tag_fg: '#000000'
+        tag_bg: '#000000'
+    SourceSchema_c02b2f71af1196e7:
+      title: ListLocation
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the List where the task has been added.
+        name:
+          type: string
+          description: The name of the List where the task has been added.
+      example:
+        id: '123456789'
+        name: Secondary List
+    SourceSchema_cb76552bfaa1b1f7:
+      title: Folder3
+      required:
+      - id
+      - name
+      - hidden
+      - access
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        hidden:
+          type: boolean
+        access:
+          type: boolean
+      example:
+        id: '1217'
+        name: Shared with me
+        hidden: false
+        access: false
+    SourceSchema_69991f42e15f5b98:
+      title: Space
+      type: object
+      properties:
+        id:
+          type: string
+      example:
+        id: '7002367'
+    SourceSchema_fa6338b8984e0f3f:
+      title: Folder
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        hidden:
+          type: boolean
+        access:
+          type: boolean
+      example:
+        id: '6992470'
+        name: Mobile Squad
+        hidden: false
+        access: true
+    SourceSchema_dfad3db21b31f11c:
+      title: Creator
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+        color:
+          type: string
+        email:
+          type: string
+        profilePicture:
+          type: string
+          nullable: true
+      example:
+        id: 183
+        username: Alex Johnson
+        color: '#827718'
+        email: user@company.com
+        profilePicture: https://attachments-public.clickup.com/profilePictures/183_abc.jpg
+    SourceSchema_bf4f5389a8644c03:
+      title: CustomFields8
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        type_config:
+          type: object
+          description: The configuration of the Custom Field. The structure of this object varies depending
+            on the [Custom Field type](ref:docs/customfields).
+        date_created:
+          type: string
+        hide_from_guests:
+          type: boolean
+        value:
+          description: The value of the Custom Field. The structure of this value varies depending on
+            the [Custom Field type](https://developer.clickup.com/docs/customfields).
+        value_richtext:
+          type: string
+        value_markdown:
+          type: string
+        required:
+          type: boolean
+      example: &id002
+        id: d2ab17e0-41d3-4d28-bdbb-f3f0f2c62f8b
+        name: Sprint Goal
+        type: short_text
+        type_config: {}
+        date_created: '1621915186877'
+        hide_from_guests: false
+        value: Improve onboarding flow
+        value_richtext: ''
+        required: false
+      x-json-schema-examples:
+      - *id002
+      - id: 1f3cc395-3448-4264-bedd-590a3b3fa178
+        name: Story Points
+        type: number
+        type_config: {}
+        date_created: '1627004071219'
+        hide_from_guests: false
+        value: '8'
+        value_richtext: ''
+        required: false
+      - id: f4d2a20d-6759-4420-b897-222dbe2587d4
+        name: Assigned Reviewer
+        type: users
+        type_config:
+          include_guests: false
+          include_team_members: true
+          single_user: false
+        date_created: '1618440378816'
+        hide_from_guests: false
+        value:
+        - id: 2772463
+          username: Alex Johnson
+          email: user@company.com
+          color: '#FC575E'
+          initials: AJ
+          profilePicture: null
+        value_richtext: ''
+        required: false
+      - id: b2e4be70-c4d3-4726-985b-46ac25375b28
+        name: Marketing Requirements
+        type: drop_down
+        type_config:
+          sorting: manual
+          new_drop_down: true
+          options:
+          - id: f8249998-9c0a-4b1d-a8b7-67a072aca05a
+            name: No Marketing Needed
+            color: '#b5bcc2'
+            orderindex: 0
+          - id: 97704092-e5aa-4005-a87f-677b764d2e4c
+            name: Internal Announcement
+            color: '#02BCD4'
+            orderindex: 1
+          - id: c3d4e5f6-a7b8-4c9d-0e1f-a2b3c4d5e6f7
+            name: Release Notes Only
+            color: '#7b68ee'
+            orderindex: 2
+          - id: b32b5b93-1839-431e-b9b0-8c4f9de9a84d
+            name: Social Media Post
+            color: '#2ecd6f'
+            orderindex: 3
+          - id: 87b3c808-a335-4284-a671-e2f9bce66713
+            name: Blog Post
+            color: '#f9ae27'
+            orderindex: 4
+          - id: a1c2d3e4-f5a6-7b8c-9d0e-f1a2b3c4d5e6
+            name: Dedicated Campaign with Press
+            color: '#e50000'
+            orderindex: 5
+        date_created: '1762838079415'
+        hide_from_guests: false
+        value: 2
+        value_richtext: ''
+        required: false
+      - id: 0aef6ee9-3c54-49e7-aa1a-e981845c773a
+        name: Team
+        type: labels
+        type_config:
+          sorting: manual
+          options:
+          - id: 2245c581-0fb7-4bba-b5f9-d40e421ab2d2
+            label: Frontend
+            color: '#bf55ec'
+            orderindex: 0
+          - id: 6992d629-f336-4e3a-87a5-6fd0738d91dd
+            label: Backend
+            color: '#04A9F4'
+            orderindex: 1
+        date_created: '1614656692549'
+        hide_from_guests: false
+        value:
+        - 978d9762-34f7-4b6e-8e1b-0ac3216deb39
+        - cd82b57c-7511-4c9d-a25f-0c8d7db807d4
+        value_richtext: ''
+        required: false
+      - id: be43f58e-989e-4233-9f25-27584f094b74
+        name: Office Location
+        type: location
+        type_config: {}
+        date_created: '1617765143523'
+        hide_from_guests: false
+        value:
+          location:
+            lat: 47.306988
+            lng: -122.5263212
+          place_id: ChIJs79efm1TkFQRJjrP-xr8u0M
+          formatted_address: 5400 N Pearl St, Tacoma, WA 98407, USA
+        value_richtext: ''
+        required: false
