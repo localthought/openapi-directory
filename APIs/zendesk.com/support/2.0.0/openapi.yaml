@@ -8,9 +8,10 @@ info:
       url: https://developer.zendesk.com/zendesk/oas.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://developer.zendesk.com/zendesk/oas.yaml on 2026-10-05T19:23:13.331134+00:00; entry source SHA-256 3258ec97eed69d58deceee500efe090ea0e0b16fd616dddf15107ab209688fdc.
+    - Fetched from https://developer.zendesk.com/zendesk/oas.yaml on 2026-10-08T12:19:25.480271+00:00; entry source SHA-256 f911b1bef3a27add7489cacdd04a0ee851022273f5b614e4e648252b72fbece8.
     - 'Applied maintenance/patches/zendesk-support.json (SHA-256 38d1641799c8a082fdb21f71f500b400e1bd9f752b5e6024e60eaa0dff2b47e5): Represented the documented null-only value alternative with explicit string type, nullable:true and enum:[null], preserving every other alternative and original oneOf exclusivity (including integer/number overlap). Removed only the exact unused invalid UserLogin parameter component (in:path with query-only deepObject style); no endpoint uses or authentication declarations are removed or relocated. Complete original condition/parameter assertions and conservative JSON Pointer absence preconditions stop replay on changed semantics, vendor corrections or new parameter uses. No OpenAPI version conversion or runtime behavior is invented.'
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
+    - Preserved existing APIs.guru curation metadata from APIs/zendesk.com/support/2.0.0/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 tags:
   - name: Attachments
@@ -34,7 +35,7 @@ tags:
   - name: Facebook Channel
     description: Endpoints supporting Zendesk's agent-facing Facebook channel settings and page management UI.
   - name: WhatsApp Templates
-    description: Endpoints supporting Zendesk's agent- and admin-facing WhatsApp message template listing and activation UI.
+    description: WhatsApp message templates synced from SunCo.
   - name: Organizations
   - name: Triggers
   - name: Object Triggers
@@ -3132,6 +3133,393 @@ paths:
                 description: Invalid attribute
                 example: ''
               example: ''
+  /api/v2/channels/whatsapp_templates:
+    get:
+      operationId: ListWhatsappTemplates
+      tags:
+        - WhatsApp Templates
+      summary: List WhatsApp Templates
+      description: 'Returns the WhatsApp message templates synced from SunCo for the account''s
+
+        WhatsApp integrations. Only templates approved by WhatsApp are synced.
+
+
+        Listing triggers a freshness check per integration. If local data is missing or stale, a
+
+        background sync is started and the `syncing` flag is set in the response. The list may be
+
+        incomplete while that flag is set, so poll until it clears.
+
+
+        #### Pagination
+
+
+        * Cursor pagination (recommended)
+
+        * Offset pagination
+
+
+        See [Pagination](/api-reference/introduction/pagination/).
+
+
+        #### Allowed For
+
+
+        * Agents
+
+        '
+      parameters:
+        - $ref: '#/components/parameters/DualPaginationPage'
+        - $ref: '#/components/parameters/PerPage'
+        - name: integration_id
+          in: query
+          description: Only return templates active on this SunCo WhatsApp integration.
+          schema:
+            type: string
+          example: 5f3a1b2c4d5e6f7a8b9c0d1e
+        - name: is_active
+          in: query
+          description: Only return templates with this activation state.
+          schema:
+            type: boolean
+          example: true
+        - name: category
+          in: query
+          description: Only return templates in this WhatsApp category, for example `UTILITY`.
+          schema:
+            type: string
+          example: UTILITY
+        - name: language
+          in: query
+          description: Only return templates authored in this language, for example `en_US`.
+          schema:
+            type: string
+          example: en_US
+        - name: name
+          in: query
+          description: Only return templates whose name contains this value.
+          schema:
+            type: string
+          example: order
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsappTemplatesResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/WhatsappTemplatesResponseExample'
+        '404':
+          description: 'Returned when `integration_id` does not match a WhatsApp integration on the account, or
+
+            when the WhatsApp re-engagement feature is not enabled for the account.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              examples:
+                default:
+                  value:
+                    error: Integration not found
+                feature_not_enabled:
+                  value:
+                    description: Not found
+                    error: RecordNotFound
+  /api/v2/channels/whatsapp_templates/{template_id}/toggle:
+    put:
+      operationId: ToggleWhatsappTemplate
+      tags:
+        - WhatsApp Templates
+      summary: Toggle WhatsApp Template
+      description: 'Enables or disables a single WhatsApp message template for the account. Activation is
+
+        controlled by admins and is never overwritten by a sync from SunCo.
+
+
+        #### Allowed For
+
+
+        * Admins
+
+        '
+      parameters:
+        - name: template_id
+          in: path
+          description: The template's identifier at WABA (WhatsApp)
+          required: true
+          schema:
+            type: string
+          example: '1234567890'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_active:
+                  type: boolean
+                  description: Whether the template should be enabled for the account
+              required:
+                - is_active
+            examples:
+              default:
+                value:
+                  is_active: true
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  whatsapp_template:
+                    $ref: '#/components/schemas/WhatsappTemplateObject'
+              examples:
+                default:
+                  value:
+                    whatsapp_template:
+                      category: UTILITY
+                      components:
+                        - text: Hi {{1}}, your order {{2}} has shipped.
+                          type: BODY
+                      created_at: '2026-09-14T14:32:27Z'
+                      id: 01JBQ8Z5K7N3M9P2R4T6V8X0YA
+                      integrations:
+                        - id: 5f3a1b2c4d5e6f7a8b9c0d1e
+                          name: WhatsApp Support
+                      is_active: true
+                      language: en_US
+                      name: order_confirmation
+                      status: approved
+                      template_id: '1234567890'
+                      updated_at: '2026-09-17T17:24:25Z'
+        '400':
+          description: Returned when `is_active` is omitted or null.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              example:
+                description: Parameter is_active is required
+                error: ParameterMissing
+        '403':
+          description: Forbidden - the current user is not an admin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              example:
+                description: You do not have access to this page
+                error: Forbidden
+        '404':
+          description: 'Returned when no template matches `template_id` on the account, or when the WhatsApp
+
+            re-engagement feature is not enabled for the account.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              example:
+                description: Not found
+                error: RecordNotFound
+  /api/v2/channels/whatsapp_templates/languages:
+    get:
+      operationId: ListWhatsappTemplateLanguages
+      tags:
+        - WhatsApp Templates
+      summary: List WhatsApp Template Languages
+      description: 'Returns the distinct languages present across the account''s synced WhatsApp message
+
+        templates. Use it to populate a language filter for
+
+        [List WhatsApp Templates](#list-whatsapp-templates).
+
+
+        #### Allowed For
+
+
+        * Agents
+
+        '
+      parameters:
+        - name: integration_id
+          in: query
+          description: Scope the languages to templates active on this WhatsApp integration.
+          schema:
+            type: string
+          example: 5f3a1b2c4d5e6f7a8b9c0d1e
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsappTemplateLanguagesResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/WhatsappTemplateLanguagesResponseExample'
+        '404':
+          description: 'Returned when `integration_id` does not match a WhatsApp integration on the account, or
+
+            when the WhatsApp re-engagement feature is not enabled for the account.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              examples:
+                default:
+                  value:
+                    error: Integration not found
+                feature_not_enabled:
+                  value:
+                    description: Not found
+                    error: RecordNotFound
+  /api/v2/channels/whatsapp_templates/toggle_many:
+    put:
+      operationId: ToggleManyWhatsappTemplates
+      tags:
+        - WhatsApp Templates
+      summary: Bulk Toggle WhatsApp Templates
+      description: 'Enables or disables several WhatsApp message templates in one request. All templates are
+
+        set to the same `is_active` value. The update is applied only if every supplied
+
+        `template_id` exists on the account.
+
+
+        #### Allowed For
+
+
+        * Admins
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_active:
+                  type: boolean
+                  description: Whether the templates should be enabled for the account
+                template_ids:
+                  type: array
+                  description: The WABA (WhatsApp) identifiers of the templates to update
+                  items:
+                    type: string
+              required:
+                - template_ids
+                - is_active
+            examples:
+              default:
+                value:
+                  is_active: false
+                  template_ids:
+                    - '1234567890'
+                    - '1234567891'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WhatsappTemplatesResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/WhatsappTemplatesResponseExample'
+        '400':
+          description: Returned when `is_active` or `template_ids` is omitted or null.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              example:
+                description: Parameter is_active is required
+                error: ParameterMissing
+        '403':
+          description: Forbidden - the current user is not an admin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              example:
+                description: You do not have access to this page
+                error: Forbidden
+        '404':
+          description: 'Returned when one or more supplied `template_ids` do not exist on the account, or when
+
+            the WhatsApp re-engagement feature is not enabled for the account.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  description:
+                    type: string
+                  error:
+                    type: string
+              examples:
+                default:
+                  value:
+                    error: One or more templates not found
+                feature_not_enabled:
+                  value:
+                    description: Not found
+                    error: RecordNotFound
+        '422':
+          description: 'Returned when `template_ids` contains no non-blank values. No response body is returned
+
+            in this case.
+
+            '
   /api/v2/chat_file_redactions/{ticket_id}:
     parameters:
       - $ref: '#/components/parameters/TicketId'
@@ -38119,11 +38507,12 @@ components:
           description: The ID of the [brand](/api-reference/ticketing/account-configuration/brands/)
         cname_status:
           type: string
-          description: 'Whether all of the required CNAME records are set. Possible values: "unknown", "verified", "failed"'
+          description: '**Deprecated.** This field is no longer in use. Existing support addresses will return their previously stored value. New support addresses will return `"unknown"`.'
           enum:
             - unknown
             - verified
             - failed
+          deprecated: true
           readOnly: true
         created_at:
           type: string
@@ -45319,7 +45708,17 @@ components:
           type: array
           description: The distinct languages present across the account's synced templates
           items:
-            type: string
+            type: object
+            properties:
+              code:
+                type: string
+                description: Language code from the template, for example `en_US`
+              label:
+                type: string
+                description: Localized display name for the language
+            required:
+              - code
+              - label
     WhatsappTemplateObject:
       title: WhatsApp Template
       type: object
@@ -45331,11 +45730,7 @@ components:
           readOnly: true
         components:
           type: array
-          description: 'The template''s WhatsApp components (header, body, footer, and buttons) as returned by
-
-            Sunshine Conversations. The shape is defined by WhatsApp and passed through unmodified.
-
-            '
+          description: The template's WhatsApp components (header, body, footer, and buttons) as returned by WhatsApp
           items:
             type: object
             additionalProperties: true
@@ -45358,7 +45753,7 @@ components:
             properties:
               id:
                 type: string
-                description: The Sunshine Conversations integration ID
+                description: The SunCo integration ID
               name:
                 type: string
                 description: Display name of the integration
@@ -45385,7 +45780,7 @@ components:
           readOnly: true
         template_id:
           type: string
-          description: The template's identifier in Sunshine Conversations
+          description: The template's identifier at WABA (WhatsApp)
           readOnly: true
         updated_at:
           type: string
@@ -45429,7 +45824,7 @@ components:
           nullable: true
         syncing:
           type: boolean
-          description: 'Whether a background sync with Sunshine Conversations is still in progress. While it is
+          description: 'Whether a background sync with SunCo is still in progress. While it is
 
             set, the returned list may be incomplete and the client should poll again.
 
@@ -57011,9 +57406,12 @@ components:
       value:
         integration_id: 5f3a1b2c4d5e6f7a8b9c0d1e
         whatsapp_template_languages:
-          - en_US
-          - es_ES
-          - pt_BR
+          - code: en_US
+            label: English (United States)
+          - code: es_ES
+            label: Spanish (Spain)
+          - code: pt_BR
+            label: Portuguese (Brazil)
     WhatsappTemplatesResponseExample:
       value:
         count: 2
