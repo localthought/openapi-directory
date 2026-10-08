@@ -20,10 +20,10 @@ info:
   x-serviceName: api.github.com.2022-11-28
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/github/rest-api-description/836ce198db13a6fb194547e53eea99c6ddae495b/descriptions/api.github.com/api.github.com.2022-11-28.json
+      url: https://raw.githubusercontent.com/github/rest-api-description/2eba8c3ba02f022011539cf01efc43e0251502f8/descriptions/api.github.com/api.github.com.2022-11-28.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/836ce198db13a6fb194547e53eea99c6ddae495b/descriptions/api.github.com/api.github.com.2022-11-28.json at commit 836ce198db13a6fb194547e53eea99c6ddae495b; entry source SHA-256 28b908e1fd554f785e31368e334a897fb01a0439b6988e669c0011c64c77efd9.
+    - Fetched from https://raw.githubusercontent.com/github/rest-api-description/2eba8c3ba02f022011539cf01efc43e0251502f8/descriptions/api.github.com/api.github.com.2022-11-28.json at commit 2eba8c3ba02f022011539cf01efc43e0251502f8; entry source SHA-256 0d2fa885d4a15f57a6fe06811cbd13e7e0f580d292530199db1a59cfc2b7d14e.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/github.com/api.github.com.2022-11-28/1.1.4/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -29153,6 +29153,9 @@ paths:
       description: '> [!NOTE]
 
         > Accessing this endpoint does not count against your REST API rate limit.
+
+
+        Rate limit status reflects the applicable limits for the requester and resource category, not the hostname used for the request. Requests authenticated as a user share the user''s rate limit across credentials. Requests without authentication use the requesting IP address. API requests routed through either an API hostname or a web hostname can count against the same applicable limit.
 
 
         Some categories of endpoints have custom rate limits that are separate from the rate limit governing the other REST API endpoints. For this reason, the API response categorizes your rate limit. Under `resources`, you''ll see objects relating to different categories:
@@ -101051,7 +101054,7 @@ components:
             - severity
     repository-rule-code-coverage:
       title: code_coverage
-      description: Enforce minimum line coverage thresholds on pull requests. When configured, uploaded coverage data must meet the specified criteria before changes can be merged.
+      description: Enforce minimum line coverage thresholds on pull requests. This rule evaluates uploaded coverage data but does not wait for coverage uploads. To ensure coverage is evaluated before merging, make each status check associated with a coverage upload a required status check.
       type: object
       required:
         - type
@@ -101432,6 +101435,46 @@ components:
                   state:
                     type: string
                     description: The state of the review.
+            proof_of_presence:
+              type: object
+              nullable: true
+              description: The proof of presence evaluation for the pull request. Null if proof of presence was not evaluated.
+              properties:
+                state:
+                  type: string
+                  description: The state of the proof of presence evaluation.
+                code:
+                  type: string
+                  description: A code describing the reason for the proof of presence state.
+                base_sha:
+                  type: string
+                  description: The base commit SHA the proof of presence evaluation applies to. Empty if unavailable.
+                head_sha:
+                  type: string
+                  description: The head commit SHA the proof of presence evaluation applies to. Empty if unavailable.
+                required_level:
+                  type: string
+                  description: The authentication level required by the rule. Empty if unavailable.
+                verified_level:
+                  type: string
+                  description: The authentication level that was verified. Empty if proof of presence has not been completed.
+                verified_at:
+                  type: string
+                  description: The time proof of presence was verified, in ISO 8601 format. Empty if proof of presence has not been completed.
+                verifier:
+                  type: object
+                  nullable: true
+                  description: The user who provided proof of presence. Null if no proof of presence was recorded.
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the user.
+                    login:
+                      type: string
+                      description: The handle for the GitHub user account.
+                    type:
+                      type: string
+                      description: The type of the user.
     rule-suite-required-status-checks:
       title: Required status checks rule suite metadata
       description: Metadata for a required status checks rule evaluation result.
@@ -103514,7 +103557,13 @@ components:
         - used
     rate-limit-overview:
       title: Rate Limit Overview
-      description: Rate Limit Overview
+      description: 'Rate limit status for the applicable requester and resource category. Requests
+
+        authenticated as a user share the user''s rate limit across credentials. Requests
+
+        without authentication use the requesting IP address. API requests routed through
+
+        either an API hostname or a web hostname can count against the same applicable limit.'
       type: object
       properties:
         resources:
@@ -113958,6 +114007,12 @@ components:
             - $ref: '#/components/schemas/repository-rule-ruleset-info'
         - allOf:
             - $ref: '#/components/schemas/repository-rule-code-scanning'
+            - $ref: '#/components/schemas/repository-rule-ruleset-info'
+        - allOf:
+            - $ref: '#/components/schemas/repository-rule-code-quality'
+            - $ref: '#/components/schemas/repository-rule-ruleset-info'
+        - allOf:
+            - $ref: '#/components/schemas/repository-rule-code-coverage'
             - $ref: '#/components/schemas/repository-rule-ruleset-info'
         - allOf:
             - $ref: '#/components/schemas/repository-rule-copilot-code-review'
