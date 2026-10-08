@@ -107,10 +107,10 @@ info:
   x-providerName: asana.com
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/Asana/openapi/1b1c15108d490fc5b780bb83e070293b5815d522/defs/asana_oas.yaml
+      url: https://raw.githubusercontent.com/Asana/openapi/4cf6c7c629ad6c6649a517c46d9feada5357d542/defs/asana_oas.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/Asana/openapi/1b1c15108d490fc5b780bb83e070293b5815d522/defs/asana_oas.yaml at commit 1b1c15108d490fc5b780bb83e070293b5815d522; entry source SHA-256 7c4c198fda7627c28be82ca0d85886fd034c93b16ed13c7d96a13d2f3534eaa6.
+    - Fetched from https://raw.githubusercontent.com/Asana/openapi/4cf6c7c629ad6c6649a517c46d9feada5357d542/defs/asana_oas.yaml at commit 4cf6c7c629ad6c6649a517c46d9feada5357d542; entry source SHA-256 921036ca3b7d118ef81044316aae03fe7dfabd6b28bad0b77735283f240fb106.
     - Quoted 1556 unquoted YAML HTTP response-code keys in path operations as strings, matching JSON object-key representation. Checked exact count, integer codes 100-599 and absence of collisions; response bodies, payload keys and schema values are unchanged.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/asana.com/1.0/openapi.yaml.
@@ -627,6 +627,17 @@ components:
       description: 'Results per page.
 
         The number of objects to return per page. The value must be between 1 and 100.'
+      example: 50
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    search_limit:
+      name: limit
+      in: query
+      description: 'Results per search response.
+
+        The number of objects to return in one search response. The value must be between 1 and 100. Search responses have no `next_page`, so to retrieve further results, sort by `created_at` and repeat the query with a `created_at.before` or `created_at.after` filter that excludes the results you have already seen.'
       example: 50
       schema:
         type: integer
@@ -2518,7 +2529,7 @@ components:
               items:
                 $ref: '#/components/schemas/AsanaNamedResource'
             html_text_value:
-              description: '*Conditional*. Only relevant for custom fields of type `text`. This is the HTML representation of the text value of a custom field, corresponding to the `text_value` plain-text field.'
+              description: '*Conditional*. Only relevant for custom fields of type `text`. This is the HTML representation of the text value of a custom field, corresponding to the `text_value` plain-text field. See [rich text](/docs/rich-text#reading-rich-text).'
               type: string
               readOnly: true
               nullable: true
@@ -3004,7 +3015,7 @@ components:
           example: Grow web traffic by 30%
         html_notes:
           type: string
-          description: The notes of the goal with formatting as HTML.
+          description: The notes of the goal with formatting as HTML. See [rich text](/docs/rich-text).
           example: <body>Start building brand awareness.</body>
         notes:
           type: string
@@ -3997,7 +4008,7 @@ components:
           type: string
           example: https://asana.comn/apps/slack
         html_text:
-          description: HTML formatted text for the body of the preview.
+          description: HTML formatted text for the body of the preview. See [rich text](/docs/rich-text#reading-rich-text).
           type: string
           example: <body>Great! I like this idea.</body>
         text:
@@ -4131,7 +4142,7 @@ components:
               format: date
               example: '2019-09-15'
             html_notes:
-              description: '[Opt In](/docs/inputoutput-options). The notes of the project with formatting as HTML.'
+              description: '[Opt In](/docs/inputoutput-options). The notes of the project with formatting as HTML. See [rich text](/docs/rich-text).'
               type: string
               example: <body>These are things we need to purchase.</body>
             members:
@@ -4204,7 +4215,7 @@ components:
               type: string
               example: Stuff to buy — Project Brief
             html_text:
-              description: HTML formatted text for the project brief.
+              description: HTML formatted text for the project brief. See [rich text](/docs/rich-text).
               type: string
               example: <body>This is a <strong>project brief</strong>.</body>
     ProjectBriefCompact:
@@ -4796,7 +4807,7 @@ components:
               type: string
               example: The project is moving forward according to plan...
             html_text:
-              description: '[Opt In](/docs/inputoutput-options). The text content of the status update with formatting as HTML.'
+              description: '[Opt In](/docs/inputoutput-options). The text content of the status update with formatting as HTML. See [rich text](/docs/rich-text).'
               type: string
               example: <body>The project <strong>is</strong> moving forward according to plan...</body>
             color:
@@ -4889,7 +4900,7 @@ components:
               type: string
               example: These are things we need to pack for a trip.
             html_description:
-              description: The description of the project template with formatting as HTML.
+              description: The description of the project template with formatting as HTML. See [rich text](/docs/rich-text#reading-rich-text).
               type: string
               example: <body>These are things we need to pack for a trip.</body>
             public:
@@ -5558,7 +5569,7 @@ components:
               type: string
               example: The project is moving forward according to plan...
             html_text:
-              description: '[Opt In](/docs/inputoutput-options). The text content of the status update with formatting as HTML.'
+              description: '[Opt In](/docs/inputoutput-options). The text content of the status update with formatting as HTML. See [rich text](/docs/rich-text).'
               type: string
               example: <body>The project <strong>is</strong> moving forward according to plan...</body>
             status_type:
@@ -5721,7 +5732,7 @@ components:
           type: string
           example: This is a comment.
         html_text:
-          description: '[Opt In](/docs/inputoutput-options). HTML formatted text for a comment. This will not include the name of the creator.'
+          description: '[Opt In](/docs/inputoutput-options). HTML formatted text for a comment. This will not include the name of the creator. See [rich text](/docs/rich-text).'
           type: string
           example: <body>This is a comment.</body>
         is_pinned:
@@ -6303,7 +6314,7 @@ components:
                 gid: my_gid
                 data: A blob of information
             html_notes:
-              description: '[Opt In](/docs/inputoutput-options). The notes of the text with formatting as HTML.'
+              description: '[Opt In](/docs/inputoutput-options). The notes of the text with formatting as HTML. See [rich text](/docs/rich-text).'
               type: string
               example: <body>Mittens <em>really</em> likes the stuff from Humboldt.</body>
             hearted:
@@ -6494,7 +6505,7 @@ components:
               type: string
               example: Please describe the bug you found and how to reproduce it.
             html_description:
-              description: HTML description of the task that will be created from this template.
+              description: HTML description of the task that will be created from this template. See [rich text](/docs/rich-text#reading-rich-text).
               type: string
               example: Please describe the bug you found and how to reproduce it.
             memberships:
@@ -6966,7 +6977,7 @@ components:
               type: string
               example: All developers should be members of this team.
             html_description:
-              description: 'The description of the team with formatting as HTML.
+              description: 'The description of the team with formatting as HTML. See [rich text](/docs/rich-text).
 
                 '
               type: string
@@ -7060,7 +7071,7 @@ components:
               type: string
               example: All developers should be members of this team.
             html_description:
-              description: '[Opt In](/docs/inputoutput-options). The description of the team with formatting as HTML.
+              description: '[Opt In](/docs/inputoutput-options). The description of the team with formatting as HTML. See [rich text](/docs/rich-text#reading-rich-text).
 
                 '
               type: string
@@ -26664,6 +26675,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/workspace_path_gid'
       - $ref: '#/components/parameters/pretty'
+      - $ref: '#/components/parameters/search_limit'
       - name: text
         in: query
         description: Performs full-text search on the project name.
@@ -41492,6 +41504,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/workspace_path_gid'
       - $ref: '#/components/parameters/pretty'
+      - $ref: '#/components/parameters/search_limit'
       - name: text
         in: query
         description: Performs full-text search on both task name and description
