@@ -1280,7 +1280,7 @@
     {
       "id": "ynab",
       "provider": "youneedabudget.com",
-      "target": "APIs/youneedabudget.com/1.0.0/openapi.yaml",
+      "target": "APIs/youneedabudget.com/1.87.0/openapi.yaml",
       "url": "https://api.ynab.com/papi/open_api_spec.yaml",
       "discovery": "The official YNAB API Endpoints reference (https://api.ynab.com/v1) loads this hosted description (/papi/open_api_spec.yaml), and the official changelog at https://api.ynab.com lists every release through v1.87.0 (checked 2026-10-08). The committed open_api_spec.yaml in the official ynab/ynab-sdk-js repository is an SDK-generation copy whose bytes differ from the hosted publication; monitor the hosted publication, not that mirror. Hosted repository health is not assessed and no Git revision is claimed. Native OpenAPI 3.1.1 / vendor 1.87.0 / 31 paths / 44 operations validates strictly at review with no patches, conversion or bundling. The stored 1.0.0 description (legacy x-origin https://api.youneedabudget.com/papi/spec-v1-swagger.json) is the initial comparison and curation baseline; the new vendor version is imported into its own directory, retaining 1.0.0 byte-for-byte.",
       "coverage": "Official YNAB API v1 (user, plans, accounts, categories, payees, payee locations, months, money movements, transactions, scheduled transactions). The vendor changelog for v1.79.0 (2026-03-05) moved all documented routes from /budgets/{budget_id} to /plans/{plan_id}; it states the /budgets paths continue to work with the original response keys but are no longer documented. Reported /budgets removals against 1.0.0 are therefore documentation renames, not runtime retirements. Preserve vendor deprecated-field descriptions, bearer authentication and rate-limit prose.",
