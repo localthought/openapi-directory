@@ -11,10 +11,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/db7a25833324c7a3639fe04b4063a7703ab3ee50/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/f73faaacbc503c932c477dcf74e78c5e12ec5836/openapi-derefed.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/db7a25833324c7a3639fe04b4063a7703ab3ee50/openapi-derefed.json at commit db7a25833324c7a3639fe04b4063a7703ab3ee50; entry source SHA-256 803c8de0360e0b840a83bc401192bc144e3716fd1e2c6786589bf26860ffd939.
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/f73faaacbc503c932c477dcf74e78c5e12ec5836/openapi-derefed.json at commit f73faaacbc503c932c477dcf74e78c5e12ec5836; entry source SHA-256 2c584abe7a8f094b6bfab6af9a7c75bccf2168a107da59ea7e9b93e00bf0766b.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -15454,26 +15454,6 @@ paths:
                 items:
                   type: object
                   properties:
-                    alertRule:
-                      type: object
-                      properties:
-                        targets:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              targetIdentifier:
-                                type: integer
-                              targetType:
-                                type: string
-                            required:
-                              - targetIdentifier
-                              - targetType
-                        environment:
-                          type: string
-                      required:
-                        - environment
-                        - targets
                     id:
                       type: string
                     name:
@@ -17659,41 +17639,6 @@ paths:
                 is_muted:
                   type: boolean
                   description: Disable creation of monitor incidents
-                alert_rule:
-                  allOf:
-                    - type: object
-                      properties:
-                        environment:
-                          type: string
-                          nullable: true
-                          description: Name of the environment
-                          maxLength: 64
-                        targets:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              target_identifier:
-                                type: integer
-                                description: ID of target object
-                              target_type:
-                                enum:
-                                  - Member
-                                  - Team
-                                type: string
-                                description: 'One of [Member, Team]
-
-
-                                  * `Member`
-
-                                  * `Team`'
-                            required:
-                              - target_identifier
-                              - target_type
-                          description: Array of dictionaries with information of the user or team to be notified
-                      required:
-                        - targets
-                  description: Alert rule configuration created alongside the monitor.
               required:
                 - config
                 - name
@@ -17712,26 +17657,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  alertRule:
-                    type: object
-                    properties:
-                      targets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            targetIdentifier:
-                              type: integer
-                            targetType:
-                              type: string
-                          required:
-                            - targetIdentifier
-                            - targetType
-                      environment:
-                        type: string
-                    required:
-                      - environment
-                      - targets
                   id:
                     type: string
                   name:
@@ -18062,26 +17987,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  alertRule:
-                    type: object
-                    properties:
-                      targets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            targetIdentifier:
-                              type: integer
-                            targetType:
-                              type: string
-                          required:
-                            - targetIdentifier
-                            - targetType
-                      environment:
-                        type: string
-                    required:
-                      - environment
-                      - targets
                   id:
                     type: string
                   name:
@@ -20273,41 +20178,6 @@ paths:
                 is_muted:
                   type: boolean
                   description: Disable creation of monitor incidents
-                alert_rule:
-                  allOf:
-                    - type: object
-                      properties:
-                        environment:
-                          type: string
-                          nullable: true
-                          description: Name of the environment
-                          maxLength: 64
-                        targets:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              target_identifier:
-                                type: integer
-                                description: ID of target object
-                              target_type:
-                                enum:
-                                  - Member
-                                  - Team
-                                type: string
-                                description: 'One of [Member, Team]
-
-
-                                  * `Member`
-
-                                  * `Team`'
-                            required:
-                              - target_identifier
-                              - target_type
-                          description: Array of dictionaries with information of the user or team to be notified
-                      required:
-                        - targets
-                  description: Alert rule configuration created alongside the monitor.
               required:
                 - config
                 - name
@@ -20325,26 +20195,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  alertRule:
-                    type: object
-                    properties:
-                      targets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            targetIdentifier:
-                              type: integer
-                            targetType:
-                              type: string
-                          required:
-                            - targetIdentifier
-                            - targetType
-                      environment:
-                        type: string
-                    required:
-                      - environment
-                      - targets
                   id:
                     type: string
                   name:
@@ -45524,26 +45374,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  alertRule:
-                    type: object
-                    properties:
-                      targets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            targetIdentifier:
-                              type: integer
-                            targetType:
-                              type: string
-                          required:
-                            - targetIdentifier
-                            - targetType
-                      environment:
-                        type: string
-                    required:
-                      - environment
-                      - targets
                   id:
                     type: string
                   name:
@@ -47741,41 +47571,6 @@ paths:
                 is_muted:
                   type: boolean
                   description: Disable creation of monitor incidents
-                alert_rule:
-                  allOf:
-                    - type: object
-                      properties:
-                        environment:
-                          type: string
-                          nullable: true
-                          description: Name of the environment
-                          maxLength: 64
-                        targets:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              target_identifier:
-                                type: integer
-                                description: ID of target object
-                              target_type:
-                                enum:
-                                  - Member
-                                  - Team
-                                type: string
-                                description: 'One of [Member, Team]
-
-
-                                  * `Member`
-
-                                  * `Team`'
-                            required:
-                              - target_identifier
-                              - target_type
-                          description: Array of dictionaries with information of the user or team to be notified
-                      required:
-                        - targets
-                  description: Alert rule configuration created alongside the monitor.
               required:
                 - config
                 - name
@@ -47793,26 +47588,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  alertRule:
-                    type: object
-                    properties:
-                      targets:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            targetIdentifier:
-                              type: integer
-                            targetType:
-                              type: string
-                          required:
-                            - targetIdentifier
-                            - targetType
-                      environment:
-                        type: string
-                    required:
-                      - environment
-                      - targets
                   id:
                     type: string
                   name:
@@ -78465,26 +78240,6 @@ components:
     Monitor:
       type: object
       properties:
-        alertRule:
-          type: object
-          properties:
-            targets:
-              type: array
-              items:
-                type: object
-                properties:
-                  targetIdentifier:
-                    type: integer
-                  targetType:
-                    type: string
-                required:
-                  - targetIdentifier
-                  - targetType
-            environment:
-              type: string
-          required:
-            - environment
-            - targets
         id:
           type: string
         name:
@@ -78765,84 +78520,11 @@ components:
         - project
         - slug
         - status
-    MonitorAlertRuleTargetValidator:
-      type: object
-      properties:
-        target_identifier:
-          type: integer
-          description: ID of target object
-        target_type:
-          enum:
-            - Member
-            - Team
-          type: string
-          description: 'One of [Member, Team]
-
-
-            * `Member`
-
-            * `Team`'
-      required:
-        - target_identifier
-        - target_type
-    MonitorAlertRuleValidator:
-      type: object
-      properties:
-        environment:
-          type: string
-          nullable: true
-          description: Name of the environment
-          maxLength: 64
-        targets:
-          type: array
-          items:
-            type: object
-            properties:
-              target_identifier:
-                type: integer
-                description: ID of target object
-              target_type:
-                enum:
-                  - Member
-                  - Team
-                type: string
-                description: 'One of [Member, Team]
-
-
-                  * `Member`
-
-                  * `Team`'
-            required:
-              - target_identifier
-              - target_type
-          description: Array of dictionaries with information of the user or team to be notified
-      required:
-        - targets
     MonitorList:
       type: array
       items:
         type: object
         properties:
-          alertRule:
-            type: object
-            properties:
-              targets:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    targetIdentifier:
-                      type: integer
-                    targetType:
-                      type: string
-                  required:
-                    - targetIdentifier
-                    - targetType
-              environment:
-                type: string
-            required:
-              - environment
-              - targets
           id:
             type: string
           name:
@@ -81005,41 +80687,6 @@ components:
         is_muted:
           type: boolean
           description: Disable creation of monitor incidents
-        alert_rule:
-          allOf:
-            - type: object
-              properties:
-                environment:
-                  type: string
-                  nullable: true
-                  description: Name of the environment
-                  maxLength: 64
-                targets:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      target_identifier:
-                        type: integer
-                        description: ID of target object
-                      target_type:
-                        enum:
-                          - Member
-                          - Team
-                        type: string
-                        description: 'One of [Member, Team]
-
-
-                          * `Member`
-
-                          * `Team`'
-                    required:
-                      - target_identifier
-                      - target_type
-                  description: Array of dictionaries with information of the user or team to be notified
-              required:
-                - targets
-          description: Alert rule configuration created alongside the monitor.
       required:
         - config
         - name
