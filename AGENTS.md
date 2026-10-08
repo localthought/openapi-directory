@@ -20,7 +20,7 @@ Fetched main remains `b511912dbb26ef97747a9f3331e1313f030db584` (#229). Only
 unrelated #179 is open. Saved uncommitted pending-review work was preserved and
 continued on `codex/pending-api-refresh-review`; no completed HCP addition is repeated.
 
-**Pending-draft review infrastructure in progress — 2026-10-08:** New
+**Pending-draft review infrastructure delivered — 2026-10-08:** New
 `maintenance/pending_pr.py` is read-only. It requires retained successful creation
 evidence, an intact full generated Git tree/message/single parent, complete native
 and typed-YAML validation, exact target-only manifest edits, original title/body,
@@ -33,16 +33,76 @@ overwriting creation receipts. All results explicitly deny publication authoriza
 
 This does not update/rebase/close/comment/ready/merge PRs or enable a scheduled writer.
 Automatic pending updates and scheduled publication remain subsequent separate work.
-**188 local updater tests pass**, including 23 new real-Git pending-review cases
-(complete suite 174.794 seconds). Selected live checks and actual hosted CI remain
-to be verified before delivery; no real pending API PR was updated or tested live.
+Separate infrastructure [#231](https://github.com/ontola/openapi-directory/pull/231)
+merged as `3a799dee7d0d158fb53ad769a7c55dab54245e7d` from exact head
+`e57b9ff59730c91ca9b5c156627c4c482f635311`. **188 tests pass locally and in actual
+hosted CI**, including 23 new real-Git pending-review cases (local suite 174.794 seconds;
+actual CI run `37760060636`, tests job `113254014549`, unittest step executed).
+Exact five infrastructure files/head/advertised base/CLEAN/MERGEABLE were verified
+before matching-head merge; REST confirmed the result. No API, source-manifest or
+workflow permissions changed. Required attachment attempt failed at the existing 100 cap.
 Evidence is retained under ignored
 `cache/maintenance/reports/pending-api-refresh-review/`. All eleven source/native/
 publication blocks, unanswered owner choices, §5 parked items and deprecated Grant
 exclusion remain; preserve laptop sleep and the other session's #179.
 
-**Last updated**: 2026-10-06 (Europe/Amsterdam). Inventory of fetched `origin/main` at `2704d663d` (PR #228 merged):
-732 provider domains; 4,293 files under `APIs/`, including 2,119
+**GitHub fixed-version content refresh delivered — 2026-10-08:** The default and
+2022-11-28 public REST companion specs are refreshed together in API-only
+[#232](https://github.com/ontola/openapi-directory/pull/232). Actual generated head
+`b3ec9d312975b3723ffae6f8d18226d73b763870`, single parent/base
+`3a799dee7d0d158fb53ad769a7c55dab54245e7d`; actual generated-head validation run
+`37761289776`, validate job `113258045044`, exact-head/API-scope step executed successfully.
+Ready state, exact head/base/two API files and CLEAN/MERGEABLE were rechecked before
+matching-head merge; REST confirms merge `3f6cbeebce0b3281a7779a9368e3d710cb46ea38`.
+
+Both remain native **3.0.3 / vendor 1.1.4 / 816 paths / 1,232 operations**.
+Unchanged version/counts concealed five complete changed nodes in each source:
+three descriptions (requester-based rate limits and coverage timing), add existing
+code-quality/code-coverage schemas as detailed-rule alternatives preserving all older
+entries/order, and add optional nullable proof-of-presence/verifier data. No endpoint,
+authentication or server removals, version invention, conversion, repair or runtime
+lifecycle inference. Official source revision is shared/pinned
+`2eba8c3ba02f022011539cf01efc43e0251502f8`; original entry SHA-256 values are
+`ba5ddc1eeeede9f3858abd96325359891f38a2bd8e20fd111abf4230741db194` and
+`0d2fa885d4a15f57a6fe06811cbd13e7e0f580d292530199db1a59cfc2b7d14e` respectively.
+Public/unarchived/undisabled source health, whole vendor/curation/provenance equality,
+complete native validation, typed YAML and all **20,618 local refs** pass. Fresh
+publication fetch dates remain **10:02–10:03 UTC**; no timestamp-only commit.
+
+The delivered reviewer was then exercised on this **actual still-draft #232**, using
+the original successful creation receipt in `cache/maintenance/drafts/`. Fresh vendor
+fetches at **10:07–10:08 UTC** produced `pending_matches_source` for both companions
+after full retained Git/receipt/recipe/body/file/native checks. It performed no Git/PR
+mutation and explicitly reported `publication_authorized:false`. Only afterwards was
+the PR marked ready and merged under the standing human authorization and independent
+actual CI/content review. This is a real pending-draft observation, not a synthetic
+GitHub test PR or an implemented update/scheduled writer. Keep successful receipts and
+all publication guards; the merged generated branch remains, and future branch reuse
+must be deliberately designed rather than deleting it to force another publication.
+
+The earlier selected **three-artifact** check also found HF Endpoints matches native
+3.1.0 / 2.0.0 / 40 paths / 46 ops; hosted health remains not_assessed, no Git revision
+invented. Original snapshots, full five-node diffs, independent native/import/Git/ref
+checks, live pending-review result, actual CI logs/states and merged receipts remain
+under ignored `cache/maintenance/reports/pending-api-refresh-review/`; actual generated
+creation evidence is in `cache/maintenance/drafts/`. Required #231/#232 app attachment
+attempts failed with `thread attachment identity count exceeds 100`; retain their actual
+GitHub links without claiming app linkage or removing history.
+
+Main advanced during this run through **another session's #230**, Airtable read-only
+Web API, merge `e3b52673e85c2b1a10decb87de1b1445ed02a21d`. Verified its sole API file
+and preserved its exact bytes; do not duplicate it or claim it as this run's delivery.
+Post-merge Git/content checks verify only the two GitHub files changed since #231,
+source recipes stayed unchanged, and all generated bytes/Airtable remain intact.
+These are original checked snapshots and post-merge Git checks, **not a new post-merge
+network audit or a full 65-artifact freshness audit**. Monitoring remains **65 artifacts /
+64 services**. Only unrelated #179 remains open. Continue safe pending updates, deliberate
+merged-branch handling and scheduled publication as separate infrastructure; extend
+official-source audits/discovery while preserving all eleven blocks, unanswered owner
+choices, §5 parked items, deprecated Grant exclusion and local sleep behavior.
+
+**Last updated**: 2026-10-08 (Europe/Amsterdam). Inventory of fetched `origin/main` at `3f6cbeebce0b` (PR #232 merged):
+733 provider domains; 4,294 files under `APIs/`, including 2,120
 `openapi.yaml` and 2,168 `swagger.yaml` files. These are dated observations,
 not live counts. Recompute against fetched `origin/main` when resuming work.
 
