@@ -349,7 +349,9 @@ referenced file, so changes in helpers are detected even when the entry file is 
 The cache preserves the archive, selected files, file hashes, bundled output, and logs.
 Each import records the snapshot hash, tool version/options, and warning count.
 
-DigitalOcean's recipe has 21 reviewed component naming warnings: separate definitions
+DigitalOcean's recipe has 22 reviewed component naming warnings (the 22nd, reviewed 2026-10-08 at
+vendor `06cf2836409b25c0191f7098bcfdb6bf171237c4`, renames the new Signals `session` model
+to `session-2` because an existing, different `session` schema shares the name): separate definitions
 with identical basenames are disambiguated, retaining both contents. A changed warning
 count stops the run for review. The local bundle was compared with DigitalOcean's
 official published bundle by resolving references across paths and common components.
