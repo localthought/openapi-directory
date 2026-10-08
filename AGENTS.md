@@ -5,6 +5,16 @@ Instructions for an agent picking up work in this repo. Read this first.
 **Repo**: `ontola/openapi-directory` (fork of `APIs-guru/openapi-directory`).
 Note the git remote resolves via an old org rename — `localthought/openapi-directory` redirects to `ontola`. Pushes print a "This repository moved" notice; harmless.
 
+**Handover to Claude — 2026-10-08:** The user asked to "wrap up your work and
+leave a handover in the repo" because they are moving the work to Claude. Codex
+maintenance is stopped after completing #234 and this handover. The existing local
+hourly automation `maintain-openapi-directory-for-one-week` was PAUSED through
+`automation_update`, with saved status verified; schedule/prompt/history preserved,
+no new automation created. Do not resume it based on older heartbeat instructions.
+Start with [HANDOVER.md](HANDOVER.md) for current delivery, remaining work, protections,
+local evidence and restart commands. This supersedes ongoing Codex execution notes
+below; standing repository conventions and parked-item/owner-choice protections remain.
+
 **Ongoing authorization — 2026-10-06:** The user explicitly said "you can continue
 past friday, no problem". The original 2026-10-09 deadline is superseded: continue
 local maintenance until the user asks to stop or pause. The existing hourly heartbeat
@@ -13,24 +23,63 @@ schedule/prompt verified. No additional automation was created. Preserve laptop-
 behavior, no power changes/cloud-host move, quiet notifications, all parked work and
 publication/merge protections. Older one-week/deadline notes below are historical.
 
-**Pending draft head updater prepared — 2026-10-08:** Branch
-`codex/guarded-pending-draft-updates` adds explicit `maintenance/refresh_pr.py`.
-Default mode is a fresh read-only review. Explicit `--publish` can update only an
-untouched owned generated draft with retained successful evidence, same original/
-current/advertised base, fixed vendor version, no endpoint/schema-name removals or
-server/auth/callback changes, intact full native/typed-YAML/recipe/Git checks and no
-review work. It uses an exact previous-head Git lease, preserves original PR title/body
-and checkout/index, and records a bounded immutable chain back to original creation.
-Legacy unlabelled initial PR bodies are held; new protocol 2 labels the body an initial
-submission snapshot, with current provenance/counts/deltas in actual new-head CI JSON
-and Actions summary. No REST writes, ready/comment/merge or scheduled publisher.
-Rejected/uncertain outcomes retain guards; if outcome receipts cannot be saved, the
-interrupted lock remains. Human PR metadata can race with Git push; post-push changes
-are held and human edits preserved, never blindly restored. Main advances, merged
-branch handling and scheduled publishing remain separate work. Local/hosted full
-validation and infrastructure delivery are pending; no production draft update is
-claimed. Preserve eleven blocks, parked choices/items, original creation caches,
-deprecated Grant exclusion, unrelated #179 and local laptop-sleep behavior.
+**Explicit pending draft head updater delivered — 2026-10-08:** Separate
+infrastructure [#234](https://github.com/ontola/openapi-directory/pull/234) merged as
+`b4c28a81c3fe14b67b8c9c3764b09ae28b2f2ad9` from actual head `648db85cef1bea5d4b3888b0973ac5e4ab483d9e`,
+advertised base `f4283c35b670a1712b38c9eb53c647822ed41464`. **206 tests pass locally
+(204.911 seconds) and in actual hosted CI**, including 18 new real-Git updater cases
+(run `37768566573`, tests job `113282140755`, actual unittest step executed).
+Exact seven infrastructure files/head/base/CLEAN/MERGEABLE were verified before
+matching-head merge; REST confirms the result. APIs and source configuration remain
+byte-identical, and all workflow permissions remain read-only. The generated-API job
+correctly skipped this infrastructure branch; actual updated-production-head CI and
+its new Actions summary are not claimed by this infrastructure delivery.
+
+`maintenance/refresh_pr.py` defaults to fresh read-only review. Explicit `--publish`
+updates only an untouched owned generated draft with successful retained evidence,
+same original/current/advertised base, fixed vendor version, no endpoint/schema-name
+removals or server/auth/callback changes, intact complete native/typed-YAML/recipe/Git
+checks and no review work. Exact previous-head Git lease preserves concurrent commits;
+private index preserves checkout/staging. It keeps original PR title/body and records
+an immutable bounded history back to successful creation, validating predecessor full
+Git trees/messages/native/manifest content. New protocol 2 labels descriptions initial
+submission snapshots; current provenance/counts/deltas appear in exact-head CI JSON
+and summary. Legacy bodies and any main advance are held. No REST writes, ready,
+comment, close or merge command, new automation or scheduled publisher was added.
+
+Rejected/uncertain push outcomes retain guards. If success/failure receipts cannot be
+saved, the interrupted lock remains. Human PR metadata can race with the Git push;
+post-push state changes are held and human edits preserved, never blindly restored.
+Source snapshots, successful candidate/receipt history, required Git objects and all
+failure/interruption evidence must remain available; missing objects are held rather
+than reconstructed or silently treated as permission. Real-Git regression cases prove
+successful one- and two-update history, companion all-or-nothing checks, concurrent
+commits, human changes and evidence-write failures. **No production API draft was
+updated or manufactured**: only unrelated #179 was open during the selected checks.
+
+Default-mode live checks on the committed infrastructure head fetched three selected
+artifacts at **11:08 UTC**; all report `no_pending_pr` / `matches_source` against API
+bytes unchanged from actual main `f4283c35b670`. GitHub companions share pinned source
+`2eba8c3ba02f022011539cf01efc43e0251502f8`, native 3.0.3 / vendor 1.1.4 / 816 paths /
+1,232 operations each; HF Endpoints native 3.1.0 / 2.0.0 / 40 / 46 remains hosted-health
+not_assessed. Original raw/health hashes, complete independent vendor-plus-curation
+projection, native/stored validation, typed YAML and all **20,872 OpenAPI reference
+objects** pass. A separate broad literal-string scan also resolved examples containing
+`$ref`; those example strings are not counted as OpenAPI Reference Objects. No
+conversion, repair, invented revision or timestamp-only API write. These are three
+selected observations, not a full 65-artifact or post-merge network audit.
+
+Evidence, original live snapshots and independent verifiers, local and actual CI logs,
+PR states and merged receipts remain under ignored
+`cache/maintenance/reports/guarded-pending-draft-updates/`. Required #234 attachment
+attempt failed at the existing 100 cap; preserve its GitHub link without claiming app
+linkage or removing history. Monitoring remains **65 artifacts / 64 services** and
+full fetched-tree inventory **733 providers / 4,294 API files / 2,120 openapi.yaml /
+2,168 swagger.yaml**. Preserve all eleven blocks, unanswered owner choices, §5 parked
+items, deprecated Grant exclusion, original creation cache and the other session's #179.
+Continue deliberate merged-branch handling and scheduled publication separately, and
+extend official-source freshness/discovery. Keep local ongoing authorization and
+laptop-sleep behavior; no execution-host or power change.
 
 **Resumed — 2026-10-08:** The user explicitly said "resume" after the 2026-10-06
 pause. The existing hourly local maintenance automation is ACTIVE again, with the
