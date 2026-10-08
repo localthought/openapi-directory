@@ -23,7 +23,8 @@ RESERVED_SUFFIX = re.compile(r".*--g[0-9]*")
 REQUIRED_INPUTS = {"maintenance/" + name for name in (
     "draft_pr.py", "update.py", "validation.py", "bundle.py", "samples.py", "releases.py",
     "report.py", "health.py", "conversion.py", "embedded.py", "response_keys.py", "requirements.txt",
-    "package.json", "package-lock.json", "convert-swagger.cjs", "pending_pr.py", "refresh_pr.py")}
+    "package.json", "package-lock.json", "convert-swagger.cjs", "pending_pr.py", "refresh_pr.py",
+    "eligibility.py")}
 
 
 class PublicationFailure(ValueError):

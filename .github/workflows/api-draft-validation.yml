@@ -6,19 +6,48 @@ on:
       - 'APIs/**'
       - 'maintenance/sources.json'
       - '.github/workflows/api-draft-validation.yml'
+  # Explicit re-validation of an existing generated draft's exact current head,
+  # e.g. after a draft was created by a token whose events do not trigger
+  # pull_request workflows. Read-only: no status, comment or PR write.
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Generated draft PR number in this repository
+        required: true
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   validate:
-    if: startsWith(github.head_ref, 'codex/official-update-')
+    if: startsWith(github.head_ref, 'codex/official-update-') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve exact draft head and base (dispatch only)
+        id: dispatch
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr }}
+        run: |
+          case "$PR_NUMBER" in ''|*[!0-9]*) echo "PR must be a number"; exit 1;; esac
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" > pr.json
+          python3 - <<'PY'
+          import json, os
+          pr = json.load(open("pr.json"))
+          repo = os.environ["GITHUB_REPOSITORY"]
+          if (pr["state"] != "open" or pr["base"]["ref"] != "main"
+                  or pr["head"]["repo"]["full_name"] != repo or pr["base"]["repo"]["full_name"] != repo
+                  or not pr["head"]["ref"].startswith("codex/official-update-")):
+              raise SystemExit("Not an open generated draft PR in this repository")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write("base=%s\nhead=%s\nbranch=%s\n" % (pr["base"]["sha"], pr["head"]["sha"], pr["head"]["ref"]))
+          PY
       # Use the already delivered base tools, never infrastructure from the draft.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ github.event.pull_request.base.sha || steps.dispatch.outputs.base }}
           fetch-depth: 0
           sparse-checkout: maintenance
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -29,9 +58,9 @@ jobs:
       - run: python -m pip install -r maintenance/requirements.txt
       - name: Validate exact draft head and API scope
         env:
-          DRAFT_BASE: ${{ github.event.pull_request.base.sha }}
-          DRAFT_HEAD: ${{ github.event.pull_request.head.sha }}
-          DRAFT_BRANCH: ${{ github.head_ref }}
+          DRAFT_BASE: ${{ github.event.pull_request.base.sha || steps.dispatch.outputs.base }}
+          DRAFT_HEAD: ${{ github.event.pull_request.head.sha || steps.dispatch.outputs.head }}
+          DRAFT_BRANCH: ${{ github.head_ref || steps.dispatch.outputs.branch }}
         run: |
           python maintenance/draft_pr.py --base "$DRAFT_BASE" --validate-head "$DRAFT_HEAD" --branch "$DRAFT_BRANCH" > draft-validation.json
           cat draft-validation.json

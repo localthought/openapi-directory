@@ -1110,3 +1110,35 @@ This explicit command does not schedule writes, resolve main/base advances, reco
 legacy/manual drafts, retire merged branches, retry guards or merge anything. These
 remain separate infrastructure and per-API review work. Weekly/monthly workflow
 permissions stay `contents: read`, and laptop sleep behavior remains unchanged.
+
+## Scheduled-publication groundwork (not scheduled, no write permissions)
+
+Implements the parts of `design/scheduled-publication.md` that do not need a schedule
+trigger or new write permissions. Both of those wait for the repository owner's explicit
+go-ahead.
+
+- `eligibility.py`: the shared hold classes (endpoint/version removals, server/auth,
+  schema-name, callback/webhook changes). `refresh_pr.py` now uses it unchanged in
+  behaviour; `scheduled_publish.py` additionally holds initial imports and new vendor
+  version directories for human review.
+- `state_store.py`: an append-only guard/receipt store on `refs/heads/maintenance-state`.
+  Every write is one commit pushed with an exact lease (create-only when absent), so a
+  concurrent writer fails closed. Existing files are never modified or deleted, except the
+  holder's own `publishing.lock`, which is removed only in the commit that records the
+  outcome. `blocked.json` keeps a group unavailable until a reviewed `cleared.json` is
+  committed. `export()` materializes the store as a local `--prior-cache` root, so
+  receipts can follow the work between machines. Receipts that only ever existed on one
+  machine are not recreated.
+- `scheduled_publish.py plan` is read-only: it builds a fresh candidate per unblocked
+  publication group and lists `eligible` (at most five), `needs_manual_review` with the
+  reason, `matches_source`, `blocked` and `failed`. `scheduled_publish.py publish` is an
+  explicit operator command using the operator's own credentials. It rebuilds each
+  eligible candidate, locks it in the state store, runs the normal create-only publisher,
+  records receipts and releases the lock, and stops at the first failure. An unknown
+  outcome without a failure guard keeps the lock. It never marks ready, approves, merges,
+  deletes or retries.
+- `api-draft-validation.yml` accepts `workflow_dispatch` with a PR number. It
+  re-validates that generated draft's exact current head with the same offline checks,
+  using only `contents: read` and `pull-requests: read`. It posts no status or comment.
+  Posting an exact-SHA commit status (which needs `statuses: write`) is part of the
+  owner-approved step.
