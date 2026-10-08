@@ -1155,3 +1155,21 @@ string default `"default"` from the boolean `base_contact_response.is_trusted`, 
 replay if the vendor changes it. The generated `APIs/moneybird.com/v2-readonly` subset
 belongs to its own generator and is not touched by refreshes; regenerate it deliberately
 afterwards.
+
+## OpenAI, Klaviyo and Jira Cloud platform (registered 2026-10-08)
+
+- `openai` follows official `openai/openai-openapi` `openapi.yaml` (OpenAPI 3.1). The fixed
+  declared version 2.3.0 is refreshed in place. The exact recipe removes only three null
+  defaults that match none of their declared alternatives.
+- `klaviyo` follows official `klaviyo/openapi` `openapi/stable.json`. The README calls it
+  the full GA spec behind the docs and SDKs; `beta.json` is not registered. New stable
+  revisions (2026-07-15 at review) get new directories. The recipe removes only five
+  `font_family` defaults that match more than one `oneOf` alternative. The value remains
+  an allowed enum value and the example.
+- `jira-platform` follows the official Jira Cloud platform REST v3 download, the canonical
+  URL behind the stored file's `x-origin`. The vendor stamps every build
+  (`1001.0.0-SNAPSHOT-<sha>`), so it uses `stable_directory` for the existing
+  `jira/1001.0.0-SNAPSHOT` directory. The recipe removes only four empty-string array-item
+  defaults outside their enums. Route removals relative to the three-year-old stored
+  snapshot are source omissions. Most have replacements in the same source (the new
+  `/workflows` and `/workflowscheme` APIs); none is asserted as a runtime retirement.
