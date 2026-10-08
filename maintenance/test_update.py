@@ -662,6 +662,29 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
             with self.subTest(fixed=fixed), self.assertRaises((ValueError, KeyError)):
                 update.prepare_document(source, json.dumps(changed).encode())
 
+    def test_default_removal_recipes_replay_exactly_and_stop_on_vendor_fix(self):
+        for name in ("openai", "klaviyo", "jira-platform"):
+            source = {"patches": ["maintenance/patches/" + name + ".json"]}
+            recipe = json.loads((update.ROOT / source["patches"][0]).read_text())
+            spec = {"openapi": "3.0.3", "info": {"title": name, "version": "1"}, "paths": {}}
+            for operation in recipe["operations"]:
+                parts = [p.replace("~1", "/").replace("~0", "~") for p in operation["pointer"][2:].split("/")]
+                node = spec
+                for part in parts[:-2]:
+                    node = node.setdefault(part, {})  # minimal skeleton; dict keys stand in for indices
+                node[parts[-2]] = dict(operation["context"], **{parts[-1]: operation["from"]})
+            result, steps = update.prepare_document(source, json.dumps(spec).encode())
+            for operation in recipe["operations"]:
+                with self.assertRaises(KeyError):
+                    update.pointer(result, operation["pointer"])
+            self.assertIn(update.sha256((update.ROOT / source["patches"][0]).read_bytes()), steps[0])
+            fixed = json.loads(json.dumps(spec))
+            first = recipe["operations"][0]["pointer"]
+            parent = update.pointer(fixed, first.rsplit("/", 1)[0])
+            del parent[first.rsplit("/", 1)[1]]
+            with self.subTest(recipe=name), self.assertRaisesRegex(ValueError, "source value changed"):
+                update.prepare_document(source, json.dumps(fixed).encode())
+
     def test_array_pointer_escaped_tokens_and_referenced_parameters(self):
         spec = document()
         self.assertEqual(update.pointer(spec, "#/components/schemas/Choice/oneOf/1"), {"type": "null"})

@@ -1303,6 +1303,53 @@
       ],
       "version_policy": "stable_directory",
       "priority": "high"
+    },
+    {
+      "id": "openai",
+      "provider": "openai.com",
+      "target": "APIs/openai.com/2.3.0/openapi.yaml",
+      "github": {
+        "repository": "openai/openai-openapi",
+        "ref": "main",
+        "path": "openapi.yaml"
+      },
+      "discovery": "Official openai/openai-openapi repository (public, unarchived; README: machine-readable description of the OpenAI REST API, authored in OpenAPI 3.1; checked 2026-10-08). Fixed declared vendor version 2.3.0 continues to change; refresh in place. At review (b2751c6625493c9c64db21b1b26a4d9300e589e3) native 3.1.0 / 2.3.0 / 228 paths / 356 operations vs stored 224 paths. Native validation fails only on three null defaults that match none of their declared alternatives; the exact recipe removes only those. No conversion or bundling.",
+      "coverage": "OpenAI REST API as published by the vendor, including beta/preview-labelled groups (e.g. Realtime, Assistants, Conversations betas). Preserve vendor lifecycle labels, authentication and servers; not a GA-only subset. The stored file has no prior x-origin; curation is preserved from it.",
+      "patches": [
+        "maintenance/patches/openai.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "klaviyo",
+      "provider": "klaviyo.com",
+      "target": "APIs/klaviyo.com/2026-07-15/openapi.yaml",
+      "github": {
+        "repository": "klaviyo/openapi",
+        "ref": "main",
+        "path": "openapi/stable.json"
+      },
+      "discovery": "Official klaviyo/openapi repository (public, unarchived; checked 2026-10-08). Its README calls openapi/stable.json the full GA spec, the same source used for the API docs and SDKs; beta.json holds pre-release endpoints and is not registered. Klaviyo is absent from the full fetched main tree. At review (80d70a7ef72df094d624464fd5f33739f4b5b039) native 3.0.2 / stable revision 2026-07-15 / 238 paths / 345 operations. Native validation fails only on five font_family defaults that match more than one oneOf alternative; the exact recipe removes only those defaults. New revisions use new version directories.",
+      "coverage": "Klaviyo REST API, GA (stable) revision only: profiles, lists/segments, events, metrics, campaigns, flows, templates, forms, catalogs, reporting and related resources. Beta endpoints are excluded by the vendor's own stable/beta split. Preserve vendor revision header semantics, OAuth/API-key authentication and per-endpoint scopes. No curation is invented for this new provider.",
+      "patches": [
+        "maintenance/patches/klaviyo.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "jira-platform",
+      "provider": "atlassian.com",
+      "target": "APIs/atlassian.com/jira/1001.0.0-SNAPSHOT/openapi.yaml",
+      "url": "https://dac-static.atlassian.com/cloud/jira/platform/swagger-v3.v3.json",
+      "discovery": "Official Jira Cloud platform REST v3 download linked from the Atlassian developer reference; the stored file's x-origin (developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json) redirects to this canonical dac-static URL, as for Confluence. The vendor stamps info.version per build (1001.0.0-SNAPSHOT-<sha>), so the existing jira/1001.0.0-SNAPSHOT directory is refreshed in place (stable_directory). At review (2026-10-08) native 3.0.1 / 423 paths / 620 operations vs stored 327 paths. Native validation fails only on four empty-string array-item defaults outside their enums; the exact recipe removes only those. Hosted health not_assessed; no Git revision claimed.",
+      "coverage": "Jira Cloud platform REST API v3 (issues, projects, workflows, fields, screens, users, permissions and related platform resources), including vendor experimental/deprecated labels. Not Jira Software (agile), Service Management or Data Center APIs. Preserve tenant server, OAuth/basic authentication and scopes.",
+      "patches": [
+        "maintenance/patches/jira-platform.json"
+      ],
+      "version_policy": "stable_directory",
+      "priority": "high"
     }
   ]
 }
