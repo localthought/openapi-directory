@@ -1210,7 +1210,7 @@
     {
       "id": "xero-identity",
       "provider": "xero.com",
-      "target": "APIs/xero.com/xero-identity/2.9.4/openapi.yaml",
+      "target": "APIs/xero.com/xero-identity/19.1.0/openapi.yaml",
       "github": {
         "repository": "XeroAPI/Xero-OpenAPI",
         "ref": "master",
