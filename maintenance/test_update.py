@@ -685,6 +685,29 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
             with self.subTest(recipe=name), self.assertRaisesRegex(ValueError, "source value changed"):
                 update.prepare_document(source, json.dumps(fixed).encode())
 
+    def test_volatile_examples_opt_in_ignores_only_example_churn(self):
+        source = {"volatile_examples": True, "version_policy": "stable_directory"}
+        old = document("v2-a")
+        old["components"]["schemas"]["Thing"] = {"type": "object", "example": {"id": "1"},
+                                                 "properties": {"example": {"type": "string"}}}
+        old["paths"]["/items/{id}"]["get"]["responses"]["200"]["content"] = {
+            "application/json": {"examples": {"one": {"value": {"id": "1", "created_at": "2026-01-01"}}}}}
+        churn = copy.deepcopy(old)
+        churn["info"]["version"] = "v2-b"
+        churn["components"]["schemas"]["Thing"]["example"] = {"id": "2"}
+        churn["paths"]["/items/{id}"]["get"]["responses"]["200"]["content"]["application/json"]["examples"]["one"]["value"]["id"] = "2"
+        result = update.compare(old, churn, source)
+        self.assertEqual(result["status"], "matches_source")
+        self.assertTrue(result["volatile_example_changes_only"])
+        self.assertEqual(update.compare(old, churn)["status"], "changed")  # strict without opt-in
+        self.assertEqual(update.compare(old, churn, dict(source, version_policy="vendor"))["status"], "changed")
+        real = copy.deepcopy(churn)
+        real["components"]["schemas"]["Thing"]["properties"]["example"]["type"] = "integer"  # a property named example
+        self.assertEqual(update.compare(old, real, source)["status"], "changed")
+        real = copy.deepcopy(churn)
+        real["paths"]["/items/{id}"]["get"]["responses"]["200"]["description"] = "Changed"
+        self.assertEqual(update.compare(old, real, source)["status"], "changed")
+
     def test_array_pointer_escaped_tokens_and_referenced_parameters(self):
         spec = document()
         self.assertEqual(update.pointer(spec, "#/components/schemas/Choice/oneOf/1"), {"type": "null"})

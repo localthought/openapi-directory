@@ -1175,3 +1175,14 @@ afterwards.
   defaults outside their enums. Route removals relative to the three-year-old stored
   snapshot are source omissions. Most have replacements in the same source (the new
   `/workflows` and `/workflowscheme` APIs); none is asserted as a runtime retirement.
+
+## Volatile example churn (Moneybird)
+
+A source may set `"volatile_examples": true` after review. The vendor then regenerates
+random example IDs and timestamps on every build. Changes confined to OpenAPI
+`example`/`examples` values (and, with `stable_directory`, the per-build `info.version`
+stamp) are reported as `matches_source` with `volatile_example_changes_only`, rather than
+as drift. Any other change, including schema properties literally named `example`, still
+counts. Moneybird is the only such source: its 2026-10-08 regeneration changed 6,428 leaves,
+all in examples apart from the version stamp. Comparisons stay strict for every other
+source and for serialized-output checks.

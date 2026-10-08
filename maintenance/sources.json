@@ -1301,6 +1301,7 @@
       "patches": [
         "maintenance/patches/moneybird.json"
       ],
+      "volatile_examples": true,
       "version_policy": "stable_directory",
       "priority": "high"
     },
