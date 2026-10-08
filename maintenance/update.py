@@ -442,8 +442,14 @@ def destination(source, spec):
     target = Path(source["target"])
     if target.parts[:2] != ("APIs", source["provider"]) or target.name != "openapi.yaml" or ".." in target.parts:
         raise ValueError("Target must be an OpenAPI YAML path inside the provider directory")
-    if source.get("version_policy") != "vendor":
-        raise ValueError("This initial importer supports only declared vendor versions")
+    policy = source.get("version_policy")
+    if policy == "stable_directory":
+        # Vendors that stamp every release (e.g. Moneybird "v2-<date>-<hash>")
+        # keep one reviewed API-major directory, refreshed in place; the exact
+        # vendor version stays recorded in the document and its provenance.
+        return target
+    if policy != "vendor":
+        raise ValueError("This importer supports only declared vendor versions or a reviewed stable directory")
     return target.parent.parent / version / "openapi.yaml"
 
 

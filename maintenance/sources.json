@@ -1286,6 +1286,23 @@
       "coverage": "Official YNAB API v1 (user, plans, accounts, categories, payees, payee locations, months, money movements, transactions, scheduled transactions). The vendor changelog for v1.79.0 (2026-03-05) moved all documented routes from /budgets/{budget_id} to /plans/{plan_id}; it states the /budgets paths continue to work with the original response keys but are no longer documented. Reported /budgets removals against 1.0.0 are therefore documentation renames, not runtime retirements. Preserve vendor deprecated-field descriptions, bearer authentication and rate-limit prose.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "moneybird",
+      "provider": "moneybird.com",
+      "target": "APIs/moneybird.com/v2/openapi.yaml",
+      "github": {
+        "repository": "moneybird/openapi",
+        "ref": "main",
+        "path": "openapi.yml"
+      },
+      "discovery": "Official moneybird/openapi repository (public, unarchived; checked 2026-10-08), the exact source already cited by the stored description's x-origin. The vendor regenerates it several times a day and stamps info.version per release (v2-<date>-<hash>), so the reviewed API-major directory APIs/moneybird.com/v2 is refreshed in place (version_policy stable_directory) instead of creating one directory per release; the exact vendor version stays in the document and provenance. At review (commit 1fb2617a8cb291885a9440c4a99597d53545ef9e) native OpenAPI 3.1.0 / v2-20261008-2ab2a03735 / 214 paths / 299 operations; it fails native validation only on is_trusted default \"default\" for a boolean, removed by the exact recipe. No conversion or bundling.",
+      "coverage": "Official Moneybird API v2 (administrations, contacts, sales/purchase invoices, financial mutations, ledger accounts, reports, webhooks and related resources). Preserve vendor bearer authentication and all operations. The separate APIs/moneybird.com/v2-readonly subset is generated from this file by its own generator (another session's work) and is not changed by refreshes here; regenerate it deliberately after a refresh.",
+      "patches": [
+        "maintenance/patches/moneybird.json"
+      ],
+      "version_policy": "stable_directory",
+      "priority": "high"
     }
   ]
 }

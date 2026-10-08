@@ -633,6 +633,35 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
             with self.assertRaises(ValueError):
                 update.destination(source, document(version))
 
+    def test_stable_directory_policy_refreshes_in_place_and_keeps_guards(self):
+        source = {"target": "APIs/example.com/v2/openapi.yaml", "provider": "example.com",
+                  "version_policy": "stable_directory"}
+        for version in ("v2-20261008-2ab2a03735", "v2-20261009-0000000000"):
+            self.assertEqual(str(update.destination(source, document(version))), source["target"])
+        for version in ("", "..", "2026/10"):
+            with self.assertRaises(ValueError):
+                update.destination(source, document(version))
+        with self.assertRaises(ValueError):
+            update.destination(dict(source, target="APIs/other.com/v2/openapi.yaml"), document("v2"))
+        with self.assertRaises(ValueError):
+            update.destination(dict(source, version_policy="guess"), document("v2"))
+
+    def test_moneybird_recipe_removes_only_invalid_boolean_default_and_stops_on_vendor_fix(self):
+        source = {"patches": ["maintenance/patches/moneybird.json"]}
+        spec = {"openapi": "3.1.0", "info": {"title": "Moneybird", "version": "v2-x"}, "paths": {},
+                "components": {"schemas": {"base_contact_response": {"type": "object", "properties": {
+                    "is_trusted": {"type": "boolean", "default": "default"}}}}}}
+        self.assertTrue(update.validate_document(spec))
+        result, steps = update.prepare_document(source, json.dumps(spec).encode())
+        self.assertEqual(result["components"]["schemas"]["base_contact_response"]["properties"]["is_trusted"],
+                         {"type": "boolean"})
+        self.assertEqual(update.validate_document(result), [])
+        for fixed in ({"type": "boolean"}, {"type": "boolean", "default": False}, {"type": "string", "default": "default"}):
+            changed = copy.deepcopy(spec)
+            changed["components"]["schemas"]["base_contact_response"]["properties"]["is_trusted"] = fixed
+            with self.subTest(fixed=fixed), self.assertRaises((ValueError, KeyError)):
+                update.prepare_document(source, json.dumps(changed).encode())
+
     def test_array_pointer_escaped_tokens_and_referenced_parameters(self):
         spec = document()
         self.assertEqual(update.pointer(spec, "#/components/schemas/Choice/oneOf/1"), {"type": "null"})
