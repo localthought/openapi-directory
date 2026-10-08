@@ -1,23 +1,43 @@
 openapi: 3.0.3
 info:
   title: Airtable Web API (read-only bases, schema, and records subset)
-  version: 1.0.0-readonly
+  version: 1.0-readonly
   description: >-
     Read-only subset of Airtable's Web API for discovering accessible bases,
-    reading a base's table schema, and listing records from a table. Airtable
-    OAuth integrations use Authorization Code with PKCE. The requested scopes
-    are data.records:read for records and schema.bases:read for base and table
-    metadata. Record fields are user-defined and vary by table; the schema
-    deliberately preserves them as arbitrary JSON values.
+    reading a base's table schema, and reading table records. Airtable
+    OAuth integrations use Authorization Code with PKCE (S256). When a client
+    secret is configured, authenticate to the token endpoint using HTTP Basic.
+    The requested scopes are data.records:read for records and schema.bases:read
+    for base and table metadata. Record fields are user-defined and vary by
+    table; the schema deliberately preserves them as arbitrary JSON values.
   contact:
     name: Airtable Developer Support
     url: https://airtable.com/developers/web/api
   x-origin:
-    - format: openapi
+    - format: html
       url: https://airtable.com/developers/web/api
-      version: "3.0"
-  x-providerName: airtable.com
-  x-serviceName: api-readonly
+  x-conversion:
+    - >-
+      Authored this Local Thought read-only subset from Airtable's official Web
+      API HTML reference pages; Airtable does not publish an OpenAPI source
+      description used for this file. The 1.0-readonly directory/version is the
+      subset's version, not an Airtable vendor release. Sources:
+      https://airtable.com/developers/web/api/list-bases,
+      https://airtable.com/developers/web/api/get-base-schema,
+      https://airtable.com/developers/web/api/list-records,
+      https://airtable.com/developers/web/api/get-record,
+      https://airtable.com/developers/web/api/oauth-reference,
+      https://airtable.com/developers/web/api/authentication, and
+      https://airtable.com/developers/web/api/scopes.
+    - >-
+      Included only base discovery, table-schema reads, record-list reads, and
+      single-record reads. Operation scopes and OAuth endpoints follow Airtable's
+      official authentication, OAuth, and scopes references; OAuth uses PKCE
+      S256, and a configured client secret is sent with HTTP Basic at token
+      exchange.
+    - >-
+      Record fields are user-defined JSON values and are represented with
+      additionalProperties so field names and nested values are preserved.
 servers:
   - url: https://api.airtable.com
 paths:
@@ -27,9 +47,13 @@ paths:
       summary: List accessible bases
       description: >-
         Lists bases accessible to the authenticated user or integration.
-        Requires the schema.bases:read scope.
+        Returns up to 1000 bases per page. If the response includes offset, pass
+        that opaque value unchanged as the offset query parameter to retrieve
+        the next page. Requires the schema.bases:read scope.
       security:
         - oauth2: [schema.bases:read]
+      parameters:
+        - $ref: '#/components/parameters/Offset'
       responses:
         '200':
           description: Accessible bases.
@@ -42,6 +66,7 @@ paths:
                   bases:
                     type: array
                     items: { $ref: '#/components/schemas/Base' }
+                  offset: { type: string }
         '401': { description: The access token is missing or invalid. }
         '403': { description: The request is not allowed or lacks a required scope. }
   /v0/meta/bases/{baseId}/tables:
@@ -93,6 +118,26 @@ paths:
         '401': { description: The access token is missing or invalid. }
         '403': { description: The request is not allowed or lacks a required scope. }
         '404': { description: The base or table does not exist or is not accessible. }
+  /v0/{baseId}/{tableIdOrName}/{recordId}:
+    get:
+      operationId: get-record
+      summary: Get a record
+      description: Returns one record identified by its Airtable record ID.
+      security:
+        - oauth2: [data.records:read]
+      parameters:
+        - $ref: '#/components/parameters/BaseId'
+        - $ref: '#/components/parameters/TableIdOrName'
+        - $ref: '#/components/parameters/RecordId'
+      responses:
+        '200':
+          description: The requested record.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Record' }
+        '401': { description: The access token is missing or invalid. }
+        '403': { description: The request is not allowed or lacks a required scope. }
+        '404': { description: 'The base, table, or record does not exist or is not accessible.' }
 components:
   securitySchemes:
     oauth2:
@@ -129,13 +174,22 @@ components:
       required: false
       description: Opaque pagination token returned by the preceding response; pass unchanged.
       schema: { type: string }
+    RecordId:
+      name: recordId
+      in: path
+      required: true
+      description: The Airtable record identifier.
+      schema: { type: string }
   schemas:
     Base:
       type: object
-      required: [id, name]
+      required: [id, name, permissionLevel]
       properties:
         id: { type: string }
         name: { type: string }
+        permissionLevel:
+          type: string
+          enum: [none, read, comment, edit, create, interfaceOnly]
       additionalProperties: true
     Table:
       type: object
