@@ -1142,3 +1142,16 @@ go-ahead.
   using only `contents: read` and `pull-requests: read`. It posts no status or comment.
   Posting an exact-SHA commit status (which needs `statuses: write`) is part of the
   owner-approved step.
+
+## Stable-directory version policy (Moneybird)
+
+`version_policy: "stable_directory"` refreshes one reviewed API-major directory in place.
+It is for vendors that stamp every regeneration with a new `info.version`; Moneybird
+publishes `v2-<date>-<hash>` several times a day. The exact vendor version stays in the
+document and its provenance; only the directory is stable. All other safety checks apply.
+`moneybird` follows the official `moneybird/openapi` `openapi.yml`, already cited by the
+stored `APIs/moneybird.com/v2/openapi.yaml`. Its exact recipe removes only the invalid
+string default `"default"` from the boolean `base_contact_response.is_trusted`, and stops
+replay if the vendor changes it. The generated `APIs/moneybird.com/v2-readonly` subset
+belongs to its own generator and is not touched by refreshes; regenerate it deliberately
+afterwards.
