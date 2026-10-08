@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import draft_pr
+import eligibility
 import pending_pr
 import update
 
@@ -19,33 +20,13 @@ def policy(plan, review):
         return "Main/base advanced; no automatic rebase of a pending PR"
     prior = pending_pr.retained_candidate(Path(review["prior_cache"]), plan, review["pr_snapshot"])
     for row, comparison in zip(plan["sources"], review["comparisons_from_pending"]):
-        if (comparison["stored"]["version"] != comparison["source"]["version"]
-                or comparison["removed_paths"] or comparison["removed_operations"]):
-            return "Version change or endpoint removal requires deliberate reconciliation"
         previous_row = next(r for r in prior["sources"] if r["id"] == row["id"])
         old = update.stored(previous_row["destination"], review["head"])
         content = plan["files"].get(row["destination"])
         new = update.parse(content.encode()) if content is not None else update.stored(row["destination"], plan["base_revision"])
-        for spec in (old, new):
-            if not isinstance(spec.get("components", {}), dict):
-                return "Unverifiable security/schema content"
-        if (old.get("servers") != new.get("servers") or old.get("security") != new.get("security")
-                or old.get("components", {}).get("securitySchemes") != new.get("components", {}).get("securitySchemes")):
-            return "Server or authentication change requires deliberate reconciliation"
-        if set(old.get("components", {}).get("schemas", {})) - set(new.get("components", {}).get("schemas", {})):
-            return "Schema removal requires deliberate reconciliation"
-        if (old.get("webhooks") != new.get("webhooks")
-                or old.get("components", {}).get("callbacks") != new.get("components", {}).get("callbacks")):
-            return "Callback/webhook change requires deliberate reconciliation"
-        for path in old["paths"]:
-            a, b = update.dereference(old, old["paths"][path]), update.dereference(new, new["paths"][path])
-            if a.get("servers") != b.get("servers"):
-                return "Path server change requires deliberate reconciliation"
-            for method in update.METHODS & a.keys():
-                if a[method].get("callbacks") != b[method].get("callbacks"):
-                    return "Operation callback change requires deliberate reconciliation"
-                if a[method].get("security") != b[method].get("security") or a[method].get("servers") != b[method].get("servers"):
-                    return "Operation authentication/server change requires deliberate reconciliation"
+        reason = eligibility.content_hold(old, new, comparison)
+        if reason:
+            return reason
     return None
 
 

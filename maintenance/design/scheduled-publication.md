@@ -1,6 +1,7 @@
 # Design: scheduled publication of generated API drafts
 
-Status: **proposal only, not implemented and not enabled.** No workflow, permission,
+Status: **groundwork implemented (see maintenance/README.md); schedule trigger and write
+permissions not enabled.** Those need the owner's explicit go-ahead. No workflow write permission,
 secret, environment or repository setting is changed by this document. Written
 2026-10-08 for HANDOVER.md item 2.
 
