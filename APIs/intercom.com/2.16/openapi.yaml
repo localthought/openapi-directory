@@ -11,12 +11,13 @@ info:
     url: https://spdx.org/licenses/MIT
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/7b3a218f2b8a9c09ae24247270c764444cddaf70/descriptions/2.16/api.intercom.io.yaml
+      url: https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/a7fdf0cecb483cea15a23081e807dce1e916c127/descriptions/2.16/api.intercom.io.yaml
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/7b3a218f2b8a9c09ae24247270c764444cddaf70/descriptions/2.16/api.intercom.io.yaml at commit 7b3a218f2b8a9c09ae24247270c764444cddaf70; entry source SHA-256 e007fe1902ceaa64e6dbaedfc064f2a2e4fc24bab6c86cf1c8f6900c2b0c42ca.
-    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=7b3a218f2b8a9c09ae24247270c764444cddaf70; catalog SHA-256 2fc7ecaaf2afc73ad4b583cc43d93a349adfea67a136d092e91aaa225aa4fd11. Preview/prerelease directories and releases below 2.16 are excluded.
+    - Fetched from https://raw.githubusercontent.com/intercom/Intercom-OpenAPI/a7fdf0cecb483cea15a23081e807dce1e916c127/descriptions/2.16/api.intercom.io.yaml at commit a7fdf0cecb483cea15a23081e807dce1e916c127; entry source SHA-256 308d899ccbe08f8022d88e3d7c49d60d3485460f17227bbf9f6ae64d63311d1c.
+    - Selected numeric release 2.16 from the reviewed vendor catalog https://api.github.com/repos/intercom/Intercom-OpenAPI/contents/descriptions?ref=a7fdf0cecb483cea15a23081e807dce1e916c127; catalog SHA-256 4d8a9c5ef4b24ac6c087cb14a5659a13428e3fe3ef47c71b7b048b7e3ac8bf8f. Preview/prerelease directories and releases below 2.16 are excluded.
     - 'Applied maintenance/patches/intercom.json (SHA-256 6e2c3a0ec38f7a2b39e9d6f6428219c15fbf014c03bd3d5774bddfcd7212c2db): GET /export/reporting_data/{job_identifier} and GET /download/reporting_data/{job_identifier} omit the required path parameter. Add the same required string job_identifier path declaration used in the validated 2.14 import; retain every vendor query/header parameter and assert each complete original list plus operation summary/tags. No endpoint or response schema is invented.'
+    - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/intercom.com/2.16/openapi.yaml.
     - Serialized as YAML with PyYAML 6.0.3; no OpenAPI version conversion.
 paths:
@@ -1868,6 +1869,7 @@ paths:
                         locale: en
                         source_id: 42
                         external_id: '3'
+                        audience_ids: []
                         created_at: 1734537269
                         updated_at: 1734537269
                         last_ingested_at: 1734537269
@@ -1883,6 +1885,7 @@ paths:
                         locale: en
                         source_id: 41
                         external_id: '2'
+                        audience_ids: []
                         created_at: 1734537269
                         updated_at: 1734537269
                         last_ingested_at: 1734537269
@@ -1898,6 +1901,7 @@ paths:
                         locale: en
                         source_id: 40
                         external_id: '1'
+                        audience_ids: []
                         created_at: 1734537269
                         updated_at: 1734537269
                         last_ingested_at: 1734537269
@@ -1955,6 +1959,9 @@ paths:
                     locale: en
                     source_id: 44
                     external_id: abc1234
+                    audience_ids:
+                      - 1
+                      - 2
                     created_at: 1734537273
                     updated_at: 1734537274
                     last_ingested_at: 1734537274
@@ -1983,6 +1990,9 @@ paths:
               successful:
                 summary: successful
                 value:
+                  audience_ids:
+                    - 1
+                    - 2
                   external_id: abc1234
                   html: <html><body><h1>Test</h1></body></html>
                   locale: en
@@ -2028,6 +2038,7 @@ paths:
                     locale: en
                     source_id: 45
                     external_id: '4'
+                    audience_ids: []
                     created_at: 1734537276
                     updated_at: 1734537276
                     last_ingested_at: 1734537276
@@ -2078,6 +2089,7 @@ paths:
                     locale: en
                     source_id: 46
                     external_id: '5'
+                    audience_ids: []
                     created_at: 1734537278
                     updated_at: 1734537278
                     last_ingested_at: 1734537278
@@ -2128,6 +2140,9 @@ paths:
                     locale: en
                     source_id: 47
                     external_id: '5678'
+                    audience_ids:
+                      - 1
+                      - 2
                     created_at: 1734537280
                     updated_at: 1734537281
                     last_ingested_at: 1734537281
@@ -2156,6 +2171,9 @@ paths:
               successful:
                 summary: successful
                 value:
+                  audience_ids:
+                    - 1
+                    - 2
                   external_id: '5678'
                   html: <html><body><h1>Test</h1></body></html>
                   locale: en
@@ -4109,7 +4127,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -4319,7 +4337,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -4508,7 +4526,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -4667,7 +4685,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -4811,7 +4829,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -5014,7 +5032,7 @@ paths:
 
         {% admonition type="warning" %}
 
-        To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+        To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
         {% /admonition %}
 
@@ -5210,7 +5228,7 @@ paths:
       tags:
         - Fin Agent
       operationId: escalateFinConversation
-      description: "Hand a conversation off to a human teammate. If you use the Intercom Helpdesk, the\nhandoff lands in your team inbox.\n\nProvide either `conversation_id` or `user`:\n\n- `conversation_id` — escalate an existing agent conversation, including one started\n  with `/fin/ask`. On the Intercom Helpdesk, Fin by default summarises the conversation\n  and opens a new Helpdesk conversation that carries the summary as an internal note.\n  Escalation does not change the original agent conversation's assignment or open/closed\n  state. Configure an escalation Operator Workflow to change this default.\n- `user` — escalate on behalf of a user with no prior agent conversation. On the Intercom\n  Helpdesk, a new Helpdesk conversation is created for the teammate. Not supported on Fin\n  for Platforms — see below.\n\nIn both cases, pass the optional `context` to give the receiving teammate background your\norchestrating agent has and Fin does not. On the Intercom Helpdesk, it appears above the\nsummary in the internal note of the new conversation the teammate picks up. It is never\nshown to the end user.\n\nEscalating an existing conversation also sets its AI Agent resolution state to\n`escalated`, readable as `ai_agent.resolution_state` on the Conversations API. This is a\nresolution state, not a billable resolution.\n\nOn Fin for Platforms, `conversation_id` is required — `user` is not supported and is\nrejected, because there is no Intercom Helpdesk in which to create a conversation. There\nis no Intercom inbox either, so an escalation that no workflow handles does not open a\nHelpdesk conversation for a teammate. `context` is not surfaced, and the conversation is\nleft open for your platform to hand off and continue driving.\n\nYou are notified over the existing webhook or SSE channel with an `escalated` status\nfollowed by `complete`. The `complete` status signals that Fin is done; it does not close\nthe conversation. On the Intercom Helpdesk, the new human conversation remains open; on\nFin for Platforms, the conversation remains open for whoever handles it on your platform.\n\n{% admonition type=\"warning\" %}\nTo request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).\n{% /admonition %}\n"
+      description: "Hand a conversation off to a human teammate. If you use the Intercom Helpdesk, the\nhandoff lands in your team inbox.\n\nProvide either `conversation_id` or `user`:\n\n- `conversation_id` — escalate an existing agent conversation, including one started\n  with `/fin/ask`. On the Intercom Helpdesk, Fin by default summarises the conversation\n  and opens a new Helpdesk conversation that carries the summary as an internal note.\n  Escalation does not change the original agent conversation's assignment or open/closed\n  state. Configure an escalation Operator Workflow to change this default.\n- `user` — escalate on behalf of a user with no prior agent conversation. On the Intercom\n  Helpdesk, a new Helpdesk conversation is created for the teammate. Not supported on Fin\n  for Platforms — see below.\n\nIn both cases, pass the optional `context` to give the receiving teammate background your\norchestrating agent has and Fin does not. On the Intercom Helpdesk, it appears above the\nsummary in the internal note of the new conversation the teammate picks up. It is never\nshown to the end user.\n\nEscalating an existing conversation also sets its AI Agent resolution state to\n`escalated`, readable as `ai_agent.resolution_state` on the Conversations API. This is a\nresolution state, not a billable resolution.\n\nOn Fin for Platforms, `conversation_id` is required — `user` is not supported and is\nrejected, because there is no Intercom Helpdesk in which to create a conversation. There\nis no Intercom inbox either, so an escalation that no workflow handles does not open a\nHelpdesk conversation for a teammate. `context` is not surfaced, and the conversation is\nleft open for your platform to hand off and continue driving.\n\nYou are notified over the existing webhook or SSE channel with an `escalated` status\nfollowed by `complete`. The `complete` status signals that Fin is done; it does not close\nthe conversation. On the Intercom Helpdesk, the new human conversation remains open; on\nFin for Platforms, the conversation remains open for whoever handles it on your platform.\n\n{% admonition type=\"warning\" %}\nTo request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.\n{% /admonition %}\n"
       responses:
         '200':
           description: Conversation escalated successfully
@@ -28820,6 +28838,15 @@ components:
           type: string
           description: The identifier for the external page which was given by the source. Must be unique for the source.
           example: '5678'
+        audience_ids:
+          type: array
+          nullable: true
+          description: The list of audience IDs to target this external page to for Fin AI Agent. Omitting the field keeps the default audience inherited from the source. Pass `[]` to clear all audience memberships, including the inherited ones. If an external page already exists with the specified source_id and external_id, omitting the field leaves its audience memberships unchanged. Unknown audience IDs return a `404` error.
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
       required:
         - title
         - html
@@ -31583,6 +31610,14 @@ components:
           type: string
           description: The identifier for the external page which was given by the source. Must be unique for the source.
           example: '5678'
+        audience_ids:
+          type: array
+          description: The list of audience IDs that this external page is targeted to for Fin AI Agent. Empty when the external page has no audience targeting.
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
         created_at:
           type: integer
           format: date-time
@@ -35284,6 +35319,15 @@ components:
           type: string
           description: The identifier for the external page which was given by the source. Must be unique for the source.
           example: '5678'
+        audience_ids:
+          type: array
+          nullable: true
+          description: The list of audience IDs to target this external page to for Fin AI Agent. Replaces all existing audience memberships. Omitting the field leaves existing audience memberships unchanged. Pass `[]` to clear all audience memberships. Unknown audience IDs return a `404` error.
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
       required:
         - title
         - html
@@ -35956,7 +36000,7 @@ tags:
 
       {% admonition type="warning" %}
 
-      To request access to the Fin Agent API, please [fill out this form](https://forms.gle/osy4uyiqyomRCsL2A).
+      To request access to the Fin Agent API, go to **Settings > Integrations > Fin Agent API** in your workspace and tell us about your use case. Once access is granted, **Fin Agent API** appears under **Fin AI Agent > Deploy**.
 
       {% /admonition %}
 
