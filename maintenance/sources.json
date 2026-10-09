@@ -1430,7 +1430,7 @@
     {
       "id": "twilio-conversations-v1",
       "provider": "twilio.com",
-      "target": "APIs/twilio.com/twilio_conversations_v1/1.55.0/openapi.yaml",
+      "target": "APIs/twilio.com/twilio_conversations_v1/1.0.0/openapi.yaml",
       "github": {
         "repository": "twilio/twilio-oai",
         "ref": "main",
