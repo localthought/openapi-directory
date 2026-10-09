@@ -1426,6 +1426,188 @@
       "import_blocker": "In-place refresh of fixed 2.0 would remove 28 paths / 47 operations. The vendor changelog evidences 25 (Issue Tracker removal announced 2026-08-20; Connect addon linker removal); five cross-workspace routes (/workspaces, /repositories, /user/permissions/repositories, /user/permissions/workspaces, /pullrequests/{selected_user}) lack vendor evidence (checked 2026-10-08). Review before importing.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "twilio-conversations-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_conversations_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_conversations_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Conversations v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Conversations v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-voice-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_voice_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_voice_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Voice v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Voice v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-video-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_video_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_video_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Video v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Video v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-lookups-v2",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_lookups_v2/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_lookups_v2.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Lookup v2, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Lookup v2 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-studio-v2",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_studio_v2/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_studio_v2.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Studio v2, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Studio v2 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-serverless-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_serverless_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_serverless_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Serverless v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Serverless v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-taskrouter-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_taskrouter_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_taskrouter_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for TaskRouter v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio TaskRouter v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-sync-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_sync_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_sync_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Sync v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Sync v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-trunking-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_trunking_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_trunking_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Elastic SIP Trunking v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Elastic SIP Trunking v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-intelligence-v2",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_intelligence_v2/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_intelligence_v2.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Conversational Intelligence v2, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Conversational Intelligence v2 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-events-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_events_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_events_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Event Streams v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Event Streams v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-trusthub-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_trusthub_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_trusthub_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Trust Hub v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Trust Hub v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "twilio-flex-v1",
+      "provider": "twilio.com",
+      "target": "APIs/twilio.com/twilio_flex_v1/1.55.0/openapi.yaml",
+      "github": {
+        "repository": "twilio/twilio-oai",
+        "ref": "main",
+        "path": "spec/json/twilio_flex_v1.json"
+      },
+      "discovery": "Official twilio/twilio-oai artifact for Flex v1, the same project already monitored for classic REST, Verify and Messaging (README: GA, actively maintained; checked 2026-10-08). The June 2024 MVR release (vendor PR 111) reset declared versions to 1.0.0; the stored 1.55.0 description is the initial comparison/curation baseline and stays byte-identical, and the actual vendor version is imported into its own directory. Native OpenAPI 3.0.1 validates strictly at review (141f1201b55abcc16b3aa8089e71c4a927326975) with no patches. Pre-scan: no new realistic Account SID (AC...) example values relative to the stored file.",
+      "coverage": "Twilio Flex v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
