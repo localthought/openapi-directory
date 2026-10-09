@@ -1186,3 +1186,22 @@ as drift. Any other change, including schema properties literally named `example
 counts. Moneybird is the only such source: its 2026-10-08 regeneration changed 6,428 leaves,
 all in examples apart from the version stamp. Comparisons stay strict for every other
 source and for serialized-output checks.
+
+## Netlify and Bitbucket (Swagger 2.0, registered 2026-10-08)
+
+- `netlify` follows official `netlify/open-api` `swagger.yml`, converted with the locked
+  converter. Its three counted repairs are the guarded `x-nullable: true` translations of
+  `databaseComputeSettingsRequest` (`min_cu`, `max_cu`, `sleep_timeout_seconds`); the
+  control conversion must otherwise be identical. The nullable location guard now counts
+  only `x-nullable: true`. The converter maps `x-nullable: false` to `nullable: false` in
+  both conversions without a repair, so complete control-output equality still covers it.
+  2.60.0 is imported into its own directory; the historical 2.16.0 Swagger is the initial
+  curation baseline and stays unchanged.
+- `bitbucket` follows the official hosted `https://api.bitbucket.org/swagger.json`. Its one
+  counted converter step is an already-empty response description left unchanged.
+  **Monitoring only for now.** The refresh of fixed version 2.0 would drop 28 paths /
+  47 operations. The vendor changelog evidences 25 paths: the Issue Tracker removal
+  announced 2026-08-20 (issues, components, milestones, versions, import/export) and the
+  addon linker removal. Five cross-workspace routes (`/workspaces`, `/repositories`,
+  `/user/permissions/repositories`, `/user/permissions/workspaces`,
+  `/pullrequests/{selected_user}`) still need vendor evidence before an in-place refresh.
