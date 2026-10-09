@@ -1253,3 +1253,16 @@ reference) declares OpenAPI 3.0.0 but uses JSON Schema 2020-12 constructs. Most 
 3.0 forms (`const` → single-value `enum`, numeric `exclusiveMinimum`, `type: "null"`). Three
 `propertyNames` constraints have no 3.0 equivalent, so no constraint-preserving recipe
 exists. It stays an unregistered lead, without a dialect upgrade.
+
+## PayPal (six artifacts) and CircleCI v2 (registered 2026-10-09)
+
+The six natively valid PayPal REST artifacts already stored from
+`paypal/paypal-rest-api-specifications` are now monitored: Subscriptions v1, Orders v2,
+Payouts v1, Transaction Search v1, Shipment Tracking v1 and Payment Method Tokens v3.
+Content can change at a fixed declared version (Orders 2.32 did). Catalog Products,
+Disputes, Partner Referrals, Invoicing, Webhooks, Web Experience Profiles and Payments
+currently fail native validation: `type` as a list in a 3.0 schema, `enum` on a Parameter
+Object, duplicate enum values, and invalid defaults/limits. They are not registered;
+their stored files are unchanged. `circleci-v2` follows CircleCI's own
+`https://circleci.com/api/v2/openapi.json`, adding the missing v2 API beside the
+historical v1 file.
