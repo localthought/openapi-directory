@@ -11,10 +11,10 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   x-origin:
     - format: openapi
-      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/f73faaacbc503c932c477dcf74e78c5e12ec5836/openapi-derefed.json
+      url: https://raw.githubusercontent.com/getsentry/sentry-api-schema/377fc3e171804d7c7e1991c4342bdb4eb7f8a2ba/openapi-derefed.json
       version: '3.0'
   x-conversion:
-    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/f73faaacbc503c932c477dcf74e78c5e12ec5836/openapi-derefed.json at commit f73faaacbc503c932c477dcf74e78c5e12ec5836; entry source SHA-256 2c584abe7a8f094b6bfab6af9a7c75bccf2168a107da59ea7e9b93e00bf0766b.
+    - Fetched from https://raw.githubusercontent.com/getsentry/sentry-api-schema/377fc3e171804d7c7e1991c4342bdb4eb7f8a2ba/openapi-derefed.json at commit 377fc3e171804d7c7e1991c4342bdb4eb7f8a2ba; entry source SHA-256 7a8678be286679d622b38d1e850c6881b195397b97c88cd1d4b4cbbb42c0152c.
     - Validated with openapi-spec-validator 0.9.0 with openapi-schema-validator 0.9.0, the Python jsonschema backend, regress 2026.9.1 ECMAScript regex syntax/matching with no flags, and cycle-safe property collection, plus security requirement name resolution across operations, callbacks and webhooks; no schema constraints removed.
     - Preserved existing APIs.guru curation metadata from APIs/sentry.io/v0/openapi.yaml.
     - Parsed the vendor document and serialized it as YAML with PyYAML 6.0.3; no API content patches or OpenAPI version conversion.
@@ -32845,6 +32845,106 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
+  /api/0/organizations/{organization_id_or_slug}/starred-service-spans/:
+    post:
+      operationId: starOrganizationServiceSpan
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Star a service span for the requesting user. Span queries expose this as the
+
+        `is_starred_transaction` field. Returns `403` if the user has already starred
+
+        the service span.'
+      summary: Star a Service Span
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+      tags:
+        - Explore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_span:
+                  type: string
+                  description: The name of the service span to star or unstar.
+                project_id:
+                  type: integer
+                  minimum: 1
+                  description: The ID of the project the service span belongs to.
+              required:
+                - project_id
+                - service_span
+        required: true
+      security:
+        - auth_token:
+            - member:read
+            - member:write
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
+    delete:
+      operationId: unstarOrganizationServiceSpan
+      description: '**Experimental:** This API is under active development and may change.
+
+
+        Unstar a service span for the requesting user. Succeeds even if the
+
+        service span was not starred.'
+      summary: Unstar a Service Span
+      parameters:
+        - in: path
+          name: organization_id_or_slug
+          schema:
+            type: string
+          description: The ID or slug of the organization the resource belongs to.
+          required: true
+        - in: query
+          name: service_span
+          schema:
+            type: string
+          description: The name of the service span to unstar.
+          required: true
+        - in: query
+          name: project_id
+          schema:
+            type: integer
+          description: The ID of the project the service span belongs to.
+          required: true
+      tags:
+        - Explore
+      security:
+        - auth_token:
+            - member:read
+            - member:write
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      x-sentry-experimental: true
   /api/0/organizations/{organization_id_or_slug}/stats-summary/:
     get:
       operationId: getOrganizationStatsSummary
@@ -90686,6 +90786,19 @@ components:
         - release_has_some_artifact
         - sdk_debug_id_support
         - sdk_version
+    StarSegment:
+      type: object
+      properties:
+        service_span:
+          type: string
+          description: The name of the service span to star or unstar.
+        project_id:
+          type: integer
+          minimum: 1
+          description: The ID of the project the service span belongs to.
+      required:
+        - project_id
+        - service_span
     StatusDetailsValidator:
       type: object
       properties:
