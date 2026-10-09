@@ -737,6 +737,30 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
                 with self.assertRaisesRegex(ValueError, "source value changed"):
                     update.prepare_document(source, json.dumps(fixed).encode())
 
+    def test_paypal_representation_recipes_replay_exactly_and_stop_on_vendor_fix(self):
+        names = ("catalogs-products", "notifications-webhooks", "payment-experience-web-profiles",
+                 "customer-partner-referrals", "invoicing", "payments")
+        for name in names:
+            source = {"patches": ["maintenance/patches/paypal-" + name + ".json"]}
+            recipe = json.loads((update.ROOT / source["patches"][0]).read_text())
+            spec = {"openapi": "3.0.3", "info": {"title": name, "version": "1"}, "paths": {}}
+            for operation in recipe["operations"]:
+                parts = [p.replace("~1", "/").replace("~0", "~") for p in operation["pointer"][2:].split("/")]
+                node = spec
+                for part in parts[:-2]:
+                    node = node.setdefault(part, {})
+                node.setdefault(parts[-2], {}).update(dict(operation["context"], **{parts[-1]: operation["from"]}))
+            result, _ = update.prepare_document(source, json.dumps(spec).encode())
+            for operation in recipe["operations"]:
+                if operation.get("remove"):
+                    with self.assertRaises(KeyError):
+                        update.pointer(result, operation["pointer"])
+                else:
+                    self.assertEqual(update.pointer(result, operation["pointer"]), operation["value"])
+            fixed = json.loads(json.dumps(result))  # an already-corrected vendor source stops replay
+            with self.subTest(recipe=name), self.assertRaises((ValueError, KeyError)):
+                update.prepare_document(source, json.dumps(fixed).encode())
+
     def test_array_pointer_escaped_tokens_and_referenced_parameters(self):
         spec = document()
         self.assertEqual(update.pointer(spec, "#/components/schemas/Choice/oneOf/1"), {"type": "null"})

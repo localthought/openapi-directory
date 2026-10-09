@@ -1266,3 +1266,22 @@ Object, duplicate enum values, and invalid defaults/limits. They are not registe
 their stored files are unchanged. `circleci-v2` follows CircleCI's own
 `https://circleci.com/api/v2/openapi.json`, adding the missing v2 API beside the
 historical v1 file.
+
+## PayPal correction recipes (2026-10-09)
+
+Six of the seven natively invalid PayPal artifacts have exact recipes that do not change
+accepted values:
+
+- Catalog Products, Webhooks Management, Web Experience Profiles: remove the
+  `type: [number, integer, string, boolean, null, array, object]` list from `patch.value`.
+  A 3.0 schema without `type` accepts exactly those kinds, null included, as verified with
+  the pinned validator.
+- Partner Referrals: remove duplicate enum values. The allowed set is identical.
+- Invoicing: four string length limits become the integers they state. Two `(?i)` patterns
+  become exact ASCII case-insensitive classes, with 417,844 strings compared against
+  ECMAScript `/i` and zero mismatches. One `"false"` default becomes `false`.
+- Payments: five `"false"` boolean defaults become `false`.
+
+Disputes is **not** corrected. Its `enum` sits on the Parameter Object of a filter that
+accepts comma-separated multiple values, so moving it into the schema would reject valid
+input. It also has a duplicate tag and descriptive defaults that violate their own patterns.
