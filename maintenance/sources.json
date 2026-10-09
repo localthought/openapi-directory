@@ -1668,6 +1668,100 @@
       ],
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "paypal-billing-subscriptions",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/billing-subscriptions/1.8/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/billing_subscriptions_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Subscriptions v1 (billing plans and subscriptions) only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-checkout-orders",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/checkout-orders/2.32/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/checkout_orders_v2.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Orders v2 (checkout orders) only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-payments-payouts-batch",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/payments-payouts-batch/1.9/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/payments_payouts_batch_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Payouts v1 (batch payouts) only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-reporting-transactions",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/reporting-transactions/1.9/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/reporting_transactions_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Transaction Search v1 only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-shipping-shipment-tracking",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/shipping-shipment-tracking/1.9/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/shipping_shipment_tracking_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Shipment Tracking v1 only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-vault-payment-tokens",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/vault-payment-tokens/3.4/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/vault_payment_tokens_v3.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact, the exact source already cited by the stored file (imported in #26-#38). Native validates strictly at review (90e8041ffe02d80c452d2b476bedd59a8d219bdc) with no patches. Content can change at a fixed declared version; refresh in place, new versions get new directories.",
+      "coverage": "PayPal REST Payment Method Tokens v3 only. Preserve OAuth2 security, vendor examples and descriptions. Other PayPal artifacts are registered separately or not at all (several currently fail native validation).",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "circleci-v2",
+      "provider": "circleci.com",
+      "target": "APIs/circleci.com/v2/openapi.yaml",
+      "url": "https://circleci.com/api/v2/openapi.json",
+      "discovery": "Official CircleCI API v2 OpenAPI description served by CircleCI and used by its API v2 reference (checked 2026-10-09). The full tree has only the historical v1 description; v2 is missing. Native OpenAPI 3.0.3 / declared v2 / 76 paths / 111 operations validates strictly with no patches. Hosted health not_assessed; no Git revision claimed. The v1 file stays unchanged.",
+      "coverage": "CircleCI API v2 (pipelines, workflows, jobs, insights, contexts, projects, schedules, webhooks and related resources), distinct from the historical v1 API. Preserve API-token authentication and vendor preview labels.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
