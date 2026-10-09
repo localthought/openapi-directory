@@ -1486,7 +1486,7 @@
     {
       "id": "twilio-studio-v2",
       "provider": "twilio.com",
-      "target": "APIs/twilio.com/twilio_studio_v2/1.55.0/openapi.yaml",
+      "target": "APIs/twilio.com/twilio_studio_v2/1.0.0/openapi.yaml",
       "github": {
         "repository": "twilio/twilio-oai",
         "ref": "main",
