@@ -1608,6 +1608,50 @@
       "coverage": "Twilio Flex v1 public artifact only (one product of the Twilio platform). Preserve vendor lifecycle annotations, Basic authentication and examples as published; the project GA label is not a GA guarantee for every operation. Other Twilio products, previews and TwiML are separate.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "resend",
+      "provider": "resend.com",
+      "target": "APIs/resend.com/1.5.1/openapi.yaml",
+      "github": {
+        "repository": "resend/resend-openapi",
+        "ref": "main",
+        "path": "resend.yaml"
+      },
+      "discovery": "Official resend/resend-openapi repository (public, unarchived; checked 2026-10-08), the description behind the Resend API reference. Resend is absent from the full fetched main tree. Native OpenAPI 3.1.2 / 1.5.1 / 72 paths / 113 operations validates strictly at review (8916b099d7f52b8552a2e1ef38a7f16fcd17864c) with no patches. New vendor versions use new directories.",
+      "coverage": "Resend email API (emails, batch, domains, API keys, audiences/contacts, broadcasts, webhooks and related resources). Preserve bearer authentication and vendor descriptions. No curation is invented for this new provider.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "pipedrive-v1",
+      "provider": "pipedrive.com",
+      "target": "APIs/pipedrive.com/v1/1.0.0/openapi.yaml",
+      "url": "https://developers.pipedrive.com/docs/api/v1/openapi.yaml",
+      "discovery": "Official Pipedrive API v1 OpenAPI download linked from https://developers.pipedrive.com/docs/api/v1 (checked 2026-10-08). Pipedrive is absent from the full fetched main tree. Native OpenAPI 3.0.1 / declared 1.0.0 / 143 paths / 213 operations validates strictly with no patches; fixed declared version, content refreshed in place. Hosted health not_assessed; no Git revision claimed.",
+      "coverage": "Pipedrive CRM REST API v1 (deals, persons, organizations, activities, pipelines, products, files, webhooks and related resources). Distinct from API v2, which the vendor publishes alongside it and is registered separately. Preserve API-token/OAuth authentication and vendor deprecation notes.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "pipedrive-v2",
+      "provider": "pipedrive.com",
+      "target": "APIs/pipedrive.com/v2/2.0.0/openapi.yaml",
+      "url": "https://developers.pipedrive.com/docs/api/v1/openapi-v2.yaml",
+      "discovery": "Official Pipedrive API v2 OpenAPI download linked from https://developers.pipedrive.com/docs/api/v1 (byte-identical to /docs/api/v2/openapi.yaml; checked 2026-10-08). Native OpenAPI 3.0.1 / 2.0.0 / 85 paths / 158 operations validates strictly with no patches. Hosted health not_assessed.",
+      "coverage": "Pipedrive CRM REST API v2 (the vendor's newer endpoints for deals, persons, organizations, activities, products, pipelines and related resources). Endpoints not in v2 remain in v1. Preserve authentication and vendor lifecycle notes.",
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "render",
+      "provider": "render.com",
+      "target": "APIs/render.com/1.0.0/openapi.yaml",
+      "url": "https://api-docs.render.com/openapi/render-public-api-1.json",
+      "discovery": "Official Render Public API description: the OpenAPI export of the vendor's API reference at https://api-docs.render.com (ReadMe-hosted, whose pages reference render-public-api-1.json; checked 2026-10-08). Render is absent from the full fetched main tree. Native OpenAPI 3.0.2 / 1.0.0 / 140 paths / 228 operations validates strictly with no patches; fixed declared version, refreshed in place. Hosted health not_assessed; no Git revision claimed.",
+      "coverage": "Render Public API (services, deploys, custom domains, environment groups, Postgres/Key Value, jobs, logs, metrics, blueprints, projects and related resources). Preserve bearer authentication and vendor labels.",
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }

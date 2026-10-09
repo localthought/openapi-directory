@@ -1219,3 +1219,20 @@ values GitHub push protection flagged for Messaging. Numbers v2, Content v1 and 
 do add such values and are deliberately **not** registered: they would hit the same push
 protection as Twilio Messaging (Q-102). Legacy or deprecated products (Autopilot, Chat,
 IP Messaging, Notify, Proxy, Frontline, Fax, Preview) are not registered either.
+
+## Resend, Pipedrive and Render (registered 2026-10-09)
+
+Three well-known providers absent from the directory, each from an official publication
+that validates natively with no patches. `resend` follows `resend/resend-openapi`
+`resend.yaml` (OpenAPI 3.1.2). `pipedrive-v1` and `pipedrive-v2` follow the two downloads
+linked from Pipedrive's API docs; they are separate APIs and not combined. `render`
+follows the OpenAPI export of Render's ReadMe-hosted API reference. Hosted sources are
+`not_assessed` for repository health.
+
+Discovery leads not registered (native defects, no recipe adopted): Mollie
+(`mollie/openapi` `specs.yaml`, 3.1 parameter-level `unevaluatedProperties`) and the
+Supabase Management API (`api.supabase.com/api/v1-json`, `const` keywords under OpenAPI
+3.0.0). Adyen Checkout v72 and Legal Entity v4 are newer than the stored files. Adyen's
+stored files carry `x-preferred` curation, so a new-version import depends on the open
+`x-preferred` decision. The stored Checkout v71 also fails the YAML 1.2 loader (a tab in a
+block scalar).
