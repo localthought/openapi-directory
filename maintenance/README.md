@@ -1236,3 +1236,19 @@ Supabase Management API (`api.supabase.com/api/v1-json`, `const` keywords under 
 stored files carry `x-preferred` curation, so a new-version import depends on the open
 `x-preferred` decision. The stored Checkout v71 also fails the YAML 1.2 loader (a tab in a
 block scalar).
+
+## Mollie (registered 2026-10-09) and the Supabase lead
+
+`mollie` follows official `mollie/openapi` `specs.yaml` (OpenAPI 3.1, matching Mollie's
+public API). Native validation fails only on 35 parameter Reference Objects that carry a
+sibling `schema`. OpenAPI 3.1 allows only `summary`/`description` beside `$ref` in a
+Reference Object and says other properties SHALL be ignored. The exact recipe removes only
+those siblings, keeping the document's defined meaning, and stops if the vendor changes
+any of them. The siblings held per-endpoint example/enum display overrides; that loss is
+stated in provenance. Schema Object `$ref` siblings, which 3.1 allows, are untouched.
+
+The Supabase Management API (`api.supabase.com/api/v1-json`, linked from the official API
+reference) declares OpenAPI 3.0.0 but uses JSON Schema 2020-12 constructs. Most have exact
+3.0 forms (`const` → single-value `enum`, numeric `exclusiveMinimum`, `type: "null"`). Three
+`propertyNames` constraints have no 3.0 equivalent, so no constraint-preserving recipe
+exists. It stays an unregistered lead, without a dialect upgrade.

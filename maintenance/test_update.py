@@ -708,6 +708,35 @@ print(hashlib.sha256(update.serialize_document(result).encode()).hexdigest())
         real["paths"]["/items/{id}"]["get"]["responses"]["200"]["description"] = "Changed"
         self.assertEqual(update.compare(old, real, source)["status"], "changed")
 
+    def test_mollie_recipe_drops_only_reference_object_schema_siblings(self):
+        source = {"patches": ["maintenance/patches/mollie.json"]}
+        recipe = json.loads((update.ROOT / source["patches"][0]).read_text())
+        operation = recipe["operations"][0]
+        self.assertEqual(len(recipe["operations"]), 35)
+        self.assertTrue(all(o["pointer"].endswith("/schema") and set(o["context"]) == {"$ref"} for o in recipe["operations"]))
+        ref = operation["context"]["$ref"]
+        target = ref.rsplit("/", 1)[1]
+        parts = [p.replace("~1", "/").replace("~0", "~") for p in operation["pointer"][2:].split("/")]
+        spec = {"openapi": "3.1.0", "info": {"title": "Mollie", "version": "1.0.0"}, "paths": {},
+                "components": {"parameters": {target: {"name": "from", "in": "query", "schema": {"type": "string"}}}}}
+        node = spec
+        for part in parts[:-3]:
+            node = node.setdefault(part, {})
+        node[parts[-3]] = [{}] * int(parts[-2]) + [{"$ref": ref, "schema": operation["from"]}] if parts[-3] == "parameters" else node
+        single = dict(recipe, operations=[operation])
+        path = update.ROOT / "maintenance/patches/mollie.json"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "maintenance/patches").mkdir(parents=True)
+            (root / "maintenance/patches/mollie.json").write_text(json.dumps(single))
+            with patch.object(update, "ROOT", root):
+                result, _ = update.prepare_document(source, json.dumps(spec).encode())
+                self.assertEqual(update.pointer(result, operation["pointer"].rsplit("/", 1)[0]), {"$ref": ref})
+                fixed = json.loads(json.dumps(spec))
+                del update.pointer(fixed, operation["pointer"].rsplit("/", 1)[0])["schema"]
+                with self.assertRaisesRegex(ValueError, "source value changed"):
+                    update.prepare_document(source, json.dumps(fixed).encode())
+
     def test_array_pointer_escaped_tokens_and_referenced_parameters(self):
         spec = document()
         self.assertEqual(update.pointer(spec, "#/components/schemas/Choice/oneOf/1"), {"type": "null"})
