@@ -1762,6 +1762,108 @@
       "coverage": "CircleCI API v2 (pipelines, workflows, jobs, insights, contexts, projects, schedules, webhooks and related resources), distinct from the historical v1 API. Preserve API-token authentication and vendor preview labels.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "paypal-catalogs-products",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/catalogs-products/1.0/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/catalogs_products_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-catalogs-products.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Catalog Products v1 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-catalogs-products.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-notifications-webhooks",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/notifications-webhooks/1.11/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/notifications_webhooks_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-notifications-webhooks.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Webhooks Management v1 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-notifications-webhooks.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-payment-experience-web-profiles",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/payment-experience-web-profiles/1.3/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/payment-experience_web_experience_profiles_v1.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-payment-experience-web-profiles.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Payment Experience Web Profiles v1 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-payment-experience-web-profiles.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-customer-partner-referrals",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/customer-partner-referrals/2.5/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/customer_partner_referrals_v2.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-customer-partner-referrals.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Partner Referrals v2 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-customer-partner-referrals.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-invoicing",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/invoicing/2.6/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/invoicing_v2.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-invoicing.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Invoicing v2 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-invoicing.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
+    },
+    {
+      "id": "paypal-payments",
+      "provider": "paypal.com",
+      "target": "APIs/paypal.com/payments/2.12/openapi.yaml",
+      "github": {
+        "repository": "paypal/paypal-rest-api-specifications",
+        "ref": "main",
+        "path": "openapi/payments_payment_v2.json"
+      },
+      "discovery": "Official paypal/paypal-rest-api-specifications artifact already cited by the stored file. It fails native validation only on representation defects; the exact recipe maintenance/patches/paypal-payments.json corrects them without changing accepted values (reviewed at 90e8041ffe02d80c452d2b476bedd59a8d219bdc). Refresh in place at a fixed declared version.",
+      "coverage": "PayPal REST Payments v2 only. Preserve OAuth2 security, vendor examples and descriptions.",
+      "patches": [
+        "maintenance/patches/paypal-payments.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
