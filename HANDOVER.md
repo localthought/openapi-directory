@@ -170,6 +170,28 @@ Do not delete guards, retry rejected pushes, manufacture receipts or restore old
 - **Next leads:** Netlify 2.60.0 and Bitbucket (Swagger 2.0, need conversion review);
   Twilio services still at 1.55.0 (run the SID pre-scan first).
 
+## Claude VPS run, round 4 — 2026-10-09 (newest)
+
+- **Infrastructure:** #288 (Netlify registered with three guarded `x-nullable` translations;
+  the nullable location guard now counts only `true`; Bitbucket registered for monitoring
+  with an explicit `import_blocker`), #290 (13 current Twilio services), #293 (Resend,
+  Pipedrive v1 and v2, Render).
+- **API delivered (generated, exact-head validation passed):** Netlify 2.60.0 #289 (+61 ops);
+  Twilio 1.0.0 Conversations #291, Voice #292, Video #294, Lookup v2 #295, Studio v2 #296,
+  Serverless #297, TaskRouter #298, Sync #299, Trunking #300, Intelligence v2 #301,
+  Event Streams #302, Trust Hub #303, Flex #304 (no push-protection rejections; 1.55.0
+  history retained); new providers Resend #305, Pipedrive v1 #306, Pipedrive v2 #307,
+  Render #308; drift Sentry #309 (`--g4`), OpenAI #310 (`--g2`).
+- **Held:**
+  - Bitbucket refresh: 5 cross-workspace route removals lack vendor evidence.
+  - Twilio Numbers v2, Content v1 and Insights v1: they add realistic Account-SID
+    examples (push-protection class, Q-102).
+  - Coinbase `coinbase-accounts/balances` removal: still no public notice (rechecked).
+  - Adyen Checkout v72 / Legal Entity v4: `x-preferred` curation (Q-111 class); the
+    stored v71 also fails the YAML 1.2 loader.
+  - Mollie and Supabase: native defects.
+- Drift re-check at 00:32 UTC across 85 unblocked sources: 82 matched, 3 changed.
+
 ## Recommended next work
 
 1. **Deliberate handling of already merged generated branches**, in separate infrastructure.
