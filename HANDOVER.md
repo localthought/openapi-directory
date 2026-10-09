@@ -192,6 +192,24 @@ Do not delete guards, retry rejected pushes, manufacture receipts or restore old
   - Mollie and Supabase: native defects.
 - Drift re-check at 00:32 UTC across 85 unblocked sources: 82 matched, 3 changed.
 
+## Claude VPS run, round 5 — 2026-10-09 (newest)
+
+- **Mollie:** registered (#312) with an exact recipe removing only 35 sibling `schema`s from
+  parameter Reference Objects (OpenAPI 3.1: SHALL be ignored); delivered #313 (new provider).
+- **Supabase Management:** not registered. Three `propertyNames` constraints have no
+  OpenAPI 3.0 equivalent, so no constraint-preserving recipe exists; no dialect upgrade.
+- **Bitbucket:** hold lifted (#314) after tracing all 28 removed paths / 47 operations to
+  vendor announcements (Issue Tracker and addon linkers in the changelog; the cross-workspace
+  API end of life, CHANGE-2770; the `/pullrequests/{selected_user}` staff notice). The
+  path-surviving `GET /snippets` removal belongs to the same cross-workspace class. Delivered #315.
+- **PayPal:** the six natively valid stored artifacts are now monitored (#316); the Orders
+  2.32 content refresh is delivered (#317). Seven invalid PayPal artifacts are recorded, not
+  registered.
+- **CircleCI v2:** registered (#316) and delivered (#318), missing beside v1 until now.
+- **Still held:** Coinbase balances removal (rechecked 00:58, no notice). Trello's official
+  spec (enum-default defect, path layout change) is a lead.
+- Drift: last full re-check 00:32 UTC; next due in a few hours.
+
 ## Recommended next work
 
 1. **Deliberate handling of already merged generated branches**, in separate infrastructure.
