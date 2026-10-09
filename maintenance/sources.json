@@ -1652,6 +1652,23 @@
       "coverage": "Render Public API (services, deploys, custom domains, environment groups, Postgres/Key Value, jobs, logs, metrics, blueprints, projects and related resources). Preserve bearer authentication and vendor labels.",
       "version_policy": "vendor",
       "priority": "high"
+    },
+    {
+      "id": "mollie",
+      "provider": "mollie.com",
+      "target": "APIs/mollie.com/1.0.0/openapi.yaml",
+      "github": {
+        "repository": "mollie/openapi",
+        "ref": "main",
+        "path": "specs.yaml"
+      },
+      "discovery": "Official mollie/openapi repository (public, unarchived; README: OpenAPI 3.1 spec matching Mollie's Public API, linked to the official API Reference; checked 2026-10-09). Mollie is absent from the full fetched main tree. Native OpenAPI 3.1.0 / 1.0.0 / 89 paths / 128 operations at review (9761dc389440916d041733e5a51608686982dfb0). It fails native validation only on 35 parameter Reference Objects with a sibling schema; OpenAPI 3.1 says such extra Reference Object properties SHALL be ignored, and the exact recipe removes only those siblings. Schema Object $ref siblings (allowed in 3.1) are untouched. Fixed declared version, refreshed in place.",
+      "coverage": "Mollie public payments API v2 (payments, refunds, chargebacks, customers, mandates, subscriptions, orders, settlements, balances, onboarding and related resources). Preserve API-key/OAuth authentication and vendor x-enumDescriptions/x-method extensions. The removed reference siblings were per-endpoint example/enum/type display overrides, not part of the specified contract. No curation invented.",
+      "patches": [
+        "maintenance/patches/mollie.json"
+      ],
+      "version_policy": "vendor",
+      "priority": "high"
     }
   ]
 }
