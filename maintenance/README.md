@@ -1205,3 +1205,17 @@ source and for serialized-output checks.
   addon linker removal. Five cross-workspace routes (`/workspaces`, `/repositories`,
   `/user/permissions/repositories`, `/user/permissions/workspaces`,
   `/pullrequests/{selected_user}`) still need vendor evidence before an in-place refresh.
+
+## Thirteen more Twilio services (registered 2026-10-08)
+
+Conversations v1, Voice v1, Video v1, Lookup v2, Studio v2, Serverless v1, TaskRouter v1,
+Sync v1, Elastic SIP Trunking v1, Conversational Intelligence v2, Event Streams v1, Trust Hub
+v1 and Flex v1 follow their own `twilio/twilio-oai` `spec/json` artifacts. They use the same
+policy as classic REST and Verify: the vendor reset declared versions to 1.0.0 (PR 111), so
+the stored 1.55.0 files remain the initial curation baselines and history. All validate
+natively without patches. Before registration, each source was scanned for example values
+shaped like Twilio SIDs. None of these 13 adds a new realistic Account SID (`AC…`); the
+values GitHub push protection flagged for Messaging. Numbers v2, Content v1 and Insights v1
+do add such values and are deliberately **not** registered: they would hit the same push
+protection as Twilio Messaging (Q-102). Legacy or deprecated products (Autopilot, Chat,
+IP Messaging, Notify, Proxy, Frontline, Fax, Preview) are not registered either.
