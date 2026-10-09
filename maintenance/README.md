@@ -1199,12 +1199,13 @@ source and for serialized-output checks.
   curation baseline and stays unchanged.
 - `bitbucket` follows the official hosted `https://api.bitbucket.org/swagger.json`. Its one
   counted converter step is an already-empty response description left unchanged.
-  **Monitoring only for now.** The refresh of fixed version 2.0 would drop 28 paths /
-  47 operations. The vendor changelog evidences 25 paths: the Issue Tracker removal
-  announced 2026-08-20 (issues, components, milestones, versions, import/export) and the
-  addon linker removal. Five cross-workspace routes (`/workspaces`, `/repositories`,
-  `/user/permissions/repositories`, `/user/permissions/workspaces`,
-  `/pullrequests/{selected_user}`) still need vendor evidence before an in-place refresh.
+  The in-place refresh of fixed version 2.0 drops 28 paths / 47 operations of the old
+  snapshot. All are vendor-announced removals: the Issue Tracker (changelog, 2026-08-20),
+  Connect addon linkers (changelog), the cross-workspace APIs (`/workspaces`,
+  `/repositories`, `/user/permissions/repositories`, `/user/permissions/workspaces`; Atlassian
+  end-of-life announcement with final removal in April 2026, changelog CHANGE-2770), and
+  `/pullrequests/{selected_user}` (removal announced by Atlassian staff for 2025-02-20).
+  Per-workspace replacements such as `/repositories/{workspace}` remain.
 
 ## Thirteen more Twilio services (registered 2026-10-08)
 

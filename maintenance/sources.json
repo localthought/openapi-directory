@@ -1415,7 +1415,7 @@
       "provider": "bitbucket.org",
       "target": "APIs/bitbucket.org/2.0/openapi.yaml",
       "url": "https://api.bitbucket.org/swagger.json",
-      "discovery": "Official Bitbucket Cloud REST API Swagger description served by api.bitbucket.org (the stored file's x-origin bitbucket.org/api/swagger.json points to the same publication). Fixed declared version 2.0 is refreshed in place. Native Swagger 2.0 / 171 paths at review (2026-10-08). Locked swagger2openapi 7.0.8 makes zero warnings and one counted converter step, traced to processResponse visiting the already-empty description of DELETE /repositories/{workspace}/{repo_slug}/branch-restrictions/{id} 204; the empty string is left unchanged, the same reviewed class as Mailchimp Marketing's counts. Hosted health not_assessed; no Git revision claimed.",
+      "discovery": "Removal evidence for the 2026-10-09 refresh (28 paths / 47 operations vs the old snapshot): Issue Tracker removal (changelog, announced 2026-08-20) and Connect addon linker removal (changelog); cross-workspace API end of life (Atlassian announcement, final removal April 2026, changelog CHANGE-2770) covering list-workspaces /workspaces, cross-workspace /repositories and /user/permissions/{repositories,workspaces}; and the staff-announced removal of /pullrequests/{selected_user} (2025-02-20). Official Bitbucket Cloud REST API Swagger description served by api.bitbucket.org (the stored file's x-origin bitbucket.org/api/swagger.json points to the same publication). Fixed declared version 2.0 is refreshed in place. Native Swagger 2.0 / 171 paths at review (2026-10-08). Locked swagger2openapi 7.0.8 makes zero warnings and one counted converter step, traced to processResponse visiting the already-empty description of DELETE /repositories/{workspace}/{repo_slug}/branch-restrictions/{id} 204; the empty string is left unchanged, the same reviewed class as Mailchimp Marketing's counts. Hosted health not_assessed; no Git revision claimed.",
       "coverage": "Bitbucket Cloud REST API 2.0 (repositories, pull requests, pipelines, workspaces, issues, branch restrictions and related resources). Preserve OAuth/basic/API-token authentication and vendor deprecation notes; not Bitbucket Data Center.",
       "conversion": {
         "tool": "swagger2openapi",
@@ -1423,7 +1423,6 @@
         "expected_warnings": 0,
         "expected_patches": 1
       },
-      "import_blocker": "In-place refresh of fixed 2.0 would remove 28 paths / 47 operations. The vendor changelog evidences 25 (Issue Tracker removal announced 2026-08-20; Connect addon linker removal); five cross-workspace routes (/workspaces, /repositories, /user/permissions/repositories, /user/permissions/workspaces, /pullrequests/{selected_user}) lack vendor evidence (checked 2026-10-08). Review before importing.",
       "version_policy": "vendor",
       "priority": "high"
     },
